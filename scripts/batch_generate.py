@@ -169,6 +169,26 @@ def _mark_generated(domain_id: str, target: str, level: str, language: str, mode
     update_catalog(mutate, CATALOG_PATH)
 
 
+# Substrings (checked lowercase) that indicate the LLM backend has hit a
+# session/rate/quota limit rather than a genuine workflow or code error.
+# Mirrors the detection in SPL.py's spl/adapters/claude_cli.py so a limit hit
+# here is recognized the same way it is inside the adapter — but here we act
+# on it *before* spl3 finishes printing the resulting uncaught-exception
+# traceback (ModelOverloaded propagates out of `spl3 run` unhandled when the
+# .spl workflow has no EXCEPTION WHEN ModelOverloaded clause), since every
+# remaining job in the batch would hit the same limit and print the same
+# traceback again.
+_SESSION_LIMIT_MARKERS = ("session limit", "rate limit", "quota", "usage limit", "modeloverloaded")
+
+
+class SessionLimitHit(Exception):
+    """Raised when the subprocess output indicates an LLM session/rate limit."""
+
+    def __init__(self, line: str):
+        self.line = line
+        super().__init__(line)
+
+
 def _run_spl3(
     domain_id: str,
     target: str,
@@ -179,7 +199,12 @@ def _run_spl3(
     llm: str,
     skip_cache: bool,
 ) -> bool:
-    """Run spl3 synchronously, streaming output. Returns True on success."""
+    """Run spl3 synchronously, streaming output. Returns True on success.
+
+    Raises SessionLimitHit as soon as the output signals an LLM session/rate
+    limit, terminating the subprocess immediately instead of letting it run
+    to completion and print its full traceback.
+    """
     output_dir = DOMAINS_DIR / domain_id / "output" / f"{level}.{language}" / model / "html"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -212,8 +237,30 @@ def _run_spl3(
         "SPL_MAX_LLM_CALLS": str(_api_settings.spl_max_llm_calls),
     }
 
-    result = subprocess.run(cmd, cwd=str(spl_dir), env=spl_env)
-    return result.returncode == 0
+    proc = subprocess.Popen(
+        cmd, cwd=str(spl_dir), env=spl_env,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        text=True, bufsize=1,
+    )
+    assert proc.stdout is not None
+    try:
+        for line in proc.stdout:
+            low = line.lower()
+            if any(marker in low for marker in _SESSION_LIMIT_MARKERS):
+                proc.terminate()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait()
+                raise SessionLimitHit(line.strip())
+            click.echo(line, nl=False)
+    finally:
+        if proc.stdout:
+            proc.stdout.close()
+
+    proc.wait()
+    return proc.returncode == 0
 
 
 @click.command()
@@ -306,12 +353,23 @@ def main(
         return
 
     succeeded, failed = 0, 0
-    for did, target, eff_level in jobs:
+    for idx, (did, target, eff_level) in enumerate(jobs):
         click.echo(f"{'='*70}")
         click.echo(f"GENERATING  domain={did}  target={target}  level={eff_level}  lang={language}  model={model}")
         click.echo(f"{'='*70}")
 
-        ok = _run_spl3(did, target, eff_level, language, model, spl_dir, llm, skip_cache)
+        try:
+            ok = _run_spl3(did, target, eff_level, language, model, spl_dir, llm, skip_cache)
+        except SessionLimitHit as exc:
+            click.echo(f"[FAIL] {did}/{target}: session/rate limit reached — {exc.line}", err=True)
+            remaining = len(jobs) - idx - 1
+            click.echo(
+                f"\nAborting batch early: LLM session/rate limit hit, remaining jobs "
+                f"would fail the same way. {succeeded} succeeded, {failed + 1} failed, "
+                f"{remaining} not attempted.",
+                err=True,
+            )
+            sys.exit(1)
 
         if ok:
             _mark_generated(did, target, eff_level, language, model)
