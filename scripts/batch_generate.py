@@ -122,9 +122,11 @@ def _get_application_ids(domain_id: str) -> list[str]:
     return list(apps.keys())
 
 
-def _already_generated(catalog_entry: dict, target: str, model: str, language: str) -> bool:
+def _already_generated(catalog_entry: dict, target: str, model: str, language: str, level: str) -> bool:
+    variant_prefix = f"output/{level}.{language}/"
     return any(
         b["target"] == target and b.get("model") == model and b.get("language", "en") == language
+        and b.get("file", "").startswith(variant_prefix)
         for b in catalog_entry.get("books", [])
     )
 
@@ -335,7 +337,7 @@ def main(
             continue
         selected = app_ids[:n_targets] if n_targets else app_ids
         for target in selected:
-            if skip_existing and _already_generated(entry, target, model, language):
+            if skip_existing and _already_generated(entry, target, model, language, eff_level):
                 click.echo(f"[skip] {did}/{target} ({model}): already in catalog")
                 continue
             jobs.append((did, target, eff_level))
