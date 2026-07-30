@@ -1,0 +1,235 @@
+domain: statistics_ch3
+primitives:
+  descriptive_statistics:
+    defines: The organization, summarization, and graphical display of data.
+    tier: 0
+  population_data:
+    defines: Data representing all the outcomes or measurements that are of interest.
+    tier: 0
+  sample_data:
+    defines: Data representing outcomes or measurements collected from a subset of the population of interest.
+    tier: 0
+  frequency_distribution:
+    defines: A method of organizing and summarizing a dataset that gives the frequency with which each
+      value occurs.
+    tier: 0
+  outliers:
+    defines: Data values that are significantly different from the other data values in a dataset.
+    tier: 0
+  probability:
+    defines: A numerical measure between 0 and 1 that assesses the likelihood of occurrence of an event.
+    tier: 0
+  sample_space:
+    defines: The set of all possible outcomes in a probability experiment.
+    tier: 0
+  event:
+    defines: A subset of the sample space.
+    tier: 0
+  random_variable:
+    defines: A variable that assigns a single numerical value to a specific outcome from an experiment.
+    tier: 0
+concepts:
+  mean:
+    defines: The arithmetic average of a dataset, calculated by summing the values and dividing by the
+      number of items.
+    composed_of:
+    - population_data
+    - sample_data
+    tier: 1
+  median:
+    defines: The middle value of an ordered dataset, used as a measure of central tendency less affected
+      by outliers.
+    composed_of:
+    - sample_data
+    tier: 1
+  mode:
+    defines: The data value that occurs with the greatest frequency in a dataset.
+    composed_of:
+    - frequency_distribution
+    tier: 1
+  trimmed_mean:
+    defines: A mean calculated after removing a percentage of data values from the lower and upper ends
+      of a sorted dataset to reduce the effect of outliers.
+    composed_of:
+    - mean
+    - outliers
+    tier: 2
+  central_tendency:
+    defines: The statistical measure that represents the center of a dataset, encompassing mean, median,
+      and mode.
+    composed_of:
+    - mean
+    - median
+    - mode
+    tier: 2
+  range:
+    defines: A measure of dispersion calculated by subtracting the minimum value from the maximum value
+      of a dataset.
+    composed_of:
+    - sample_data
+    tier: 1
+  variance:
+    defines: A measure of the spread of data values based on the squared deviations of observations from
+      the mean.
+    composed_of:
+    - mean
+    tier: 2
+  standard_deviation:
+    defines: A measure of the spread of a dataset, in the same units as the data, calculated as the square
+      root of the variance.
+    composed_of:
+    - variance
+    tier: 3
+  coefficient_of_variation:
+    defines: A measure of relative variation calculated as the standard deviation expressed as a percentage
+      of the mean.
+    composed_of:
+    - standard_deviation
+    - mean
+    tier: 4
+  percentiles:
+    defines: Values that divide an ordered dataset into hundredths, indicating the percentage of data
+      points falling below a given value.
+    composed_of:
+    - sample_data
+    tier: 1
+  quartiles:
+    defines: Values that divide an ordered dataset into four equal parts, with the second quartile equal
+      to the median.
+    composed_of:
+    - percentiles
+    - median
+    tier: 2
+  interquartile_range:
+    defines: The difference between the third quartile and first quartile, indicating the spread of the
+      middle 50% of the data.
+    composed_of:
+    - quartiles
+    tier: 3
+  z_score:
+    defines: A measure of position calculated by subtracting the mean from a data value and dividing by
+      the standard deviation, representing the number of standard deviations from the mean.
+    composed_of:
+    - mean
+    - standard_deviation
+    tier: 4
+  relative_frequency_probability:
+    defines: A method of determining the likelihood of an event based on the observed frequency of its
+      occurrence in collected data.
+    composed_of:
+    - probability
+    - sample_data
+    tier: 1
+  theoretical_probability:
+    defines: A method of calculating probability based on equally likely outcomes known ahead of time,
+      without collecting data.
+    composed_of:
+    - probability
+    - sample_space
+    tier: 1
+  complement_of_an_event:
+    defines: The set of all outcomes in the sample space that are not included in a given event, with
+      probability equal to 1 minus the event's probability.
+    composed_of:
+    - probability
+    - event
+    tier: 1
+  independent_dependent_events:
+    defines: A classification of events based on whether the occurrence of one event affects the probability
+      of occurrence of another.
+    composed_of:
+    - probability
+    - event
+    tier: 1
+  conditional_probability:
+    defines: The probability of an event occurring given that another event has already occurred.
+    composed_of:
+    - probability
+    - event
+    - independent_dependent_events
+    tier: 2
+  probability_of_at_least_one:
+    defines: The probability that one or more occurrences of an event happen, calculated as the complement
+      of no occurrences.
+    composed_of:
+    - complement_of_an_event
+    - independent_dependent_events
+    tier: 2
+  bayes_theorem:
+    defines: A statistical technique that revises a probability estimate using new information or evidence,
+      expressed via conditional probabilities.
+    composed_of:
+    - conditional_probability
+    tier: 3
+  discrete_random_variable:
+    defines: A random variable that can take on only a finite or countable number of values, typically
+      resulting from a count.
+    composed_of:
+    - random_variable
+    tier: 1
+  continuous_random_variable:
+    defines: A random variable that can take on any value within an interval, typically resulting from
+      a measurement.
+    composed_of:
+    - random_variable
+    tier: 1
+  probability_distribution:
+    defines: A mathematical function that assigns probabilities to the various outcomes of a random variable.
+    composed_of:
+    - random_variable
+    - probability
+    tier: 1
+  binomial_distribution:
+    defines: A discrete probability distribution modeling the number of successes in a fixed number of
+      independent trials, each with the same probability of success.
+    composed_of:
+    - discrete_random_variable
+    - probability_distribution
+    - independent_dependent_events
+    tier: 2
+  poisson_distribution:
+    defines: A discrete probability distribution used to calculate the probability of a certain number
+      of occurrences of an event within a specific interval.
+    composed_of:
+    - discrete_random_variable
+    - probability_distribution
+    tier: 2
+  probability_density_function:
+    defines: A function used to describe the probability distribution of a continuous random variable,
+      where area under the curve represents probability.
+    composed_of:
+    - continuous_random_variable
+    - probability_distribution
+    tier: 2
+  normal_distribution:
+    defines: A symmetric, bell-shaped continuous probability distribution characterized by its mean and
+      standard deviation.
+    composed_of:
+    - probability_density_function
+    - mean
+    - standard_deviation
+    tier: 4
+  standard_normal_distribution:
+    defines: A normal distribution with a mean of 0 and a standard deviation of 1, used to standardize
+      other normal distributions via z-scores.
+    composed_of:
+    - normal_distribution
+    - z_score
+    tier: 5
+  empirical_rule:
+    defines: A rule stating the approximate percentages of data values falling within one, two, and three
+      standard deviations of the mean for a normal distribution.
+    composed_of:
+    - normal_distribution
+    - standard_deviation
+    tier: 5
+applications:
+  python_data_analysis:
+    defines: The use of Python libraries such as pandas and scipy.stats to compute descriptive statistics
+      and probability distribution values.
+    needs:
+    - mean
+    - standard_deviation
+    - quartiles
+    - probability_distribution
+    tier: 4

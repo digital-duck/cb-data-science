@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Concept Graph — graph</title>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f0f2f5;overflow:hidden;height:100vh}
+.app{
+  display:grid;
+  grid-template-columns:230px 1fr 210px;
+  grid-template-rows:60vh 40vh;
+  height:100vh;
+  gap:0;
+}
+/* ── Left sidebar: learning path ── */
+#path-sidebar{
+  grid-column:1;grid-row:1/3;
+  background:#f5f6f8;color:#2a2a2a;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  border-right:1px solid #dde0e6;
+}
+#path-header{
+  padding:14px 14px 10px;
+  border-bottom:1px solid #dde0e6;
+  flex-shrink:0;
+}
+#path-header h1{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#888;margin-bottom:2px;font-weight:700}
+#path-header .domain-name{font-size:11px;color:#555;margin-top:4px}
+#path-steps{flex:1;overflow-y:auto;padding:8px 0}
+#path-steps .hint{color:#aaa;font-size:12px;text-align:center;padding:24px 12px;line-height:1.5}
+.step-item{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 12px;cursor:pointer;
+  border-left:3px solid transparent;
+  transition:background .15s;
+}
+.step-item:hover{background:#ebebf0}
+.step-item.active{background:#e8eef8;border-left-color:#4a90d9}
+.step-item.target{background:#eaf5ea;border-left-color:#4caf50}
+.step-num{min-width:20px;font-size:10px;font-weight:700;color:#bbb;padding-top:2px;flex-shrink:0}
+.step-item.target .step-num{color:#4caf50}
+.step-label{font-size:12px;font-weight:600;color:#333;line-height:1.4}
+.step-def{font-size:10px;color:#888;margin-top:2px;line-height:1.4}
+.step-kind{display:inline-block;padding:0 5px;border-radius:8px;font-size:9px;font-weight:700;margin-left:4px}
+#path-count{font-size:10px;color:#aaa;margin-top:3px}
+/* ── Graph panel ── */
+#graph-panel{
+  grid-column:2;grid-row:1;
+  position:relative;background:#fff;
+  border-bottom:2px solid #dde;
+}
+#graph-container{width:100%;height:100%}
+.graph-recenter-btn{
+  position:absolute;right:16px;bottom:16px;z-index:50;
+  padding:6px 14px;border-radius:6px;
+  border:1px solid #1e3a5f;background:#1e3a5f;color:#fff;
+  font-size:12px;font-weight:600;font-family:system-ui,sans-serif;
+  box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;
+}
+.graph-recenter-btn:hover{background:#28496f;border-color:#28496f}
+/* ── Explanation panel ── */
+#explain-panel{
+  grid-column:2;grid-row:2;
+  background:#fff;overflow-y:auto;
+  padding:16px 20px;
+}
+#explain-panel .empty{color:#aaa;font-size:13px;padding:20px 0;text-align:center}
+#explain-panel .node-title{
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;
+}
+#explain-panel .node-title h2{font-size:16px;color:#1e3a5f}
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:700;
+}
+.badge.primitive{background:#e8f5e9;color:#2e7d32}
+.badge.concept{background:#e3f2fd;color:#1565c0}
+.badge.application{background:#fff3e0;color:#ef6c00}
+.tier-tag{font-size:11px;color:#999;margin-left:auto}
+#explain-panel .defines{
+  font-size:14px;color:#333;line-height:1.6;margin-bottom:12px;
+  padding:10px 12px;background:#f8f9fb;border-radius:6px;
+  border-left:3px solid #90b4e8;
+}
+#explain-panel .section-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:#999;margin-bottom:6px;
+}
+#explain-panel .prereq-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.prereq-chip{
+  padding:3px 9px;border-radius:12px;font-size:11px;
+  background:#e3f2fd;color:#1565c0;cursor:pointer;
+  border:1px solid #90caf9;transition:background .12s;
+}
+.prereq-chip:hover{background:#bbdefb}
+#explain-panel .meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.meta-item{font-size:12px;color:#555}
+.meta-item b{color:#1e3a5f}
+#explain-panel .play-hint{
+  font-size:12px;color:#5a5a5a;line-height:1.6;
+  padding:8px 12px;background:#fffde7;border-radius:6px;
+  border-left:3px solid #ffd54f;margin-bottom:8px;
+}
+/* ── Notes sidebar ── */
+#notes-sidebar{
+  grid-column:3;grid-row:1/3;
+  background:#fafaf8;
+  border-left:2px solid #e8e8e0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+#notes-header{
+  padding:10px 12px 8px;
+  border-bottom:1px solid #e0e0d8;
+  flex-shrink:0;
+}
+#notes-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+#notes-header h2{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.06em;margin:0}
+#notes-node-label{font-size:11px;color:#999;margin-top:2px}
+.nb-btn{font-size:10px;padding:2px 7px;border-radius:3px;
+  border:1px solid #ddd;background:#f0f0ea;cursor:pointer;color:#777;
+  font-family:system-ui,sans-serif}
+.nb-btn:hover{background:#e0e0d8;color:#444}
+#notes-textarea{
+  flex:0 0 auto;height:100px;border:none;resize:none;
+  padding:12px;font-size:12px;line-height:1.6;
+  font-family:inherit;background:#fafaf8;color:#333;
+  outline:none;
+}
+#notes-with-entries{
+  border-top:1px solid #e8e8e0;flex:1;min-height:0;overflow-y:auto;
+}
+.note-entry{
+  padding:6px 12px;cursor:pointer;
+  border-bottom:1px solid #f0f0e8;
+  font-size:11px;
+}
+.note-entry:hover{background:#f0efe8}
+.note-entry .note-node{font-weight:600;color:#555;display:flex;justify-content:space-between;align-items:center}
+.note-entry .note-ts{font-weight:400;color:#bbb;font-size:10px}
+.note-entry .note-preview{color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ── kind badge colours in sidebar ── */
+.primitive-k{background:#e8f5e9;color:#2e7d32}
+.concept-k{background:#e3f2fd;color:#1565c0}
+.application-k{background:#fff3e0;color:#ef6c00}
+/* ── concept detail panel ── */
+#concept-detail{margin-top:14px;border-top:1px solid #e8e8e0;padding-top:10px;}
+#concept-iframe{width:100%;height:500px;border:1px solid #e0e0d8;border-radius:4px;margin-top:6px;display:block;}
+.concept-not-found{color:#e57373;font-size:12px;padding:6px 0;font-style:italic;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- LEFT: learning path sidebar -->
+<aside id="path-sidebar">
+  <div id="path-header">
+    <h1>Learning Path</h1>
+    <div class="domain-name">graph</div>
+    <div id="path-count"></div>
+  </div>
+  <div id="path-steps">
+    <div class="hint">Click any node in the graph<br>to see its learning path</div>
+  </div>
+</aside>
+
+<!-- CENTRE TOP: concept graph -->
+<div id="graph-panel">
+  <div id="graph-container"></div>
+  <button class="graph-recenter-btn" onclick="reCenterGraph()" title="Re-fit the graph to the viewport">Re-Center</button>
+</div>
+
+<!-- CENTRE BOTTOM: explanation panel -->
+<div id="explain-panel">
+  <div class="empty">Select a node to see its definition, prerequisites, and learning context.</div>
+</div>
+
+<!-- RIGHT: notes sidebar -->
+<aside id="notes-sidebar">
+  <div id="notes-header">
+    <div id="notes-header-top">
+      <h2>Notes</h2>
+      <div>
+        <button class="nb-btn" id="nb-clear-btn" onclick="clearNote()">Clear</button>
+        <button class="nb-btn" onclick="exportNotes()">Export</button>
+      </div>
+    </div>
+    <div id="notes-node-label">no node selected</div>
+  </div>
+  <textarea id="notes-textarea" placeholder="Type notes here&#10;(auto-saved per node)"></textarea>
+  <div id="notes-with-entries"></div>
+</aside>
+
+</div><!-- .app -->
+
+<script>
+const RAW = {"nodes": [{"id": "artificial_intelligence", "label": "artificial intelligence", "kind": "primitive", "tier": 0, "defines": "A branch of computer science that aims to create intelligent systems capable of simulating humanlike cognitive abilities, including learning, reasoning, perception, and decision-making.", "prereqs": [], "verifier": "", "lab": "", "play": "", "color": {"background": "#fffde7", "border": "#795548"}, "font": {"size": 13}}, {"id": "neuron", "label": "neuron", "kind": "primitive", "tier": 0, "defines": "An individual decision-making unit of a neural network that takes some number of inputs and produces an output.", "prereqs": [], "verifier": "", "lab": "", "play": "", "color": {"background": "#fffde7", "border": "#795548"}, "font": {"size": 13}}, {"id": "weight", "label": "weight", "kind": "primitive", "tier": 0, "defines": "A value multiplied to the incoming signal, determining the strength of a connection.", "prereqs": [], "verifier": "", "lab": "", "play": "", "color": {"background": "#fffde7", "border": "#795548"}, "font": {"size": 13}}, {"id": "bias", "label": "bias", "kind": "primitive", "tier": 0, "defines": "A value added to the weighted signal, making the neuron more or less likely to activate.", "prereqs": [], "verifier": "", "lab": "", "play": "", "color": {"background": "#fffde7", "border": "#795548"}, "font": {"size": 13}}, {"id": "vector", "label": "vector", "kind": "primitive", "tier": 0, "defines": "An ordered list of numbers used to represent the inputs or weights of a neuron collectively.", "prereqs": [], "verifier": "", "lab": "", "play": "", "color": {"background": "#fffde7", "border": "#795548"}, "font": {"size": 13}}, {"id": "activation_function", "label": "activation function", "kind": "concept", "tier": 1, "defines": "A non-decreasing function that determines whether a neuron activates and how strongly, given the combined weighted and biased input.", "prereqs": ["neuron", "weight", "bias"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "layers", "label": "layers", "kind": "concept", "tier": 1, "defines": "Groups of neurons that receive the same inputs from previous groups and forward signals to the next group, comprising the input layer, hidden layers, and output layer of a network.", "prereqs": ["neuron"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "neural_network", "label": "neural network", "kind": "concept", "tier": 2, "defines": "A structure made up of interconnected neurons, organized into input, hidden, and output layers, that takes input and produces classification output.", "prereqs": ["neuron", "layers", "activation_function"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "perceptron", "label": "perceptron", "kind": "concept", "tier": 2, "defines": "A single-layer neural network using the step function as activation function, designed for binary classification tasks, trained via the perceptron learning rule.", "prereqs": ["neuron", "activation_function", "weight", "bias"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "depth", "label": "depth", "kind": "concept", "tier": 2, "defines": "The number of hidden layers a neural network contains, a defining characteristic of deep learning models.", "prereqs": ["layers"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "multilayer_perceptron", "label": "multilayer perceptron", "kind": "concept", "tier": 3, "defines": "The basic paradigm for neural networks having multiple hidden layers, developed to extend single-layer perceptrons.", "prereqs": ["perceptron", "layers", "neural_network"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "loss_function", "label": "loss function", "kind": "concept", "tier": 3, "defines": "A mathematical function that measures the error between a neural network's predicted output and the actual target values.", "prereqs": ["neural_network"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "gradient_descent", "label": "gradient descent", "kind": "concept", "tier": 4, "defines": "A method for locating minimum values of a multivariable function, such as a loss function, by taking small steps in the direction of greatest decrease.", "prereqs": ["loss_function"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "recurrent_neural_network", "label": "recurrent neural network", "kind": "concept", "tier": 4, "defines": "A neural network that incorporates feedback loops, allowing it to process sequential data of varying length by remembering prior inputs.", "prereqs": ["neural_network", "multilayer_perceptron"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "deep_learning", "label": "deep learning", "kind": "concept", "tier": 4, "defines": "The training and implementation of neural networks with many hidden layers to learn hierarchical, structured representations of data.", "prereqs": ["multilayer_perceptron", "depth"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "backpropagation", "label": "backpropagation", "kind": "concept", "tier": 5, "defines": "An algorithm used to train neural networks by determining how errors depend on changes in weights and biases, propagating backward from the output layer through the network.", "prereqs": ["gradient_descent", "loss_function", "multilayer_perceptron"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "vanishing_exploding_gradient", "label": "vanishing exploding gradient", "kind": "concept", "tier": 5, "defines": "Training failures in RNNs caused by connecting weights becoming compounded to very large (exploding) or very small (vanishing) values, destabilizing gradient descent.", "prereqs": ["recurrent_neural_network", "gradient_descent"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "convolutional_neural_network", "label": "convolutional neural network", "kind": "concept", "tier": 5, "defines": "A class of neural network models developed to process structured, grid-like data such as images, using the mathematical operation of convolution.", "prereqs": ["deep_learning", "neural_network"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "natural_language_processing", "label": "natural language processing", "kind": "concept", "tier": 5, "defines": "An area of AI concerned with recognizing written or spoken language and generating new language content.", "prereqs": ["artificial_intelligence", "deep_learning"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "epoch", "label": "epoch", "kind": "concept", "tier": 6, "defines": "A single complete training cycle of a neural network over the training data, during which weights and biases are adjusted based on the loss function.", "prereqs": ["backpropagation"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "lstm", "label": "lstm", "kind": "concept", "tier": 6, "defines": "A type of RNN incorporating memory cells that overcome the vanishing/exploding gradient problem to capture long-term dependencies.", "prereqs": ["recurrent_neural_network", "vanishing_exploding_gradient"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "feature_map", "label": "feature map", "kind": "concept", "tier": 6, "defines": "The output of convolutional layers in a CNN, representing learned features of the input data across spatial dimensions.", "prereqs": ["convolutional_neural_network"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "word_embedding", "label": "word embedding", "kind": "concept", "tier": 6, "defines": "The translation of words into vector representations in high-dimensional space in a way that preserves semantic relationships among words.", "prereqs": ["vector", "natural_language_processing"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "pooling_layer", "label": "pooling layer", "kind": "concept", "tier": 7, "defines": "A CNN layer that down-samples feature maps, reducing spatial dimensions while retaining important information.", "prereqs": ["convolutional_neural_network", "feature_map"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "transformer_model", "label": "transformer model", "kind": "concept", "tier": 7, "defines": "A neural network architecture using a self-attention mechanism to capture long-range and large-scale dependencies in input data.", "prereqs": ["deep_learning", "word_embedding", "natural_language_processing"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "ai_hallucination", "label": "ai hallucination", "kind": "concept", "tier": 9, "defines": "A generated response from an AI model, especially an LLM, that has no basis in reality yet appears plausible.", "prereqs": ["large_language_model"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "large_language_model", "label": "large language model", "kind": "application", "tier": 8, "defines": "A powerful NLP model, such as ChatGPT, designed to understand and generate humanlike text based on massive amounts of training data.", "prereqs": ["transformer_model", "natural_language_processing", "word_embedding"], "verifier": "", "lab": "", "play": "", "color": {"background": "#fce4ec", "border": "#c62828"}, "font": {"size": 13}}, {"id": "responsible_ai", "label": "responsible ai", "kind": "concept", "tier": 10, "defines": "The ethical and socially conscious development and deployment of AI technologies, aimed at ensuring fairness, transparency, and accountability.", "prereqs": ["artificial_intelligence", "ai_hallucination"], "verifier": "", "lab": "", "play": "", "color": {"background": "#e8f5e9", "border": "#2e7d32"}, "font": {"size": 13}}, {"id": "semantic_segmentation", "label": "semantic segmentation", "kind": "application", "tier": 8, "defines": "A computer vision task, typically performed using CNNs, that assigns a semantic label to each pixel of an image to partition it into meaningful regions.", "prereqs": ["convolutional_neural_network", "feature_map", "pooling_layer"], "verifier": "", "lab": "", "play": "", "color": {"background": "#fce4ec", "border": "#c62828"}, "font": {"size": 13}}, {"id": "generative_art", "label": "generative art", "kind": "application", "tier": 5, "defines": "The use of AI tools to enhance or create new artistic and graphic works, such as visual art, music, and video.", "prereqs": ["deep_learning", "artificial_intelligence"], "verifier": "", "lab": "", "play": "", "color": {"background": "#fce4ec", "border": "#c62828"}, "font": {"size": 13}}, {"id": "speech_recognition_tts", "label": "speech recognition tts", "kind": "application", "tier": 6, "defines": "NLP applications that convert spoken language into text and text into spoken language, respectively.", "prereqs": ["natural_language_processing", "deep_learning"], "verifier": "", "lab": "", "play": "", "color": {"background": "#fce4ec", "border": "#c62828"}, "font": {"size": 13}}, {"id": "deepfake", "label": "deepfake", "kind": "application", "tier": 6, "defines": "A product of an AI system that appears realistic but is created with malicious intent to mislead people.", "prereqs": ["deep_learning", "generative_art"], "verifier": "", "lab": "", "play": "", "color": {"background": "#fce4ec", "border": "#c62828"}, "font": {"size": 13}}], "edges": [{"from": "artificial_intelligence", "to": "natural_language_processing"}, {"from": "artificial_intelligence", "to": "responsible_ai"}, {"from": "artificial_intelligence", "to": "generative_art"}, {"from": "neuron", "to": "activation_function"}, {"from": "neuron", "to": "layers"}, {"from": "neuron", "to": "neural_network"}, {"from": "neuron", "to": "perceptron"}, {"from": "weight", "to": "activation_function"}, {"from": "weight", "to": "perceptron"}, {"from": "bias", "to": "activation_function"}, {"from": "bias", "to": "perceptron"}, {"from": "vector", "to": "word_embedding"}, {"from": "activation_function", "to": "neural_network"}, {"from": "activation_function", "to": "perceptron"}, {"from": "layers", "to": "neural_network"}, {"from": "layers", "to": "depth"}, {"from": "layers", "to": "multilayer_perceptron"}, {"from": "neural_network", "to": "multilayer_perceptron"}, {"from": "neural_network", "to": "loss_function"}, {"from": "neural_network", "to": "recurrent_neural_network"}, {"from": "neural_network", "to": "convolutional_neural_network"}, {"from": "perceptron", "to": "multilayer_perceptron"}, {"from": "depth", "to": "deep_learning"}, {"from": "multilayer_perceptron", "to": "recurrent_neural_network"}, {"from": "multilayer_perceptron", "to": "deep_learning"}, {"from": "multilayer_perceptron", "to": "backpropagation"}, {"from": "loss_function", "to": "gradient_descent"}, {"from": "loss_function", "to": "backpropagation"}, {"from": "gradient_descent", "to": "backpropagation"}, {"from": "gradient_descent", "to": "vanishing_exploding_gradient"}, {"from": "recurrent_neural_network", "to": "vanishing_exploding_gradient"}, {"from": "recurrent_neural_network", "to": "lstm"}, {"from": "deep_learning", "to": "convolutional_neural_network"}, {"from": "deep_learning", "to": "natural_language_processing"}, {"from": "deep_learning", "to": "transformer_model"}, {"from": "deep_learning", "to": "generative_art"}, {"from": "deep_learning", "to": "speech_recognition_tts"}, {"from": "deep_learning", "to": "deepfake"}, {"from": "backpropagation", "to": "epoch"}, {"from": "vanishing_exploding_gradient", "to": "lstm"}, {"from": "convolutional_neural_network", "to": "feature_map"}, {"from": "convolutional_neural_network", "to": "pooling_layer"}, {"from": "convolutional_neural_network", "to": "semantic_segmentation"}, {"from": "natural_language_processing", "to": "word_embedding"}, {"from": "natural_language_processing", "to": "transformer_model"}, {"from": "natural_language_processing", "to": "large_language_model"}, {"from": "natural_language_processing", "to": "speech_recognition_tts"}, {"from": "feature_map", "to": "pooling_layer"}, {"from": "feature_map", "to": "semantic_segmentation"}, {"from": "word_embedding", "to": "transformer_model"}, {"from": "word_embedding", "to": "large_language_model"}, {"from": "pooling_layer", "to": "semantic_segmentation"}, {"from": "transformer_model", "to": "large_language_model"}, {"from": "ai_hallucination", "to": "responsible_ai"}, {"from": "large_language_model", "to": "ai_hallucination"}, {"from": "generative_art", "to": "deepfake"}]};
+const DOMAIN_KEY = "graph";
+
+// ── index ──────────────────────────────────────────────────────────────────
+const nodeIndex = {};
+RAW.nodes.forEach(n => nodeIndex[n.id] = n);
+
+const prereqOf  = {};  // id → ids that are direct prerequisites OF id
+const dependsOn = {};  // id → ids that id feeds into
+RAW.nodes.forEach(n => { prereqOf[n.id] = []; dependsOn[n.id] = []; });
+RAW.edges.forEach(e => {
+  prereqOf[e.to].push(e.from);
+  dependsOn[e.from].push(e.to);
+});
+
+// ── BFS longest-path levels (fixes application nodes at wrong tier) ─────────
+const bfsLevels = (() => {
+  const levels = {};
+  const successors = {};
+  RAW.nodes.forEach(n => { levels[n.id] = -1; successors[n.id] = []; });
+  RAW.edges.forEach(e => successors[e.from].push(e.to));
+  const sources = RAW.nodes.filter(n => !RAW.edges.some(e => e.to === n.id));
+  const queue = sources.map(n => n.id);
+  queue.forEach(n => levels[n] = 0);
+  let i = 0;
+  while (i < queue.length) {
+    const cur = queue[i++];
+    for (const succ of successors[cur]) {
+      const nl = levels[cur] + 1;
+      if (levels[succ] < nl) { levels[succ] = nl; queue.push(succ); }
+    }
+  }
+  return levels;
+})();
+
+// ── graph algorithms ────────────────────────────────────────────────────────
+function getAncestors(targetId) {
+  const visited = new Set();
+  const queue = [targetId];
+  while (queue.length) {
+    const cur = queue.shift();
+    for (const p of prereqOf[cur])
+      if (!visited.has(p)) { visited.add(p); queue.push(p); }
+  }
+  return visited;
+}
+
+function topoSort(nodeSet) {
+  const inDeg = {};
+  nodeSet.forEach(n => inDeg[n] = 0);
+  nodeSet.forEach(n => { for (const p of prereqOf[n]) if (nodeSet.has(p)) inDeg[n]++; });
+  const reach = {};
+  nodeSet.forEach(n => {
+    let r = 0;
+    nodeSet.forEach(m => { if (m !== n && getAncestors(m).has(n)) r++; });
+    reach[n] = r;
+  });
+  const heap = [];
+  nodeSet.forEach(n => { if (inDeg[n] === 0) heap.push(n); });
+  heap.sort((a, b) => (reach[b] - reach[a]) || a.localeCompare(b));
+  const result = [];
+  while (heap.length) {
+    const node = heap.shift();
+    result.push(node);
+    for (const succ of dependsOn[node]) {
+      if (!nodeSet.has(succ)) continue;
+      if (--inDeg[succ] === 0) {
+        heap.push(succ);
+        heap.sort((a, b) => (reach[b] - reach[a]) || a.localeCompare(b));
+      }
+    }
+  }
+  return result;
+}
+
+// ── vis.js network ──────────────────────────────────────────────────────────
+const container = document.getElementById('graph-container');
+const visNodes = new vis.DataSet(RAW.nodes.map(n => ({
+  id: n.id,
+  label: n.label.replace(/ /g, '\n'),
+  level: bfsLevels[n.id] !== undefined ? bfsLevels[n.id] : n.tier,
+  color: n.color,
+  font: n.font,
+  title: `<b>${n.label}</b> [${n.kind}]<br>${n.defines || ''}`,
+  shape: n.kind === 'concept' ? 'ellipse' : 'box',
+})));
+const visEdges = new vis.DataSet(RAW.edges.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  arrows: 'to', color: {color: '#c8ccd4'}, width: 1,
+})));
+const network = new vis.Network(container, {nodes: visNodes, edges: visEdges}, {
+  layout: { hierarchical: {
+    enabled: true, direction: 'UD',
+    sortMethod: 'directed', levelSeparation: 85, nodeSpacing: 130,
+  } },
+  physics: { enabled: false },
+  interaction: { hover: true, tooltipDelay: 150 },
+  edges: { smooth: { type: 'cubicBezier', forceDirection: 'vertical' } },
+});
+
+// Compact layout: group by tier, sort alphabetically, left-align all nodes.
+network.once('afterDrawing', function() {
+  const pos = network.getPositions();
+  const spacing = 140;
+
+  // Group nodes by their BFS tier
+  const byTier = {};
+  RAW.nodes.forEach(n => {
+    const tier = bfsLevels[n.id] ?? n.tier ?? 0;
+    if (!byTier[tier]) byTier[tier] = [];
+    byTier[tier].push(n.id);
+  });
+
+  // Sort each tier alphabetically, assign X starting from 0
+  const tiers = Object.keys(byTier).map(Number).sort((a, b) => a - b);
+  const tierSep = 85;
+  tiers.forEach((tier, ti) => {
+    const ids = byTier[tier].sort();
+    const y = ti * tierSep;
+    ids.forEach((id, i) => {
+      network.moveNode(id, i * spacing, y);
+    });
+  });
+
+  network.fit({ animation: false });
+});
+
+function reCenterGraph() {
+  network.fit({ animation: true });
+}
+
+const C_PATH   = {background: '#fff9c4', border: '#f9a825'};
+const C_TARGET = {background: '#ffe082', border: '#e65100'};
+
+function resetColors() {
+  visNodes.update(RAW.nodes.map(n => ({id: n.id, color: n.color})));
+  visEdges.update(RAW.edges.map((e, i) => ({id: i, color: {color: '#c8ccd4'}, width: 1})));
+}
+
+// ── explanation panel ───────────────────────────────────────────────────────
+function renderExplanation(node) {
+  const kclass = node.kind;
+  const prereqChips = (node.prereqs || []).map(p =>
+    `<span class="prereq-chip" onclick="selectNode('${p}')">${p.replace(/_/g,' ')}</span>`
+  ).join('');
+  const metaItems = [
+    node.verifier ? `<span class="meta-item"><b>Verifier:</b> ${node.verifier}</span>` : '',
+    node.lab      ? `<span class="meta-item"><b>Lab:</b> ${node.lab}</span>` : '',
+  ].filter(Boolean).join('');
+  const playHtml = node.play
+    ? `<div class="section-label">Try it</div><div class="play-hint">${node.play}</div>`
+    : '';
+
+  const panel = document.getElementById('explain-panel');
+  panel.innerHTML = `
+    <div class="node-title">
+      <h2>${node.label}</h2>
+      <span class="badge ${kclass}">${kclass}</span>
+      <span class="tier-tag">BFS level ${bfsLevels[node.id] ?? node.tier}</span>
+    </div>
+    ${node.defines ? `<div class="defines">${node.defines}</div>` : ''}
+    ${prereqChips ? `<div class="section-label">Prerequisites</div><div class="prereq-list">${prereqChips}</div>` : ''}
+    ${metaItems ? `<div class="meta-row">${metaItems}</div>` : ''}
+    ${playHtml}
+  `;
+
+  // ── concept HTML detail ──
+  const conceptsBase = window.__cb_CONCEPTS_BASE;
+  const conceptUrls = window.__cb_CONCEPT_URLS || {};
+  const mappedUrl = conceptUrls[node.id];
+  if (mappedUrl || conceptsBase) {
+    const conceptUrl = mappedUrl || (conceptsBase + 'concept_' + encodeURIComponent(node.id) + '.html');
+    const detail = document.createElement('div');
+    detail.id = 'concept-detail';
+    detail.innerHTML = '<div class="section-label">Concept Detail</div><div class="concept-loading" style="color:#aaa;font-size:12px;padding:6px 0">Loading…</div>';
+    panel.appendChild(detail);
+    fetch(conceptUrl)
+      .then(r => {
+        if (!r.ok) throw new Error('not found');
+        return r.text();
+      })
+      .then(html => {
+        const slot = detail.querySelector('.concept-loading');
+        if (!slot) return;
+        // Vite dev server returns the SPA index.html (200) for missing static files.
+        // Verify we got a real concept page by checking for a known marker.
+        if (html.includes('spl-credit') || html.includes('Powered by')) {
+          const iframe = document.createElement('iframe');
+          iframe.id = 'concept-iframe';
+          iframe.src = conceptUrl;
+          slot.replaceWith(iframe);
+        } else {
+          slot.className = 'concept-not-found';
+          slot.textContent = 'Content not found — generate it first.';
+        }
+      })
+      .catch(() => {
+        const slot = detail.querySelector('.concept-loading');
+        if (slot) { slot.className = 'concept-not-found'; slot.textContent = 'Content not found — generate it first.'; }
+      });
+  }
+}
+
+// ── learning path sidebar ───────────────────────────────────────────────────
+function renderPathSidebar(orderedPath, targetId) {
+  const stepsEl = document.getElementById('path-steps');
+  const countEl = document.getElementById('path-count');
+  countEl.textContent = orderedPath.length
+    ? `${orderedPath.length} step${orderedPath.length !== 1 ? 's' : ''} to learn first`
+    : 'Root concept — no prerequisites';
+
+  const target = nodeIndex[targetId];
+  const kc = k => `${k.charAt(0).toUpperCase() + k.slice(1)}`;
+
+  stepsEl.innerHTML = orderedPath.map((n, i) => {
+    const nd = nodeIndex[n];
+    return `<div class="step-item" onclick="selectNode('${n}')">
+      <span class="step-num">${i + 1}.</span>
+      <div>
+        <div class="step-label">${nd.label}
+          <span class="step-kind ${nd.kind}-k">${nd.kind}</span>
+        </div>
+        ${nd.defines ? `<div class="step-def">${nd.defines}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('') + `<div class="step-item target">
+    <span class="step-num">▶</span>
+    <div>
+      <div class="step-label">${target.label}
+        <span class="step-kind ${target.kind}-k">${target.kind}</span>
+      </div>
+      ${target.defines ? `<div class="step-def">${target.defines}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ── notes (localStorage) ────────────────────────────────────────────────────
+let currentNodeId = null;
+
+function noteKey(nodeId) { return `concept_notes_${DOMAIN_KEY}_${nodeId}`; }
+
+function loadNote(nodeId) {
+  const parsed = _parseNote(localStorage.getItem(noteKey(nodeId)));
+  return parsed ? parsed.text : '';
+}
+
+function saveNote(nodeId, text) {
+  if (text.trim()) {
+    const data = JSON.stringify({ text, ts: new Date().toISOString() });
+    localStorage.setItem(noteKey(nodeId), data);
+  } else {
+    localStorage.removeItem(noteKey(nodeId));
+  }
+  renderNotesList();
+}
+
+function _parseNote(raw) {
+  if (!raw) return null;
+  try { const d = JSON.parse(raw); return { text: d.text || '', ts: d.ts || '' }; }
+  catch (_) { return { text: raw, ts: '' }; }
+}
+
+function _fmtTs(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const yy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mi = String(d.getMinutes()).padStart(2,'0');
+  return `${yy}-${mm}-${dd} ${hh}:${mi}`;
+}
+
+function renderNotesList() {
+  const container = document.getElementById('notes-with-entries');
+  const entries = RAW.nodes
+    .filter(n => localStorage.getItem(noteKey(n.id)))
+    .map(n => {
+      const parsed = _parseNote(localStorage.getItem(noteKey(n.id)));
+      return {id: n.id, label: n.label, preview: (parsed?.text || '').slice(0, 60), ts: parsed?.ts || ''};
+    });
+  if (!entries.length) { container.innerHTML = ''; return; }
+  container.innerHTML = entries.map(e =>
+    `<div class="note-entry" onclick="selectNode('${e.id}')">
+      <div class="note-node">${e.label}<span class="note-ts">${_fmtTs(e.ts)}</span></div>
+      <div class="note-preview">${e.preview}</div>
+    </div>`
+  ).join('');
+}
+
+function switchNotes(nodeId) {
+  if (currentNodeId !== null) {
+    saveNote(currentNodeId, document.getElementById('notes-textarea').value);
+  }
+  currentNodeId = nodeId;
+  document.getElementById('notes-textarea').value = loadNote(nodeId);
+  document.getElementById('notes-node-label').textContent =
+    nodeIndex[nodeId]?.label || nodeId;
+}
+
+function clearNote() {
+  if (!currentNodeId) return;
+  document.getElementById('notes-textarea').value = '';
+  saveNote(currentNodeId, '');
+  const btn = document.getElementById('nb-clear-btn');
+  if (btn) { btn.textContent = 'Cleared!'; setTimeout(() => { btn.textContent = 'Clear'; }, 1000); }
+}
+
+function exportNotes() {
+  const notes = {};
+  RAW.nodes.forEach(n => {
+    const v = localStorage.getItem(noteKey(n.id));
+    if (v) notes[n.id] = v;
+  });
+  const blob = new Blob([JSON.stringify(notes, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${DOMAIN_KEY}_notes.json`;
+  a.click();
+}
+
+document.getElementById('notes-textarea').addEventListener('input', () => {
+  if (currentNodeId) saveNote(currentNodeId, document.getElementById('notes-textarea').value);
+});
+
+// ── unified node select ─────────────────────────────────────────────────────
+function selectNode(nodeId) {
+  if (!nodeIndex[nodeId]) return;
+  network.selectNodes([nodeId]);
+  handleSelect(nodeId);
+}
+
+function handleSelect(targetId) {
+  const node = nodeIndex[targetId];
+
+  renderExplanation(node);
+  switchNotes(targetId);
+
+  const ancestors = getAncestors(targetId);
+  const pathSet = new Set([...ancestors]);
+  const orderedPath = topoSort(pathSet);
+
+  renderPathSidebar(orderedPath, targetId);
+
+  resetColors();
+  visNodes.update(orderedPath.map(n => ({id: n, color: C_PATH})));
+  visNodes.update([{id: targetId, color: C_TARGET}]);
+  visEdges.update(RAW.edges.map((e, i) => {
+    const inPath = pathSet.has(e.from) && (pathSet.has(e.to) || e.to === targetId);
+    return {id: i, color: {color: inPath ? '#f9a825' : '#c8ccd4'}, width: inPath ? 2 : 1};
+  }));
+}
+
+network.on('click', params => {
+  if (params.nodes.length) handleSelect(params.nodes[0]);
+});
+
+// initialise notes list on load
+renderNotesList();
+
+// When viewed directly (not in an iframe), inject a back link next to the
+// "Learning Path" heading so it doesn't look like a title-bar element.
+if (window.parent === window) {
+  var h1 = document.querySelector('#path-header h1');
+  if (h1) {
+    var backLink = document.createElement('a');
+    backLink.href = '../../';
+    backLink.textContent = '← App';
+    backLink.style.cssText = [
+      'font-size:10px','color:#2563eb','font-family:system-ui,sans-serif',
+      'text-decoration:none','font-weight:400','letter-spacing:normal',
+      'text-transform:none','white-space:nowrap','flex-shrink:0'
+    ].join(';');
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:baseline;gap:8px;';
+    h1.parentNode.insertBefore(row, h1);
+    row.appendChild(h1);
+    row.appendChild(backLink);
+  }
+}
+</script>
+</body>
+</html>

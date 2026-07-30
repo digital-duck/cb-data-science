@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gdpr Ccpa | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="gdpr-ccpa">Gdpr Ccpa</h2>
+<h3 id="definition">Definition</h3>
+<p>The <strong>General Data Protection Regulation</strong> (GDPR, EU 2016/679, effective 25 May 2018) and the <strong>California Consumer Privacy Act</strong> (CCPA, Cal. Civ. Code §1798.100 et seq., effective 1 January 2020) are the two dominant statutory frameworks governing the collection, processing, and transfer of personal data. Both instruments share a common logical skeleton: they define a <em>data subject</em> $s \in S$, a <em>data controller</em> $c \in C$, a finite set of <em>processing purposes</em> $P = \{p_1, p_2, \ldots, p_n\}$, and require that every processing event $e = (s, c, p_i, t)$ be <em>lawful</em>, <em>purposeful</em>, and <em>minimised</em>.</p>
+<p>Formally, let $\mathcal{D}(s)$ denote the personal-data universe of subject $s$. A controller $c$ may process subset $A \subseteq \mathcal{D}(s)$ under purpose $p_i$ if and only if a <strong>legal basis</strong> $\ell \in L$ exists, where $L$ is the enumerated basis set. Under GDPR Article 6, $|L| = 6$ (consent, contract, legal obligation, vital interest, public task, legitimate interest). CCPA narrows the instrument to a binary opt-out right rather than an opt-in consent model for most categories.</p>
+<h3 id="worked-example">Worked Example</h3>
+<p>Suppose an e-commerce platform collects $\mathcal{D}(s) = \{\text{name}, \text{email}, \text{purchase history}, \text{IP address}\}$. It wishes to send marketing emails ($p_{\text{mkt}}$) and share purchase history with a third-party analytics firm ($p_{\text{analytics}}$).</p>
+<p>Under GDPR, both operations require an independent legal basis. The platform selects $\ell = \text{consent}$ for $p_{\text{mkt}}$ and $\ell = \text{legitimate interest}$ for $p_{\text{analytics}}$. The controller must document a <em>Legitimate Interest Assessment</em> (LIA) demonstrating that $\text{benefit}(c) \succ \text{risk}(s)$ under a proportionality test. A data-subject request to erase $\mathcal{D}(s)$ (Article 17) must be honoured within 30 days unless a retention obligation overrides it.</p>
+<p>Under CCPA, the same subject, if a California resident, may submit an opt-out of sale; the platform must cease transferring purchase history within 15 business days ($t \leq t_0 + 15$).</p>
+<h3 id="key-principle">Key Principle</h3>
+<p><strong>Data Minimisation Principle.</strong> For any lawful processing event $(s, c, p_i, t)$ with legal basis $\ell$, the processed data set $A$ must satisfy</p>
+$$A = \operatorname*{arg\,min}_{A' \subseteq \mathcal{D}(s),\; \text{sufficient}(A', p_i)} |A'|,$$
+<p>where $\text{sufficient}(A', p_i)$ denotes that $A'$ is adequate to fulfil purpose $p_i$. Collecting any $a \in \mathcal{D}(s) \setminus A$ constitutes an unlawful over-collection.</p>
+<h3 id="lab-cell-sympy">Lab Cell (SymPy)</h3>
+<pre><code>from sympy import FiniteSet, Eq, Symbol
+
+# Personal data universe for subject s
+D_s = FiniteSet('name', 'email', 'purchase_history', 'ip_address')
+
+# Minimum data required for marketing purpose
+A_mkt = FiniteSet('name', 'email')
+
+# Verify minimisation: A_mkt is a proper subset of D_s
+print("Minimised?", A_mkt.is_subset(D_s) and A_mkt != D_s)  # True
+
+# GDPR retention window (days): erasure deadline
+t0, delta = Symbol('t0'), 30
+deadline = t0 + delta
+print("Erasure deadline:", deadline)</code></pre>
+<p>Running this cell confirms that the marketing campaign processes only the minimal sufficient set $A_{\text{mkt}} \subsetneq \mathcal{D}(s)$, and that the erasure deadline is precisely $t_0 + 30$ days, satisfying the Article 17 requirement.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

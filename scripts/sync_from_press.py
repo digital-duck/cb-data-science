@@ -10,8 +10,11 @@ has_book=False (no concept-book HTML has been generated yet — that's a
 separate, LLM-driven step via batch_generate.py / spl).
 
 Usage:
-    python scripts/sync_from_press.py --book college-physics-2e --prefix college_physics_ch
-    python scripts/sync_from_press.py --book college-physics-2e --chapters 3-34
+    python scripts/sync_from_press.py --book college-physics-2e --prefix college_physics_ch \
+        --title "Physics" --source-label "OpenStax College Physics 2e" --tags science
+    python scripts/sync_from_press.py --book Principles-of-Data-Science --prefix data_science_ch \
+        --title "Data Science" --source-label "OpenStax Principles of Data Science" --tags science,math \
+        --chapters 1
 """
 import argparse
 import json
@@ -62,7 +65,8 @@ def _pick_capstone(graph_yaml: dict) -> str | None:
     return max(concepts, key=lambda k: concepts[k].get("tier", 0))
 
 
-def sync_chapter(book: str, chapter: int, domain_prefix: str, dry_run: bool) -> dict | None:
+def sync_chapter(book: str, chapter: int, domain_prefix: str, dry_run: bool,
+                  title: str, source_label: str, tags: list[str]) -> dict | None:
     src_dir = PRESS_ROOT / "output" / book / f"ch{chapter}"
     graph_src = src_dir / "graph.yaml"
     if not graph_src.exists():
@@ -77,10 +81,10 @@ def sync_chapter(book: str, chapter: int, domain_prefix: str, dry_run: bool) -> 
 
     graph_yaml = yaml.safe_load(graph_src.read_text(encoding="utf-8"))
     stats = _graph_stats(graph_yaml)
-    title = _chapter_title(src_dir / "chunks.yaml", chapter)
+    chapter_title = _chapter_title(src_dir / "chunks.yaml", chapter)
     capstone = _pick_capstone(graph_yaml)
 
-    print(f"  ch{chapter}: {domain_id}  \"{title}\"  "
+    print(f"  ch{chapter}: {domain_id}  \"{chapter_title}\"  "
           f"(nodes={stats['nodes']} edges={stats['edges']} capstone={capstone})")
 
     if dry_run:
@@ -102,11 +106,12 @@ def sync_chapter(book: str, chapter: int, domain_prefix: str, dry_run: bool) -> 
 
     return {
         "id": domain_id,
-        "name": f"Physics Ch{chapter}: {title}",
-        "description": f"OpenStax College Physics 2e, Chapter {chapter}: {title}.",
+        "name": f"{title} Ch{chapter}: {chapter_title}",
+        "description": f"{source_label}, Chapter {chapter}: {chapter_title}.",
         "capstone": capstone or "",
         **stats,
-        "tags": ["science"],
+        "tags": tags,
+        "default_level": "college",
         "has_navigator": True,
         "has_book": False,
         "books": [],
@@ -131,8 +136,16 @@ def main():
     ap.add_argument("--book", required=True, help="concept-book-press book slug, e.g. college-physics-2e")
     ap.add_argument("--prefix", required=True, help="domain id prefix, e.g. college_physics_ch")
     ap.add_argument("--chapters", default=None, help="e.g. '3-34' or '1,3,5' — default: all available")
+    ap.add_argument("--title", required=True,
+                     help="Short subject name used in catalog 'name', e.g. 'Physics' or 'Data Science'")
+    ap.add_argument("--source-label", required=True,
+                     help="Full source citation used in catalog 'description', "
+                          "e.g. 'OpenStax College Physics 2e'")
+    ap.add_argument("--tags", default="science",
+                     help="Comma-separated catalog tags, e.g. 'science,math'")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
+    tags = [t.strip() for t in args.tags.split(",") if t.strip()]
 
     book_dir = PRESS_ROOT / "output" / args.book
     if args.chapters:
@@ -152,7 +165,8 @@ def main():
     added, refreshed = 0, 0
 
     for ch in chapters:
-        entry = sync_chapter(args.book, ch, args.prefix, args.dry_run)
+        entry = sync_chapter(args.book, ch, args.prefix, args.dry_run,
+                              args.title, args.source_label, tags)
         if entry is None:
             continue
         if entry["id"] in by_id:

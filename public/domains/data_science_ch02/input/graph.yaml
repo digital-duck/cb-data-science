@@ -1,0 +1,216 @@
+domain: data_collection_and_management
+primitives:
+  data_collection:
+    defines: The systematic process of gathering and accurately conveying information related to a phenomenon
+      or event.
+    tier: 0
+  observational_data:
+    defines: Data collected by systematically observing and recording behavior without active researcher
+      participation.
+    tier: 0
+  transactional_data:
+    defines: Information related to transactions or interactions between individuals, businesses, or systems,
+      used more in quantitative research.
+    tier: 0
+  experiment:
+    defines: Collecting data through a controlled, well-designed experimental scheme with defined variables,
+      control specimens, and procedures.
+    tier: 0
+  survey:
+    defines: A questionnaire-based method of collecting information from a sample of individuals to represent
+      a population.
+    tier: 0
+  sampling:
+    defines: The process of selecting a subset of a larger population to represent and analyze information
+      about that population.
+    tier: 0
+  web_scraping:
+    defines: A method of collecting data from websites by extracting information from HTML code using
+      automated tools.
+    tier: 0
+  api:
+    defines: A set of protocols, tools, and definitions that allow different software systems to communicate
+      and access data or services.
+    tier: 0
+  regular_expressions:
+    defines: A sequence of characters defining a search pattern, used for matching and manipulating text
+      strings.
+    tier: 0
+  string_manipulation:
+    defines: Techniques for dividing a text string into substrings (splitting) or extracting a portion
+      by index range (slicing).
+    tier: 0
+  missing_data:
+    defines: Data points or values absent from a dataset, occurring due to collection errors, corruption,
+      or nonresponse, classified as MCAR, MAR, or MNAR.
+    tier: 0
+  outliers:
+    defines: Data points that differ significantly from other data points in a dataset, potentially skewing
+      analysis.
+    tier: 0
+  big_data:
+    defines: Extremely large and complex sets of data that traditional data processing methods and tools
+      are unable to handle efficiently.
+    tier: 0
+concepts:
+  survey_design:
+    defines: The process of structuring survey questions, ordering, and question type mix to gather reliable
+      data while minimizing bias.
+    composed_of:
+    - survey
+    tier: 1
+  open_vs_closed_questions:
+    defines: Distinction between questions allowing free-form responses (open-ended) versus predetermined
+      answer choices (closed-ended).
+    composed_of:
+    - survey_design
+    tier: 2
+  bias_in_surveys:
+    defines: Systematic distortion in survey results caused by leading or assumption-laden question wording
+      or unrepresentative sampling.
+    composed_of:
+    - survey
+    - survey_design
+    tier: 2
+  sampling_techniques:
+    defines: Various methods (simple random, stratified, cluster, convenience, systematic, purposive,
+      snowball, quota, volunteer) for selecting a representative subset from a population.
+    composed_of:
+    - sampling
+    tier: 1
+  sampling_error:
+    defines: The difference between results obtained from a sample and the true value of the population
+      parameter it represents.
+    composed_of:
+    - sampling
+    - sampling_techniques
+    tier: 2
+  sampling_bias:
+    defines: A distortion that occurs when a sample is not representative of the population it intends
+      to generalize to, leading to skewed conclusions.
+    composed_of:
+    - sampling
+    - sampling_techniques
+    tier: 2
+  measurement_error:
+    defines: Inaccuracies or discrepancies that arise during collection, recording, or analysis of data
+      due to human, environmental, or systematic factors.
+    composed_of:
+    - data_collection
+    - experiment
+    tier: 1
+  social_media_data_collection:
+    defines: Gathering information from platforms like Twitter and Instagram using APIs, social listening,
+      surveys, network analysis, or media analysis.
+    composed_of:
+    - api
+    - web_scraping
+    - survey
+    tier: 1
+  parsing_and_extraction:
+    defines: Analyzing a dataset or string to retrieve specific pieces of information using techniques
+      like splitting, slicing, and regex.
+    composed_of:
+    - regular_expressions
+    - string_manipulation
+    tier: 1
+  data_processing:
+    defines: Managing raw data by cleaning it and transforming it into a structured, usable format.
+    composed_of:
+    - parsing_and_extraction
+    tier: 2
+  data_storage:
+    defines: Saving processed data (e.g., as CSV via DataFrames) in a suitable format for future use and
+      analysis.
+    composed_of:
+    - data_processing
+    tier: 3
+  data_cleaning_preprocessing:
+    defines: The technique of organizing and converting raw data into usable structures by handling missing
+      values, duplicates, and errors.
+    composed_of:
+    - missing_data
+    - outliers
+    tier: 1
+  data_normalization:
+    defines: Applying rules (normal forms) and scaling formulas to organize data, remove redundancy, and
+      rescale values typically between 0 and 1.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+  data_transformation:
+    defines: Modifying data (e.g., via log, square root, or exponential operations) to make it more suitable
+      for planned analysis.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+  data_validation:
+    defines: The process of ensuring data accuracy and quality by checking it against defined rules and
+      standards.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+  data_aggregation:
+    defines: The process of gathering and merging information from multiple sources into a single dataset
+      for insights and conclusions.
+    composed_of:
+    - data_collection
+    - data_processing
+    tier: 3
+  noisy_data:
+    defines: Data containing errors, outliers, or irrelevant information that conceals true patterns and
+      relationships in a dataset.
+    composed_of:
+    - outliers
+    - missing_data
+    tier: 1
+  text_preprocessing:
+    defines: Preparing raw text data for natural language processing through techniques like tokenization,
+      lowercasing, stopword removal, and lemmatization.
+    composed_of:
+    - string_manipulation
+    - regular_expressions
+    tier: 1
+  data_compression:
+    defines: A method of reducing file size while retaining essential information, classified as lossy
+      or lossless (e.g., Huffman coding).
+    composed_of:
+    - big_data
+    tier: 1
+  data_indexing:
+    defines: Organizing and storing data in a database or storage system to allow efficient and fast retrieval
+      of specific data.
+    composed_of:
+    - big_data
+    tier: 1
+  data_chunking:
+    defines: Breaking down large datasets into smaller, manageable chunks to make them easier to manage,
+      process, analyze, and store.
+    composed_of:
+    - big_data
+    tier: 1
+  dbms:
+    defines: Software tools used for organizing, storing, retrieving, and managing large volumes of structured
+      data.
+    composed_of:
+    - data_storage
+    - big_data
+    tier: 4
+applications:
+  cloud_computing:
+    defines: The delivery of computing services such as storage, processing power, and software applications
+      over the internet.
+    needs:
+    - big_data
+    tier: 1
+  large_dataset_management:
+    defines: The combined use of compression, storage solutions, indexing, chunking, DBMS, and cloud computing
+      to handle big data challenges.
+    needs:
+    - data_compression
+    - data_storage
+    - data_indexing
+    - data_chunking
+    - dbms
+    - cloud_computing
+    tier: 5

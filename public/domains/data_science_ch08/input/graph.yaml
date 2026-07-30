@@ -1,0 +1,220 @@
+domain: data_science_ethics_ch8
+primitives:
+  ethics_in_data_science:
+    defines: The responsible collection, analysis, use, and dissemination of data.
+    tier: 0
+  autonomy:
+    defines: The ideal that individuals maintain control over the decisions regarding the collection and
+      use of their data.
+    tier: 0
+  transparency:
+    defines: Being open and honest about how data is collected, stored, and used.
+    tier: 0
+  data_breach:
+    defines: The act of data being stolen by a malicious third party.
+    tier: 0
+  data_privacy:
+    defines: The assurance that individual data is collected, processed, and stored securely with respect
+      for individuals' rights and preferences.
+    tier: 0
+  personally_identifiable_information:
+    defines: Information that directly and unambiguously identifies an individual.
+    tier: 0
+  encryption:
+    defines: The process of converting sensitive or confidential data into a code to protect it from unauthorized
+      access or interception.
+    tier: 0
+  intellectual_property:
+    defines: Original artistic works, trademarks and trade secrets, patents, and other creative output
+      that is legally protected from unauthorized use.
+    tier: 0
+  bias:
+    defines: Systematic error, intentional or unintentional, in data or models that causes unethical or
+      inaccurate outcomes.
+    tier: 0
+  digital_divide:
+    defines: The gap between those who have access to digital technologies and those who do not.
+    tier: 0
+concepts:
+  informed_consent:
+    defines: The process of obtaining permission from a research subject indicating that they understand
+      the scope of collecting data, including risks, benefits, and consequences.
+    composed_of:
+    - autonomy
+    - transparency
+    tier: 1
+  regulatory_compliance:
+    defines: Understanding and adhering to the state, federal, and industry regulations that apply to
+      a data gathering project.
+    composed_of:
+    - data_privacy
+    - ethics_in_data_science
+    tier: 1
+  regulatory_compliance_officer:
+    defines: A trained individual responsible for confirming that a company or organization follows the
+      laws, regulations, and policies that rule its functions.
+    composed_of:
+    - regulatory_compliance
+    tier: 2
+  data_sovereignty:
+    defines: Laws that require data collected from a country's citizens to be stored and processed within
+      its borders.
+    composed_of:
+    - regulatory_compliance
+    tier: 2
+  data_retention:
+    defines: How long personal data may be stored, as governed by laws and regulations.
+    composed_of:
+    - data_privacy
+    - regulatory_compliance
+    tier: 2
+  data_security:
+    defines: Steps taken to protect digital information from unauthorized access, disclosure, alteration,
+      or destruction.
+    composed_of:
+    - data_privacy
+    - data_breach
+    - encryption
+    tier: 1
+  confidentiality:
+    defines: The safeguarding of privacy and security of data by controlling access to it.
+    composed_of:
+    - data_security
+    - data_privacy
+    tier: 2
+  anonymization:
+    defines: The act of removing personal identifying information from datasets to make sensitive information
+      usable for analysis without the risk of exposing personal information.
+    composed_of:
+    - personally_identifiable_information
+    - data_privacy
+    tier: 1
+  anonymous_data:
+    defines: Data that has been stripped of personally identifiable information so that it cannot be linked
+      back to any individual.
+    composed_of:
+    - anonymization
+    tier: 2
+  pseudonymization:
+    defines: The act of replacing sensitive information in a dataset with artificial identifiers or codes
+      while still maintaining its usefulness for analysis.
+    composed_of:
+    - personally_identifiable_information
+    - anonymization
+    tier: 2
+  hashing:
+    defines: The process of transforming data into a fixed-length value or string using a hash function,
+      producing a unique but irreversible output for each input.
+    composed_of:
+    - pseudonymization
+    - encryption
+    tier: 3
+  k_anonymization:
+    defines: The principle of ensuring that each record within a dataset is indistinguishable from at
+      least k-1 other records with respect to a specified set of identifying attributes.
+    composed_of:
+    - anonymization
+    tier: 2
+  data_sharing:
+    defines: The process of allowing access to or transferring data from one entity to another.
+    composed_of:
+    - data_privacy
+    - transparency
+    - data_security
+    tier: 2
+  data_governance_protocols:
+    defines: A set of rules, policies, and procedures that enable precise control over data access while
+      ensuring that it is safeguarded.
+    composed_of:
+    - data_security
+    - regulatory_compliance
+    - data_sharing
+    tier: 3
+  fairness:
+    defines: The absence of bias in the models and algorithms used to process data.
+    composed_of:
+    - bias
+    tier: 1
+  data_validation:
+    defines: The process of checking, verifying, and validating the accuracy and reliability of data before
+      it is used in decision-making.
+    composed_of:
+    - bias
+    - ethics_in_data_science
+    tier: 1
+  outlier_detection:
+    defines: The identification of observations that are significantly different from the rest of the
+      data.
+    composed_of:
+    - data_validation
+    tier: 2
+  cross_validation:
+    defines: A process that compares model results across different subsets of the data by repeatedly
+      splitting it into training and testing sets to evaluate performance and detect overfitting.
+    composed_of:
+    - data_validation
+    tier: 2
+  accurate_representation:
+    defines: Presenting data in a way that authentically reflects the underlying information without misrepresentation
+      or manipulation.
+    composed_of:
+    - ethics_in_data_science
+    tier: 1
+  data_source_attribution:
+    defines: The practice of clearly identifying and acknowledging the sources employed in the visualizations
+      and reporting of data.
+    composed_of:
+    - accurate_representation
+    - transparency
+    tier: 2
+  universal_design_principles:
+    defines: A set of guidelines aimed at creating products, environments, and systems that are accessible
+      and usable by all people regardless of age, ability, or disability.
+    composed_of:
+    - digital_divide
+    tier: 1
+  accessibility_and_inclusivity:
+    defines: The ethical responsibility to ensure that presented data is usable and understandable by
+      all individuals regardless of capabilities, background, or experience.
+    composed_of:
+    - universal_design_principles
+    - digital_divide
+    tier: 2
+applications:
+  cookies:
+    defines: Small data files deposited on users' hard disks from websites they visit to track browsing
+      history and tailor advertisements.
+    needs:
+    - data_privacy
+    - personally_identifiable_information
+    tier: 1
+  explainable_ai:
+    defines: A set of processes, methodologies, and techniques designed to make complex AI models more
+      understandable and interpretable to humans.
+    needs:
+    - fairness
+    - bias
+    tier: 2
+  hipaa:
+    defines: U.S. legislation requiring the safeguarding of sensitive information related to patient health.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - personally_identifiable_information
+    tier: 2
+  ferpa:
+    defines: Legislation providing protections for student educational records and defining certain rights
+      for parents regarding their children's records.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - personally_identifiable_information
+    tier: 2
+  gdpr_ccpa:
+    defines: Major data protection regulations that demand organizations collect, process, and accumulate
+      confidential data securely and transparently.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - transparency
+    tier: 2

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personally Identifiable Information | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="personally-identifiable-information">Personally Identifiable Information</h2>
+<p><strong>Definition.</strong> <em>Personally Identifiable Information</em> (PII) is any data element, or combination of data elements, that can be used to distinguish or trace the identity of a specific individual, either alone or when linked with other information. Formally, let $\mathcal{U}$ denote a universe of individuals and let $\mathcal{D}$ be a dataset of attribute vectors $\mathbf{x} = (x_1, x_2, \ldots, x_k)$. An attribute set $S \subseteq \{1, \ldots, k\}$ is called <em>identifying</em> if the mapping $f_S : \mathcal{U} \to \prod_{i \in S} \text{Dom}(x_i)$ is injective — that is, no two distinct individuals share the same values on every attribute in $S$. PII is then any collection of attributes that constitutes or contains an identifying set.</p>
+<p>Direct identifiers (name, government ID number, biometric record) are individually identifying; quasi-identifiers (age, zip code, occupation) become identifying through combination. This distinction drives regulatory frameworks such as HIPAA in the United States and the General Data Protection Regulation (GDPR) in the European Union.</p>
+<p><strong>Worked Example.</strong> Consider a medical dataset with attributes $\{$<code>age</code>, <code>zip_code</code>, <code>diagnosis</code>$\}$. Suppose <code>age</code> alone partitions 10,000 patients into groups of roughly 200, and <code>zip_code</code> alone into groups of roughly 50. Neither attribute is individually identifying. However, a landmark study by Sweeney (2000) demonstrated that the combination $\{$<code>date_of_birth</code>, <code>sex</code>, <code>zip_code</code>$\}$ uniquely identified 87% of the U.S. population in publicly available voter records. This illustrates the <em>linkage attack</em>: an adversary joins the medical dataset with a public voter roll on these quasi-identifiers, recovering the diagnosis for a named individual.</p>
+<p><strong>Key Theorem (k-Anonymity, Sweeney 2002).</strong> A dataset satisfies <em>$k$-anonymity</em> if every record is indistinguishable from at least $k - 1$ others with respect to every quasi-identifier. Equivalently, for each equivalence class $E$ induced by the quasi-identifier projection, $|E| \geq k$. $k$-Anonymity is a necessary but not sufficient condition for privacy; it does not protect against attribute or homogeneity attacks, motivating stronger notions such as $\ell$-diversity and $(\epsilon, \delta)$-differential privacy.</p>
+<p><strong>Lab Cell.</strong></p>
+<pre><code>import pandas as pd
+
+data = pd.DataFrame({
+    "age":      [29, 29, 45, 45, 60, 60],
+    "zip_code": ["10001", "10001", "10002", "10002", "10003", "10003"],
+    "diagnosis":["flu", "flu", "flu", "diabetes", "flu", "flu"],
+})
+
+quasi_ids = ["age", "zip_code"]
+group_sizes = data.groupby(quasi_ids).size()
+k = group_sizes.min()
+print(f"Dataset satisfies {k}-anonymity")   # k=2</code></pre>
+<p>Running this cell confirms 2-anonymity: every <code>(age, zip_code)</code> pair appears at least twice, so no individual record stands alone. Increasing $k$ — by generalising <code>age</code> into decade brackets, for instance — trades data utility for stronger privacy guarantees, a tension central to privacy-preserving data publishing.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

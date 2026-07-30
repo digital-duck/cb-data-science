@@ -150,6 +150,22 @@ public/domains/chinese_characters/output/intro.zh/html/
 
 ---
 
+## Comparing Levels
+
+```bash
+# before fixing prompt for level and math 
+python scripts/batch_generate.py --level college 
+python scripts/batch_generate.py --level intro 
+
+# after
+python scripts/batch_generate.py --level core 
+python scripts/batch_generate.py --level research 
+
+```
+
+
+
+
 ## Comparing LLM quality
 
 ```bash
