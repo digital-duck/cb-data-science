@@ -45,34 +45,100 @@ Per `spl/style_profiles.py`'s current definitions:
 | `college` | `college` | Problem-solving application; formal notation **only if the concept is intrinsically mathematical** — `dataset`/`hipaa` should stay notation-light, `arima` should not |
 | `research` | `research` or `research_applied` (tag-dependent) | Project-driven framing (literature, suggested investigation, report-writing note); full theorem/proof notation reserved for math/physics/engineering-tagged domains only — `hipaa` should land in `research_applied`, not `research` |
 
-## Comparison table (fill in once all four levels complete)
+## Results (all four levels complete)
 
-| Concept | intro | core | college | research |
-|---|---|---|---|---|
-| `dataset` / `data_science` | ✅ generated | ✅ generated | ✅ generated | ⏳ pending |
-| `arima` / `seasonal_trend_decomposition_loess` | ✅ generated | ✅ generated | ✅ generated | ⏳ pending |
-| `hipaa` / `ferpa` / `gdpr_ccpa` | ✅ generated | ✅ generated | ✅ generated | ⏳ pending |
+**Headline finding: the comparison is broken at the concept-section level by a real
+caching bug, unrelated to the style/level design itself.** `concept_{name}.html` files
+— the individual per-concept teaching sections, the bulk of what a reader actually
+reads — are **byte-for-byte identical across all four levels**, confirmed via `diff`:
 
-For each cell once `research` completes, note pass/fail against its row's expectation
-above (not just "generated") — e.g. `hipaa` at `research`: pass = plain regulatory
-prose at graduate rigor; fail = invented math/proof notation.
-
-File paths (once found under each level):
 ```
-public/domains/data_science_ch01/output/{level}.en/sonnet/html/concept_{name}.html
-public/domains/data_science_ch05/output/{level}.en/sonnet/html/concept_{name}.html
-public/domains/data_science_ch08/output/{level}.en/sonnet/html/concept_{name}.html
+$ diff .../intro.en/.../concept_hipaa.html .../research.en/.../concept_hipaa.html
+[ok] Files are identical
+$ diff .../intro.en/.../concept_data_science.html .../research.en/.../concept_data_science.html
+ch01 data_science: IDENTICAL across intro/research
+$ diff .../intro.en/.../concept_arima.html .../research.en/.../concept_arima.html
+ch05 arima: IDENTICAL across intro/research
 ```
 
-## Open question to resolve during this comparison
+**Root cause**, traced to `SPL.py/spl/stdlib.py`'s `cache_get`/`cache_put`: the Layer-2
+content cache key is built from `concept` + `params` + `rubric_version`. In
+`build_concept_book.spl`, the params JSON is built with:
 
-`data_science_ch08`'s catalog entry has `"tags": ["science", "math"]` — the same tags
-every chapter in this book got from `sync_from_press.py --tags science,math`, applied
-book-wide rather than per-chapter. `_STEM_MATH_TAGS = {"math", "physics", "engineering"}`
-in `batch_generate.py` checks for intersection with a domain's tags, so **`ch08` may
-incorrectly qualify for full `research` rigor on `hipaa`/`ferpa`/`gdpr_ccpa` purely
-because the whole book was tagged `"math"`**, not because Chapter 8 (ethics/regulation)
-actually is math. If the `hipaa` result at `research` comes back notation-heavy, this is
-the likely root cause — the fix would be per-chapter tagging (e.g. only chapters 3–5
-tagged `"math"`) rather than blanket book-level tags, or a finer-grained per-concept
-signal instead of a domain-level tag check.
+```
+CALL json_set("{}", "language", @language) INTO @_params_json
+```
+
+— **`style` is never included in the cache key.** Once a concept section is generated
+and cached under any style (the first of the four runs, `college`, before this
+comparison started), every subsequent run at a different `--level`/style hits the
+cache and silently reuses that first run's content, regardless of what style was
+actually requested. This is a bug in the shared SPL.py content-cache mechanism, not
+specific to this book or `cb-data-science` — it affects every domain using
+`build_concept_book.spl`'s Layer-2 cache pattern. **The fix belongs in
+`concept-book-base`/SPL.py, not this app**, and is a prerequisite for any future
+level comparison to mean anything at the concept-section level.
+
+**What actually did vary correctly: the payoff (`book_{target}.html`) section.**
+Payoff generation apparently isn't hit by the same caching gap (sizes and content
+genuinely differ across levels — see below), and it demonstrates the redesigned
+`research`/`research_applied` profiles working roughly as intended in structure:
+
+- `book_hipaa.html`, `intro` (feynman): analogy-driven — *"Imagine you are rushed to
+  an emergency room... that fear is exactly the problem HIPAA was built to solve"* —
+  ends with "Now you try."
+- `book_hipaa.html`, `research`: literature-and-investigation framing exactly matching
+  the redesigned `research` structure (`Definition → Theorem/Proof → Literature
+  context → Suggested investigation → Report-writing note`) — cites Sweeney's
+  re-identification result, Dwork et al. composition theorems, proposes a concrete
+  differential-privacy experiment (Gaussian mechanism, MIMIC-III, moments accountant),
+  and closes with an explicit "a write-up of this investigation should establish..."
+  section.
+
+**But this surfaces the two real, distinct problems the concept-section caching bug
+was masking:**
+
+1. **The tag-inheritance bug (predicted in the Open Question, now confirmed).**
+   `data_science_ch08`'s `research`-level `book_hipaa.html` is full theorem/proof
+   differential-privacy notation ($(\varepsilon,\delta)$-DP, the Gaussian mechanism,
+   formal adversary models) for a concept (HIPAA) that is fundamentally regulatory, not
+   mathematical. Root cause confirmed: `ch08`'s catalog tags are `["science", "math"]`
+   — inherited book-wide from `sync_from_press.py --tags science,math` — so
+   `_resolve_style()`'s `_STEM_MATH_TAGS & set(tags)` check finds `"math"` present and
+   never falls back to `research_applied`. **Fix: per-chapter tags, not one blanket
+   `--tags` value for the whole book** — chapters like Ch.5 (Time Series, genuinely
+   statistical) should keep `"math"`; Ch.8 (Ethics) should not.
+2. **Even `intro`/`feynman` — which explicitly states "no prior university math" —
+   leaks formal notation.** `book_hipaa.html` at `intro` still contains
+   `$f \in F$` / `$f \notin F$` set-membership notation; `book_arima.html` at `intro`
+   contains full LaTeX time-series equations ($X_t = \phi_1 X_{t-1} + \dots$). ARIMA
+   arguably needs *some* formalism even at intro level to be honest about what it is,
+   but the `feynman` profile's own instruction ("minimal formalisation") isn't being
+   held to strongly by the model — this is a prompt-adherence gap, not a routing bug
+   like #1, and worth a lighter-touch fix (e.g. explicitly telling `feynman` to avoid
+   LaTeX display-math entirely, not just "minimal").
+
+## Fixes needed before this comparison can be trusted
+
+1. **(Blocking, shared codebase)** Add `style` to the cache-key params in
+   `build_concept_book.spl`: `CALL json_set(@_params_json, "style", @style) INTO
+   @_params_json` (after the existing `language` `json_set`). Lives in
+   `concept-book-base`/SPL.py, propagates to every `cb-*` app the same way the earlier
+   `--level` fix did. All content generated across the four runs so far should be
+   treated as unreliable for concept-level comparison until this is fixed and the
+   three concepts are regenerated with `--skip-cache`.
+2. **(This app)** Re-tag `cb-data-science`'s chapters per-chapter instead of
+   book-wide — re-run `sync_from_press.py` chapter-by-chapter with chapter-appropriate
+   `--tags` (e.g. `ch03`–`ch05` keep `math`, `ch08` drops it) rather than one
+   `--tags science,math` call across all 10 chapters.
+3. **(Prompt tuning, lower priority)** Tighten `feynman`'s "minimal formalisation"
+   instruction to explicitly discourage LaTeX display-math, based on the `hipaa`/
+   `arima` intro-level leakage observed above.
+
+## File paths used in this comparison
+
+```
+public/domains/data_science_ch01/output/{level}.en/sonnet/html/{book,concept}_{name}.html
+public/domains/data_science_ch05/output/{level}.en/sonnet/html/{book,concept}_{name}.html
+public/domains/data_science_ch08/output/{level}.en/sonnet/html/{book,concept}_{name}.html
+```
