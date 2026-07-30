@@ -699,6 +699,21 @@ button { cursor: pointer; font-family: inherit; }
   cursor: pointer;
 }
 
+.cb-book-pane__refresh {
+  padding: 3px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-family: inherit;
+  color: #374151;
+  cursor: pointer;
+}
+.cb-book-pane__refresh:hover {
+  background: #e8edf5;
+  border-color: #93c5fd;
+}
+
 .cb-book-pane__frame {
   flex: 1;
   width: 100%;

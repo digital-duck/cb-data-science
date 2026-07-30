@@ -58,6 +58,10 @@ async function _checkExists(url) {
   } catch (_) { _existsCache.set(url, false); return false }
 }
 
+function _clearExistsCache() {
+  _existsCache.clear()
+}
+
 function _notFoundHtml(fname, model, lang, level) {
   const conceptName = decodeURIComponent(fname).replace(/^(?:concept|book)_/, '').replace(/_/g, ' ').replace(/\.html$/, '')
   const modelLabel = model || 'default'
@@ -88,7 +92,7 @@ function makeSelect(options, current, cls) {
   return sel
 }
 
-function makeControlRow(label, state, onChange) {
+function makeControlRow(label, state, onChange, onRefresh) {
   const row = document.createElement('div')
   row.className = 'cb-book-pane__controls'
   if (label) {
@@ -117,6 +121,16 @@ function makeControlRow(label, state, onChange) {
   langSel.title = 'Language'
   langSel.addEventListener('change', () => onChange('lang', langSel.value))
   row.appendChild(langSel)
+
+  if (onRefresh) {
+    const refreshBtn = document.createElement('button')
+    refreshBtn.type = 'button'
+    refreshBtn.className = 'cb-book-pane__refresh'
+    refreshBtn.title = 'Refresh — re-check for content that just finished generating'
+    refreshBtn.textContent = '🔄'
+    refreshBtn.addEventListener('click', onRefresh)
+    row.appendChild(refreshBtn)
+  }
 
   return row
 }
@@ -392,7 +406,7 @@ export function BookPage(container, params) {
   rightCol.style.cssText = 'flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0'
   contentEl.appendChild(rightCol)
 
-  rightCol.appendChild(makeControlRow(null, p1, (key, val) => { p1[key] = val; reload() }))
+  rightCol.appendChild(makeControlRow(null, p1, (key, val) => { p1[key] = val; reload() }, () => { _clearExistsCache(); reload() }))
 
   const frame = document.createElement('iframe')
   frame.style.cssText = 'flex:1;width:100%;border:none;display:block'
