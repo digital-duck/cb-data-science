@@ -135,6 +135,14 @@ was masking:**
    instruction to explicitly discourage LaTeX display-math, based on the `hipaa`/
    `arima` intro-level leakage observed above.
 
+## TODO
+
+- [ ] Cache-key fix (item 1 above) is now implemented in `concept-book-base` and
+  propagated to `cb-data-science/spl/build_concept_book.spl` (and all other `cb-*`
+  forks). Regenerate the three test concepts (`data_science` ch1, `arima` ch5, `hipaa`
+  ch8) across all four levels with `--skip-cache` and update the Results section above
+  with the corrected comparison.
+
 ## File paths used in this comparison
 
 ```
