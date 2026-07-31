@@ -35,23 +35,12 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="ethics-in-data-science">Ethics In Data Science</h2>
-<p><strong>Definition.</strong> Ethics in data science is the systematic study of moral obligations that arise when collecting, processing, analyzing, and deploying data-driven models. It addresses three interlocking domains: <em>privacy</em> (the right of individuals to control information about themselves), <em>fairness</em> (the requirement that algorithmic decisions do not unjustly discriminate), and <em>accountability</em> (the obligation to explain, audit, and correct automated systems). Formally, a data pipeline $\mathcal{P}: \mathcal{X} \to \mathcal{Y}$ is said to satisfy <strong>demographic parity</strong> with respect to a protected attribute $A \in \{0,1\}$ if</p>
-$$P(\hat{Y} = 1 \mid A = 0) = P(\hat{Y} = 1 \mid A = 1),$$
-<p>where $\hat{Y}$ denotes the model's binary prediction. Violations of this condition constitute a measurable, quantifiable form of algorithmic bias.</p>
-<p><strong>Worked Example.</strong> A credit-scoring model trained on historical loan data produces acceptance rates of $78\%$ for group $A=0$ and $52\%$ for group $A=1$. The disparity ratio is $52/78 \approx 0.667$, below the widely-cited <strong>four-fifths rule</strong> threshold of $0.8$. One corrective strategy is <strong>reweighting</strong>: assign each training sample $(x_i, y_i)$ a weight</p>
-$$w_i = \frac{P(A)}{P(A = a_i)},$$
-<p>effectively rebalancing the empirical distribution so the model cannot exploit group membership as a proxy feature. After reweighting and retraining, practitioners re-evaluate both the disparity ratio and overall accuracy, accepting a possible accuracy–fairness trade-off as an explicit design decision rather than an overlooked artifact.</p>
-<p><strong>Key Theorem (Impossibility of Simultaneous Fairness Criteria).</strong> Chouldechova (2017) proved that when base rates differ across groups ($P(Y=1 \mid A=0) \neq P(Y=1 \mid A=1)$), no classifier can simultaneously satisfy demographic parity, equalized odds, and calibration. This result is not a failure of engineering; it is a mathematical fact that forces practitioners to <em>choose</em> which fairness criterion the application's social context demands, and to document that choice transparently.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, Rational, simplify
-
-p0, p1 = Rational(78, 100), Rational(52, 100)
-disparity_ratio = simplify(p1 / p0)
-four_fifths_satisfied = disparity_ratio &gt;= Rational(4, 5)
-
-print(f"Disparity ratio: {disparity_ratio}")          # 2/3
-print(f"Four-fifths rule satisfied: {four_fifths_satisfied}")  # False</code></pre>
-<p>Running this cell makes the bias quantification reproducible and auditable — a habit that operationalizes the accountability principle from the outset of any project.</p>
+<p><strong>Definition.</strong> Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n$ be a dataset drawn from joint distribution $P(X, Y)$ over feature space $\mathcal{X}$ and label space $\mathcal{Y}$, and let $h: \mathcal{X} \to \mathcal{Y}$ be a learned predictor. Ethical data science demands that $h$ satisfy normative constraints — fairness, privacy, transparency — alongside predictive accuracy $\mathbb{E}[\ell(h(X), Y)]$, where $\ell$ is a task loss.</p>
+<p><strong>Theorem (Impossibility; Chouldechova 2017).</strong> For a binary classifier with base rates $p_A \neq p_B$ across groups $A, B$, it is impossible to simultaneously satisfy calibration within groups, equal false positive rates, and equal false negative rates. That is, no $h$ can achieve all three constraints unless $p_A = p_B$.</p>
+<p><em>Proof sketch.</em> Express each constraint as a linear equation in the confusion-matrix entries conditional on group membership. Under unequal base rates the system is overdetermined; a standard counting argument yields a contradiction. $\square$</p>
+<p>This result formalizes a tension that practitioners encounter empirically: optimizing for one fairness criterion degrades another. The literature distinguishes individual fairness (Dwork et al. 2012), group fairness (demographic parity, equalized odds), and causal fairness via do-calculus (Kusner et al. 2017). Privacy adds a further constraint: $(\varepsilon, \delta)$-differential privacy bounds information leakage but provably degrades accuracy in proportion to dataset sensitivity (Dwork & Roth 2014). Transparency requirements (explainability) remain theoretically under-specified relative to fairness and privacy.</p>
+<p><strong>Investigation.</strong> Replicate the impossibility proof on the COMPAS recidivism dataset: compute calibration curves and error-rate parity simultaneously; quantify the trade-off surface as base-rate disparity $|p_A - p_B|$ varies via subsampling.</p>
+<p><strong>Write-up.</strong> A complete report should state which fairness criteria were targeted and why, derive the constraint equations for your classifier family, report the empirical trade-off curve with confidence intervals, and discuss which criterion aligns with the decision-maker's normative commitments and relevant regulatory guidance (e.g., EU AI Act Article 10).</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -537,6 +537,12 @@
         "file": "output/college.en/sonnet/html/book_arima.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/intro.zh/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -546,6 +552,13 @@
         "file": "output/research.en/sonnet/html/concept_arima.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "arima_zh",
+        "label": "Arima Zh",
+        "file": "output/research.zh/sonnet/html/concept_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "augmented_dickey_fuller_test",
@@ -562,6 +575,13 @@
         "language": "en"
       },
       {
+        "name": "autoregressive_model_zh",
+        "label": "Autoregressive Model Zh",
+        "file": "output/research.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "cyclic_component",
         "label": "Cyclic Component",
         "file": "output/research.en/sonnet/html/concept_cyclic_component.html",
@@ -576,11 +596,25 @@
         "language": "en"
       },
       {
+        "name": "differencing_zh",
+        "label": "Differencing Zh",
+        "file": "output/research.zh/sonnet/html/concept_differencing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "error",
         "label": "Error",
         "file": "output/research.en/sonnet/html/concept_error.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "error_zh",
+        "label": "Error Zh",
+        "file": "output/research.zh/sonnet/html/concept_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "forecasting",
@@ -597,11 +631,25 @@
         "language": "en"
       },
       {
+        "name": "integrative_component_zh",
+        "label": "Integrative Component Zh",
+        "file": "output/research.zh/sonnet/html/concept_integrative_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "lag",
         "label": "Lag",
         "file": "output/research.en/sonnet/html/concept_lag.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "lag_zh",
+        "label": "Lag Zh",
+        "file": "output/research.zh/sonnet/html/concept_lag_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "linear_regression_forecasting",
@@ -616,6 +664,13 @@
         "file": "output/research.en/sonnet/html/concept_moving_average_model.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "moving_average_model_zh",
+        "label": "Moving Average Model Zh",
+        "file": "output/research.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "naive_forecasting",
@@ -653,6 +708,13 @@
         "language": "en"
       },
       {
+        "name": "sequence_zh",
+        "label": "Sequence Zh",
+        "file": "output/research.zh/sonnet/html/concept_sequence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "stationary",
         "label": "Stationary",
         "file": "output/research.en/sonnet/html/concept_stationary.html",
@@ -674,6 +736,13 @@
         "language": "en"
       },
       {
+        "name": "time_series_zh",
+        "label": "Time Series Zh",
+        "file": "output/research.zh/sonnet/html/concept_time_series_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "trend",
         "label": "Trend",
         "file": "output/research.en/sonnet/html/concept_trend.html",
@@ -686,6 +755,13 @@
         "file": "output/research.en/sonnet/html/concept_trend_cycle_component.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "trend_zh",
+        "label": "Trend Zh",
+        "file": "output/research.zh/sonnet/html/concept_trend_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "volatility",

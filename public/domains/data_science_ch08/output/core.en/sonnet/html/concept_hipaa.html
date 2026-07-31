@@ -34,35 +34,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <body>
 <div class="page">
   <main>
-    <h2 id="hipaa">Hipaa</h2>
-<h3 id="definition">Definition</h3>
-<p>The <strong>Health Insurance Portability and Accountability Act</strong> (HIPAA), enacted by the United States Congress in 1996, establishes federal standards for the protection of individually identifiable health information, termed <strong>Protected Health Information (PHI)</strong>. Formally, let $\mathcal{U}$ denote a universe of data records, each record $r \in \mathcal{U}$ a tuple of attributes $r = (a_1, a_2, \ldots, a_k)$. A record $r$ constitutes PHI if and only if it satisfies two conditions simultaneously: (1) it pertains to the past, present, or future physical or mental health of an individual, and (2) it contains at least one of the <strong>18 HIPAA identifiers</strong> $\mathcal{I} = \{i_1, \ldots, i_{18}\}$ — including names, geographic data finer than state level, dates other than year, telephone numbers, and Social Security numbers, among others. The <strong>de-identification</strong> transformation $\delta: \mathcal{U} \to \mathcal{U}'$ produces a dataset $\mathcal{U}'$ no longer subject to HIPAA's Privacy Rule, provided $\delta$ satisfies either the <strong>Safe Harbor</strong> method (suppression of all 18 identifiers) or the <strong>Expert Determination</strong> method ($P(\text{identification} \mid r') \leq \epsilon$ for some acceptably small $\epsilon$).</p>
-<h3 id="worked-example">Worked Example</h3>
-<p>Consider a hospital dataset with records of the form $r = (\text{ZIP}, \text{DOB}, \text{Diagnosis})$. Suppose ZIP $= 02138$, DOB $= 1945\text{-}03\text{-}15$, and Diagnosis $= \text{Type II Diabetes}$. Because ZIP and date of birth appear on HIPAA's identifier list, this record qualifies as PHI. Applying Safe Harbor: generalize ZIP to the three-digit prefix $021$, suppress the full date to year $1945$, and retain diagnosis. The transformed record $r' = (021, 1945, \text{Type II Diabetes})$ no longer contains any of the 18 identifiers and is thus de-identified under the Safe Harbor standard.</p>
-<h3 id="key-theorem">Key Theorem</h3>
-<p><strong>Theorem (Safe Harbor Sufficiency).</strong> Let $r'$ be a record produced by suppressing or generalizing all 18 HIPAA identifiers from $r$. Then the covered entity transmitting $r'$ has no actual knowledge that the information can be used to identify an individual, satisfying 45 C.F.R. § 164.514(b).</p>
-<p>This theorem guarantees legal compliance without requiring probabilistic risk estimation, though it may over-suppress clinically useful attributes.</p>
-<h3 id="lab-cell-sympy">Lab Cell (SymPy)</h3>
-<pre><code>from sympy import FiniteSet
-
-identifiers = FiniteSet(
-    "name", "zip", "dob", "ssn", "phone",
-    "fax", "email", "account", "certificate",
-    "vehicle_id", "device_id", "url", "ip",
-    "biometric", "photo", "geo_sub_state",
-    "dates_except_year", "any_unique_code"
-)
-
-record_attributes = FiniteSet("zip", "dob", "diagnosis")
-
-phi_attributes = record_attributes &amp; identifiers
-is_phi = len(phi_attributes) &gt; 0
-
-print(f"PHI identifiers present: {phi_attributes}")
-print(f"Record qualifies as PHI: {is_phi}")
-
-safe_harbor = record_attributes - identifiers
-print(f"Attributes surviving Safe Harbor: {safe_harbor}")</code></pre>
+    <h2 id="hipaa">HIPAA</h2>
+<p>You've probably heard that doctors aren't allowed to share your medical records with just anyone — not your school, not your employer, not even a curious neighbor. That protective wall has a name: <strong>HIPAA</strong>, the Health Insurance Portability and Accountability Act, passed by the U.S. Congress in 1996.</p>
+<h3 id="the-structure-behind-the-rule">The Structure Behind the Rule</h3>
+<p>HIPAA creates a category called <strong>Protected Health Information (PHI)</strong> — any data that links a person's identity to their health. This includes obvious things like diagnoses and prescriptions, but also subtler details: dates of treatment, zip codes, and even device serial numbers from medical equipment. The law recognizes 18 specific identifiers that, if attached to health data, turn ordinary information into PHI.</p>
+<p>The core rule is called the <strong>Privacy Rule</strong>, and it defines exactly who may access PHI. These authorized parties are called <strong>covered entities</strong> (hospitals, clinics, insurance companies) and their <strong>business associates</strong> (billing services, cloud storage vendors). Everyone else is outside the circle.</p>
+<p>A simplified way to model authorized disclosure:</p>
+$$\text{Disclosure OK} \iff \text{Recipient} \in \text{CoveredEntities} \cup \text{BusinessAssociates} \cup \{\text{Patient}\}$$
+<p>When data must travel outside this set — say, for medical research — HIPAA allows it only with explicit patient <strong>authorization</strong> or after the data is <strong>de-identified</strong> (all 18 identifiers removed).</p>
+<h3 id="the-pattern-to-remember">The Pattern to Remember</h3>
+<p>PHI = identity + health data. Remove the identity link → no longer PHI → fewer restrictions apply.</p>
+<hr>
+<p><strong>Practice Problem:</strong> A hospital wants to share patient recovery times with a university research team. The team is not a covered entity. Describe <em>two</em> ways the hospital could legally share this information under HIPAA rules.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

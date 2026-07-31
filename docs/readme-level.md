@@ -165,6 +165,23 @@ python scripts/batch_generate.py \
   --level "intro,core,college,research" \
   --skip-cache 
 
+
+# multi-levels - lang = zh
+python scripts/batch_generate.py \
+  --domain data_science_ch05 \
+  --include "arima" \
+  --level "intro,core,college,research" \
+  --language zh \
+  --skip-cache 
+
+
+# multi-levels
+python scripts/batch_generate.py \
+  --domain data_science_ch08 \
+  --include "hipaa" \
+  --level "intro,core,college,research" \
+  --skip-cache 
+
 ```
 
 ```output

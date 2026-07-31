@@ -35,23 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="ethics-in-data-science">Ethics In Data Science</h2>
-<p><strong>Definition.</strong> Ethics in data science is the systematic study of moral obligations that arise when collecting, processing, analyzing, and deploying data-driven models. It addresses three interlocking domains: <em>privacy</em> (the right of individuals to control information about themselves), <em>fairness</em> (the requirement that algorithmic decisions do not unjustly discriminate), and <em>accountability</em> (the obligation to explain, audit, and correct automated systems). Formally, a data pipeline $\mathcal{P}: \mathcal{X} \to \mathcal{Y}$ is said to satisfy <strong>demographic parity</strong> with respect to a protected attribute $A \in \{0,1\}$ if</p>
-$$P(\hat{Y} = 1 \mid A = 0) = P(\hat{Y} = 1 \mid A = 1),$$
-<p>where $\hat{Y}$ denotes the model's binary prediction. Violations of this condition constitute a measurable, quantifiable form of algorithmic bias.</p>
-<p><strong>Worked Example.</strong> A credit-scoring model trained on historical loan data produces acceptance rates of $78\%$ for group $A=0$ and $52\%$ for group $A=1$. The disparity ratio is $52/78 \approx 0.667$, below the widely-cited <strong>four-fifths rule</strong> threshold of $0.8$. One corrective strategy is <strong>reweighting</strong>: assign each training sample $(x_i, y_i)$ a weight</p>
-$$w_i = \frac{P(A)}{P(A = a_i)},$$
-<p>effectively rebalancing the empirical distribution so the model cannot exploit group membership as a proxy feature. After reweighting and retraining, practitioners re-evaluate both the disparity ratio and overall accuracy, accepting a possible accuracy–fairness trade-off as an explicit design decision rather than an overlooked artifact.</p>
-<p><strong>Key Theorem (Impossibility of Simultaneous Fairness Criteria).</strong> Chouldechova (2017) proved that when base rates differ across groups ($P(Y=1 \mid A=0) \neq P(Y=1 \mid A=1)$), no classifier can simultaneously satisfy demographic parity, equalized odds, and calibration. This result is not a failure of engineering; it is a mathematical fact that forces practitioners to <em>choose</em> which fairness criterion the application's social context demands, and to document that choice transparently.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, Rational, simplify
-
-p0, p1 = Rational(78, 100), Rational(52, 100)
-disparity_ratio = simplify(p1 / p0)
-four_fifths_satisfied = disparity_ratio &gt;= Rational(4, 5)
-
-print(f"Disparity ratio: {disparity_ratio}")          # 2/3
-print(f"Four-fifths rule satisfied: {four_fifths_satisfied}")  # False</code></pre>
-<p>Running this cell makes the bias quantification reproducible and auditable — a habit that operationalizes the accountability principle from the outset of any project.</p>
+<p><strong>Recap:</strong> You've probably heard that data science is powerful — it can predict diseases, recommend movies, and even influence elections. But power comes with responsibility. Ethics in data science is about asking not just <em>can we do this?</em> but <em>should we?</em></p>
+<p><strong>The Structure of the Problem: Bias</strong></p>
+<p>The single most important concept to understand first is <strong>bias</strong> — a systematic error that causes a model to treat some groups unfairly compared to others.</p>
+<p>Here's how it sneaks in: suppose you train a loan-approval model on historical bank decisions. If the bank historically denied loans to certain neighborhoods at higher rates, that pattern gets absorbed into the training data. The model learns to repeat the pattern — not because anyone programmed in discrimination, but because the <em>data reflected a biased past</em>. The model can score well on accuracy tests and still be deeply unfair.</p>
+<p>This is sometimes called <strong>historical bias</strong> in the training data, and it's different from a coding error. You can fix a bug in code. Fixing data bias requires actively identifying which groups are affected and measuring outcomes separately for each group.</p>
+<p>A useful first check: after a model is trained, compare its error rates across subgroups. If the model is wrong about one demographic twice as often as another, that's a signal worth investigating — even if overall accuracy looks fine.</p>
+<p><strong>A Simple Rule to Remember</strong></p>
+<p>High accuracy on the full dataset does not guarantee fair outcomes for every subgroup.</p>
+<p><strong>Practice Problem</strong></p>
+<p>A school uses a machine learning model to predict which students are at risk of falling behind, then flags them for extra tutoring. The model was trained on grades from the past five years. Describe one way historical bias might appear in this model's predictions, and suggest one check you could run to detect it.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

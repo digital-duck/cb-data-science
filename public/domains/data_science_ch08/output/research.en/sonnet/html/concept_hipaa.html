@@ -35,34 +35,12 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="hipaa">Hipaa</h2>
-<h3 id="definition">Definition</h3>
-<p>The <strong>Health Insurance Portability and Accountability Act</strong> (HIPAA), enacted by the United States Congress in 1996, establishes federal standards for the protection of individually identifiable health information, termed <strong>Protected Health Information (PHI)</strong>. Formally, let $\mathcal{U}$ denote a universe of data records, each record $r \in \mathcal{U}$ a tuple of attributes $r = (a_1, a_2, \ldots, a_k)$. A record $r$ constitutes PHI if and only if it satisfies two conditions simultaneously: (1) it pertains to the past, present, or future physical or mental health of an individual, and (2) it contains at least one of the <strong>18 HIPAA identifiers</strong> $\mathcal{I} = \{i_1, \ldots, i_{18}\}$ — including names, geographic data finer than state level, dates other than year, telephone numbers, and Social Security numbers, among others. The <strong>de-identification</strong> transformation $\delta: \mathcal{U} \to \mathcal{U}'$ produces a dataset $\mathcal{U}'$ no longer subject to HIPAA's Privacy Rule, provided $\delta$ satisfies either the <strong>Safe Harbor</strong> method (suppression of all 18 identifiers) or the <strong>Expert Determination</strong> method ($P(\text{identification} \mid r') \leq \epsilon$ for some acceptably small $\epsilon$).</p>
-<h3 id="worked-example">Worked Example</h3>
-<p>Consider a hospital dataset with records of the form $r = (\text{ZIP}, \text{DOB}, \text{Diagnosis})$. Suppose ZIP $= 02138$, DOB $= 1945\text{-}03\text{-}15$, and Diagnosis $= \text{Type II Diabetes}$. Because ZIP and date of birth appear on HIPAA's identifier list, this record qualifies as PHI. Applying Safe Harbor: generalize ZIP to the three-digit prefix $021$, suppress the full date to year $1945$, and retain diagnosis. The transformed record $r' = (021, 1945, \text{Type II Diabetes})$ no longer contains any of the 18 identifiers and is thus de-identified under the Safe Harbor standard.</p>
-<h3 id="key-theorem">Key Theorem</h3>
-<p><strong>Theorem (Safe Harbor Sufficiency).</strong> Let $r'$ be a record produced by suppressing or generalizing all 18 HIPAA identifiers from $r$. Then the covered entity transmitting $r'$ has no actual knowledge that the information can be used to identify an individual, satisfying 45 C.F.R. § 164.514(b).</p>
-<p>This theorem guarantees legal compliance without requiring probabilistic risk estimation, though it may over-suppress clinically useful attributes.</p>
-<h3 id="lab-cell-sympy">Lab Cell (SymPy)</h3>
-<pre><code>from sympy import FiniteSet
-
-identifiers = FiniteSet(
-    "name", "zip", "dob", "ssn", "phone",
-    "fax", "email", "account", "certificate",
-    "vehicle_id", "device_id", "url", "ip",
-    "biometric", "photo", "geo_sub_state",
-    "dates_except_year", "any_unique_code"
-)
-
-record_attributes = FiniteSet("zip", "dob", "diagnosis")
-
-phi_attributes = record_attributes &amp; identifiers
-is_phi = len(phi_attributes) &gt; 0
-
-print(f"PHI identifiers present: {phi_attributes}")
-print(f"Record qualifies as PHI: {is_phi}")
-
-safe_harbor = record_attributes - identifiers
-print(f"Attributes surviving Safe Harbor: {safe_harbor}")</code></pre>
+<p><strong>Definition.</strong> The Health Insurance Portability and Accountability Act (HIPAA, 1996) establishes the legal and administrative framework governing the use and disclosure of <em>Protected Health Information</em> (PHI) by <em>covered entities</em> (health plans, clearinghouses, providers) and their <em>business associates</em>. PHI is defined as any individually identifiable health information transmitted or maintained in any medium. HIPAA's Privacy Rule (45 C.F.R. §164.514) specifies two de-identification standards: the <em>Safe Harbor</em> method, which requires removal of 18 enumerated identifiers, and the <em>Expert Determination</em> method, which demands that a statistical or scientific expert certify that residual re-identification risk is "very small."</p>
+<p><strong>Formal framing.</strong> Let $\mathcal{D}$ denote a dataset of $n$ records drawn from population $\mathcal{P}$, with quasi-identifier space $\mathcal{Q}$. Safe Harbor de-identification projects $\mathcal{D}$ onto a reduced attribute space $\mathcal{D}'$. The residual re-identification risk under adversarial background knowledge $\mathcal{B}$ can be bounded by $k$-anonymity: a dataset satisfies $k$-anonymity if every record shares its quasi-identifier tuple with at least $k-1$ others, so that $\Pr[\text{identify}(r \mid \mathcal{D}', \mathcal{B})] \leq 1/k$. Expert Determination implicitly targets $k \geq 1/\epsilon$ for some small $\epsilon$, though the threshold is unspecified in regulation. Differential privacy provides a stronger, composition-closed guarantee: a randomized mechanism $\mathcal{M}$ is $(\epsilon, \delta)$-differentially private if for all adjacent datasets $\mathcal{D}, \mathcal{D}'$ and all outputs $S$,</p>
+$$\Pr[\mathcal{M}(\mathcal{D}) \in S] \leq e^{\epsilon} \Pr[\mathcal{M}(\mathcal{D}') \in S] + \delta.$$
+<p><strong>Literature context.</strong> Sweeney (2002) demonstrated that 87% of Americans could be uniquely identified from $\{$ZIP, birth date, sex$\}$ alone, motivating the 18-identifier Safe Harbor list yet exposing its inadequacy against auxiliary data. Machanavajjhala et al. (2007) extended $k$-anonymity to $\ell$-diversity to counter attribute-inference attacks. The differential privacy framework (Dwork et al., 2006; Dwork & Roth, 2014) offers a rigorous alternative, and the Apple–Google exposure-notification protocols and the U.S. Census 2020 TopDown algorithm are landmark deployments. Open questions include: (i) calibrating $\epsilon$ to regulatory thresholds in a principled way, (ii) composition under repeated HIPAA disclosures across covered entities, and (iii) integrating generative models (LLMs trained on EHR corpora) under HIPAA constraints without formal DP guarantees.</p>
+<p><strong>Suggested investigation.</strong> Obtain a publicly available de-identified clinical dataset (e.g., MIMIC-III on PhysioNet, which itself requires a data-use agreement). Apply Safe Harbor de-identification, then measure empirical re-identification rate using a linkage attack against a demographic auxiliary table (e.g., U.S. Census microdata). Quantify the effective $k$ achieved and compare against a Laplace-mechanism DP release at $\epsilon \in \{0.1, 1.0, 10.0\}$ on a summary statistic of clinical interest. Compute the privacy-utility tradeoff curve and identify the $\epsilon$ value at which DP matches Safe Harbor's empirical $k$.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state the threat model (honest-but-curious linker, bounded auxiliary knowledge), derive the $k$-anonymity achieved before and after the attack, report the $(\epsilon,\delta)$ parameters of the DP mechanism with justification for the noise calibration, and discuss whether the Expert Determination standard could be satisfied by the DP certificate. The report should conclude with a policy recommendation: does the chosen $\epsilon$ constitute "very small" risk under 45 C.F.R. §164.514(b)(1), and how should that threshold be formalized?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

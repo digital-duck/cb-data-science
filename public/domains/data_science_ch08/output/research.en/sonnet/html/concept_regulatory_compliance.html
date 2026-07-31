@@ -35,24 +35,11 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="regulatory-compliance">Regulatory Compliance</h2>
-<p><strong>Definition.</strong> Regulatory compliance is the state in which a system, process, or entity satisfies all constraints imposed by an external governing authority within a specified operational domain. Formally, let $\mathcal{S}$ denote a system described by a state vector $\mathbf{x} \in \mathcal{X} \subseteq \mathbb{R}^n$, and let $\mathcal{R} = \{g_1, g_2, \ldots, g_m\}$ be a finite set of regulatory constraints, where each $g_i : \mathcal{X} \to \mathbb{R}$ is a measurable function. The system is said to be <em>compliant</em> if and only if</p>
-$$g_i(\mathbf{x}) \leq 0 \quad \forall\, i \in \{1, 2, \ldots, m\}.$$
-<p>The <em>feasible compliance region</em> is the set $\mathcal{F} = \{\mathbf{x} \in \mathcal{X} \mid g_i(\mathbf{x}) \leq 0,\ \forall i\}$. Compliance analysis then reduces to verifying that the operational trajectory $\mathbf{x}(t)$ remains within $\mathcal{F}$ for all $t$ in the relevant time horizon.</p>
-<p><strong>Worked Example.</strong> A pharmaceutical manufacturer must ensure that active-ingredient concentration $c$ (mg/L) satisfies $80 \leq c \leq 120$. Expressing this as two inequality constraints: $g_1(c) = 80 - c \leq 0$ and $g_2(c) = c - 120 \leq 0$. A batch yields $c = 95\,\text{mg/L}$. Since $g_1(95) = -15 < 0$ and $g_2(95) = -25 < 0$, the batch lies strictly inside $\mathcal{F}$ and is compliant. A batch with $c = 125\,\text{mg/L}$ violates $g_2$ and must be rejected.</p>
-<p><strong>Theorem (Feasibility of Linear Compliance Regions).</strong> If every constraint $g_i$ is affine—that is, $g_i(\mathbf{x}) = \mathbf{a}_i^\top \mathbf{x} - b_i$ for some $\mathbf{a}_i \in \mathbb{R}^n$, $b_i \in \mathbb{R}$—then $\mathcal{F}$ is a convex polytope. Consequently, membership testing is decidable in polynomial time via linear programming, and the distance from any point $\mathbf{x}_0$ to $\mathcal{F}$ is computable as $d(\mathbf{x}_0, \mathcal{F}) = \min_{\mathbf{x} \in \mathcal{F}} \|\mathbf{x} - \mathbf{x}_0\|_2$, which is a convex quadratic program.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, solve, Rational
-
-c = symbols('c', real=True)
-lower, upper = 80, 120
-
-g1 = lower - c   # &lt;= 0 means c &gt;= 80
-g2 = c - upper   # &lt;= 0 means c &lt;= 120
-
-for batch in [95, 125]:
-    status = "COMPLIANT" if g1.subs(c, batch) &lt;= 0 and g2.subs(c, batch) &lt;= 0 \
-             else "NON-COMPLIANT"
-    print(f"c = {batch}: g1 = {g1.subs(c,batch)}, g2 = {g2.subs(c,batch)} → {status}")</code></pre>
+<p><strong>Definition.</strong> Let $\mathcal{S} = (Q, \Sigma, \delta, q_0, F)$ be a finite automaton representing the state-transition semantics of a computational system, and let $\mathcal{R} = \{\varphi_1, \ldots, \varphi_k\}$ be a finite set of regulatory constraints expressed in linear temporal logic (LTL). The system $\mathcal{S}$ is <em>compliant</em> with $\mathcal{R}$ if and only if every execution trace $\pi \in \mathcal{L}(\mathcal{S})$ satisfies $\bigwedge_{i=1}^{k} \varphi_i$. In practice, $\mathcal{R}$ encodes requirements from instruments such as GDPR Article 22, the EU AI Act Annex III, or HIPAA §164.312, each translatable to safety or liveness properties over the system's observable behavior.</p>
+<p><strong>Theorem (Compliance Verification Complexity).</strong> Model-checking $\mathcal{S} \models \varphi$ for $\varphi \in$ LTL is PSPACE-complete in the size of $\varphi$ and $\mathcal{S}$ (Clarke et al., 1999). Consequently, exhaustive compliance verification is intractable for large state spaces, motivating abstraction-refinement and runtime monitoring as practical alternatives.</p>
+<p><strong>Literature context.</strong> The tension between expressiveness and decidability is central to regulatory engineering. Basin, Harvan & Klaedtke (2012) propose monitorable trace-based compliance. More recently, Governatori et al. (2023) examine normative systems over deontic logic, while Wachter, Mittelstadt & Russell (2017) raise the open problem of <em>counterfactual compliance</em>—whether a system that violates $\varphi$ can be repaired minimally. For LLM pipelines, compliance over stochastic traces remains largely unresolved.</p>
+<p><strong>Suggested investigation.</strong> Encode a representative regulatory clause (e.g., GDPR right-to-explanation) as an LTL formula $\varphi$, implement a runtime monitor over an LLM workflow execution log, and measure the false-positive rate under model non-determinism. Vary $|\mathcal{R}|$ and record verification time empirically against the PSPACE lower bound.</p>
+<p><strong>Report-writing note.</strong> A write-up should formally state the monitored property, justify the LTL encoding against the natural-language clause, report precision/recall of the monitor, and discuss whether observed violations are attributable to specification ambiguity or genuine system non-compliance.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

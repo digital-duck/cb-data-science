@@ -35,24 +35,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="personally-identifiable-information">Personally Identifiable Information</h2>
-<p><strong>Definition.</strong> <em>Personally Identifiable Information</em> (PII) is any data element, or combination of data elements, that can be used to distinguish or trace the identity of a specific individual, either alone or when linked with other information. Formally, let $\mathcal{U}$ denote a universe of individuals and let $\mathcal{D}$ be a dataset of attribute vectors $\mathbf{x} = (x_1, x_2, \ldots, x_k)$. An attribute set $S \subseteq \{1, \ldots, k\}$ is called <em>identifying</em> if the mapping $f_S : \mathcal{U} \to \prod_{i \in S} \text{Dom}(x_i)$ is injective — that is, no two distinct individuals share the same values on every attribute in $S$. PII is then any collection of attributes that constitutes or contains an identifying set.</p>
-<p>Direct identifiers (name, government ID number, biometric record) are individually identifying; quasi-identifiers (age, zip code, occupation) become identifying through combination. This distinction drives regulatory frameworks such as HIPAA in the United States and the General Data Protection Regulation (GDPR) in the European Union.</p>
-<p><strong>Worked Example.</strong> Consider a medical dataset with attributes $\{$<code>age</code>, <code>zip_code</code>, <code>diagnosis</code>$\}$. Suppose <code>age</code> alone partitions 10,000 patients into groups of roughly 200, and <code>zip_code</code> alone into groups of roughly 50. Neither attribute is individually identifying. However, a landmark study by Sweeney (2000) demonstrated that the combination $\{$<code>date_of_birth</code>, <code>sex</code>, <code>zip_code</code>$\}$ uniquely identified 87% of the U.S. population in publicly available voter records. This illustrates the <em>linkage attack</em>: an adversary joins the medical dataset with a public voter roll on these quasi-identifiers, recovering the diagnosis for a named individual.</p>
-<p><strong>Key Theorem (k-Anonymity, Sweeney 2002).</strong> A dataset satisfies <em>$k$-anonymity</em> if every record is indistinguishable from at least $k - 1$ others with respect to every quasi-identifier. Equivalently, for each equivalence class $E$ induced by the quasi-identifier projection, $|E| \geq k$. $k$-Anonymity is a necessary but not sufficient condition for privacy; it does not protect against attribute or homogeneity attacks, motivating stronger notions such as $\ell$-diversity and $(\epsilon, \delta)$-differential privacy.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import pandas as pd
-
-data = pd.DataFrame({
-    "age":      [29, 29, 45, 45, 60, 60],
-    "zip_code": ["10001", "10001", "10002", "10002", "10003", "10003"],
-    "diagnosis":["flu", "flu", "flu", "diabetes", "flu", "flu"],
-})
-
-quasi_ids = ["age", "zip_code"]
-group_sizes = data.groupby(quasi_ids).size()
-k = group_sizes.min()
-print(f"Dataset satisfies {k}-anonymity")   # k=2</code></pre>
-<p>Running this cell confirms 2-anonymity: every <code>(age, zip_code)</code> pair appears at least twice, so no individual record stands alone. Increasing $k$ — by generalising <code>age</code> into decade brackets, for instance — trades data utility for stronger privacy guarantees, a tension central to privacy-preserving data publishing.</p>
+<p><strong>Recap:</strong> You already know that some information feels private — your diary entries, your passwords, your secrets. But privacy in the digital world gets more specific than just "stuff I don't want shared." There's a precise category called <strong>Personally Identifiable Information</strong>, or <strong>PII</strong>.</p>
+<p><strong>The Structure:</strong> PII is any data that can be used — alone or combined with other data — to identify a specific individual. Some pieces are <em>direct identifiers</em>: a full name, a Social Security number, a phone number, or a passport number. These point straight to one person. Others are <em>indirect identifiers</em>: your birthday, your ZIP code, your employer. Each one alone describes millions of people, but combine them and the crowd shrinks fast.</p>
+<p>Researchers have shown that just three data points — birth date, gender, and ZIP code — can uniquely identify roughly <strong>87%</strong> of the U.S. population. That's the combinatorial power of PII: pieces that seem harmless alone become identifying when linked together.</p>
+<p><strong>A Simple Rule:</strong> Think of a <em>uniqueness threshold</em>. A piece of information is effectively PII if combining it with a small number of other available facts narrows the population down to one (or very few) individuals:</p>
+$$\text{Anonymity} \approx \frac{\text{population matching all known attributes}}{\text{total population}}$$
+<p>The closer that fraction gets to $\frac{1}{N}$ for some specific person, the more the data acts like PII.</p>
+<p><strong>Practice Problem:</strong> You know these facts about a classmate: they are 14 years old, left-handed, live in ZIP code 94102, and were born in February. Would this combination likely constitute PII? Explain your reasoning using the uniqueness idea above, and identify which attribute you think narrows the group the most.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>
