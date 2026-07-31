@@ -35,44 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="integrative-component">Integrative Component</h2>
-<h3 id="definition">Definition</h3>
-<p>In the theory of linear dynamical systems and control, the <strong>integrative component</strong> (also called the <em>integral action</em> or <em>I-term</em>) is the feedback element whose output at time $t$ is proportional to the accumulated history of the error signal. Given an error function $e : [0, \infty) \to \mathbb{R}$, the integrative component produces the signal</p>
-$$
-u_I(t) = K_I \int_0^t e(\tau)\, d\tau,
-$$
-<p>where $K_I \in \mathbb{R}_{>0}$ is the <em>integral gain</em>. Unlike proportional action, which responds only to the instantaneous error, the integrative component retains memory of all past deviations and corrects for persistent bias that proportional control alone cannot eliminate. In the Laplace domain this relationship becomes</p>
-$$
-U_I(s) = \frac{K_I}{s}\, E(s),
-$$
-<p>so the integrative component introduces a pole at the origin, endowing the closed-loop system with a free integrator and guaranteeing zero steady-state error for step inputs.</p>
-<h3 id="worked-example">Worked Example</h3>
-<p>Suppose a heating system maintains a target temperature of $T^<em> = 70\,^\circ\text{C}$. The measured temperature follows $T(t) = 70 - 5e^{-t}$, so the error is $e(t) = T^</em> - T(t) = 5e^{-t}$. With $K_I = 2$, the integrative correction signal is</p>
-$$
-u_I(t) = 2\int_0^t 5e^{-\tau}\,d\tau = 10\bigl(1 - e^{-t}\bigr).
-$$
-<p>As $t \to \infty$, $u_I \to 10$, providing a steady correction that exactly cancels the persistent offset — something a pure proportional controller cannot achieve when its gain is finite.</p>
-<h3 id="key-theorem-internal-model-principle-steady-state-form">Key Theorem: Internal Model Principle (Steady-State Form)</h3>
-<p><strong>Theorem.</strong> A feedback controller achieves zero steady-state error to a step disturbance if and only if the open-loop transfer function contains at least one free integrator (a pole at $s = 0$).</p>
-<p><em>Proof sketch.</em> By the Final Value Theorem, $\lim_{t\to\infty} e(t) = \lim_{s\to 0} s\, E(s)$. For a unit step, $E(s) = 1/[s(1 + G(s)H(s))]$. The limit equals zero precisely when $G(s)H(s) \to \infty$ as $s \to 0$, which holds if and only if $G$ or $H$ contains the factor $1/s$. $\square$</p>
-<h3 id="lab-cell">Lab Cell</h3>
-<pre><code>import sympy as sp
-
-t, s, K_I = sp.symbols('t s K_I', positive=True)
-
-# Error signal and integrative output (time domain)
-e   = 5 * sp.exp(-t)
-u_I = K_I * sp.integrate(e, (t, 0, t))
-print("u_I(t) =", sp.simplify(u_I))
-
-# Transfer function in Laplace domain
-E_s  = sp.laplace_transform(e, t, s, noconds=True)
-U_Is = (K_I / s) * E_s
-print("U_I(s) =", sp.simplify(U_Is))
-
-# Steady-state value via Final Value Theorem
-fvt = sp.limit(s * U_Is, s, 0)
-print("Steady-state u_I =", fvt)</code></pre>
-<p>Running this cell with $K_I = 2$ reproduces $u_I(t) = 10(1 - e^{-t})$ and confirms the steady-state value of $10$, illustrating how symbolic computation makes the Internal Model Principle concrete and verifiable.</p>
+<p><strong>Definition.</strong> In a closed-loop control system, the <em>integrative component</em> (I-component) of the control signal is defined as</p>
+$$u_I(t) = K_i \int_0^t e(\tau)\,d\tau,$$
+<p>where $e(\tau) = r(\tau) - y(\tau)$ denotes the tracking error between reference $r$ and plant output $y$, and $K_i > 0$ is the integral gain. In the frequency domain this reduces to multiplication by $K_i/s$, introducing a pole at the origin — a structural zero in the open-loop sensitivity function.</p>
+<p><strong>Theorem (Steady-State Error Elimination).</strong> Consider a linear time-invariant plant $G(s)$ with unity feedback and an integral controller $C(s) = K_i/s$. If the closed-loop system $T(s) = C(s)G(s)/[1+C(s)G(s)]$ is internally stable, then for any step reference $R(s) = A/s$ the steady-state error satisfies $\lim_{t\to\infty} e(t) = 0$.</p>
+<p><em>Proof sketch.</em> By the Final Value Theorem, $\lim_{t\to\infty} e(t) = \lim_{s\to 0} s E(s)$. The error transfer function is $E(s) = R(s)/[1+C(s)G(s)]$, so $s E(s) = sA/\{s[1 + K_i G(s)/s]\} = A/[1 + K_i G(0)/0^+] \to 0$, provided $G(0)$ is finite and nonzero. $\square$</p>
+<p><strong>Literature Context.</strong> The internal model principle (Francis & Wonham, 1976, <em>Automatica</em>) generalizes this: a controller achieves asymptotic tracking of a class of reference signals if and only if it internally replicates the signal's generator dynamics. Integration is the canonical instance for step inputs. Open problems include robust integral action under plant uncertainty (see Morari & Zafiriou, 1989) and the interaction between integrator windup and nonlinear saturation, which remains an active area in anti-windup synthesis (Zaccarian & Teel, 2011).</p>
+<p><strong>Suggested Investigation.</strong> Implement a first-order plant $G(s) = 1/(s+a)$ in simulation and sweep $K_i$ and $a$ jointly. Record the gain and phase margins as a function of $K_i$, the transient overshoot under step inputs, and the onset of windup when the actuator saturates at $\pm u_{\max}$. Compare a naive I-controller with a clamping anti-windup scheme (back-calculation).</p>
+<p><strong>Report-Writing Note.</strong> A write-up should establish: (i) analytic stability bounds on $K_i$ as a function of $a$; (ii) empirical transient metrics (rise time, overshoot, settling time) against theoretical predictions from the dominant-pole approximation; and (iii) a quantitative account of windup onset and how the anti-windup modification restores nominal transient performance.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

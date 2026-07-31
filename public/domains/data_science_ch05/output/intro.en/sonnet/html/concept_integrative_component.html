@@ -35,44 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="integrative-component">Integrative Component</h2>
-<h3 id="definition">Definition</h3>
-<p>In the theory of linear dynamical systems and control, the <strong>integrative component</strong> (also called the <em>integral action</em> or <em>I-term</em>) is the feedback element whose output at time $t$ is proportional to the accumulated history of the error signal. Given an error function $e : [0, \infty) \to \mathbb{R}$, the integrative component produces the signal</p>
-$$
-u_I(t) = K_I \int_0^t e(\tau)\, d\tau,
-$$
-<p>where $K_I \in \mathbb{R}_{>0}$ is the <em>integral gain</em>. Unlike proportional action, which responds only to the instantaneous error, the integrative component retains memory of all past deviations and corrects for persistent bias that proportional control alone cannot eliminate. In the Laplace domain this relationship becomes</p>
-$$
-U_I(s) = \frac{K_I}{s}\, E(s),
-$$
-<p>so the integrative component introduces a pole at the origin, endowing the closed-loop system with a free integrator and guaranteeing zero steady-state error for step inputs.</p>
-<h3 id="worked-example">Worked Example</h3>
-<p>Suppose a heating system maintains a target temperature of $T^<em> = 70\,^\circ\text{C}$. The measured temperature follows $T(t) = 70 - 5e^{-t}$, so the error is $e(t) = T^</em> - T(t) = 5e^{-t}$. With $K_I = 2$, the integrative correction signal is</p>
-$$
-u_I(t) = 2\int_0^t 5e^{-\tau}\,d\tau = 10\bigl(1 - e^{-t}\bigr).
-$$
-<p>As $t \to \infty$, $u_I \to 10$, providing a steady correction that exactly cancels the persistent offset — something a pure proportional controller cannot achieve when its gain is finite.</p>
-<h3 id="key-theorem-internal-model-principle-steady-state-form">Key Theorem: Internal Model Principle (Steady-State Form)</h3>
-<p><strong>Theorem.</strong> A feedback controller achieves zero steady-state error to a step disturbance if and only if the open-loop transfer function contains at least one free integrator (a pole at $s = 0$).</p>
-<p><em>Proof sketch.</em> By the Final Value Theorem, $\lim_{t\to\infty} e(t) = \lim_{s\to 0} s\, E(s)$. For a unit step, $E(s) = 1/[s(1 + G(s)H(s))]$. The limit equals zero precisely when $G(s)H(s) \to \infty$ as $s \to 0$, which holds if and only if $G$ or $H$ contains the factor $1/s$. $\square$</p>
-<h3 id="lab-cell">Lab Cell</h3>
-<pre><code>import sympy as sp
-
-t, s, K_I = sp.symbols('t s K_I', positive=True)
-
-# Error signal and integrative output (time domain)
-e   = 5 * sp.exp(-t)
-u_I = K_I * sp.integrate(e, (t, 0, t))
-print("u_I(t) =", sp.simplify(u_I))
-
-# Transfer function in Laplace domain
-E_s  = sp.laplace_transform(e, t, s, noconds=True)
-U_Is = (K_I / s) * E_s
-print("U_I(s) =", sp.simplify(U_Is))
-
-# Steady-state value via Final Value Theorem
-fvt = sp.limit(s * U_Is, s, 0)
-print("Steady-state u_I =", fvt)</code></pre>
-<p>Running this cell with $K_I = 2$ reproduces $u_I(t) = 10(1 - e^{-t})$ and confirms the steady-state value of $10$, illustrating how symbolic computation makes the Internal Model Principle concrete and verifiable.</p>
+<p>Imagine you're on a road trip. You glance at your speedometer: 60 mph <em>right now</em>. But what you really care about is how far you've actually traveled. That total on your odometer is something different — it has been built up, mile by mile, from every speed reading along the way. The speedometer tells you the <em>rate</em>; the odometer captures the <em>accumulation</em>.</p>
+<p>This is the essence of the integrative component. Whenever a quantity changes over time, we can always ask two distinct questions: "How fast is it changing at this instant?" and "What has it all added up to so far?" The first question belongs to the derivative. The second belongs to the integrative component — the accumulated total of a continuously changing rate.</p>
+<p>Picture filling a bathtub with a faucet whose flow rate varies. At 9:00 am it pours 2 gallons per minute; by 9:05 it slows to 1. You can't just multiply a single rate by the total time. Instead, you chop time into tiny slivers, ask how many gallons arrived in each sliver, and add everything up. Make the slivers infinitely thin and that process becomes an integral.</p>
+<p>Formally, if a quantity flows at rate $f(t)$, its integrative component over the interval $[a, b]$ is</p>
+$$\int_a^b f(t)\, dt.$$
+<p>The Fundamental Theorem of Calculus reveals why this feels inevitable: if $F'(t) = f(t)$, then</p>
+$$\int_a^b f(t)\, dt = F(b) - F(a).$$
+<p>Differentiation and integration are exact inverses — every accumulated total can be unwound back into an instantaneous rate, and vice versa.</p>
+<p><strong>Now you try:</strong> A car's speed at time $t$ seconds is $v(t) = 4t$ m/s. How far does it travel from $t = 0$ to $t = 3$? Compute $\int_0^3 4t\, dt$ and check your answer against common sense.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

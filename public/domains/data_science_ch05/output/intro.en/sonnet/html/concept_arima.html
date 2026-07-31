@@ -35,34 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="arima">Arima</h2>
-<p><strong>Definition.</strong> Assume the reader is already familiar with the backshift operator $B$, the autoregressive polynomial $\phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$, the moving-average polynomial $\theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$, and white noise $\varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0,\sigma^2)$. The single new primitive introduced here is the <strong>differencing operator</strong>: for a non-negative integer $d$, define $\nabla^d = (1-B)^d$, so $\nabla^1 X_t = X_t - X_{t-1}$ and $\nabla^2 X_t = X_t - 2X_{t-1} + X_{t-2}$. Setting $Y_t = \nabla^d X_t$ and requiring $Y_t$ to be weakly stationary yields the <em>AutoRegressive Integrated Moving Average</em> model $\text{ARIMA}(p,d,q)$:</p>
-$$
-\phi(B)\,\nabla^d X_t = \theta(B)\,\varepsilon_t.
-$$
-<p>The integer $d \geq 0$ is the <em>degree of integration</em>: applying $\nabla^d$ removes deterministic or stochastic trends and renders the transformed series $Y_t$ stationary. When $d=0$ the model reduces to the familiar $\text{ARMA}(p,q)$.</p>
-<p><strong>Worked Example.</strong> Monthly airline passenger counts (Box–Jenkins data) exhibit exponential growth, so a log-transform is applied first to stabilise variance. The autocorrelation function of the log series decays slowly and linearly — a hallmark of a unit root — so one difference ($d=1$) is taken. For the differenced series the partial ACF cuts off after lag 1 and the ACF cuts off after lag 1, suggesting $p=1$, $q=1$. The fitted $\text{ARIMA}(1,1,1)$ model is</p>
-$$
-(1 - \hat\phi_1 B)(1-B)\,X_t = (1 + \hat\theta_1 B)\,\varepsilon_t,
-$$
-<p>with estimated coefficients $\hat\phi_1 \approx 0.60$ and $\hat\theta_1 \approx -0.38$. Residuals pass the Ljung–Box portmanteau test at the 5 % level, confirming adequate fit.</p>
-<p><strong>Key Theorem (Wold Decomposition).</strong> Every zero-mean covariance-stationary process $\{Y_t\}$ has a representation $Y_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j}$ with $\psi_0 = 1$ and $\sum_j \psi_j^2 < \infty$. An invertible $\text{ARMA}(p,q)$ process is a finite-parameter approximation to this infinite moving average, which justifies using ARIMA — after differencing removes the trend — as a parsimonious forecasting model.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-from sympy import symbols, expand
-
-# Illustrate the differencing operator symbolically
-B = symbols('B')
-nabla = 1 - B
-print("nabla^1 applied to X_t gives coefficient polynomial:", expand(nabla))
-print("nabla^2 applied to X_t gives coefficient polynomial:", expand(nabla**2))
-
-# Fit ARIMA(1,1,1) to log-transformed AirPassengers data
-url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv"
-df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
-log_passengers = df['Passengers'].apply('log')
-result = ARIMA(log_passengers, order=(1, 1, 1)).fit()
-print(result.summary())</code></pre>
+<h3 id="the-weather-diary-problem">The Weather Diary Problem</h3>
+<p>Imagine you kept a daily temperature diary for three years. Someone bets you $100 that you can't predict tomorrow's temperature better than "just guess the average." You flip through your notebook and notice something: cold days tend to follow cold days, and sudden warm spells are usually followed by a correction back toward normal. There's <em>memory</em> in the data — and that single observation is the engine of everything that follows.</p>
+<h3 id="one-idea-two-refinements">One Idea, Two Refinements</h3>
+<p>The core primitive is <strong>autoregression</strong>: a value predicts itself. If $y_t$ is today's temperature, write $y_t \approx \phi_1 y_{t-1} + \phi_2 y_{t-2} + \text{noise}$ — the series literally regresses onto its own past. That's the "AR" in ARIMA, and it's the only genuinely new concept you need to internalize here.</p>
+<p>The other two letters are refinements that fix specific problems. <strong>Differencing</strong> (the "I") removes a drifting trend — subtract yesterday from today and the series stabilizes. <strong>Moving-average terms</strong> (the "MA") absorb shocks that echo for a day or two after they arrive. You don't need full intuition for either right now; think of them as small corrections you dial in once the autoregressive backbone is working.</p>
+<p>Together they give ARIMA$(p, d, q)$:</p>
+$$\Delta^d y_t = c + \sum_{i=1}^{p} \phi_i \Delta^d y_{t-i} + \sum_{j=1}^{q} \theta_j \varepsilon_{t-j} + \varepsilon_t$$
+<p>where $p$ = AR lags, $d$ = times you differenced, $q$ = MA lags, and $\varepsilon_t$ is white noise.</p>
+<h3 id="now-you-try">Now You Try</h3>
+<p>Grab monthly electricity bills for two years. Plot them — do they drift upward, or bounce around a stable mean? If they drift, subtract consecutive months. Does the result look like noisy clumps with no long-term climb? If yes, fit an AR(1) to that differenced series first. Once that works, layer in the MA term and see whether January's bill becomes predictable.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

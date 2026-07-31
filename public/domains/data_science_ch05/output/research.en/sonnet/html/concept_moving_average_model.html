@@ -35,31 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="moving-average-model">Moving Average Model</h2>
-<p><strong>Definition.</strong> A <em>moving average model of order $q$</em>, denoted $\mathrm{MA}(q)$, is a discrete-time stochastic process $\{X_t\}$ defined by</p>
-$$X_t = \mu + \varepsilon_t + \theta_1\varepsilon_{t-1} + \theta_2\varepsilon_{t-2} + \cdots + \theta_q\varepsilon_{t-q},$$
-<p>where $\mu \in \mathbb{R}$ is the process mean, $\theta_1, \ldots, \theta_q \in \mathbb{R}$ are the <em>moving average coefficients</em>, and $\{\varepsilon_t\}$ is a white-noise sequence with variance $\sigma^2$ (see the preceding section for the formal definition). Unlike an autoregressive model, $X_t$ depends directly on past <em>shocks</em> rather than past <em>observations</em>.</p>
-<p><strong>Worked Example.</strong> Consider the $\mathrm{MA}(1)$ process $X_t = \varepsilon_t + 0.8\,\varepsilon_{t-1}$ with $\sigma^2 = 1$. The mean is $\mathbb{E}[X_t] = 0$. The variance is</p>
-$$\mathrm{Var}(X_t) = \sigma^2(1 + \theta_1^2) = 1 + 0.64 = 1.64.$$
-<p>The autocovariance at lag $k$ satisfies</p>
-$$\gamma(k) = \begin{cases} \sigma^2(1 + \theta_1^2) & k = 0, \\ \sigma^2\theta_1 & k = \pm 1, \\ 0 & |k| > 1. \end{cases}$$
-<p>Hence the autocorrelation at lag 1 is $\rho(1) = \gamma(1)/\gamma(0) = 0.8/1.64 \approx 0.488$, and all higher-lag autocorrelations are exactly zero — a distinctive <em>cutoff</em> property that distinguishes MA processes from AR processes.</p>
-<p><strong>Key Theorem (Finite Memory).</strong> An $\mathrm{MA}(q)$ process is always weakly stationary, and its autocorrelation function satisfies $\rho(k) = 0$ for all $|k| > q$. This cutoff at lag $q$ provides the primary diagnostic for identifying the order of a moving average model from empirical autocorrelation plots.</p>
-<p><em>Proof sketch.</em> Since $X_t$ is a finite linear combination of white-noise terms, both $\mathbb{E}[X_t]$ and $\mathrm{Var}(X_t)$ are constants independent of $t$. For $|k| > q$, the sets $\{\varepsilon_t, \varepsilon_{t-1}, \ldots, \varepsilon_{t-q}\}$ and $\{\varepsilon_{t-k}, \ldots, \varepsilon_{t-k-q}\}$ are disjoint, so uncorrelated white-noise terms yield $\gamma(k) = 0$. $\square$</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Rational, simplify
-
-theta, sigma2 = symbols('theta sigma2', positive=True)
-
-var_X   = sigma2 * (1 + theta**2)
-gamma_1 = sigma2 * theta
-rho_1   = simplify(gamma_1 / var_X)
-
-print("Var(X_t)  =", var_X)
-print("rho(1)    =", rho_1)
-
-# Evaluate at theta=0.8, sigma2=1
-print("rho(1)|_{θ=0.8} =", float(rho_1.subs([(theta, Rational(4,5)), (sigma2, 1)])))</code></pre>
-<p>Running this cell confirms $\rho(1) = \theta/(1+\theta^2)$ and recovers the numerical value $\approx 0.488$ obtained above.</p>
+<p><strong>Definition.</strong> A <em>moving average model of order $q$</em>, denoted $\mathrm{MA}(q)$, is the process</p>
+$$X_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}, \qquad \varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0,\sigma^2),$$
+<p>where $\{\theta_j\}_{j=1}^q \subset \mathbb{R}$ are the MA coefficients. In backshift notation, $X_t - \mu = \Theta(B)\,\varepsilon_t$ with $\Theta(z) = 1 + \theta_1 z + \cdots + \theta_q z^q$.</p>
+<p><strong>Theorem (Stationarity).</strong> <em>Every $\mathrm{MA}(q)$ process is weakly stationary regardless of the values of $\{\theta_j\}$.</em> The autocovariance function satisfies</p>
+$$\gamma(h) = \sigma^2 \sum_{j=0}^{q-|h|} \theta_j \theta_{j+|h|}, \quad |h| \leq q; \qquad \gamma(h) = 0, \quad |h| > q,$$
+<p>with $\theta_0 \equiv 1$. <em>Proof sketch.</em> Since $X_t - \mu$ is a finite linear combination of i.i.d. zero-mean variables, $\mathbb{E}[X_t] = \mu$ and $\gamma(h)$ depends only on $|h|$; direct substitution yields the formula. $\square$</p>
+<p>A structural caveat: the coefficients $\theta$ and $\theta^{-1}$ produce identical $\{\gamma(h)\}$, so the MA polynomial $\Theta(z)$ is not identifiable from second-order structure alone. Restricting all roots of $\Theta(z)$ to lie outside the unit disk selects the canonical <em>invertible</em> representative; non-invertibility degrades forecasting even when autocovariances match.</p>
+<p><strong>Literature context.</strong> The MA model originates in Yule (1927) and was systematized by Box and Jenkins (1970). The classical identification strategy examines the ACF for a hard cutoff at lag $q$, which is theoretically exact but brittle in finite samples. Open problems include: MLE for MA parameters yields a non-convex likelihood surface with local optima near the invertibility boundary; model selection criteria (AIC, BIC) degrade under heavy-tailed noise.</p>
+<p><strong>Suggested investigation.</strong> Simulate $\mathrm{MA}(1)$ processes at $\theta = 0.8$ and its dual $\theta^{-1} = 1.25$ for $n \in \{50, 200, 1000\}$. Fit both candidates by conditional and exact MLE using <code>statsmodels</code> or R's <code>arima()</code>. Measure parameter recovery bias and forecasting RMSE, then repeat with Student-$t_3$ noise to test Gaussian MLE robustness near the unit-root boundary.</p>
+<p><strong>Report-writing note.</strong> A write-up should establish: the theoretical ACF cutoff, empirical ACF plots confirming or contradicting it, a comparison table of estimates and forecast errors across $\theta/\theta^{-1}$ pairs and sample sizes, and a discussion of whether enforcing invertibility during optimization consistently selects the correct branch. The investigation is complete when it can articulate why invertibility matters for forecasting even when $\{\gamma(h)\}$ is identical between dual solutions.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

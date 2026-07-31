@@ -35,26 +35,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="time-series">Time Series</h2>
-<p><strong>Definition.</strong> A <em>time series</em> is a sequence of observations $\{x_t\}_{t=1}^{T}$ indexed by discrete time $t \in \mathbb{Z}$, where each $x_t$ is a realization of a random variable $X_t$. The collection $\{X_t\}$ is called a <em>stochastic process</em>. A time series is said to be <em>weakly stationary</em> (or <em>covariance-stationary</em>) if its mean and autocovariance structure are invariant under time shifts:</p>
-$$\mathbb{E}[X_t] = \mu \quad \text{for all } t,$$
-$$\operatorname{Cov}(X_t, X_{t+k}) = \gamma(k) \quad \text{for all } t, k,$$
-<p>where $\gamma(k)$ is called the <em>autocovariance function</em> at lag $k$. The normalized version, $\rho(k) = \gamma(k)/\gamma(0)$, is the <em>autocorrelation function</em> (ACF). These two quantities — $\gamma$ and $\rho$ — are the primary tools for characterizing the internal dependence structure of a stationary series.</p>
-<p><strong>Worked Example.</strong> Consider daily closing prices of a stock over $T = 5$ days: $x_1 = 100,\ x_2 = 102,\ x_3 = 101,\ x_4 = 105,\ x_5 = 103$. Compute the sample mean $\bar{x} = \frac{1}{5}\sum_{t=1}^{5} x_t = 102.2$. The lag-1 sample autocovariance is</p>
-$$\hat{\gamma}(1) = \frac{1}{T}\sum_{t=2}^{T}(x_t - \bar{x})(x_{t-1} - \bar{x}) = \frac{1}{5}\bigl[(-1.2)(-2.2) + (-1.2)(-0.2) + (2.8)(-1.2) + (0.8)(2.8)\bigr] = 0.56.$$
-<p>A positive $\hat{\gamma}(1)$ indicates that consecutive observations tend to move together — a feature common in financial data.</p>
-<p><strong>Key Theorem (Properties of the ACF).</strong> For any weakly stationary process $\{X_t\}$, the autocorrelation function satisfies:</p>
-$$\rho(0) = 1, \qquad \rho(-k) = \rho(k) \quad \text{for all } k \in \mathbb{Z}, \qquad |\rho(k)| \leq 1.$$
-<p>Symmetry follows directly from the definition of covariance; the bound $|\rho(k)| \leq 1$ is a consequence of the Cauchy–Schwarz inequality applied to $X_t$ and $X_{t+k}$. Together, these constraints rule out spurious correlation estimates outside $[-1, 1]$ and allow the ACF to be plotted on a standardized scale — the foundation of all graphical stationarity diagnostics.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>import sympy as sp
-
-k = sp.Symbol('k', integer=True)
-phi, sigma2 = sp.symbols('phi sigma2', positive=True)
-
-# AR(1) autocovariance: gamma(k) = sigma^2 * phi^|k| / (1 - phi^2)
-gamma = sigma2 * phi**sp.Abs(k) / (1 - phi**2)
-rho   = sp.simplify(gamma / gamma.subs(k, 0))
-sp.pprint(rho)  # yields phi^|k|; verify rho(0)=1 and symmetry</code></pre>
+<p><strong>Definition.</strong> A <em>weakly stationary time series</em> is a stochastic process $\{X_t\}_{t \in \mathbb{Z}}$ satisfying $\mathbb{E}[X_t] = \mu$ for all $t$ and $\text{Cov}(X_t, X_{t+h}) = \gamma(h)$ for a function $\gamma$ depending only on the lag $h \in \mathbb{Z}$, not on $t$. This single condition—that the second-order structure is time-invariant—is the operative primitive: it licenses both Fourier-analytic tools and linear prediction theory without requiring the stronger assumption of strict stationarity.</p>
+<p><strong>Theorem (Wold Decomposition).</strong> Every zero-mean purely nondeterministic weakly stationary process $\{X_t\}$ admits the representation</p>
+$$X_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j}, \quad \sum_{j=0}^{\infty} \psi_j^2 < \infty,$$
+<p>where $\{\varepsilon_t\}$ is white noise with variance $\sigma^2$ and $\psi_0 = 1$. The coefficients $\{\psi_j\}$ are unique. <em>Proof sketch:</em> Project $X_t$ onto the closed linear span $\overline{\text{sp}}\{X_s : s < t\}$; the one-step prediction errors $\varepsilon_t = X_t - \hat{X}_t$ are mutually orthogonal, and successive Gram–Schmidt steps recover the $\psi_j$ uniquely. $\square$</p>
+<p><strong>Literature context.</strong> Wold's theorem establishes that weak stationarity is precisely the condition under which linear prediction is well-posed; the non-uniqueness that arises in non-stationary settings (unit roots, structural breaks) is an active research area. Brockwell and Davis (1991) give the canonical treatment; Anderson (1971) covers the multivariate extension. Open questions concern whether weak stationarity is the right regularity class for neural sequence models—Transformers and state-space models implicitly learn $\psi_j$ weights without enforcing the $\ell^2$ summability constraint.</p>
+<p><strong>Suggested investigation.</strong> Generate sample paths from a weakly stationary AR(2) process with roots near but strictly inside the unit circle. Estimate $\psi_j$ via the Durbin–Levinson recursion and verify empirically that the estimated coefficients lie in $\ell^2$. Then perturb one root to land on the unit circle and document precisely where the recursion breaks down and why.</p>
+<p><strong>Report-writing note.</strong> A write-up should establish: the parameter configuration and its distance from the unit circle, the estimated $\psi_j$ sequence and its partial sums against the theoretical $\ell^2$ bound, and a precise statement of which step in the Wold proof fails when weak stationarity is violated.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,34 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="seasonal-component">Seasonal Component</h2>
-<p><strong>Definition.</strong> Let $\{y_t\}_{t=1}^{T}$ be a time series observed at equally spaced intervals. The <em>seasonal component</em> $S_t$ is a periodic function satisfying</p>
-$$S_t = S_{t+m} \quad \forall\, t,$$
-<p>where $m \in \mathbb{Z}^{+}$ is the <em>period</em> (e.g., $m = 12$ for monthly data, $m = 4$ for quarterly data). In the classical additive decomposition</p>
-$$y_t = T_t + S_t + \varepsilon_t,$$
-<p>$T_t$ denotes the trend, and $\varepsilon_t$ is the irregular residual. In the multiplicative form, $y_t = T_t \cdot S_t \cdot \varepsilon_t$, the seasonal factor is expressed as a ratio rather than an additive offset. The additive model is preferred when seasonal fluctuations are roughly constant in magnitude; the multiplicative model is preferred when they scale with the level of the series.</p>
-<p><strong>Worked Example.</strong> Consider average monthly electricity demand (GWh) over three years. Visual inspection reveals demand peaks each July–August (summer cooling) and dips each April–May. To isolate $S_t$, compute a <em>centered moving average</em> (CMA) of order $m = 12$:</p>
-$$\hat{T}_t = \frac{1}{12}\sum_{k=-5}^{6} y_{t+k}.$$
-<p>Subtract the CMA from the raw series to obtain detrended values $d_t = y_t - \hat{T}_t$. Average $d_t$ across all occurrences of each calendar month to produce twelve seasonal indices $\hat{S}_1, \ldots, \hat{S}_{12}$. For identifiability, impose the constraint $\sum_{j=1}^{12} \hat{S}_j = 0$ (additive case) or $\prod_{j=1}^{12} \hat{S}_j = 1$ (multiplicative case).</p>
-<p><strong>Key Theorem (Uniqueness of Additive Decomposition).</strong> If $y_t = T_t + S_t + \varepsilon_t$ with $S_t$ strictly $m$-periodic and $\sum_{j=1}^{m} S_j = 0$, then $T_t$ and $S_t$ are separately identifiable from $y_t$ up to a constant, provided $T_t$ varies on a timescale much larger than $m$.</p>
-<p><em>Proof sketch.</em> Applying the centered moving average operator annihilates $S_t$ (since its $m$-period sum is zero) and smooths $\varepsilon_t$, leaving a consistent estimate of $T_t$. The seasonal component is then recovered by subtraction. $\square$</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import numpy as np
-
-rng = np.random.default_rng(0)
-m      = 12
-time   = np.arange(1, 37)                        # 3 years of monthly data
-trend  = 0.4 * time + 100
-season = 5 * np.cos(2 * np.pi * time / m)        # known ground truth
-series = trend + season + rng.normal(0, 1, len(time))
-
-# Centered moving average (the one new primitive introduced here)
-cma = np.convolve(series, np.ones(m) / m, mode='same')
-detrended = series - cma
-
-# Average each calendar month across years
-indices = np.array([detrended[month::m].mean() for month in range(m)])
-print(np.round(indices, 2))</code></pre>
-<p>Running this cell prints twelve estimated seasonal indices. Because <code>np.convolve</code> with a uniform kernel of length $m$ implements the CMA operator from the worked example, the output should closely recover the cosine pattern embedded in the synthetic series.</p>
+<p>Picture a coffee shop's weekly sales. Monday is slow, Friday buzzes, Saturday peaks, Sunday dips again. Come next week, the same rhythm repeats. That repeating, calendar-driven pulse is the seasonal component — the part of any pattern that cycles back on a predictable schedule.</p>
+<p><strong>Why does this feel right?</strong></p>
+<p>Human life runs on cycles: days, weeks, months, years. Ice cream sells more in July than January. Electricity spikes every morning when people shower. Retail explodes every December. These are not random fluctuations — they are <em>structured</em> repetitions baked into the calendar. Once you see that, you realise any measurement of the world carries two very different kinds of movement: long-run drift (trend) and this rhythmic heartbeat (season).</p>
+<p><strong>Building the intuition</strong></p>
+<p>Imagine peeling an orange. The trend is the whole orange — the general size and weight. The seasonal component is one repeating segment. If you know the segment shape, you can predict where it sits in next week's slice before you even look.</p>
+<p>That image leads naturally to one formal idea. If your time series is $y_t$, you can write:</p>
+$$y_t = T_t + S_t + R_t$$
+<p>where $T_t$ is the trend you already know, $S_t$ is the seasonal component, and $R_t$ is leftover noise. This section's single new object is $S_t$ — the piece that repeats with period $m$. Everything else in the equation is a placeholder we will unpack in later sections.</p>
+<p><strong>Now you try</strong></p>
+<p>Take your weekly step-count for the past month. Label each day of the week. Do Saturdays look consistently higher than Tuesdays? If yes, you have just spotted a seasonal component with period $m = 7$ — without touching any algebra at all.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

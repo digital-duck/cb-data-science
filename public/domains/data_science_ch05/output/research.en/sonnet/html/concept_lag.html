@@ -35,27 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="lag">Lag</h2>
-<p><strong>Definition.</strong> Let $\{x_t\}$ be a discrete-time sequence indexed by integers $t \in \mathbb{Z}$. The <em>lag-$k$ operator</em> $L^k$ is defined by</p>
-$$L^k x_t = x_{t-k}, \qquad k \in \mathbb{Z}.$$
-<p>When $k > 0$ the operator shifts the sequence backward in time (a <em>delay</em>); when $k < 0$ it shifts forward (a <em>lead</em>). The special case $L^1$ is called the <em>backshift operator</em> and is frequently denoted $B$ in the time-series literature. Lag is a purely algebraic construction: it does not depend on stationarity or any probabilistic assumptions, making it well-defined for arbitrary real- or complex-valued sequences.</p>
-<p><strong>Worked Example.</strong> Consider the weekly sales figures $x = (3, 7, 2, 9, 5)$ for $t = 1, 2, 3, 4, 5$. Applying the lag-2 operator yields</p>
-$$L^2 x_t = x_{t-2},$$
-<p>so the lagged series is $(\text{undefined}, \text{undefined}, 3, 7, 2)$ for $t = 1, \ldots, 5$. In practice one pads the first $k$ positions with <code>NaN</code> or discards them, depending on the application. The <em>first difference</em> of the original series is $\Delta x_t = x_t - x_{t-1} = (1 - L)x_t$, demonstrating that lag operators compose with ordinary polynomial algebra: $(1 - L)$ is a degree-one <em>lag polynomial</em>.</p>
-<p><strong>Key Theorem (Lag Polynomial Factorisation).</strong> Let $\Phi(L) = 1 - \phi_1 L - \cdots - \phi_p L^p$ be a lag polynomial with roots $z_1, \ldots, z_p$ (solutions to $\Phi(z) = 0$). The autoregressive process $\Phi(L)x_t = \varepsilon_t$ is <em>stationary</em> if and only if every root satisfies $|z_i| > 1$, i.e., all roots lie strictly outside the unit circle in the complex plane. This geometric condition on the roots underpins the stability analysis of AR, ARMA, and state-space models alike.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, factor, Rational
-
-L, z = symbols('L z')
-
-# Lag polynomial for AR(2): 1 - 0.5L - 0.25L^2
-Phi = 1 - Rational(1,2)*L - Rational(1,4)*L**2
-print("Phi(L) =", Phi)
-
-# Check roots (substitute z for L, solve Phi(z)=0)
-from sympy import solve
-roots = solve(Phi.subs(L, z), z)
-print("Roots:", roots)
-print("All outside unit circle?", all(abs(complex(r)) &gt; 1 for r in roots))</code></pre>
+<p><strong>Definition.</strong> A <em>lag</em> of magnitude $\tau \geq 0$ is a pure temporal displacement between a cause and its observable effect. In continuous time, a linear time-invariant system with output delay satisfies</p>
+$$y(t) = f\bigl(u(t - \tau)\bigr),$$
+<p>whose Laplace-domain representation is $Y(s) = e^{-\tau s} G(s) U(s)$, where $e^{-\tau s}$ is the <em>delay operator</em>. In discrete time, a lag-$k$ relationship is encoded by the backshift operator $B^k$: $y_t = B^k u_t \equiv u_{t-k}$. Lag also appears in statistical settings as the argument of an autocovariance function $\gamma(k) = \mathrm{Cov}(X_t, X_{t-k})$, bridging signal processing and time-series econometrics.</p>
+<p><strong>Stability and the transcendental characteristic equation.</strong> Consider the scalar delay differential equation $\dot{x}(t) = ax(t) + bx(t-\tau)$. Substituting $x(t) = e^{\lambda t}$ yields the characteristic quasi-polynomial</p>
+$$\lambda = a + b e^{-\lambda \tau},$$
+<p>which has infinitely many roots $\{\lambda_n\}_{n \in \mathbb{Z}}$ in $\mathbb{C}$. This infinite spectral dimension is the central analytical obstacle: unlike ODE systems, stability cannot be verified by checking finitely many eigenvalues. The <em>Pontryagin criterion</em> and the <em>D-subdivision method</em> (Sipahi et al., 2011, <em>IEEE Trans. Autom. Control</em>) characterize the stability boundary as a curve in the $(a, b)$ plane parametrized by $\omega \in \mathbb{R}$. A key result: for $a < 0$ and $|b| < |a|$, the system is stable for all $\tau \geq 0$; outside this cone, there exists a critical delay $\tau^*$ beyond which stability is lost.</p>
+<p><strong>Literature context.</strong> Gu, Kharitonov, and Chen (2003, <em>Stability of Time-Delay Systems</em>, Birkhäuser) is the standard reference for Lyapunov–Krasovskii functional methods. Current open problems include tight stability conditions for coupled delay networks (relevant to Momagrid-style distributed inference pipelines, where round-trip communication introduces heterogeneous node-level lags) and data-driven identification of $\tau$ when the delay is unknown or state-dependent (see Brunton & Kutz, 2022, <em>Data-Driven Science and Engineering</em>, Chapter 7).</p>
+<p><strong>Suggested investigation.</strong> Fix $a = -1$ and sweep $(b, \tau)$ over a grid; numerically locate roots of $\lambda - a - be^{-\lambda\tau} = 0$ using the Lambert $W$ function, and verify agreement with the Pontryagin boundary. Then introduce a Smith predictor and measure the reduction in effective lag in closed-loop step response.</p>
+<p><strong>Report note.</strong> A write-up should state the characteristic equation explicitly, prove at least one stability boundary case analytically, compare the analytic boundary against numerical root-locus plots, and report the critical delay $\tau^*$ with a sensitivity analysis to parameter uncertainty in $b$.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

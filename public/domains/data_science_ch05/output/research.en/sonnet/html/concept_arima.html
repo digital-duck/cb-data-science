@@ -35,34 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="arima">Arima</h2>
-<p><strong>Definition.</strong> Assume the reader is already familiar with the backshift operator $B$, the autoregressive polynomial $\phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$, the moving-average polynomial $\theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$, and white noise $\varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0,\sigma^2)$. The single new primitive introduced here is the <strong>differencing operator</strong>: for a non-negative integer $d$, define $\nabla^d = (1-B)^d$, so $\nabla^1 X_t = X_t - X_{t-1}$ and $\nabla^2 X_t = X_t - 2X_{t-1} + X_{t-2}$. Setting $Y_t = \nabla^d X_t$ and requiring $Y_t$ to be weakly stationary yields the <em>AutoRegressive Integrated Moving Average</em> model $\text{ARIMA}(p,d,q)$:</p>
+<p><strong>Definition.</strong> An ARIMA$(p, d, q)$ process is a discrete-time stochastic process $\{X_t\}$ such that the $d$-th difference $W_t = \Delta^d X_t = (1-B)^d X_t$ satisfies the ARMA$(p,q)$ equation</p>
 $$
-\phi(B)\,\nabla^d X_t = \theta(B)\,\varepsilon_t.
+\phi(B)\,W_t = \theta(B)\,\varepsilon_t, \qquad \varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0,\sigma^2),
 $$
-<p>The integer $d \geq 0$ is the <em>degree of integration</em>: applying $\nabla^d$ removes deterministic or stochastic trends and renders the transformed series $Y_t$ stationary. When $d=0$ the model reduces to the familiar $\text{ARMA}(p,q)$.</p>
-<p><strong>Worked Example.</strong> Monthly airline passenger counts (Box–Jenkins data) exhibit exponential growth, so a log-transform is applied first to stabilise variance. The autocorrelation function of the log series decays slowly and linearly — a hallmark of a unit root — so one difference ($d=1$) is taken. For the differenced series the partial ACF cuts off after lag 1 and the ACF cuts off after lag 1, suggesting $p=1$, $q=1$. The fitted $\text{ARIMA}(1,1,1)$ model is</p>
-$$
-(1 - \hat\phi_1 B)(1-B)\,X_t = (1 + \hat\theta_1 B)\,\varepsilon_t,
-$$
-<p>with estimated coefficients $\hat\phi_1 \approx 0.60$ and $\hat\theta_1 \approx -0.38$. Residuals pass the Ljung–Box portmanteau test at the 5 % level, confirming adequate fit.</p>
-<p><strong>Key Theorem (Wold Decomposition).</strong> Every zero-mean covariance-stationary process $\{Y_t\}$ has a representation $Y_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j}$ with $\psi_0 = 1$ and $\sum_j \psi_j^2 < \infty$. An invertible $\text{ARMA}(p,q)$ process is a finite-parameter approximation to this infinite moving average, which justifies using ARIMA — after differencing removes the trend — as a parsimonious forecasting model.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-from sympy import symbols, expand
-
-# Illustrate the differencing operator symbolically
-B = symbols('B')
-nabla = 1 - B
-print("nabla^1 applied to X_t gives coefficient polynomial:", expand(nabla))
-print("nabla^2 applied to X_t gives coefficient polynomial:", expand(nabla**2))
-
-# Fit ARIMA(1,1,1) to log-transformed AirPassengers data
-url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv"
-df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
-log_passengers = df['Passengers'].apply('log')
-result = ARIMA(log_passengers, order=(1, 1, 1)).fit()
-print(result.summary())</code></pre>
+<p>where $\phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ and $\theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$ are the AR and MA polynomials in the backshift operator $B$, and $d \geq 0$ is the integration order.</p>
+<p><strong>Key result (Wold decomposition).</strong> If $\phi(z) \neq 0$ for all $|z| \leq 1$ (invertibility of AR part) and $\theta(z) \neq 0$ for $|z| \leq 1$ (invertibility of MA part), then the ARMA component $W_t$ admits the unique causal representation $W_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j}$, where $\psi(B) = \phi(B)^{-1}\theta(B)$ and $\sum_j \psi_j^2 < \infty$. Differencing $d$ times maps a unit-root nonstationary process to a covariance-stationary one, underpinning the "I" component. The Ljung–Box statistic $Q(m) = n(n+2)\sum_{k=1}^m \hat{\rho}_k^2/(n-k)$ under $\chi^2_{m-p-q}$ provides a standard residual diagnostic.</p>
+<p><strong>Literature context.</strong> Box and Jenkins (1970) introduced ARIMA as a systematic identification–estimation–diagnostic cycle; Hamilton (1994, <em>Time Series Analysis</em>) provides the canonical treatment. Open questions include: optimal order selection under model misspecification (AIC vs. BIC in finite samples with structural breaks), and whether differencing versus fractional integration ($d \in (0,1)$, ARFIMA) better captures long-memory phenomena in macroeconomic and climate series (Granger & Joyeux, 1980; Hosking, 1981).</p>
+<p><strong>Suggested investigation.</strong> Select a nonstationary economic series (e.g., monthly CPI or equity price index). Apply the augmented Dickey–Fuller and KPSS tests to determine $d$, use ACF/PACF plots to hypothesize $(p,q)$, estimate via exact maximum likelihood, validate with Ljung–Box and recursive residuals, and compare one-step-ahead forecast RMSE against a seasonal SARIMA$(P,D,Q)_s$ baseline.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state the unit-root test statistics and critical values, report parameter estimates with standard errors and likelihood ratio tests for order reduction, present ACF plots of raw and differenced series alongside model residuals, and include a rolling-window out-of-sample forecast evaluation with confidence intervals.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

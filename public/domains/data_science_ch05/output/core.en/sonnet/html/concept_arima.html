@@ -35,34 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="arima">Arima</h2>
-<p><strong>Definition.</strong> Assume the reader is already familiar with the backshift operator $B$, the autoregressive polynomial $\phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$, the moving-average polynomial $\theta(B) = 1 + \theta_1 B + \cdots + \theta_q B^q$, and white noise $\varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0,\sigma^2)$. The single new primitive introduced here is the <strong>differencing operator</strong>: for a non-negative integer $d$, define $\nabla^d = (1-B)^d$, so $\nabla^1 X_t = X_t - X_{t-1}$ and $\nabla^2 X_t = X_t - 2X_{t-1} + X_{t-2}$. Setting $Y_t = \nabla^d X_t$ and requiring $Y_t$ to be weakly stationary yields the <em>AutoRegressive Integrated Moving Average</em> model $\text{ARIMA}(p,d,q)$:</p>
-$$
-\phi(B)\,\nabla^d X_t = \theta(B)\,\varepsilon_t.
-$$
-<p>The integer $d \geq 0$ is the <em>degree of integration</em>: applying $\nabla^d$ removes deterministic or stochastic trends and renders the transformed series $Y_t$ stationary. When $d=0$ the model reduces to the familiar $\text{ARMA}(p,q)$.</p>
-<p><strong>Worked Example.</strong> Monthly airline passenger counts (Box–Jenkins data) exhibit exponential growth, so a log-transform is applied first to stabilise variance. The autocorrelation function of the log series decays slowly and linearly — a hallmark of a unit root — so one difference ($d=1$) is taken. For the differenced series the partial ACF cuts off after lag 1 and the ACF cuts off after lag 1, suggesting $p=1$, $q=1$. The fitted $\text{ARIMA}(1,1,1)$ model is</p>
-$$
-(1 - \hat\phi_1 B)(1-B)\,X_t = (1 + \hat\theta_1 B)\,\varepsilon_t,
-$$
-<p>with estimated coefficients $\hat\phi_1 \approx 0.60$ and $\hat\theta_1 \approx -0.38$. Residuals pass the Ljung–Box portmanteau test at the 5 % level, confirming adequate fit.</p>
-<p><strong>Key Theorem (Wold Decomposition).</strong> Every zero-mean covariance-stationary process $\{Y_t\}$ has a representation $Y_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j}$ with $\psi_0 = 1$ and $\sum_j \psi_j^2 < \infty$. An invertible $\text{ARMA}(p,q)$ process is a finite-parameter approximation to this infinite moving average, which justifies using ARIMA — after differencing removes the trend — as a parsimonious forecasting model.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-from sympy import symbols, expand
-
-# Illustrate the differencing operator symbolically
-B = symbols('B')
-nabla = 1 - B
-print("nabla^1 applied to X_t gives coefficient polynomial:", expand(nabla))
-print("nabla^2 applied to X_t gives coefficient polynomial:", expand(nabla**2))
-
-# Fit ARIMA(1,1,1) to log-transformed AirPassengers data
-url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv"
-df = pd.read_csv(url, header=0, index_col=0, parse_dates=True)
-log_passengers = df['Passengers'].apply('log')
-result = ARIMA(log_passengers, order=(1, 1, 1)).fit()
-print(result.summary())</code></pre>
+<p><strong>Recap:</strong> You've probably noticed that some data has a rhythm — temperatures rise in summer, fall in winter; a store sells more on weekends. ARIMA is a mathematical model that captures patterns in time and uses them to predict what comes next.</p>
+<p><strong>Exploring the structure:</strong> ARIMA stands for <strong>AutoRegressive Integrated Moving Average</strong>, and its three letters each name one ingredient. For now, focus on the middle one — the <strong>I</strong>, which stands for <em>Integrated</em>, but really means <strong>differencing</strong>.</p>
+<p>Real-world time series often drift upward or downward over time. That trend makes prediction harder, because the model has to chase a moving target. Differencing removes the drift by replacing each value with the <em>change</em> from the step before:</p>
+$$y'_t = y_t - y_{t-1}$$
+<p>If daily sales are 40, 43, 41 … the differenced series becomes 3, −2, 4 … — fluctuations around zero instead of a drifting line. Once the series is level (statisticians call this <em>stationary</em>), the other parts of ARIMA can fit the remaining pattern cleanly.</p>
+<p>An ARIMA$(p,\, d,\, q)$ model records how many rounds of differencing were applied as the middle parameter $d$. Usually $d = 0$ or $d = 1$ is enough.</p>
+<p><strong>Simple rule:</strong> Plot your data first. If it drifts steadily up or down, set $d = 1$; if it already hovers around a constant level, $d = 0$ is fine.</p>
+<hr>
+<p><strong>Practice problem:</strong> A bakery records daily croissant sales for one week: 40, 43, 41, 45, 44, 47, 46. Compute the first-difference series $y'_t = y_t - y_{t-1}$ for days 2–7. Does the differenced series look more stable (closer to zero) than the original? What does that tell you about whether $d = 1$ is a reasonable choice here?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

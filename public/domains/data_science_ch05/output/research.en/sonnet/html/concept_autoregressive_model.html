@@ -35,28 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="autoregressive-model">Autoregressive Model</h2>
-<p><strong>Definition.</strong> An <em>autoregressive model of order $p$</em>, denoted $\mathrm{AR}(p)$, expresses a time series $\{X_t\}$ as a linear combination of its own $p$ most recent values plus a white-noise innovation:</p>
-$$X_t = c + \phi_1 X_{t-1} + \phi_2 X_{t-2} + \cdots + \phi_p X_{t-p} + \varepsilon_t,$$
-<p>where $c \in \mathbb{R}$ is a constant intercept, $\phi_1, \ldots, \phi_p \in \mathbb{R}$ are the <em>autoregressive coefficients</em>, and $\varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2)$ is the innovation sequence. The model is called <em>autoregressive</em> because the response variable is regressed on its own past realizations.</p>
-<p><strong>Worked Example.</strong> Consider the $\mathrm{AR}(1)$ process $X_t = 0.8\, X_{t-1} + \varepsilon_t$ with $\sigma = 1$ and $X_0 = 0$. Drawing $\varepsilon_1 = 1.2$, $\varepsilon_2 = -0.5$, $\varepsilon_3 = 0.9$, the first three values are:</p>
-$$X_1 = 0.8(0) + 1.2 = 1.2,$$
-$$X_2 = 0.8(1.2) + (-0.5) = 0.46,$$
-$$X_3 = 0.8(0.46) + 0.9 = 1.268.$$
-<p>Each observation is anchored to the previous one, creating temporal dependence that decays geometrically as the lag grows.</p>
-<p><strong>Key Theorem (Stationarity Condition).</strong> The $\mathrm{AR}(p)$ process is <em>weakly stationary</em> if and only if all roots of the characteristic polynomial</p>
-$$\Phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_p z^p$$
-<p>lie strictly outside the complex unit disk, i.e., $\Phi(z) \neq 0$ for all $|z| \leq 1$.</p>
-<p><em>Proof sketch.</em> Solving the recurrence forward shows that each $X_t$ can be written as a weighted sum of past innovations $\varepsilon_{t-j}$. Those weights are proportional to powers of $1/z_k$, where $z_k$ are the roots of $\Phi(z)$. When every $|z_k| > 1$, the weights decay geometrically and the sum converges, yielding a time-invariant mean and autocovariance function—the two conditions that define weak stationarity.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, solve, Rational
-
-z = symbols('z')
-phi1 = Rational(4, 5)          # AR(1) coefficient 0.8
-char_poly = 1 - phi1 * z
-roots = solve(char_poly, z)
-print("Characteristic root:", roots)
-print("Stationary?", all(abs(complex(r)) &gt; 1 for r in roots))</code></pre>
-<p>Running this cell confirms the single root at $z = 1.25$, which lies outside the unit disk, verifying that the process $X_t = 0.8\,X_{t-1} + \varepsilon_t$ is stationary.</p>
+<p><strong>Definition.</strong> An autoregressive (AR) model of order $p$ represents a discrete-time stochastic process $\{X_t\}$ as a linear combination of its own past values plus white noise:</p>
+$$X_t = \sum_{k=1}^{p} \phi_k X_{t-k} + \varepsilon_t, \qquad \varepsilon_t \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2).$$
+<p>The coefficient vector $\boldsymbol{\phi} = (\phi_1, \ldots, \phi_p)^\top$ fully characterizes the model's short-range dependence structure. In the language of probability, $X_t$ is conditionally Gaussian given its history: $p(X_t \mid X_{t-1}, \ldots, X_{t-p}) = \mathcal{N}(\boldsymbol{\phi}^\top \mathbf{x}_{t-1}, \sigma^2)$.</p>
+<p><strong>Theorem (Stationarity condition).</strong> The AR($p$) process is covariance-stationary if and only if all roots of the characteristic polynomial $\Phi(z) = 1 - \sum_{k=1}^p \phi_k z^k$ lie strictly outside the unit disk in $\mathbb{C}$. Under stationarity, the autocorrelation function satisfies the Yule–Walker equations $\boldsymbol{\Gamma}_p \boldsymbol{\phi} = \boldsymbol{\gamma}_p$, where $\Gamma_p$ is the Toeplitz autocorrelation matrix and $\boldsymbol{\gamma}_p = (\gamma(1), \ldots, \gamma(p))^\top$.</p>
+<p><strong>Proof sketch.</strong> Write the AR($p$) in companion form $\mathbf{Y}_t = \mathbf{F}\mathbf{Y}_{t-1} + \boldsymbol{e}_t$. Stationarity requires that all eigenvalues of $\mathbf{F}$ lie within the unit disk, which is equivalent to the root condition on $\Phi(z)$.</p>
+<p><strong>Literature context.</strong> Box and Jenkins (1970) established AR models as the foundation of time-series analysis; Hamilton (1994) remains the canonical reference for macroeconomic applications. The deep connection between AR models and neural language models — where the joint probability $p(x_1, \ldots, x_T) = \prod_t p(x_t \mid x_{<t})$ is factored autoregressively — has revived theoretical interest (Bengio et al., 2003; Brown et al., 2020). Open questions include: optimal order selection under model misspecification, AR approximation of long-memory (ARFIMA) processes, and the statistical efficiency gap between least-squares and maximum-likelihood estimators in finite samples.</p>
+<p><strong>Suggested investigation.</strong> Fit AR($p$) models of varying order to a real-world time series (e.g., log-returns of an asset or a macroeconomic indicator). Estimate $\boldsymbol{\phi}$ via ordinary least squares and compare with the Yule–Walker estimator. Verify the stationarity condition numerically by plotting the characteristic roots, and use AIC/BIC to perform order selection. Then generate synthetic data from the fitted model and evaluate one-step-ahead forecast intervals.</p>
+<p><strong>Report-writing note.</strong> A write-up should establish: the estimated coefficient vector with standard errors, a root plot confirming stationarity, a diagnostic of residual autocorrelation (Ljung–Box test), and a table comparing forecast RMSE across orders. Connecting the classical AR framework to the autoregressive factorization used in transformer language models makes for a compelling theoretical bridge.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

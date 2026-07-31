@@ -143,6 +143,40 @@ was masking:**
   ch8) across all four levels with `--skip-cache` and update the Results section above
   with the corrected comparison.
 
+```bash
+# Regenerate the 3 test concepts at intro level with cache bypass
+python scripts/batch_generate.py \
+  --domain data_science_ch01 --domain data_science_ch05 --domain data_science_ch08 \
+  --include data_science,arima,hipaa \
+  --level intro \
+  --skip-cache
+
+
+# test
+python scripts/batch_generate.py \
+  --domain data_science_ch05 \
+  --include data_science,arima,hipaa \
+  --level intro 
+
+# multi-levels
+python scripts/batch_generate.py \
+  --domain data_science_ch05 \
+  --include "data_science,arima,hipaa" \
+  --level "intro,core,college,research" \
+  --skip-cache 
+
+```
+
+```output
+
+data_science_ch05               target=seasonal_trend_decomposition_loess   level=intro       style=feynman
+data_science_ch05               target=augmented_dickey_fuller_test         level=intro       style=feynman
+data_science_ch05               target=naive_forecasting                    level=intro       style=feynman
+data_science_ch05               target=linear_regression_forecasting        level=intro       style=feynman
+* data_science_ch05               target=arima                                level=intro       style=feynman
+
+```
+
 ## File paths used in this comparison
 
 ```
