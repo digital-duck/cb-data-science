@@ -35,28 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="perceptron">Perceptron</h2>
-<p><strong>Definition.</strong> A <em>perceptron</em> is a binary linear classifier defined by a weight vector $\mathbf{w} \in \mathbb{R}^n$, a bias term $b \in \mathbb{R}$, and a step activation function. Given an input vector $\mathbf{x} \in \mathbb{R}^n$, the perceptron computes the output</p>
-$$\hat{y} = \sigma(\mathbf{w}^\top \mathbf{x} + b), \qquad \sigma(z) = \begin{cases} 1 & z \geq 0 \\ 0 & z < 0 \end{cases}$$
-<p>The scalar $z = \mathbf{w}^\top \mathbf{x} + b$ is called the <em>net input</em> or <em>pre-activation</em>. Geometrically, the decision boundary is the hyperplane $\{\mathbf{x} : \mathbf{w}^\top \mathbf{x} + b = 0\}$, which partitions $\mathbb{R}^n$ into two half-spaces corresponding to the two classes.</p>
-<p><strong>Worked Example.</strong> Consider the logical AND function on two binary inputs. Let $\mathbf{x} = (x_1, x_2)^\top$ with labels $y = x_1 \land x_2$. Choose $\mathbf{w} = (1, 1)^\top$ and $b = -1.5$. Evaluating on all four inputs:</p>
-<p>| $x_1$ | $x_2$ | $z = x_1 + x_2 - 1.5$ | $\hat{y}$ | $y$ | |--------|--------|------------------------|-----------|-----| | 0 | 0 | $-1.5$ | 0 | 0 | | 1 | 0 | $-0.5$ | 0 | 0 | | 0 | 1 | $-0.5$ | 0 | 0 | | 1 | 1 | $0.5$ | 1 | 1 |</p>
-<p>All four outputs match the target, confirming that AND is linearly separable and this perceptron implements it exactly.</p>
-<p><strong>Perceptron Convergence Theorem.</strong> If a training set $\{(\mathbf{x}_i, y_i)\}_{i=1}^{m}$ with $y_i \in \{0,1\}$ is <em>linearly separable</em> — that is, there exists $\mathbf{w}^<em>$ and $b^</em>$ such that all examples are correctly classified with margin $\gamma > 0$ — then the perceptron learning rule</p>
-$$\mathbf{w} \leftarrow \mathbf{w} + (y_i - \hat{y}_i)\,\mathbf{x}_i, \quad b \leftarrow b + (y_i - \hat{y}_i)$$
-<p>converges in at most $\lfloor R^2 / \gamma^2 \rfloor$ updates, where $R = \max_i \|\mathbf{x}_i\|$. Crucially, convergence is not guaranteed when the data are not linearly separable; the weights cycle indefinitely.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import numpy as np
-
-# Weights and bias for AND gate
-w = np.array([1.0, 1.0])
-b = -1.5
-
-X = np.array([[0,0],[1,0],[0,1],[1,1]])
-for x in X:
-    z = w @ x + b
-    y_hat = 1 if z &gt;= 0 else 0
-    print(f"x={x}, z={z:.1f}, y_hat={y_hat}")</code></pre>
-<p>Running this cell reproduces the table above and invites the student to modify $\mathbf{w}$ and $b$ to implement OR and NAND, reinforcing the geometric intuition of rotating and translating the decision boundary.</p>
+<p><strong>Definition.</strong> A <em>perceptron</em> is a parameterized binary classifier $f_{\mathbf{w}, b} : \mathbb{R}^d \to \{-1, +1\}$ defined by</p>
+$$f_{\mathbf{w},b}(\mathbf{x}) = \operatorname{sgn}(\mathbf{w}^\top \mathbf{x} + b),$$
+<p>where $\mathbf{w} \in \mathbb{R}^d$ is a weight vector and $b \in \mathbb{R}$ is a bias. Without loss of generality one absorbs the bias into an augmented weight $\tilde{\mathbf{w}} = (b, \mathbf{w})^\top$ with $\tilde{\mathbf{x}} = (1, \mathbf{x})^\top$, yielding $f(\tilde{\mathbf{x}}) = \operatorname{sgn}(\tilde{\mathbf{w}}^\top \tilde{\mathbf{x}})$. The Rosenblatt (1958) update rule, given a misclassified example $(\mathbf{x}_t, y_t)$ with $y_t \in \{-1,+1\}$, is</p>
+$$\tilde{\mathbf{w}}_{t+1} \leftarrow \tilde{\mathbf{w}}_t + y_t \tilde{\mathbf{x}}_t.$$
+<p><strong>Theorem (Perceptron Convergence, Novikoff 1962).</strong> <em>Let $\{(\mathbf{x}_i, y_i)\}_{i=1}^n \subset \mathbb{R}^d \times \{-1,+1\}$ be linearly separable with margin $\gamma = \min_i y_i (\mathbf{w}^</em> \cdot \mathbf{x}_i) > 0$ for some unit-norm separator $\mathbf{w}^<em>$, and $R = \max_i \|\mathbf{x}_i\|$. Then the online perceptron algorithm makes at most $\lfloor R^2/\gamma^2 \rfloor$ mistakes.</em></p>
+<p><em>Proof sketch.</em> Track two quantities across mistake steps $t$: the inner product $\tilde{\mathbf{w}}_t \cdot \mathbf{w}^<em>$ grows by at least $\gamma$ per update (since $y_t(\mathbf{w}^</em> \cdot \mathbf{x}_t) \geq \gamma$), giving $\tilde{\mathbf{w}}_t \cdot \mathbf{w}^<em> \geq M\gamma$ after $M$ mistakes; meanwhile $\|\tilde{\mathbf{w}}_t\|^2$ grows by at most $R^2$ per update (since $y_t(\tilde{\mathbf{w}}_t \cdot \tilde{\mathbf{x}}_t) \leq 0$ at a mistake), giving $\|\tilde{\mathbf{w}}_t\|^2 \leq MR^2$. Applying Cauchy–Schwarz, $M\gamma \leq \tilde{\mathbf{w}}_t \cdot \mathbf{w}^</em> \leq \|\tilde{\mathbf{w}}_t\| \leq \sqrt{MR^2}$, which yields $M \leq R^2/\gamma^2$. $\square$</p>
+<p><strong>Literature context.</strong> The bound is tight up to constants: Blum & Warmuth (1992) construct adversarial sequences achieving $\Theta(R^2/\gamma^2)$ mistakes, so no algorithm in the online mistake-bound model can improve the exponent. The connection to support vector machines is structural — the SVM margin $\gamma_{\text{SVM}}$ maximizes the Novikoff denominator, making SVMs the "best-case" input for perceptron-style analysis (Vapnik 1995) — but this connection is taken up in a later section. In the non-separable regime the perceptron does not converge; the voted perceptron of Freund & Schapire (1999) addresses this by maintaining a weighted ensemble of all intermediate hypotheses, and its analysis introduces one additional mechanism best treated separately. Modern interest resurfaces in the context of neural networks: a single perceptron is a one-neuron network, and gradient descent on the squared loss with a sigmoid activation recovers Rosenblatt's rule in the limit of hard thresholding. Whether the discrete mistake-bound model and continuous SGD convergence rates can be unified under a single framework remains an active research question (Shalev-Shwartz 2011).</p>
+<p><strong>Suggested investigation.</strong> Implement the Rosenblatt perceptron on a synthetic 2D dataset with controlled margin $\gamma$. Vary $\gamma \in \{0.05, 0.1, 0.2, 0.5\}$ and sample size $n \in \{100, 500, 2000\}$; record mistake counts $M$ across multiple random draws and compare to the Novikoff bound $\lfloor R^2/\gamma^2 \rfloor$. The central empirical question is whether $M$ saturates the theoretical bound or falls well below it, and how the ratio $M_{\text{emp}}/\lfloor R^2/\gamma^2 \rfloor$ behaves as a function of $\gamma$ and $R$. A natural extension is to vary the ambient dimension $d$ while holding $\gamma$ and $R$ fixed, probing whether the bound's dimension-independence is reflected in practice.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should reproduce the Novikoff proof with explicit constants, present the empirical mistake curves alongside the theoretical bound (as separate panels for each $\gamma$ value), and quantify the tightness ratio $M_{\text{emp}}/\lfloor R^2/\gamma^2 \rfloor$ as a function of $\gamma$, $R$, and $n$. The discussion should explain why the bound is pessimistic in practice — typically because adversarial orderings are not realized by random draws — and identify which geometric parameter ($\gamma$ versus $R$) dominates empirical convergence speed. The write-up should conclude with a precise statement of what the experiment does and does not establish about the tightness of the bound.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

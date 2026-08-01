@@ -35,26 +35,20 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="audience">Audience</h2>
-<p><strong>Definition.</strong> Let $\mathcal{M}$ be a message space and $\mathcal{K}$ a knowledge space whose elements represent prior beliefs, vocabulary, and cognitive schemata. An <em>audience</em> $\mathcal{A}$ is a non-empty set of agents $\{r_1, r_2, \ldots, r_n\}$, each equipped with a knowledge profile $\kappa_i \in \mathcal{K}$. A <em>target audience</em> $\mathcal{A}^<em> \subseteq \mathcal{A}$ is the subset for whom a message $m \in \mathcal{M}$ is designed to be both received and decoded with minimal information loss. Formally, the </em>audience fit* of message $m$ with respect to agent $r_i$ is the functional</p>
-$$\phi(m, r_i) = 1 - \frac{H(m \mid \kappa_i)}{H(m)},$$
-<p>where $H(\cdot)$ denotes Shannon entropy and $H(m \mid \kappa_i)$ is the conditional entropy of the message given the agent's prior knowledge. A value $\phi = 1$ indicates perfect comprehension; $\phi = 0$ indicates total opacity.</p>
-<p><strong>Worked Example.</strong> Suppose a calculus instructor encodes a lecture $m$ that assumes knowledge of limits and derivatives. Consider two agents: $r_1$ (a first-year student who has completed pre-calculus, $\kappa_1$) and $r_2$ (a trained analyst, $\kappa_2$). Estimating entropy reductions, suppose $H(m) = 8$ bits, $H(m \mid \kappa_1) = 3$ bits, and $H(m \mid \kappa_2) = 0.5$ bits. Then</p>
-$$\phi(m, r_1) = 1 - \tfrac{3}{8} = 0.625, \qquad \phi(m, r_2) = 1 - \tfrac{0.5}{8} = 0.9375.$$
-<p>The lecture is well-matched to $r_2$ but delivers only 62.5% comprehension efficiency to $r_1$. A responsible author adjusts $m$ to raise $\phi(m, r_1)$ toward 1 without sacrificing precision for $r_2$.</p>
-<p><strong>Key Theorem (Audience–Message Alignment).</strong> For a fixed message $m$, the expected comprehension over a target audience $\mathcal{A}^<em>$ is maximised when the message encoding minimises $\mathbb{E}_{r \in \mathcal{A}^</em>}[H(m \mid \kappa_r)]$, equivalently when $m$ is constructed in the shared knowledge subspace $\bigcap_{r \in \mathcal{A}^*} \operatorname{supp}(\kappa_r)$.</p>
-<p><em>Proof sketch.</em> Since $H(m \mid \kappa_r) \geq 0$ for all $r$, minimising the expectation requires maximising overlap between the informational structure of $m$ and the common prior support. Any symbol in $m$ outside the intersection increases conditional entropy additively, reducing expected $\phi$. $\square$</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, log, simplify, Rational
-
-H_m = 8          # total entropy of message (bits)
-kappa_r1 = 3     # conditional entropy for student
-kappa_r2 = Rational(1, 2)  # conditional entropy for analyst
-
-phi = lambda H_cond: 1 - H_cond / H_m
-
-print("phi(m, r1) =", phi(kappa_r1))   # 5/8
-print("phi(m, r2) =", phi(kappa_r2))   # 15/16</code></pre>
-<p>Running this cell confirms $\phi(m, r_1) = \tfrac{5}{8}$ and $\phi(m, r_2) = \tfrac{15}{16}$, making the alignment gap concrete and computable.</p>
+<p>You already know that you talk differently to your little sibling than to your science teacher. That shift is you instinctively adjusting for your <em>audience</em> — the person or group you are communicating with. But audience isn't just about tone. It shapes every decision a writer or speaker makes: word choice, how much background to give, what examples to pick, even how long to be.</p>
+<p><strong>What "audience" actually controls</strong></p>
+<p>Think of a message as having three layers:</p>
+<li><strong>What you say</strong> — the raw content.</li>
+<li><strong>How you say it</strong> — vocabulary level, formality, sentence length.</li>
+<li><strong>What you assume</strong> — the knowledge you expect the reader already has.</li>
+<p>A skilled communicator adjusts all three layers at once. A doctor writing a medical journal article assumes the reader knows what "myocardial infarction" means. The same doctor writing a pamphlet for patients swaps it for "heart attack." Same fact, completely different text.</p>
+<p>A useful shorthand: imagine one specific person from your audience and ask, <em>"Would this sentence make sense to them on a first read?"</em> If yes, keep it. If no, revise.</p>
+<p><strong>The core rule</strong></p>
+<p>> Match your vocabulary, assumed knowledge, and detail level to what your audience already knows — not to what <em>you</em> know.</p>
+<p>This means experts write <em>shorter</em> explanations for each other (shared vocabulary does the work) but <em>longer</em> ones for beginners (every term needs unpacking).</p>
+<hr>
+<p><strong>Practice problem</strong></p>
+<p>You are writing a two-sentence explanation of what a <em>fraction</em> is. Write one version for a third-grader and one version for a classmate who already knows long division. Then identify one specific thing you changed between the two versions and explain why.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

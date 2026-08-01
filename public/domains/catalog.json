@@ -825,140 +825,140 @@
       {
         "name": "bayes_theorem",
         "label": "Bayes Theorem",
-        "file": "output/research.en/sonnet/html/concept_bayes_theorem.html",
+        "file": "output/core.en/sonnet/html/concept_bayes_theorem.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "big_data",
         "label": "Big Data",
-        "file": "output/research.en/sonnet/html/concept_big_data.html",
+        "file": "output/core.en/sonnet/html/concept_big_data.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "binary_multiclass_classification",
         "label": "Binary Multiclass Classification",
-        "file": "output/research.en/sonnet/html/concept_binary_multiclass_classification.html",
+        "file": "output/core.en/sonnet/html/concept_binary_multiclass_classification.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "bootstrap_aggregating",
         "label": "Bootstrap Aggregating",
-        "file": "output/research.en/sonnet/html/concept_bootstrap_aggregating.html",
+        "file": "output/core.en/sonnet/html/concept_bootstrap_aggregating.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "bootstrapping",
         "label": "Bootstrapping",
-        "file": "output/research.en/sonnet/html/concept_bootstrapping.html",
+        "file": "output/core.en/sonnet/html/concept_bootstrapping.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "data_mining",
         "label": "Data Mining",
-        "file": "output/research.en/sonnet/html/concept_data_mining.html",
+        "file": "output/core.en/sonnet/html/concept_data_mining.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "decision_tree",
         "label": "Decision Tree",
-        "file": "output/research.en/sonnet/html/concept_decision_tree.html",
+        "file": "output/core.en/sonnet/html/concept_decision_tree.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "facial_recognition",
         "label": "Facial Recognition",
-        "file": "output/research.en/sonnet/html/concept_facial_recognition.html",
+        "file": "output/core.en/sonnet/html/concept_facial_recognition.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "heart_disease_classification",
         "label": "Heart Disease Classification",
-        "file": "output/research.en/sonnet/html/concept_heart_disease_classification.html",
+        "file": "output/core.en/sonnet/html/concept_heart_disease_classification.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "information_entropy",
         "label": "Information Entropy",
-        "file": "output/research.en/sonnet/html/concept_information_entropy.html",
+        "file": "output/core.en/sonnet/html/concept_information_entropy.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "labeled_unlabeled_data",
         "label": "Labeled Unlabeled Data",
-        "file": "output/research.en/sonnet/html/concept_labeled_unlabeled_data.html",
+        "file": "output/core.en/sonnet/html/concept_labeled_unlabeled_data.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "logistic_regression",
         "label": "Logistic Regression",
-        "file": "output/research.en/sonnet/html/concept_logistic_regression.html",
+        "file": "output/core.en/sonnet/html/concept_logistic_regression.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "machine_learning_model",
         "label": "Machine Learning Model",
-        "file": "output/research.en/sonnet/html/concept_machine_learning_model.html",
+        "file": "output/core.en/sonnet/html/concept_machine_learning_model.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "naive_bayes_classifier",
         "label": "Naive Bayes Classifier",
-        "file": "output/research.en/sonnet/html/concept_naive_bayes_classifier.html",
+        "file": "output/core.en/sonnet/html/concept_naive_bayes_classifier.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "random_forest",
         "label": "Random Forest",
-        "file": "output/research.en/sonnet/html/concept_random_forest.html",
+        "file": "output/core.en/sonnet/html/concept_random_forest.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "sigmoid_function",
         "label": "Sigmoid Function",
-        "file": "output/research.en/sonnet/html/concept_sigmoid_function.html",
+        "file": "output/core.en/sonnet/html/concept_sigmoid_function.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "spam_filtering",
         "label": "Spam Filtering",
-        "file": "output/research.en/sonnet/html/concept_spam_filtering.html",
+        "file": "output/core.en/sonnet/html/concept_spam_filtering.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "supervised_learning",
         "label": "Supervised Learning",
-        "file": "output/research.en/sonnet/html/concept_supervised_learning.html",
+        "file": "output/core.en/sonnet/html/concept_supervised_learning.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "temperature_prediction",
         "label": "Temperature Prediction",
-        "file": "output/research.en/sonnet/html/concept_temperature_prediction.html",
+        "file": "output/core.en/sonnet/html/concept_temperature_prediction.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "training_testing_set",
         "label": "Training Testing Set",
-        "file": "output/research.en/sonnet/html/concept_training_testing_set.html",
+        "file": "output/core.en/sonnet/html/concept_training_testing_set.html",
         "model": "sonnet",
         "language": "en"
       }

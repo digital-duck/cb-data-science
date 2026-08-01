@@ -35,31 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="heart-disease-classification">Heart Disease Classification</h2>
-<p><strong>Definition.</strong> Heart disease classification is a supervised learning problem in which a model $f: \mathbb{R}^d \to \{0, 1\}$ maps a patient feature vector $\mathbf{x} = (x_1, x_2, \ldots, x_d)^\top$ to a binary label $y \in \{0, 1\}$, where $y = 1$ denotes the presence of coronary artery disease and $y = 0$ denotes its absence. The feature space typically includes clinical measurements such as age, resting blood pressure, serum cholesterol, maximum heart rate achieved, and the ST-segment depression induced by exercise. Formally, given a training set $\mathcal{D} = \{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^{n}$, the learning objective is to find $f$ that minimises expected classification error $\mathbb{E}[\mathbf{1}(f(\mathbf{x}) \neq y)]$ over the true data distribution.</p>
-<p><strong>Worked Example.</strong> Consider the Cleveland Heart Disease dataset, which contains $n = 303$ patient records with $d = 13$ features. After standardising each feature to zero mean and unit variance, one applies logistic regression, which models the conditional probability</p>
-$$P(y = 1 \mid \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^\top \mathbf{x} + b)}},$$
-<p>where $\sigma(\cdot)$ is the sigmoid function. Parameters $\mathbf{w} \in \mathbb{R}^d$ and $b \in \mathbb{R}$ are estimated by maximising the log-likelihood</p>
-$$\ell(\mathbf{w}, b) = \sum_{i=1}^{n} \left[ y^{(i)} \log \hat{p}^{(i)} + (1 - y^{(i)}) \log(1 - \hat{p}^{(i)}) \right].$$
-<p>On a 70/30 train–test split, logistic regression achieves approximately 84% accuracy, with the ST-depression feature carrying the largest positive coefficient.</p>
-<p><strong>Key Theorem (Bayes Optimality).</strong> The classifier that minimises expected 0–1 loss is the Bayes classifier $f^*(\mathbf{x}) = \mathbf{1}(P(y=1 \mid \mathbf{x}) > \tfrac{1}{2})$. Any learning algorithm is evaluated by how closely its decision boundary approximates this optimal boundary. In class-imbalanced clinical settings, the decision threshold $\tau$ may be shifted below $\tfrac{1}{2}$ to increase sensitivity (recall for $y=1$) at the cost of specificity.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sklearn.datasets import fetch_openml
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-
-data = fetch_openml("heart-disease", version=1, as_frame=True)
-X, y = data.data.fillna(data.data.median()), (data.target.astype(int) &gt; 0).astype(int)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-scaler = StandardScaler()
-X_train_s = scaler.fit_transform(X_train)
-X_test_s  = scaler.transform(X_test)
-
-model = LogisticRegression(max_iter=1000)
-model.fit(X_train_s, y_train)
-print(classification_report(y_test, model.predict(X_test_s)))</code></pre>
+<p>You already have the intuition: a doctor looks at a patient's age, blood pressure, and cholesterol, then decides whether that person is at risk for heart disease. Classification is exactly that decision-making process — turned into math.</p>
+<p><strong>Exploring the structure.</strong> In a classification problem, each patient is described by a set of <em>features</em>, often written as a vector $\mathbf{x} = (x_1, x_2, \ldots, x_n)$. For heart disease, typical features include age ($x_1$), resting blood pressure in mmHg ($x_2$), and serum cholesterol in mg/dL ($x_3$). The model learns a function $f(\mathbf{x})$ that maps these features to a label $y$, where we might define:</p>
+$$y = \begin{cases} 1 & \text{heart disease present} \\ 0 & \text{no heart disease} \end{cases}$$
+<p>A simple starting model is a <em>threshold rule</em>: pick one feature and draw a boundary. For example, if resting blood pressure alone is used, the rule might be:</p>
+$$\hat{y} = \begin{cases} 1 & \text{if } x_2 > 130 \\ 0 & \text{otherwise} \end{cases}$$
+<p>Of course, one feature is rarely enough — real classifiers combine many features and learn which threshold for each feature matters most.</p>
+<p><strong>The key pattern.</strong> Classification always has two ingredients: <em>features</em> that describe the input, and <em>labels</em> that describe the output. Training means finding the boundary $f(\mathbf{x})$ that best separates the classes using past examples.</p>
+<hr>
+<p><strong>Practice problem.</strong> A dataset shows two patients:</p>
+<li>Patient A: age 45, blood pressure 125 mmHg → no heart disease</li>
+<li>Patient B: age 62, blood pressure 155 mmHg → heart disease</li>
+<p>Using the single-feature threshold rule $\hat{y} = 1$ if blood pressure $> 140$, classify each patient. Does the rule agree with the true labels? If not, would raising or lowering 140 help?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

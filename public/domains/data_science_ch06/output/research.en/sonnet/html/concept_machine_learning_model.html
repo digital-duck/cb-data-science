@@ -35,33 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="machine-learning-model">Machine Learning Model</h2>
-<p><strong>Definition.</strong> A <em>machine learning model</em> is a parametric function $f_{\boldsymbol{\theta}} : \mathcal{X} \to \mathcal{Y}$, where $\mathcal{X} \subseteq \mathbb{R}^d$ is the input space, $\mathcal{Y}$ is the output space, and $\boldsymbol{\theta} \in \Theta \subseteq \mathbb{R}^p$ is a vector of learnable parameters. Given a dataset $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$, learning consists of finding parameters $\boldsymbol{\theta}^*$ that minimize an empirical loss functional</p>
-$$\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta} \in \Theta} \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}\!\left(f_{\boldsymbol{\theta}}(\mathbf{x}_i),\, y_i\right),$$
-<p>where $\mathcal{L} : \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}_{\geq 0}$ is a loss function measuring discrepancy between predictions and targets. The model family (e.g., linear, polynomial, neural network) determines the hypothesis class $\mathcal{H} = \{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\}$.</p>
-<p><strong>Worked Example.</strong> Consider simple linear regression, where $\mathcal{X} = \mathbb{R}$, $\mathcal{Y} = \mathbb{R}$, and $f_{\boldsymbol{\theta}}(x) = \theta_1 x + \theta_0$. With squared loss $\mathcal{L}(\hat{y}, y) = (\hat{y} - y)^2$, the empirical risk becomes</p>
-$$R(\theta_0, \theta_1) = \frac{1}{n}\sum_{i=1}^{n}(\theta_1 x_i + \theta_0 - y_i)^2.$$
-<p>Setting $\partial R / \partial \theta_0 = 0$ and $\partial R / \partial \theta_1 = 0$ yields the closed-form ordinary least-squares solution:</p>
-$$\theta_1^* = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}, \qquad \theta_0^* = \bar{y} - \theta_1^* \bar{x},$$
-<p>where $\bar{x}$ and $\bar{y}$ denote sample means.</p>
-<p><strong>Key Theorem (Bias–Variance Decomposition).</strong> For any model $f_{\boldsymbol{\theta}}$ trained on a random dataset, the expected squared prediction error at a point $\mathbf{x}$ decomposes as</p>
-$$\mathbb{E}\!\left[(y - f_{\boldsymbol{\theta}}(\mathbf{x}))^2\right] = \underbrace{\mathrm{Bias}^2[f_{\boldsymbol{\theta}}(\mathbf{x})]}_{\text{systematic error}} + \underbrace{\mathrm{Var}[f_{\boldsymbol{\theta}}(\mathbf{x})]}_{\text{estimation variance}} + \underbrace{\sigma^2}_{\text{irreducible noise}}.$$
-<p>This result implies a fundamental trade-off: richer hypothesis classes reduce bias but increase variance, motivating regularization techniques such as ridge regression, which augments the loss with a penalty $\lambda\|\boldsymbol{\theta}\|_2^2$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, diff, solve, Rational, simplify
-
-x, y_sym, t0, t1 = symbols('x y t0 t1')
-# Toy dataset: three points
-data = [(1, 2), (2, 3), (3, 5)]
-n = len(data)
-
-R = sum((t1*xi + t0 - yi)**2 for xi, yi in data) / n
-dR_dt0 = diff(R, t0)
-dR_dt1 = diff(R, t1)
-solution = solve([dR_dt0, dR_dt1], [t0, t1])
-print("OLS solution:", solution)
-# Verify: f(x) = solution[t1]*x + solution[t0]
-f = solution[t1]*x + solution[t0]
-print("Fitted line:", simplify(f))</code></pre>
+<p><strong>Definition.</strong> A <em>machine learning model</em> is a parameterized family of functions $\mathcal{F} = \{f_\theta : \mathcal{X} \to \mathcal{Y} \mid \theta \in \Theta\}$, together with a learning algorithm $\mathcal{A}$ that, given a dataset $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n \subset \mathcal{X} \times \mathcal{Y}$, produces a parameter estimate $\hat{\theta} = \mathcal{A}(\mathcal{D})$ minimizing some loss functional $\mathcal{L} : \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}_{\geq 0}$. Formally, learning solves</p>
+$$\hat{\theta} \in \arg\min_{\theta \in \Theta} \frac{1}{n} \sum_{i=1}^n \mathcal{L}(f_\theta(x_i), y_i) + \lambda R(\theta),$$
+<p>where $R : \Theta \to \mathbb{R}_{\geq 0}$ is a regularizer and $\lambda \geq 0$ controls the bias–variance tradeoff. The triple $(\mathcal{F}, \mathcal{L}, \mathcal{A})$ constitutes the <em>model specification</em>; the result $f_{\hat\theta}$ is the <em>fitted model</em>. This formulation subsumes linear regression, kernel machines, and deep neural networks as special cases by varying $\Theta$, $\mathcal{L}$, and $\mathcal{A}$.</p>
+<p><strong>Theorem (Generalization bound — PAC-Bayes, Catoni 2007).</strong> Let $P$ be a prior over $\Theta$ independent of $\mathcal{D}$, and let $Q$ be any posterior. With probability at least $1-\delta$ over draws of $\mathcal{D}$,</p>
+$$\mathbb{E}_{\theta \sim Q}[R(f_\theta)] \;\leq\; \mathbb{E}_{\theta \sim Q}[\hat{R}(f_\theta)] + \sqrt{\frac{\mathrm{KL}(Q \| P) + \ln(1/\delta)}{2n}},$$
+<p>where $\hat{R}$ denotes empirical risk and $R$ denotes population risk. The bound makes the usual assumption of i.i.d. draws from a fixed distribution $\mathcal{P}_{\mathcal{X}\times\mathcal{Y}}$.</p>
+<p><em>Proof sketch.</em> Apply the change-of-measure inequality $\mathbb{E}_Q[g] \leq \mathrm{KL}(Q\|P) + \ln \mathbb{E}_P[e^g]$ to the random variable $g = n\hat{R}(f_\theta) - nR(f_\theta)$, then invoke Hoeffding's lemma on the bounded loss, and invert the resulting Chernoff bound. $\square$</p>
+<p><strong>Literature context.</strong> Vapnik's VC theory (1971) established dimension-based generalization, but PAC-Bayes bounds (McAllester 1999; Catoni 2007) are tighter in practice and admit data-dependent posteriors. A central open problem is the <em>overparameterized regime</em>: modern neural networks with $|\Theta| \gg n$ generalize well empirically yet violate classical bounds, a phenomenon Belkin et al. (2019) formalize as <em>double descent</em>. Implicit regularization by stochastic gradient descent — studied via the <em>edge of stability</em> (Cohen et al. 2021) and <em>sharpness-aware minimization</em> (Foret et al. 2021) — is an active research front without a complete theoretical account. The relationship between architecture inductive bias and the effective dimensionality of $\Theta$ remains an open question linking statistical learning theory to deep learning practice.</p>
+<p><strong>Suggested investigation.</strong> Replicate the double-descent curve on a controlled setup: train a two-layer MLP on MNIST as width $d$ increases from $d \ll n$ to $d \gg n$, recording test loss at the interpolation threshold $d^* \approx n$. Compute empirical PAC-Bayes bounds using a Gaussian prior and a Laplace-approximation posterior. Observe whether the bound tracks the actual test error across regimes, or fails to explain the benign overfitting region. Vary the label-noise rate to sharpen the discrepancy.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state precisely which version of the PAC-Bayes theorem is used and verify its assumptions hold; (ii) plot bound tightness versus model complexity on the same axes as the double-descent curve; (iii) discuss whether the bound's failure in the overparameterized regime is a fundamental limitation of the KL term, a prior-choice artifact, or an artifact of the bound's form; and (iv) connect findings to at least one current paper on implicit bias, citing specific theoretical gaps the experiment either supports or challenges.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

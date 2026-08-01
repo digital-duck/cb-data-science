@@ -35,29 +35,19 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="large-language-model">Large Language Model</h2>
-<p><strong>Definition.</strong> A <em>large language model</em> (LLM) is a parametric probability distribution $p_\theta$ over sequences of tokens drawn from a finite vocabulary $\mathcal{V}$. Given a context sequence $x_{1:t} = (x_1, x_2, \ldots, x_t)$ with each $x_i \in \mathcal{V}$, the model factorizes the joint distribution autoregressively:</p>
-$$p_\theta(x_{1:T}) = \prod_{t=1}^{T} p_\theta(x_t \mid x_{1:t-1}).$$
-<p>Each conditional factor is computed by a deep neural network — in contemporary practice, the Transformer architecture — whose $|\theta|$ parameters number in the billions. Training minimizes the negative log-likelihood (equivalently, cross-entropy loss) over a corpus $\mathcal{D}$:</p>
-$$\mathcal{L}(\theta) = -\frac{1}{|\mathcal{D}|} \sum_{(x_{1:T}) \in \mathcal{D}} \sum_{t=1}^{T} \log p_\theta(x_t \mid x_{1:t-1}).$$
-<p>The term <em>large</em> is deliberately relative: it marks the empirical threshold above which models exhibit qualitative emergent capabilities absent in smaller counterparts.</p>
-<p><strong>Worked Example.</strong> Suppose $\mathcal{V} = \{\texttt{cat}, \texttt{sat}, \texttt{on}, \texttt{mat}\}$ and the context is $x_{1:2} = (\texttt{cat}, \texttt{sat})$. An LLM assigns a probability vector over $\mathcal{V}$ for position $t = 3$:</p>
-$$p_\theta(\cdot \mid \texttt{cat}, \texttt{sat}) = [0.02,\ 0.03,\ 0.90,\ 0.05].$$
-<p>Generation by <em>greedy decoding</em> selects $x_3 = \arg\max p_\theta(\cdot \mid x_{1:2}) = \texttt{on}$. Sampling instead draws $x_3 \sim p_\theta(\cdot \mid x_{1:2})$, introducing stochasticity controlled by a temperature parameter $\tau$ that rescales logits as $z_i \leftarrow z_i / \tau$ before the softmax.</p>
-<p><strong>Key Theorem (Universal Approximation for Sequences).</strong> For any distribution $q$ over $\mathcal{V}^*$ with finite entropy and any $\varepsilon > 0$, there exists a Transformer $p_\theta$ with sufficiently many layers and heads such that $D_{\mathrm{KL}}(q \,\|\, p_\theta) < \varepsilon$. This result underpins the empirical scaling laws observed by Kaplan et al. (2020), where test loss decreases as a power law in $|\theta|$, dataset size, and compute.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-# Softmax at temperature tau
-tau = sp.Symbol('tau', positive=True)
-z = sp.Matrix([2, 1, 4, 1])          # raw logits
-z_scaled = z / tau
-exp_z = z_scaled.applyfunc(sp.exp)
-probs = exp_z / exp_z.dot(sp.ones(4, 1))
-
-# Evaluate at tau=1
-p_numeric = probs.subs(tau, 1).applyfunc(sp.N)
-print("Softmax probabilities:", p_numeric.T)</code></pre>
-<p>Running this cell at $\tau = 1$ recovers the normalized probability vector; reducing $\tau \to 0$ sharpens the distribution toward a one-hot argmax, while $\tau \to \infty$ flattens it toward uniform — illustrating the temperature–diversity trade-off central to LLM decoding strategies.</p>
+<p><strong>Definition.</strong> A <em>large language model</em> (LLM) is a parametric probability distribution $p_\theta$ over sequences of discrete tokens drawn from a vocabulary $\mathcal{V}$. Under the autoregressive factorization, this distribution decomposes as</p>
+$$p_\theta(x_1, x_2, \ldots, x_T) = \prod_{t=1}^{T} p_\theta(x_t \mid x_1, \ldots, x_{t-1}),$$
+<p>where each conditional factor is computed by a neural network—almost universally a <em>transformer</em> architecture—that maps the prefix $(x_1, \ldots, x_{t-1})$ to a categorical distribution over $\mathcal{V}$. The qualifier <em>large</em> refers empirically to parameter counts in the range $10^8$–$10^{12}$ and to training corpora on the order of $10^{12}$–$10^{13}$ tokens, thresholds that have proven sufficient for qualitative capability shifts observed since 2020.</p>
+<p><strong>Core training objective and convergence structure.</strong> The standard objective is cross-entropy minimization over a corpus $\mathcal{D}$:</p>
+$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{D}} \left[ \sum_{t=1}^{T} \log p_\theta(x_t \mid x_{<t}) \right].$$
+<p>This is equivalent to minimizing $\mathrm{KL}(p_{\mathcal{D}} \| p_\theta)$, so the global minimum is attained when $p_\theta = p_{\mathcal{D}}$—the true data-generating distribution. In practice, the model is over-parameterized relative to what stochastic gradient descent provably converges to; the implicit bias of the optimizer and the inductive bias of the transformer architecture jointly determine the solution reached. No satisfactory theoretical account of this interaction exists at scale, making LLM training an open problem in optimization theory.</p>
+<p><strong>Scaling laws.</strong> Hoffmann et al. (2022; <em>Chinchilla</em>) established empirically that optimal loss under a compute budget $C$ satisfies $L^*(C) \propto C^{-\alpha}$ with $\alpha \approx 0.054$, achieved when the number of training tokens $D$ and parameters $N$ satisfy $D \propto N$. Formally, the scaling law takes the form</p>
+$$L(N, D) = \frac{A}{N^\alpha} + \frac{B}{D^\beta} + L_\infty,$$
+<p>where $L_\infty$ is the irreducible entropy of the data distribution, and empirically $\alpha \approx \beta \approx 0.5$. Whether these exponents are universal or depend on data distribution, architecture, and tokenization is actively contested (Muennighoff et al., 2023; Sardana & Frankle, 2023).</p>
+<p><strong>Emergence and phase transitions.</strong> Wei et al. (2022) documented <em>emergent abilities</em>: capabilities—multi-step arithmetic, chain-of-thought reasoning—that appear abruptly above a compute threshold and are near-zero below it. Schaeffer et al. (2023) challenged this framing, showing that many apparent phase transitions are artifacts of nonlinear evaluation metrics rather than discontinuities in the loss surface. The mathematical status of emergence in high-dimensional function approximation remains unresolved.</p>
+<p><strong>In-context learning as implicit Bayesian inference.</strong> A particularly active theoretical thread (Xie et al., 2022; Akyürek et al., 2022; Von Oswald et al., 2023) interprets in-context learning (ICL)—the ability to adapt behavior from a few examples in the prompt without weight updates—as approximate Bayesian posterior inference over a latent task variable. If the pretraining distribution decomposes as $p(x) = \int p(x \mid z)\, p(z)\, dz$ over latent task $z$, then conditioning on demonstrations approximates $p(z \mid \text{examples})$. Von Oswald et al. showed that transformer gradient-descent circuits can implement one step of gradient descent on a linear model internally, providing a mechanistic account. Whether this extends to nonlinear function classes at depth is open.</p>
+<p><strong>Suggested investigation.</strong> Replicate the scaling-law fit on a publicly available checkpoint sequence (e.g., Pythia; Biderman et al., 2023). Fit the Chinchilla functional form to held-out loss versus $(N, D)$ pairs, estimate $\alpha$, $\beta$, $L_\infty$ by nonlinear least squares, and compare to the published values. Then perturb tokenization (byte-pair versus unigram) and test whether the exponents change—a direct probe of the universality claim.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the fitted exponents with confidence intervals; (2) a residual analysis showing where the law breaks down; (3) a clear statement of which universality claims are supported and which must be qualified. The write-up should situate findings against Hoffmann et al. and the critiques in Muennighoff et al., making explicit what additional data or compute would be needed to resolve remaining ambiguities.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

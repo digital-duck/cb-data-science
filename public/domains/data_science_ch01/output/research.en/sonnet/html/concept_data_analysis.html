@@ -35,30 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-analysis">Data Analysis</h2>
-<p><strong>Definition.</strong> <em>Data analysis</em> is the systematic process of inspecting, cleaning, transforming, and modeling a collection of observations in order to extract meaningful information, draw conclusions, and support decision-making. Formally, let $\mathcal{D} = \{x_1, x_2, \ldots, x_n\}$ be a finite sample drawn from a population with unknown distribution $F$. Data analysis seeks to estimate properties of $F$—such as its mean $\mu$, variance $\sigma^2$, or shape—using functionals of the empirical distribution $\hat{F}_n$, defined by $\hat{F}_n(t) = \frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[x_i \leq t]$.</p>
-<p><strong>Worked Example.</strong> Suppose a student records the daily high temperatures (in °C) over ten consecutive days:</p>
-$$\mathcal{D} = \{22, 25, 19, 28, 23, 21, 30, 26, 24, 20\}$$
-<p>The sample mean is</p>
-$$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i = \frac{238}{10} = 23.8 \text{ °C}.$$
-<p>The sample variance, corrected for bias by Bessel's correction, is</p>
-$$s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2 = \frac{1}{9}\sum_{i=1}^{n}(x_i - 23.8)^2 \approx 11.73 \text{ °C}^2,$$
-<p>giving a sample standard deviation of $s \approx 3.42$ °C. These two statistics together provide a concise summary of the distribution's location and spread.</p>
-<p><strong>Key Theorem (Glivenko–Cantelli).</strong> For independent and identically distributed observations, the empirical distribution $\hat{F}_n$ converges uniformly to the true distribution $F$ almost surely:</p>
-$$\sup_{t \in \mathbb{R}} \left|\hat{F}_n(t) - F(t)\right| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
-<p>This result guarantees that sufficiently large samples carry faithful information about the underlying population, providing the theoretical foundation for sample-based inference.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy.stats import Normal, E, variance, std
-from sympy import symbols, Rational, sqrt, N
-
-data = [22, 25, 19, 28, 23, 21, 30, 26, 24, 20]
-n = len(data)
-mean = Rational(sum(data), n)
-var  = Rational(sum((x - mean)**2 for x in data), n - 1)
-
-print("Sample mean    :", mean)          # 119/5
-print("Sample variance:", float(var))    # 11.7333...
-print("Sample std dev :", float(sqrt(var)))  # 3.4254...</code></pre>
-<p>Running this cell verifies the hand calculations and introduces the use of exact rational arithmetic to avoid floating-point rounding during exploratory analysis.</p>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P)$ be a probability space and let $\mathbf{X} = (X_1, \ldots, X_n)$ be a sequence of random variables with values in a measurable space $(\mathcal{X}, \mathcal{B})$. <em>Data analysis</em> is, formally, the study of functionals $T : \mathcal{X}^n \to \Theta$ — estimators, test statistics, predictors, or exploratory summaries — together with their sampling distributions, asymptotic behavior, and decision-theoretic optimality properties. The objects of primary interest are the bias–variance decomposition of squared-error risk, the convergence of empirical measures to the population measure, and the sensitivity of conclusions to model misspecification. Crucially, none of these properties are fully settled in the high-dimensional, dependent-data, or distribution-shift regimes that now dominate applied work.</p>
+<p><strong>Theorem (Uniform Law of Large Numbers / Glivenko–Cantelli).</strong> Let $F_n(x) = n^{-1}\sum_{i=1}^n \mathbf{1}[X_i \leq x]$ denote the empirical distribution function of an i.i.d. sample from $F$. Then</p>
+$$\sup_{x \in \mathbb{R}} |F_n(x) - F(x)| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> Fix $\varepsilon > 0$ and choose a finite $\varepsilon$-net $\{x_1, \ldots, x_k\}$ in the sense that every interval $(-\infty, x]$ is approximated to within $\varepsilon$ in $F$-measure. By the strong law, $F_n(x_j) \to F(x_j)$ almost surely for each $j$; monotonicity of $F_n$ and $F$ then propagates pointwise convergence to uniform convergence. The Dvoretzky–Kiefer–Wolfowitz (DKW) inequality sharpens this to a finite-sample exponential bound: $P(\sup_x |F_n(x) - F(x)| > \varepsilon) \leq 2e^{-2n\varepsilon^2}$. $\square$</p>
+<p>The DKW bound is sharp up to the constant 2 (Massart, 1990), and its generalization to VC classes — the fundamental theorem of statistical learning — underpins PAC learning theory. The analogous result for dependent sequences requires mixing conditions; for $\phi$-mixing processes the bound degrades by a factor related to the mixing coefficients, an area of active research under the rubric of <em>non-stationary statistical learning</em> (Kuznetsov and Mohri, 2017).</p>
+<p><strong>What is known and what remains open.</strong> Classical multivariate analysis (PCA, regression, MANOVA) assumes $n \gg p$. The high-dimensional regime $p/n \to \gamma \in (0, \infty)$ is now well-characterized by random matrix theory: the Marchenko–Pastur law describes the empirical spectral distribution of $\mathbf{X}^\top \mathbf{X}/n$, and the BBP transition (Baik, Ben Arous, Péché, 2005) locates the phase transition for detectability of low-rank signal. Open questions include finite-sample rates for spiked covariance estimation under heavy tails, optimal multiple-testing correction under arbitrary dependence, and causal identifiability from observational data under unmeasured confounding.</p>
+<p><strong>Suggested investigation.</strong> Take a real tabular dataset (e.g., UCI repository, $n \approx 500$–$2000$, $p \approx 20$–$100$). First, compute the empirical spectral distribution of $\hat{\Sigma} = n^{-1}\mathbf{X}^\top \mathbf{X}$ and overlay the Marchenko–Pastur law for the measured $\gamma = p/n$. Identify which eigenvalues lie outside the bulk — candidate signal directions. Second, apply the DKW-based bootstrap to construct distribution-free confidence bands for the marginal CDFs; compare coverage against a Gaussian-assumption confidence band. Third, introduce a mild distribution shift by sub-sampling a covariate-stratified split and measure how rapidly the dominant principal components rotate.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) whether the observed bulk spectrum is consistent with the null (all-noise) Marchenko–Pastur prediction, and what $p$-value a Tracy–Widom test assigns to the largest eigenvalue; (ii) empirical coverage of bootstrap confidence bands at the nominal $95\%$ level across 500 simulation replicates; (iii) a quantitative measure (e.g., principal angle between subspaces) of how the leading eigenspace shifts across distribution splits, with a discussion of whether the shift exceeds what sampling variability alone predicts. These three results together constitute a minimal reproducible audit of a dataset prior to any modeling step.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

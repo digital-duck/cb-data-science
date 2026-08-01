@@ -35,29 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-collection">Data Collection</h2>
-<p><strong>Definition.</strong> <em>Data collection</em> is the systematic process of gathering observations from a population or process in accordance with a pre-specified protocol, such that each recorded value can be associated with a measurable quantity, a unit of measurement, and a source. Formally, if $\Omega$ denotes the sample space of all possible outcomes, a data collection procedure defines a measurable function $X : \Omega \to \mathbb{R}^d$ together with an index set $\mathcal{I}$ of observation timestamps or identifiers. The result is a dataset $\mathcal{D} = \{(i, \mathbf{x}_i) : i \in \mathcal{I},\; \mathbf{x}_i \in \mathbb{R}^d\}$.</p>
-<p>A collection procedure is called <em>well-posed</em> if it satisfies three properties: (1) <strong>reproducibility</strong> — independent repetitions under identical conditions yield statistically equivalent samples; (2) <strong>traceability</strong> — every datum can be traced to its instrument, timestamp, and operator; and (3) <strong>representativeness</strong> — the sample distribution approximates the target population distribution within a stated tolerance.</p>
-<p><strong>Worked Example.</strong> Suppose a laboratory measures the boiling point of water at varying altitudes. At altitude $h_i$ (in metres), the atmospheric pressure follows $P_i \approx 101{,}325 \cdot e^{-h_i/8500}$ Pa. An experimenter records $n = 5$ paired observations:</p>
-$$\mathcal{D} = \{(h_i,\, T_i)\}_{i=1}^{5} = \{(0, 100.0),\, (500, 98.3),\, (1000, 96.7),\, (1500, 95.0),\, (2000, 93.4)\}$$
-<p>where $T_i$ is in degrees Celsius. Each entry is traceable to a calibrated thermometer ($\pm 0.1\,^\circ\text{C}$) and a GPS altimeter ($\pm 5\,\text{m}$), satisfying the traceability requirement.</p>
-<p><strong>Key Theorem (Law of Large Numbers — Weak Form).</strong> Let $X_1, X_2, \ldots, X_n$ be independent, identically distributed random variables with finite mean $\mu = \mathbb{E}[X_1]$. Then the sample mean $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$ converges in probability to $\mu$:</p>
-$$\bar{X}_n \xrightarrow{P} \mu \quad \text{as } n \to \infty.$$
-<p>This theorem provides the theoretical justification for increasing sample size to improve accuracy: systematic collection of more observations reduces the gap between observed statistics and true population parameters.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, exp, lambdify, Rational
-import numpy as np
-
-h = symbols('h', positive=True)
-P = 101325 * exp(-h / 8500)          # atmospheric pressure model
-P_func = lambdify(h, P, 'numpy')
-
-altitudes = np.array([0, 500, 1000, 1500, 2000])
-pressures = P_func(altitudes)
-T_boil    = 100 - (101325 - pressures) / 3600   # linear approximation
-
-for hi, Ti in zip(altitudes, T_boil):
-    print(f"h = {hi:5d} m  →  T_boil ≈ {Ti:.2f} °C")</code></pre>
-<p>Running this cell reproduces the dataset $\mathcal{D}$ analytically, demonstrating how a physical model and a collection protocol together define a self-consistent, traceable experiment.</p>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ be a measurable space (the <em>feature space</em>) and $\mathcal{Y}$ a response space. A <em>data collection protocol</em> is a triple $\mathcal{D} = (\Pi, \mu, n)$, where $\Pi : \mathcal{X} \to [0,1]$ is a sampling distribution over candidate instances, $\mu : \mathcal{X} \to \mathcal{Y}$ is the (unknown) labeling mechanism, and $n \in \mathbb{N}$ is the budget. The output is a dataset $S = \{(x_i, y_i)\}_{i=1}^n$ with $(x_i, y_i) \sim \Pi \otimes \mu$. The central question is not merely <em>how</em> to draw samples, but <em>which</em> $\Pi$ minimizes downstream estimation error under budget constraints — a question that remains incompletely answered for heterogeneous, high-dimensional, or sequentially-acquired data.</p>
+<p><strong>Theorem (Bias–Variance Decomposition under Covariate Shift).</strong> Let $\hat{f}_S$ be an estimator trained on $S$ and evaluated under a <em>test</em> distribution $Q \neq \Pi$. Define the importance weight $w(x) = dQ/d\Pi(x)$. Then for squared-error loss:</p>
+$$\mathbb{E}_S\left[\int_{\mathcal{X}} (\hat{f}_S(x) - \mu(x))^2 \, dQ(x)\right] = \underbrace{\int w(x)^2 \,\mathrm{Var}_S[\hat{f}_S(x)] \, d\Pi(x)}_{\text{weighted variance}} + \underbrace{\int (\mathbb{E}_S[\hat{f}_S(x)] - \mu(x))^2 \, dQ(x)}_{\text{bias}}.$$
+<p><em>Proof sketch.</em> Apply the standard bias–variance identity pointwise under $Q$, then write $dQ = w \, d\Pi$ and interchange expectation and integral by Fubini (justified when $w \in L^2(\Pi)$). $\square$</p>
+<p>The theorem makes the cost of a poorly chosen $\Pi$ explicit: large $w(x)$ inflates variance at regions where $\Pi$ under-samples. Active data collection — choosing $\Pi$ adaptively to reduce $\max_x w(x)$ — is therefore a principled design objective, not an engineering afterthought.</p>
+<p><strong>Literature context.</strong> Classical survey sampling (Cochran 1977) characterizes optimal stratified designs for finite populations, but assumes the model class and test distribution are known. The modern machine-learning literature reframes the problem under <em>active learning</em> (Settles 2009; Balcan et al. 2006), <em>optimal experimental design</em> (Fedorov 1972; Atkinson et al. 2007), and <em>distribution shift</em> (Sugiyama & Kawanabe 2012). Open problems include: (i) optimal $\Pi$ under <em>unknown</em> $Q$ with only unlabeled target samples available; (ii) budget allocation when labels arrive with delay or noise; (iii) sequential collection protocols that are provably near-optimal without oracle access to $\mu$.</p>
+<p><strong>Suggested investigation.</strong> Implement stratified vs. uncertainty-sampling active learning on a synthetic regression task where $Q$ is a shifted Gaussian. Fix $n = 200$ and vary $\Pi$ from uniform to oracle-optimal (derived analytically from $w$). Measure the integrated mean-squared error under $Q$ at each checkpoint $n \in \{20, 50, 100, 200\}$. Replicate the covariate-shift correction of Sugiyama et al. (2007) using kernel mean matching, and compare corrected vs. uncorrected estimators. Quantify how quickly the bias term in the decomposition above dominates variance as shift severity increases.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the precise sampling distribution $\Pi$ used at each stage and the rationale for its choice; an empirical verification of the bias–variance decomposition (plot each term separately across $n$); and a comparison against at least one baseline from the literature with matching hyperparameter budget. The conclusion should state whether the observed gap between sampling strategies is statistically significant (bootstrap confidence intervals) and identify which regime — low $n$, high shift, or noisy labels — most severely degrades the naive uniform baseline.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,26 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="random-variable">Random Variable</h2>
-<p><strong>Definition.</strong> A <em>random variable</em> is a measurable function $X : \Omega \to \mathbb{R}$ defined on a probability space $(\Omega, \mathcal{F}, P)$, where $\Omega$ is the sample space, $\mathcal{F}$ is a $\sigma$-algebra of events, and $P$ is a probability measure. For every Borel set $B \subseteq \mathbb{R}$, we require $X^{-1}(B) = \{\omega \in \Omega : X(\omega) \in B\} \in \mathcal{F}$, ensuring that the probability $P(X \in B)$ is well-defined. Informally, a random variable assigns a real number to each outcome of an experiment, translating abstract events into numerical quantities amenable to analysis.</p>
-<p>Random variables are classified by their range. A <em>discrete</em> random variable takes values in a countable set $\{x_1, x_2, \ldots\}$ and is characterized by its <em>probability mass function</em> (PMF) $p(x_k) = P(X = x_k)$, satisfying $\sum_k p(x_k) = 1$. A <em>continuous</em> random variable takes values in an interval and is described by a <em>probability density function</em> (PDF) $f$, where $P(a \le X \le b) = \int_a^b f(x)\,dx$ and $\int_{-\infty}^{\infty} f(x)\,dx = 1$.</p>
-<p><strong>Worked Example.</strong> Roll a fair six-sided die. Set $\Omega = \{1,2,3,4,5,6\}$ with $P(\{\omega\}) = 1/6$ for each outcome. Define $X(\omega) = \omega$. Then $X$ is a discrete random variable with PMF $p(k) = 1/6$ for $k \in \{1,\ldots,6\}$. Its <em>expected value</em> is</p>
-$$\mathbb{E}[X] = \sum_{k=1}^{6} k \cdot \frac{1}{6} = \frac{21}{6} = 3.5,$$
-<p>and its <em>variance</em> is $\operatorname{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2 = \frac{91}{6} - \frac{441}{36} = \frac{35}{12} \approx 2.92$.</p>
-<p><strong>Key Theorem (Law of the Unconscious Statistician).</strong> If $g : \mathbb{R} \to \mathbb{R}$ is measurable and $X$ is a discrete random variable, then</p>
-$$\mathbb{E}[g(X)] = \sum_k g(x_k)\, p(x_k),$$
-<p>without needing to derive the distribution of $g(X)$ explicitly. The analogous statement for continuous $X$ replaces the sum with $\int_{-\infty}^{\infty} g(x) f(x)\,dx$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Rational, summation, simplify
-
-k = symbols('k', integer=True)
-pmf = Rational(1, 6)
-
-E_X  = summation(k * pmf, (k, 1, 6))
-E_X2 = summation(k**2 * pmf, (k, 1, 6))
-Var_X = simplify(E_X2 - E_X**2)
-
-print(f"E[X]   = {E_X}")      # 7/2
-print(f"Var(X) = {Var_X}")    # 35/12</code></pre>
+<h3 id="definition">Definition</h3>
+<p>Fix a probability space $(\Omega, \mathcal{F}, \mathbb{P})$ as established in the preceding section. A <strong>random variable</strong> is a measurable function $X: \Omega \to \mathbb{R}$, meaning that for every Borel set $B \in \mathcal{B}(\mathbb{R})$, the preimage $X^{-1}(B) = \{\omega \in \Omega : X(\omega) \in B\}$ belongs to $\mathcal{F}$. This single measurability requirement is the one structural addition that the present section introduces; everything that follows — distributions, CDFs, expectations — is derived from it.</p>
+<p>The essential consequence of measurability is that $X$ transfers probability from $(\Omega, \mathcal{F}, \mathbb{P})$ to the real line via the <strong>pushforward measure</strong> $\mu_X(B) := \mathbb{P}(X^{-1}(B))$. Once this transfer is established, the underlying sample space recedes: all statistical inference operates on $\mu_X$, the distribution of $X$, without further reference to $\Omega$.</p>
+<h3 id="theorem-and-proof-sketch-existence-of-the-distribution-function">Theorem and Proof Sketch: Existence of the Distribution Function</h3>
+<p><strong>Theorem.</strong> Every random variable $X$ induces a unique cumulative distribution function $F_X : \mathbb{R} \to [0,1]$ defined by $F_X(x) = \mathbb{P}(X \leq x)$, satisfying: (i) $F_X$ is non-decreasing, (ii) right-continuous, (iii) $\lim_{x \to -\infty} F_X(x) = 0$ and $\lim_{x \to +\infty} F_X(x) = 1$.</p>
+<p><em>Proof sketch.</em> Monotonicity follows from the monotonicity of $\mathbb{P}$ on nested events: $x \leq x'$ implies $\{X \leq x\} \subseteq \{X \leq x'\}$. Right-continuity uses continuity of $\mathbb{P}$ from above: $\{X \leq x + 1/n\} \downarrow \{X \leq x\}$ implies $F_X(x + 1/n) \to F_X(x)$. The boundary limits follow from $\{X \leq x\} \uparrow \Omega$ and $\downarrow \emptyset$ as $x \to \pm\infty$. The converse — that any function satisfying (i)–(iii) corresponds to a unique Borel measure on $\mathbb{R}$ — is the Lebesgue–Stieltjes theorem, which requires Carathéodory's extension theorem and is non-trivial. $\square$</p>
+<h3 id="literature-context">Literature Context</h3>
+<p>The measure-theoretic formulation originates with Kolmogorov's 1933 <em>Grundbegriffe der Wahrscheinlichkeitsrechnung</em> and remains the foundational reference. Standard graduate treatments appear in Billingsley's <em>Probability and Measure</em> and Durrett's <em>Probability: Theory and Examples</em>. While the definition is settled, several surrounding questions remain active: the characterization of distributions under model misspecification (Huber's robust statistics), the behavior of empirical distributions as random elements in function spaces (Donsker's theorem, empirical process theory), and the measure-theoretic foundations of causality, where the sample space must be enriched with a causal graph (Pearl, 2009; Peters, Janzing & Schölkopf, 2017). Connections to noncommutative probability — where random variables become operators on Hilbert spaces — open into free probability and quantum information theory.</p>
+<h3 id="suggested-investigation">Suggested Investigation</h3>
+<p>A productive short project: empirically verify the Glivenko–Cantelli theorem. Given $X_1, \ldots, X_n \overset{\text{iid}}{\sim} F$, the empirical CDF $\hat{F}_n(x) = n^{-1}\sum_{i=1}^n \mathbf{1}[X_i \leq x]$ satisfies $\sup_x |\hat{F}_n(x) - F(x)| \to 0$ almost surely. Simulate this convergence for several choices of $F$ (Gaussian, Cauchy, discrete), measure the sup-norm as a function of $n$, and compare the empirical rate against the Kolmogorov–Smirnov theoretical bound $O(n^{-1/2})$. Note the pathological behavior when $F$ is heavy-tailed: the sup-norm convergence rate is the same in theory, but finite-sample behavior deteriorates markedly, and understanding why is itself an instructive exercise.</p>
+<h3 id="report-writing-note">Report-Writing Note</h3>
+<p>A write-up of this investigation should establish: (1) a precise statement of the measurability requirement and why it cannot be dropped, illustrated with a concrete non-measurable function if the measure-theoretic background permits; (2) a self-contained proof of the CDF characterization theorem; (3) numerical evidence for Glivenko–Cantelli with explicit convergence plots and sup-norm versus $n$ on a log–log scale; (4) a discussion of what breaks when the i.i.d. assumption is violated, referencing at least one non-i.i.d. generalization such as convergence for ergodic sequences.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,32 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="population-data">Population Data</h2>
-<p><strong>Definition.</strong> In statistics, a <em>population</em> is the complete collection of all individuals, objects, or measurements under study. <em>Population data</em> refers to the full set of values of a variable $X$ measured across every member of this collection. If the population has $N$ members with measurements $x_1, x_2, \ldots, x_N$, the <em>population mean</em> is</p>
-$$\mu = \frac{1}{N}\sum_{i=1}^{N} x_i,$$
-<p>and the <em>population variance</em> is</p>
-$$\sigma^2 = \frac{1}{N}\sum_{i=1}^{N}(x_i - \mu)^2.$$
-<p>The standard deviation $\sigma = \sqrt{\sigma^2}$ gives dispersion in the original units of measurement. Crucially, these are <em>parameters</em> — fixed (if unknown) numerical characteristics of the population — not estimates derived from a subset.</p>
-<p><strong>Worked Example.</strong> A small rural school has exactly five students whose weekly study hours are $\{4, 6, 7, 9, 9\}$. This constitutes complete population data. Compute:</p>
-$$\mu = \frac{4+6+7+9+9}{5} = \frac{35}{5} = 7 \text{ hours.}$$
-$$\sigma^2 = \frac{(4-7)^2+(6-7)^2+(7-7)^2+(9-7)^2+(9-7)^2}{5} = \frac{9+1+0+4+4}{5} = \frac{18}{5} = 3.6.$$
-<p>Hence $\sigma = \sqrt{3.6} \approx 1.897$ hours. Notice the denominator is $N = 5$, not $N-1$; the correction $N-1$ (Bessel's correction) applies only when estimating from a <em>sample</em>.</p>
-<p><strong>Key Theorem (Chebyshev's Inequality).</strong> For any population with mean $\mu$ and finite variance $\sigma^2$, and for any real $k > 1$,</p>
-$$P\!\left(|X - \mu| \geq k\sigma\right) \leq \frac{1}{k^2}.$$
-<p>This bound holds for <em>every</em> population distribution, requiring no normality assumption. For $k = 2$, at least $75\%$ of the population lies within two standard deviations of the mean — a universal guarantee.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import Rational, sqrt, var, simplify
-
-data = [4, 6, 7, 9, 9]
-N = len(data)
-
-mu = Rational(sum(data), N)
-sigma_sq = sum(Rational((x - mu)**2) for x in data) / N
-sigma = sqrt(sigma_sq)
-
-print("Population mean:    ", mu)          # 7
-print("Population variance:", sigma_sq)    # 18/5
-print("Population std dev: ", sigma)       # 3*sqrt(10)/5</code></pre>
-<p>Running this cell confirms $\mu = 7$, $\sigma^2 = \tfrac{18}{5}$, and $\sigma = \tfrac{3\sqrt{10}}{5}$, illustrating exact arithmetic over the rationals — a key advantage of symbolic computation.</p>
+<p><strong>Definition.</strong> Assume familiarity with probability spaces and real-valued random variables. The single new primitive introduced here is the <em>population distribution</em>: given a random variable $X : \Omega \to \mathcal{X}$ on a probability space $(\Omega, \mathcal{F}, P)$, the population distribution is the pushforward measure</p>
+$$\mu = P \circ X^{-1}, \qquad \mu(B) = P(X^{-1}(B)) \quad \forall\, B \in \mathcal{B},$$
+<p>which encodes the complete probabilistic structure of $X$ over the reference population. <em>Population data</em> is the notional totality $\{x_\omega : \omega \in \Omega\}$ drawn from $\mu$; in practice only a finite sample $\mathbf{x}_n = (x_1, \ldots, x_n) \overset{\text{iid}}{\sim} \mu$ is available. Statistical inference is the problem of recovering properties of $\mu$ from $\mathbf{x}_n$—a well-posed goal only once $\mu$ is identified as the estimand of interest, rather than an artifact of the data-collection process.</p>
+<p><strong>Theorem (Glivenko–Cantelli).</strong> Let $F$ denote the CDF of $\mu$ on $\mathbb{R}$ and $\hat{F}_n(t) = n^{-1}\sum_{i=1}^n \mathbf{1}[x_i \le t]$ the empirical CDF. Then</p>
+$$\sup_{t \in \mathbb{R}} \left| \hat{F}_n(t) - F(t) \right| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> Pointwise almost-sure convergence $\hat{F}_n(t) \to F(t)$ follows from the strong law of large numbers at each fixed $t$. Monotonicity of both $\hat{F}_n$ and $F$ permits a countable dense-grid argument that upgrades pointwise to uniform convergence; Varadarajan (1958) extends the argument to pushforward measures on Polish spaces via the portmanteau theorem. $\square$</p>
+<p>The quantitative counterpart is the Dvoretzky–Kiefer–Wolfowitz inequality,</p>
+$$P\!\left(\sup_t |\hat{F}_n(t) - F(t)| > \epsilon\right) \le 2e^{-2n\epsilon^2},$$
+<p>which is dimension-free on $\mathbb{R}$ but deteriorates in higher dimensions, previewing the curse of dimensionality without requiring any further primitives beyond $\mu$ and the empirical CDF.</p>
+<p><strong>Literature context and open problems.</strong> Different traditions operationalize $\mu$ in incompatible ways. Survey sampling (Cochran, 1977) treats the population as a finite enumerable set and locates randomness in the sampling design rather than in $\mu$ itself. Nonparametric statistics treats $\mu$ as an element of an infinite-dimensional function space, with estimation rates controlled by smoothness assumptions on $F$ (Tsybakov, 2009). In modern machine learning the central difficulty is that the training sample and the deployment population may have different distributions—<em>covariate shift</em> and <em>distribution shift</em> (Quiñonero-Candela et al., 2009; Koh et al., 2021)—so $\mu$ is not even well-defined without specifying which population. The deepest open problem is <em>population-level causal inference</em>: interventional distributions $P(Y \mid do(X = x))$ are properties of $\mu$ yet are not identifiable from $\hat{F}_n$ alone without structural assumptions (Pearl, 2009), meaning Glivenko–Cantelli convergence to $\mu$ is necessary but not sufficient for causal conclusions.</p>
+<p><strong>Suggested investigation.</strong> Fix a known $\mu$ (e.g., a two-component Gaussian mixture) and, for $n \in \{50, 200, 1000, 5000\}$, compute $\sup_t |\hat{F}_n(t) - F(t)|$ empirically over many replicates. Plot the 95th-percentile deviation against the DKW upper bound and examine how tightly the inequality is achieved. As a second phase, redraw the test set from a shifted mixture and measure how a downstream estimator trained on the original sample degrades; test whether reweighting by estimated density ratios restores population-level accuracy.</p>
+<p><strong>Report-writing note.</strong> A write-up should open by identifying $\mu$ precisely—including the target population and the mapping $X$—before any estimator is introduced. Distinguish clearly between statements about $\mu$ (population-level estimands) and statements about the sampling distribution of statistics under repeated draws. Report confidence intervals derived from the DKW bound alongside point estimates, state the regularity conditions on $\mu$ required for each bound to hold, and close with a diagnosis of whether the dominant error in the investigation is attributable to finite-sample approximation of $\mu$ or to model misspecification.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

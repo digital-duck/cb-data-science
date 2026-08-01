@@ -35,35 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="transformer-model">Transformer Model</h2>
-<p><strong>Definition.</strong> A <em>transformer model</em> is a sequence-to-sequence neural architecture that computes output representations entirely through attention mechanisms and position-wise feed-forward layers, without any recurrence or convolution. Given an input sequence of token embeddings $\mathbf{X} \in \mathbb{R}^{n \times d_{\text{model}}}$, the model produces contextualized representations by stacking $L$ identical encoder blocks, each consisting of a multi-head self-attention sublayer followed by a feed-forward sublayer, with residual connections and layer normalization applied after each.</p>
-<p>The central computation is <em>scaled dot-product attention</em>. For query matrix $Q \in \mathbb{R}^{n \times d_k}$, key matrix $K \in \mathbb{R}^{n \times d_k}$, and value matrix $V \in \mathbb{R}^{n \times d_v}$, the attention output is</p>
-$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.$$
-<p>The factor $\sqrt{d_k}$ prevents the dot products from growing large in magnitude, which would push the softmax into regions of near-zero gradient. Multi-head attention projects $Q$, $K$, $V$ into $h$ independent subspaces, computes attention in each, then concatenates and projects the results:</p>
-$$\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\ldots,\text{head}_h)\,W^O, \quad \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V).$$
-<p><strong>Worked example.</strong> Let $n = 2$, $d_k = 2$, and suppose</p>
-$$Q = K = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}, \quad V = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}.$$
-<p>The raw score matrix is $QK^\top / \sqrt{2} = I/\sqrt{2}$. After softmax row-wise, each row becomes approximately $(0.731, 0.269)$ (the diagonal entry wins). The output is a convex combination of value rows, so token 1 attends primarily to itself — a sensible identity-like behavior confirming that the mechanism recovers local focus when no cross-token signal is present.</p>
-<p><strong>Key theorem (Universal approximation via attention).</strong> Any continuous sequence-to-sequence function on a compact domain can be approximated to arbitrary precision by a sufficiently deep transformer with ReLU feed-forward sublayers. This result, established by Yun et al. (2020), parallels the classical universal approximation theorem for MLPs but applies to the sequence-function setting.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>import sympy as sp
-
-d_k = 2
-Q = sp.Matrix([[1, 0], [0, 1]])
-K = Q; V = Q
-scores = Q * K.T / sp.sqrt(d_k)
-
-def softmax_row(M):
-    rows = []
-    for i in range(M.rows):
-        row = M.row(i)
-        exps = [sp.exp(x) for x in row]
-        s = sum(exps)
-        rows.append([e / s for e in exps])
-    return sp.Matrix(rows)
-
-A = softmax_row(scores)
-output = A * V
-sp.pprint(output.applyfunc(lambda x: sp.nsimplify(x, rational=False)))</code></pre>
+<p><strong>Definition.</strong> A <em>transformer</em> is a sequence-to-sequence function $f_\theta : \mathbb{R}^{n \times d} \to \mathbb{R}^{n \times d}$ composed of $L$ stacked blocks, each consisting of a multi-head self-attention (MHSA) sublayer followed by a position-wise feed-forward network (FFN), with residual connections and layer normalization. Given an input matrix $X \in \mathbb{R}^{n \times d}$ (tokens $\times$ model dimension), a single attention head computes</p>
+$$\mathrm{Attn}(X) = \mathrm{softmax}\!\left(\frac{XW_Q (XW_K)^\top}{\sqrt{d_k}}\right) X W_V,$$
+<p>where $W_Q, W_K \in \mathbb{R}^{d \times d_k}$ and $W_V \in \mathbb{R}^{d \times d_v}$ are learned projections. With $h$ heads concatenated and linearly projected, the MHSA output is $\mathrm{MHSA}(X) = \mathrm{Concat}(\mathrm{head}_1, \ldots, \mathrm{head}_h) W_O$. The FFN sublayer applies two affine maps with a pointwise nonlinearity: $\mathrm{FFN}(z) = W_2 \, \sigma(W_1 z + b_1) + b_2$.</p>
+<p><strong>Theorem (Universal approximation, Yun et al. 2020).</strong> <em>For any continuous permutation-equivariant function $g : [0,1]^{n \times d} \to \mathbb{R}^{n \times d}$ and any $\varepsilon > 0$, there exists a two-layer transformer $f_\theta$ (with sufficient width and ReLU activations in the FFN) such that $\sup_X \|f_\theta(X) - g(X)\| < \varepsilon$.</em></p>
+<p>The key steps in the proof establish that (i) MHSA with sufficiently many heads can implement arbitrary sparse averaging over token positions, and (ii) the FFN sublayer recovers full pointwise function approximation on compact domains. The bound, however, is non-constructive and the head count grows exponentially with $n$; this gap between the existence guarantee and practical architectures remains an active research concern.</p>
+<p><strong>Literature context.</strong> Vaswani et al. (2017) introduced the transformer for machine translation, replacing recurrence with global attention at $\mathcal{O}(n^2 d)$ cost per layer. Subsequent work bifurcates into two threads: (1) <em>scaling laws</em> — Kaplan et al. (2020) and Hoffmann et al. (2022, "Chinchilla") characterize test loss as a power law $L(N, D) \approx A/N^\alpha + B/D^\beta + C$ in model parameters $N$ and training tokens $D$; (2) <em>mechanistic interpretability</em> — Elhage et al. (2021) decompose the residual stream as a sum of rank-1 attention contributions and identify "induction heads" as a concrete circuit implementing in-context learning. Open questions include: a tight sample-complexity theory for in-context learning; a principled explanation of the grokking phenomenon (delayed generalization after memorization); and a proof-level understanding of why positional encodings interact with length generalization.</p>
+<p><strong>Suggested investigation.</strong> Replicate the induction-head circuit on a small two-layer transformer trained on a synthetic copying task ($n \leq 64$, vocabulary size $\leq 50$). Specifically: (i) train to convergence on random sequences with a repeated token pattern; (ii) apply activation patching (interchange intervention) to identify which attention heads carry the induction signal; (iii) verify that ablating those heads degrades accuracy to chance while ablating others does not. Extend the experiment by varying the sequence length to probe where the circuit breaks down — this directly touches the length-generalization open problem.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should formally state the circuit hypothesis as a falsifiable claim, report intervention effects as causal attributions (not correlations), plot accuracy versus ablated head set, and situate findings against the Elhage et al. framework. The write-up should be explicit about what the synthetic task does and does not generalize to.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

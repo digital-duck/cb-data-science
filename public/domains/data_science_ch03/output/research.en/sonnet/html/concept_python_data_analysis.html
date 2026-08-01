@@ -35,35 +35,20 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="python-data-analysis">Python Data Analysis</h2>
-<p><strong>Definition.</strong> <em>Data analysis</em> is the systematic process of inspecting, cleaning, transforming, and modelling a dataset to extract actionable information and support decision-making. Formally, given a dataset $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^{n}$ where $x_i \in \mathbb{R}^p$ are feature vectors and $y_i \in \mathbb{R}$ are response values, the goal is to estimate a function $f : \mathbb{R}^p \to \mathbb{R}$ such that $y_i \approx f(x_i) + \varepsilon_i$, where $\varepsilon_i$ is random noise with $\mathbb{E}[\varepsilon_i] = 0$. Python's scientific stack—principally <code>NumPy</code>, <code>pandas</code>, and <code>matplotlib</code>—provides the computational substrate for every stage of this pipeline.</p>
-<p><strong>Worked Example.</strong> Consider the body-mass index dataset containing heights $h$ (metres) and weights $w$ (kilograms) for $n = 100$ individuals. The sample mean and variance of weight are:</p>
-$$\bar{w} = \frac{1}{n}\sum_{i=1}^{n} w_i, \qquad s^2_w = \frac{1}{n-1}\sum_{i=1}^{n}(w_i - \bar{w})^2.$$
-<p>The Pearson correlation between height and weight is:</p>
-$$r = \frac{\sum_{i=1}^{n}(h_i - \bar{h})(w_i - \bar{w})}{\sqrt{\sum_{i=1}^{n}(h_i-\bar{h})^2\,\sum_{i=1}^{n}(w_i-\bar{w})^2}}.$$
-<p>If $r = 0.87$, this indicates a strong positive linear relationship: taller individuals tend to weigh more. Using <code>pandas</code>, the entire computation reduces to <code>df['height'].corr(df['weight'])</code>.</p>
-<p><strong>Key Theorem (Law of Large Numbers).</strong> Let $X_1, X_2, \ldots, X_n$ be independent and identically distributed random variables with finite mean $\mu = \mathbb{E}[X_i]$. Then the sample mean $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$ satisfies:</p>
-$$\bar{X}_n \xrightarrow{\,p\,} \mu \quad \text{as } n \to \infty.$$
-<p>This theorem is the theoretical justification for using sample statistics as estimates of population parameters: as the dataset grows, descriptive summaries converge to their true values.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import pandas as pd
-import sympy as sp
-
-# Symbolic mean and variance
-x, n = sp.symbols('x n', positive=True)
-data = [62, 75, 80, 71, 68, 90, 55, 84, 77, 66]
-s = pd.Series(data, name='weight_kg')
-
-print(f"Mean  : {s.mean():.2f}")
-print(f"Std   : {s.std():.2f}")
-print(f"Median: {s.median():.2f}")
-
-# Symbolic expression for sample variance
-x_bar = sp.Symbol('bar_x')
-xi    = sp.IndexedBase('x')
-i     = sp.Idx('i', n)
-var_expr = sp.Sum((xi[i] - x_bar)**2, i) / (n - 1)
-sp.pprint(var_expr)</code></pre>
-<p>Running this cell prints the descriptive statistics and renders the symbolic variance formula, connecting numerical computation to its mathematical definition.</p>
+<h3 id="definition">Definition</h3>
+<p>Python data analysis denotes the discipline of transforming raw, heterogeneous data into structured, statistically interpretable representations using a composable stack of scientific libraries. Formally, a data analysis pipeline may be modeled as a directed acyclic graph $G = (V, E)$ where each vertex $v_i \in V$ represents a pure transformation $f_i : \mathcal{D}_i \to \mathcal{D}_{i+1}$ over a data domain $\mathcal{D}$, and each edge encodes a data dependency. The canonical Python substrate—NumPy for array arithmetic, Pandas for labeled heterogeneous tables, SciPy for numerical methods, and scikit-learn for statistical learning—instantiates this graph as a sequence of memory-resident, vectorized operations. Crucially, the correctness and reproducibility of any downstream inference depends on the algebraic properties preserved across each node: commutativity of aggregations, associativity of group reductions, and invariance of summary statistics under permutation of records.</p>
+<h3 id="theorem-derivation">Theorem / Derivation</h3>
+<p>A foundational concern is numerical stability of columnar aggregations. Let $\mathbf{x} = (x_1, \ldots, x_n) \in \mathbb{R}^n$. Naïve single-pass sample variance,</p>
+$$s^2_{\text{naïve}} = \frac{1}{n-1}\left(\sum_{i=1}^n x_i^2 - n\bar{x}^2\right),$$
+<p>is algebraically correct but numerically unstable when $\sum x_i^2 \approx n\bar{x}^2$: catastrophic cancellation inflates the relative error to $O(\epsilon_{\text{mach}} \cdot \kappa)$, where $\kappa = \|\mathbf{x}\|_2^2 / \text{Var}(\mathbf{x})$ is a condition number. Welford's online algorithm computes a running mean $\mu_k$ and sum of squared deviations $M_k$ via</p>
+$$\mu_k = \mu_{k-1} + \frac{x_k - \mu_{k-1}}{k}, \qquad M_k = M_{k-1} + (x_k - \mu_{k-1})(x_k - \mu_k),$$
+<p>yielding relative error $O(\epsilon_{\text{mach}})$ uniformly in $n$. NumPy's <code>np.var</code> employs a two-pass algorithm that achieves comparable stability; Pandas <code>DataFrame.std</code> delegates to this path. The practical implication: analysts who replicate summary statistics using vectorized arithmetic may silently introduce condition-number-dependent errors not present in the library call.</p>
+<h3 id="literature-context">Literature Context</h3>
+<p>The numerical analysis of statistical computations is treated rigorously in Higham (2002) <em>Accuracy and Stability of Numerical Algorithms</em>, while the Python scientific stack's design principles are documented in Harris et al. (2020, <em>Nature</em>) for NumPy and McKinney (2010, <em>SciPy Proceedings</em>) for Pandas. Open questions cluster around three themes. First, <strong>type inference under schema drift</strong>: Pandas' <code>read_csv</code> dtype inference is heuristic and non-monotone—column types may change as row count grows—creating reproducibility hazards in streaming or incremental ingestion contexts with no formal guarantee. Second, <strong>lazy vs. eager evaluation tradeoffs</strong>: libraries such as Polars and Dask introduce deferred computation graphs; whether the resulting plans are semantically equivalent to their eager counterparts under all split strategies is an active correctness question. Third, <strong>missing-data algebra</strong>: <code>NaN</code> propagation in IEEE 754 floating-point does not compose with Pandas' <code>NA</code> for integer or boolean columns, producing silent type coercions whose interaction with groupby semantics remains incompletely specified.</p>
+<h3 id="suggested-investigation">Suggested Investigation</h3>
+<p>A well-scoped project is to <strong>benchmark condition-number sensitivity of variance estimators across real tabular datasets</strong>. Collect ten publicly available datasets spanning different dynamic ranges (e.g., census income, sensor time series, genomic expression matrices). For each column, compute $\kappa$, the naïve estimator, Welford's estimator, and NumPy's two-pass estimator. Record relative deviation from a 128-bit reference computed via <code>mpmath</code>. Plot error as a function of $\log \kappa$ and fit a linear model to test the $O(\epsilon_{\text{mach}} \cdot \kappa)$ prediction. Extend the investigation by introducing deliberate mean-shift to stress-test condition sensitivity, then verify whether Pandas <code>groupby().std()</code> inherits the same stability guarantee as the column-level call.</p>
+<h3 id="report-writing-note">Report-Writing Note</h3>
+<p>A write-up of this investigation should establish: (i) a precise statement of the stability theorem for each estimator with explicit error bounds, (ii) the experimental protocol including dataset provenance and Python/library versions, (iii) a figure showing error-vs-$\kappa$ with overlaid theoretical bounds, and (iv) a discussion of which practical analysis workflows encounter high-$\kappa$ columns and what mitigation (centering, log-transform, explicit dtype casting) is appropriate. The report should conclude with an open question: whether Pandas' missing-value semantics can be given a formal algebraic specification that guarantees stability properties compose across multi-step pipelines.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

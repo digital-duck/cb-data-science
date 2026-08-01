@@ -152,21 +152,15 @@ python scripts/batch_generate.py \
   --skip-cache
 
 
-# test
+# [X] multi-levels
 python scripts/batch_generate.py \
-  --domain data_science_ch05 \
-  --include data_science,arima,hipaa \
-  --level intro 
-
-# multi-levels
-python scripts/batch_generate.py \
-  --domain data_science_ch05 \
-  --include "data_science,arima,hipaa" \
+  --domain data_science_ch01 \
+  --include "predictive_analytics" \
   --level "intro,core,college,research" \
   --skip-cache 
 
 
-# multi-levels - lang = zh
+# [X] multi-levels - lang = zh, en
 python scripts/batch_generate.py \
   --domain data_science_ch05 \
   --include "arima" \
@@ -175,29 +169,54 @@ python scripts/batch_generate.py \
   --skip-cache 
 
 
-# multi-levels
+# [X] multi-levels 
 python scripts/batch_generate.py \
   --domain data_science_ch08 \
   --include "hipaa" \
   --level "intro,core,college,research" \
   --skip-cache 
 
-```
+## [X] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch02 \
+  --include "cloud_computing" \
+  --level "intro,core,college,research" \
+  --skip-cache 
 
-```output
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch03 \
+  --include "python_data_analysis" \
+  --level "intro,core,college,research" \
+  --skip-cache 
 
-data_science_ch05               target=seasonal_trend_decomposition_loess   level=intro       style=feynman
-data_science_ch05               target=augmented_dickey_fuller_test         level=intro       style=feynman
-data_science_ch05               target=naive_forecasting                    level=intro       style=feynman
-data_science_ch05               target=linear_regression_forecasting        level=intro       style=feynman
-* data_science_ch05               target=arima                                level=intro       style=feynman
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch06 \
+  --include "heart_disease_classification" \
+  --level "intro,core,college,research" \
+  --skip-cache 
 
-```
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch07 \
+  --include "large_language_model" \
+  --level "intro,core,college,research" \
+  --skip-cache 
 
-## File paths used in this comparison
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch09 \
+  --include "three_d_visualization" \
+  --level "intro,core,college,research" \
+  --skip-cache 
 
-```
-public/domains/data_science_ch01/output/{level}.en/sonnet/html/{book,concept}_{name}.html
-public/domains/data_science_ch05/output/{level}.en/sonnet/html/{book,concept}_{name}.html
-public/domains/data_science_ch08/output/{level}.en/sonnet/html/{book,concept}_{name}.html
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch10 \
+  --include "executive_dashboard" \
+  --level "intro,core,college,research" \
+  --skip-cache 
+
+
 ```

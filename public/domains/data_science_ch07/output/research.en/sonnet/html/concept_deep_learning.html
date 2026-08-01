@@ -35,30 +35,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="deep-learning">Deep Learning</h2>
-<p><strong>Definition.</strong> A <em>deep neural network</em> is a parametric function $f_\theta : \mathbb{R}^{n_0} \to \mathbb{R}^{n_L}$ obtained by composing $L$ affine transformations interleaved with nonlinear activation functions:</p>
-$$f_\theta(\mathbf{x}) = \sigma_L(W_L \cdots \sigma_1(W_1 \mathbf{x} + \mathbf{b}_1) \cdots + \mathbf{b}_L),$$
-<p>where $W_\ell \in \mathbb{R}^{n_\ell \times n_{\ell-1}}$ is the weight matrix of layer $\ell$, $\mathbf{b}_\ell \in \mathbb{R}^{n_\ell}$ is the bias vector, and $\sigma_\ell$ is an element-wise activation function. A common choice is the rectified linear unit, $\sigma(z) = \max(0, z)$. Training minimises an empirical loss $\mathcal{L}(\theta) = \frac{1}{N}\sum_{i=1}^N \ell(f_\theta(\mathbf{x}_i), y_i)$ over a labelled dataset $\{(\mathbf{x}_i, y_i)\}_{i=1}^N$ by iteratively updating $\theta$ in the direction of the negative gradient of $\mathcal{L}$.</p>
-<p><strong>Worked Example.</strong> Consider a two-layer network ($L = 2$) for binary classification with $n_0 = 2$, $n_1 = 3$, $n_2 = 1$, and rectified linear activations. Given input $\mathbf{x} = (1, -1)^\top$, weight matrix $W_1 = \begin{pmatrix}1 & 0\\0 & 1\\1 & 1\end{pmatrix}$, and $\mathbf{b}_1 = \mathbf{0}$, the hidden representation is</p>
-$$\mathbf{h} = \sigma_1(W_1\mathbf{x}) = \max\!\left(0,\,(1,\,-1,\,0)^\top\right) = (1,\,0,\,0)^\top.$$
-<p>With $W_2 = (2,\,-1,\,3)$ and $b_2 = 0$, the output is $f_\theta(\mathbf{x}) = 2$, predicting the positive class after thresholding at zero.</p>
-<p><strong>Key Theorem (Universal Approximation).</strong> Let $\sigma$ be any continuous, non-polynomial activation function. For every continuous function $g : [0,1]^d \to \mathbb{R}$ and $\varepsilon > 0$, there exists a single-hidden-layer network $f_\theta$ such that $\sup_{\mathbf{x}} |f_\theta(\mathbf{x}) - g(\mathbf{x})| < \varepsilon$. The theorem guarantees <em>existence</em> of an approximator but gives no bound on the required width; in practice, depth dramatically reduces the width needed for structured functions.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-x1, x2, w11, w12 = sp.symbols('x1 x2 w11 w12', real=True)
-
-# Single neuron with rectified linear activation
-z = w11*x1 + w12*x2
-relu = sp.Piecewise((z, z &gt; 0), (sp.Integer(0), True))
-
-# Evaluate at the worked-example point
-val = relu.subs({x1: 1, x2: -1, w11: 1, w12: 0})
-print("Neuron output:", val)
-
-# Evaluate at a point where the pre-activation is negative
-val2 = relu.subs({x1: -2, x2: 1, w11: 1, w12: 0})
-print("Neuron output (negative pre-activation):", val2)</code></pre>
-<p>Running this cell confirms the piecewise behaviour of the activation: the neuron transmits its weighted input unchanged when $z > 0$, and returns zero otherwise. This asymmetry is what breaks the symmetry of purely linear composition and endows deep networks with their representational power.</p>
+<p><strong>Definition.</strong> A deep neural network is a parametric function $f_\theta : \mathcal{X} \to \mathcal{Y}$ defined by the composition $f_\theta = \ell_L \circ \ell_{L-1} \circ \cdots \circ \ell_1$, where each layer $\ell_k(\mathbf{x}) = \sigma(W_k \mathbf{x} + \mathbf{b}_k)$ applies an affine map followed by a pointwise nonlinearity $\sigma$. The parameter set $\theta = \{W_k, \mathbf{b}_k\}_{k=1}^L$ is optimized by minimizing an empirical risk $\hat{\mathcal{L}}(\theta) = \frac{1}{n}\sum_{i=1}^n \ell(f_\theta(\mathbf{x}_i), y_i)$ via stochastic gradient descent (SGD) or its adaptive variants (Adam, AdaGrad). Deep learning is not, however, a settled technology — its theoretical foundations remain substantively incomplete, and every practitioner encounters regimes where received intuitions fail.</p>
+<p><strong>Theorem (Universal Approximation, Hornik–Stinchcombe–White, 1989).</strong> Let $\sigma$ be a continuous, bounded, nonconstant function. For any $f \in C(\mathcal{K})$ on a compact $\mathcal{K} \subset \mathbb{R}^n$ and any $\varepsilon > 0$, there exists a single-hidden-layer network $\hat{f}$ such that $\sup_{\mathbf{x} \in \mathcal{K}} |f(\mathbf{x}) - \hat{f}(\mathbf{x})| < \varepsilon$.</p>
+<p><strong>Proof sketch.</strong> The proof uses the density of finite linear combinations of ridge functions $\sum_j c_j \sigma(\mathbf{w}_j^\top \mathbf{x} + b_j)$ in $C(\mathcal{K})$, established via the Stone–Weierstrass theorem and properties of the Fourier transform of $\sigma$. Width sufficient; depth not required. $\square$</p>
+<p>This result is frequently misread as a justification for depth. It is not: it guarantees existence of a width-$N$ shallow network for some $N$ that may be exponentially large in dimension. The depth-separation literature (Eldan–Shamir 2016, Telgarsky 2016) shows that there exist functions computed by depth-$L$ networks that require exponential width in depth-$(L-1)$ networks, but these separations are worst-case and rarely characterize practical learning scenarios.</p>
+<p><strong>What remains open.</strong> The central mysteries are not architectural but optimization-theoretic and statistical. Why does SGD on nonconvex loss landscapes find solutions that generalize well? The double-descent phenomenon (Belkin et al. 2019, Hastie et al. 2022) shows that interpolating models — trained to zero training loss — can achieve low test error, violating classical bias–variance tradeoffs. The implicit regularization of SGD (Gunasekar et al. 2018) and the edge-of-stability phenomenon (Cohen et al. 2021), wherein gradient descent operates stably above the theoretical stability threshold of $2/\eta_{\max}$, remain active research areas. Neural tangent kernel (NTK) theory (Jacot et al. 2018) provides a tractable infinite-width limit but does not explain finite-width generalization or feature learning.</p>
+<p><strong>Suggested investigation.</strong> Replicate the double-descent curve on a benchmark dataset (e.g., CIFAR-10 with a ResNet family). Vary model size from underparameterized ($d \ll n$) through the interpolation threshold to overparameterized ($d \gg n$). Plot test risk as a function of parameter count. Then perturb the training procedure — replace SGD with full-batch gradient descent, or change the learning rate schedule — and measure how the location and amplitude of the double-descent peak shift. This isolates the role of the optimizer versus the model class in producing the phenomenon.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) precise definitions of the underparameterized and interpolation regimes in terms of effective degrees of freedom; (2) a theoretical prediction for peak location derived from the random matrix theory literature (e.g., Mei–Montanari 2022 for random features); (3) quantitative comparison between prediction and experiment; and (4) a clear statement of which aspects of the observed behavior are explained by existing theory and which constitute open problems. Do not treat generalization as explained by any single existing framework — that claim would be false.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

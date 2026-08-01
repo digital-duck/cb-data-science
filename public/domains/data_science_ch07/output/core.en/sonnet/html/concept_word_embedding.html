@@ -35,32 +35,19 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="word-embedding">Word Embedding</h2>
-<p><strong>Definition.</strong> A <em>word embedding</em> is a function $\phi: \mathcal{V} \to \mathbb{R}^d$ that maps each word in a finite vocabulary $\mathcal{V}$ to a dense vector in $d$-dimensional Euclidean space, where $d \ll |\mathcal{V}|$. The embedding is learned so that geometric relationships in $\mathbb{R}^d$ reflect semantic or syntactic relationships among words. Formally, if $w_i, w_j \in \mathcal{V}$ are semantically similar, we expect $\|\phi(w_i) - \phi(w_j)\|_2$ to be small. This contrasts with one-hot encoding, in which every word is represented by a standard basis vector $e_i \in \mathbb{R}^{|\mathcal{V}|}$; under one-hot encoding, all inter-word distances are equal and no semantic structure is encoded.</p>
-<p><strong>Worked Example.</strong> Consider a toy vocabulary $\mathcal{V} = \{\text{king}, \text{queen}, \text{man}, \text{woman}\}$ and suppose a learned embedding in $\mathbb{R}^2$ yields</p>
-$$\phi(\text{king}) = \begin{pmatrix}0.9\\0.1\end{pmatrix},\quad \phi(\text{queen}) = \begin{pmatrix}0.9\\0.9\end{pmatrix},\quad \phi(\text{man}) = \begin{pmatrix}0.1\\0.1\end{pmatrix},\quad \phi(\text{woman}) = \begin{pmatrix}0.1\\0.9\end{pmatrix}.$$
-<p>Computing the analogy vector $\phi(\text{king}) - \phi(\text{man}) + \phi(\text{woman}) = (0.9, 0.9)^\top = \phi(\text{queen})$ recovers the gender analogy $\text{king} - \text{man} + \text{woman} \approx \text{queen}$ exactly. Real embeddings exhibit this structure approximately, not exactly, but the principle generalises to thousands of dimensions and millions of words.</p>
-<p><strong>Key Theorem (Distributional Hypothesis, Firth 1957; formalised by Levy & Goldberg 2014).</strong> The skip-gram model with negative sampling (Word2Vec) implicitly factorises the shifted pointwise mutual information matrix $M_{ij} = \mathrm{PMI}(w_i, c_j) - \log k$, where $c_j$ ranges over context words and $k$ is the number of negative samples. Consequently, the optimal embedding vectors satisfy $\phi(w_i)^\top \phi(c_j) \approx \mathrm{PMI}(w_i, c_j) - \log k$, grounding the geometric intuition in an information-theoretic objective.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import numpy as np
-from sympy import Matrix, sqrt, Rational
-
-# Toy embedding matrix: rows are word vectors
-E = Matrix([
-    [Rational(9,10), Rational(1,10)],   # king
-    [Rational(9,10), Rational(9,10)],   # queen
-    [Rational(1,10), Rational(1,10)],   # man
-    [Rational(1,10), Rational(9,10)],   # woman
-])
-
-# Cosine similarity between king and queen
-v1, v2 = E.row(0), E.row(1)
-cos_sim = v1.dot(v2) / (sqrt(v1.dot(v1)) * sqrt(v2.dot(v2)))
-print("cos(king, queen) =", cos_sim)   # close to 1
-
-# Analogy: king - man + woman
-analogy = E.row(0) - E.row(2) + E.row(3)
-print("king - man + woman =", analogy) # should equal queen</code></pre>
-<p>Running this cell confirms $\cos(\phi(\text{king}), \phi(\text{queen})) = 1$ in this idealised example, and that the analogy arithmetic closes exactly. In practice, embeddings trained on large corpora achieve cosine similarities above $0.7$ for such canonical analogies.</p>
+<p>You already have the intuition: words can be represented as arrows (vectors) in a high-dimensional space, and words with similar meanings end up pointing in similar directions. Now let's look at what that actually means in practice.</p>
+<p>A word embedding assigns every word a list of numbers — its <strong>coordinates</strong> in that space. A simple example with just two dimensions might look like:</p>
+$$\text{cat} = \begin{bmatrix} 0.9 \\ 0.2 \end{bmatrix}, \quad \text{dog} = \begin{bmatrix} 0.85 \\ 0.25 \end{bmatrix}, \quad \text{car} = \begin{bmatrix} 0.1 \\ 0.8 \end{bmatrix}$$
+<p>Real embeddings use hundreds of dimensions, but the principle is the same. Each dimension captures some hidden feature — maybe one tracks "animal-ness," another tracks "size," and so on. The model learns these features automatically from enormous amounts of text.</p>
+<p>The most famous pattern word embeddings reveal is <strong>vector arithmetic</strong>:</p>
+$$\vec{\text{king}} - \vec{\text{man}} + \vec{\text{woman}} \approx \vec{\text{queen}}$$
+<p>This isn't a coincidence — it means the relationship "male → female" corresponds to a consistent direction in the space. Analogy becomes subtraction and addition.</p>
+<p>To measure how similar two words are, we use <strong>cosine similarity</strong>: if $\mathbf{a}$ and $\mathbf{b}$ are two word vectors, their similarity is:</p>
+$$\cos\theta = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\|\|\mathbf{b}\|}$$
+<p>A result near $1$ means very similar; near $0$ means unrelated.</p>
+<p><strong>Practice problem:</strong> Suppose embeddings give you:</p>
+$$\vec{\text{Paris}} - \vec{\text{France}} + \vec{\text{Japan}} \approx \, ?$$
+<p>What word would you expect the result to be closest to, and why? (Hint: think about what relationship the first two words share.)</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

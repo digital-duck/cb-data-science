@@ -35,35 +35,27 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="python-data-analysis">Python Data Analysis</h2>
-<p><strong>Definition.</strong> <em>Data analysis</em> is the systematic process of inspecting, cleaning, transforming, and modelling a dataset to extract actionable information and support decision-making. Formally, given a dataset $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^{n}$ where $x_i \in \mathbb{R}^p$ are feature vectors and $y_i \in \mathbb{R}$ are response values, the goal is to estimate a function $f : \mathbb{R}^p \to \mathbb{R}$ such that $y_i \approx f(x_i) + \varepsilon_i$, where $\varepsilon_i$ is random noise with $\mathbb{E}[\varepsilon_i] = 0$. Python's scientific stack—principally <code>NumPy</code>, <code>pandas</code>, and <code>matplotlib</code>—provides the computational substrate for every stage of this pipeline.</p>
-<p><strong>Worked Example.</strong> Consider the body-mass index dataset containing heights $h$ (metres) and weights $w$ (kilograms) for $n = 100$ individuals. The sample mean and variance of weight are:</p>
-$$\bar{w} = \frac{1}{n}\sum_{i=1}^{n} w_i, \qquad s^2_w = \frac{1}{n-1}\sum_{i=1}^{n}(w_i - \bar{w})^2.$$
-<p>The Pearson correlation between height and weight is:</p>
-$$r = \frac{\sum_{i=1}^{n}(h_i - \bar{h})(w_i - \bar{w})}{\sqrt{\sum_{i=1}^{n}(h_i-\bar{h})^2\,\sum_{i=1}^{n}(w_i-\bar{w})^2}}.$$
-<p>If $r = 0.87$, this indicates a strong positive linear relationship: taller individuals tend to weigh more. Using <code>pandas</code>, the entire computation reduces to <code>df['height'].corr(df['weight'])</code>.</p>
-<p><strong>Key Theorem (Law of Large Numbers).</strong> Let $X_1, X_2, \ldots, X_n$ be independent and identically distributed random variables with finite mean $\mu = \mathbb{E}[X_i]$. Then the sample mean $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$ satisfies:</p>
-$$\bar{X}_n \xrightarrow{\,p\,} \mu \quad \text{as } n \to \infty.$$
-<p>This theorem is the theoretical justification for using sample statistics as estimates of population parameters: as the dataset grows, descriptive summaries converge to their true values.</p>
-<p><strong>Lab Cell.</strong></p>
+<p><strong>Quick recap:</strong> You already know that data is everywhere — scores, temperatures, prices, populations. Python gives you tools to <em>talk</em> to that data systematically instead of staring at a spreadsheet.</p>
+<p><strong>The structure beneath the surface</strong></p>
+<p>Real data analysis follows a repeatable pipeline:</p>
+<li><strong>Load</strong> — read data from a file (CSV, Excel, database)</li>
+<li><strong>Inspect</strong> — check shape, types, and missing values</li>
+<li><strong>Clean</strong> — fix errors, fill gaps, standardize formats</li>
+<li><strong>Analyze</strong> — compute summaries, find patterns</li>
+<li><strong>Visualize</strong> — turn numbers into pictures</li>
+<p>The two workhorses are <strong>pandas</strong> (data tables) and <strong>matplotlib/seaborn</strong> (charts). A pandas <code>DataFrame</code> is like a spreadsheet in code — rows are observations, columns are variables.</p>
 <pre><code>import pandas as pd
-import sympy as sp
 
-# Symbolic mean and variance
-x, n = sp.symbols('x n', positive=True)
-data = [62, 75, 80, 71, 68, 90, 55, 84, 77, 66]
-s = pd.Series(data, name='weight_kg')
-
-print(f"Mean  : {s.mean():.2f}")
-print(f"Std   : {s.std():.2f}")
-print(f"Median: {s.median():.2f}")
-
-# Symbolic expression for sample variance
-x_bar = sp.Symbol('bar_x')
-xi    = sp.IndexedBase('x')
-i     = sp.Idx('i', n)
-var_expr = sp.Sum((xi[i] - x_bar)**2, i) / (n - 1)
-sp.pprint(var_expr)</code></pre>
-<p>Running this cell prints the descriptive statistics and renders the symbolic variance formula, connecting numerical computation to its mathematical definition.</p>
+df = pd.read_csv("scores.csv")
+print(df.shape)        # (rows, columns)
+print(df.describe())   # count, mean, std, min, max per column</code></pre>
+<p>The <code>describe()</code> method gives you the five-number summary plus mean and standard deviation in one call. For a column of exam scores, the <strong>mean</strong> $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ and <strong>standard deviation</strong> $s$ tell you the center and spread immediately.</p>
+<p>Filtering rows works like a math predicate:</p>
+<pre><code>high_scorers = df[df["score"] &gt; 90]</code></pre>
+<p>This keeps only the rows where the condition is <code>True</code> — exactly like set-builder notation $\{x \mid x > 90\}$.</p>
+<p><strong>The rule to remember:</strong> every analysis step maps to one clear action: load → inspect → clean → analyze → visualize. Skip a step and your conclusions may be built on messy data.</p>
+<hr>
+<p><strong>Practice problem:</strong> Download any small CSV (weather data, sports stats, your own grade sheet). Load it with pandas, print <code>df.describe()</code>, and answer: Which column has the highest standard deviation, and what does that tell you about the variability in that variable?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

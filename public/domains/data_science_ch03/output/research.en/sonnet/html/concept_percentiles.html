@@ -35,27 +35,20 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="percentiles">Percentiles</h2>
-<p><strong>Definition.</strong> Let $X$ be a real-valued random variable with cumulative distribution function $F(x) = P(X \leq x)$. For $p \in (0, 1)$, the <strong>$p$-th quantile</strong> (or $100p$-th <strong>percentile</strong>) of $X$ is the value</p>
-$$Q(p) = \inf\{x \in \mathbb{R} : F(x) \geq p\}.$$
-<p>For a finite data set $\{x_1, x_2, \ldots, x_n\}$ arranged in non-decreasing order $x_{(1)} \leq x_{(2)} \leq \cdots \leq x_{(n)}$, the $100p$-th percentile is commonly estimated by the order statistic $x_{(\lceil np \rceil)}$, where $\lceil \cdot \rceil$ denotes the ceiling function. Percentiles partition the distribution into hundredths: the 50th percentile is the <strong>median</strong>, while the 25th and 75th percentiles are the first and third <strong>quartiles</strong>, $Q_1$ and $Q_3$, respectively. Their difference $\text{IQR} = Q_3 - Q_1$ is the <strong>interquartile range</strong>, a robust measure of spread.</p>
-<p><strong>Worked Example.</strong> Suppose a class of ten students earns the scores</p>
-$$55,\; 62,\; 67,\; 70,\; 74,\; 78,\; 81,\; 85,\; 91,\; 96.$$
-<p>Find the 80th percentile. Here $n = 10$ and $p = 0.80$, so the index is $\lceil 10 \times 0.80 \rceil = \lceil 8 \rceil = 8$. The 80th percentile is therefore $x_{(8)} = 85$, meaning approximately 80% of students scored at or below 85.</p>
-<p><strong>Theorem (Monotonicity and Equivariance).</strong> Let $Q_X(p)$ denote the $p$-th quantile of $X$. For any monotone increasing function $g$,</p>
-$$Q_{g(X)}(p) = g\!\left(Q_X(p)\right).$$
-<p><em>Proof sketch.</em> Since $g$ is increasing, $g(X) \leq g(x) \iff X \leq x$, so $F_{g(X)}(g(x)) = F_X(x)$. Taking the infimum over $\{t : F_{g(X)}(t) \geq p\}$ yields the result. $\square$</p>
-<p>This equivariance property is practically significant: percentiles of log-transformed income data, for instance, map back to income percentiles by exponentiation without recomputation.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import numpy as np
-from sympy import stats, Symbol, N
-
-# Empirical percentiles
-scores = [55, 62, 67, 70, 74, 78, 81, 85, 91, 96]
-p80 = np.percentile(scores, 80, method='higher')
-iqr = np.percentile(scores, 75) - np.percentile(scores, 25)
-print(f"80th percentile: {p80}")   # 85
-print(f"IQR: {iqr}")               # 19.25</code></pre>
-<p>Running this cell confirms $Q(0.80) = 85$ and reveals that the middle 50% of scores spans roughly 19 points, indicating moderate dispersion around the median.</p>
+<p><strong>Definition.</strong> Let $X$ be a real-valued random variable with cumulative distribution function $F(x) = \Pr(X \leq x)$. The $p$-th percentile (or $100p$-th quantile) of $X$ is the value</p>
+$$Q(p) = F^{-1}(p) := \inf\{x \in \mathbb{R} : F(x) \geq p\}, \quad p \in (0,1).$$
+<p>This generalized inverse (the <em>quantile function</em>) is well-defined for any CDF, including those with jumps or flat regions, and coincides with the ordinary inverse when $F$ is strictly increasing and continuous. The 25th, 50th, and 75th percentiles are the <em>quartiles</em> $Q_1, Q_2, Q_3$; the interquartile range $\mathrm{IQR} = Q_3 - Q_1$ is a canonical robust measure of spread.</p>
+<p><strong>Theorem (Quantile Equivariance).</strong> For any strictly monotone increasing function $g : \mathbb{R} \to \mathbb{R}$ and random variable $X$,</p>
+$$Q_{g(X)}(p) = g(Q_X(p)).$$
+<p><em>Proof.</em> By the monotone transformation law, $\Pr(g(X) \leq y) = \Pr(X \leq g^{-1}(y))$ for $g$ strictly increasing. Hence $F_{g(X)}(y) = F_X(g^{-1}(y))$, and</p>
+$$F_{g(X)}^{-1}(p) = \inf\{y : F_X(g^{-1}(y)) \geq p\} = g\!\left(\inf\{x : F_X(x) \geq p\}\right) = g(Q_X(p)). \qquad \square$$
+<p>This result is practically important: a log-transform of data preserves the rank ordering, so percentiles of $\log X$ exponentiate back to percentiles of $X$ — a fact exploited in lognormal modeling throughout reliability engineering and finance.</p>
+<p><strong>Estimation.</strong> Given an i.i.d. sample $X_1, \ldots, X_n$ with order statistics $X_{(1)} \leq \cdots \leq X_{(n)}$, the empirical quantile $\hat{Q}(p) = X_{(\lceil np \rceil)}$ is strongly consistent by the Glivenko–Cantelli theorem. Under mild regularity ($f = F'$ exists and $f(Q(p)) > 0$), the asymptotic distribution is</p>
+$$\sqrt{n}\bigl(\hat{Q}(p) - Q(p)\bigr) \xrightarrow{d} \mathcal{N}\!\left(0,\, \frac{p(1-p)}{f(Q(p))^2}\right),$$
+<p>a classical result derived via the delta method applied to the empirical CDF (see Serfling, <em>Approximation Theorems of Mathematical Statistics</em>, 1980, §2.3). The variance blows up near the tails ($p \to 0$ or $1$), which is why extreme quantile estimation remains an active research area connected to extreme value theory (EVT) and the Fisher–Tippett–Gnedenko theorem.</p>
+<p><strong>What is open.</strong> Quantile estimation under dependence, heavy tails, and high dimensions is far from settled. Conformal prediction reframes quantile estimation as a coverage guarantee problem (Angelopoulos & Bates, 2023), while quantile regression (Koenker & Bassett, 1978) extends the concept to conditional quantiles $Q_{Y|X}(p)$ via the asymmetric loss $\rho_p(u) = u(p - \mathbf{1}_{u < 0})$, whose minimizer is exactly $Q(p)$ — a characterization that motivates neural quantile networks and conformal risk control.</p>
+<p><strong>Suggested investigation.</strong> Generate samples from a mixture distribution (e.g., $0.8\,\mathcal{N}(0,1) + 0.2\,\mathcal{N}(5,0.5)$) at sizes $n \in \{50, 200, 1000, 5000\}$. For each $n$, estimate $Q(0.5)$, $Q(0.9)$, and $Q(0.99)$ using (i) the standard empirical quantile and (ii) kernel-smoothed quantile estimation. Compare empirical variance against the asymptotic formula above. Repeat under $\mathrm{AR}(1)$ dependence with $\phi = 0.7$ to observe how the independence assumption inflates coverage error.</p>
+<p><strong>Report note.</strong> A write-up of this investigation should establish: (1) a table of empirical vs. theoretical asymptotic variance by $p$ and $n$; (2) QQ-plots confirming or refuting the Gaussian limit at each regime; (3) a discussion of where the asymptotic approximation breaks down and why the tail ($p = 0.99$) converges slowest; and (4) a short section connecting the dependence experiment to block-bootstrap corrections for time-series quantile inference.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,27 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="labeled-unlabeled-data">Labeled Unlabeled Data</h2>
-<p><strong>Definition.</strong> A <em>dataset</em> $\mathcal{D}$ is a finite collection of input-output pairs drawn from some unknown joint distribution $p(x, y)$, where $x \in \mathcal{X}$ denotes an input (feature vector) and $y \in \mathcal{Y}$ denotes an output (label). We call an example $(x_i, y_i)$ <strong>labeled</strong> when the target value $y_i$ is observed, and <strong>unlabeled</strong> when only $x_i$ is available. Formally, partition $\mathcal{D}$ into</p>
-$$\mathcal{D}_L = \{(x_i, y_i)\}_{i=1}^{n_L}, \qquad \mathcal{D}_U = \{x_j\}_{j=1}^{n_U},$$
-<p>where typically $n_L \ll n_U$. The marginal distribution $p(x)$ governs both subsets, while $p(y \mid x)$ is the conditional we wish to learn. Acquiring labels is expensive (human annotation, laboratory assay, clinical diagnosis), so leveraging $\mathcal{D}_U$ to improve a model trained on $\mathcal{D}_L$ is the central problem of <strong>semi-supervised learning</strong>.</p>
-<p><strong>Worked Example.</strong> Suppose $\mathcal{X} = \mathbb{R}$ and $y \in \{0, 1\}$. We observe $n_L = 4$ labeled points: $(1, 0),\, (2, 0),\, (8, 1),\, (9, 1)$, and $n_U = 3$ unlabeled points: $4, 5, 6$. A purely supervised classifier trained on $\mathcal{D}_L$ might place the decision boundary at $x^<em> = 5$. The unlabeled cluster near $x = 5$ reveals that the input density $p(x)$ has a gap between $[2, 4]$ and $[6, 8]$; shifting $x^</em>$ to the gap at $x = 5$ respects the <strong>cluster assumption</strong>: decision boundaries should lie in low-density regions of $p(x)$.</p>
-<p><strong>Key Theorem (Cluster Assumption, informal).</strong> If $p(x)$ is low near $x^<em>$ and the true boundary coincides with a density valley, then the generalization error of a boundary placed at $x^</em>$ is bounded by a term that decreases as $n_U \to \infty$, even when $n_L$ is fixed. Making this precise requires PAC-learning analysis beyond our current scope, but the intuition underpins methods such as label propagation and self-training.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Piecewise, Rational, plot
-
-x = symbols('x', real=True)
-
-# Toy piecewise density illustrating a gap at x = 5
-p = Piecewise(
-    (Rational(1, 4), (x &gt;= 1) &amp; (x &lt;= 4)),
-    (Rational(1, 20), (x &gt; 4) &amp; (x &lt; 6)),   # low-density gap
-    (Rational(1, 4), (x &gt;= 6) &amp; (x &lt;= 9)),
-    (0, True)
-)
-
-plot(p, (x, 0, 10), title='Input density p(x) with gap',
-     xlabel='x', ylabel='p(x)')</code></pre>
-<p>Running this cell renders the density valley near $x = 5$, making the geometric motivation for boundary placement visually immediate.</p>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ be an input space and $\mathcal{Y}$ a label space. A <em>labeled dataset</em> is a set $\mathcal{L} = \{(x_i, y_i)\}_{i=1}^{n}$ drawn i.i.d. from a joint distribution $p(x, y)$. An <em>unlabeled dataset</em> is a set $\mathcal{U} = \{x_j\}_{j=1}^{m}$ drawn i.i.d. from the marginal $p(x)$, with $m \gg n$ in practice. The central question of <em>semi-supervised learning</em> (SSL) is: under what conditions does $\mathcal{U}$ improve a classifier trained only on $\mathcal{L}$?</p>
+<p><strong>Theoretical framing.</strong> In the PAC-learning setting, the labeled sample complexity for learning a hypothesis class $\mathcal{H}$ with VC dimension $d$ to error $\epsilon$ at confidence $1-\delta$ is $n = O\!\left(\frac{d + \log(1/\delta)}{\epsilon}\right)$. The unlabeled distribution $p(x)$ is irrelevant here because the PAC bound is worst-case over all $p(x,y)$ compatible with some $h^* \in \mathcal{H}$.</p>
+<p><strong>Theorem (Ben-David et al., 2008).</strong> <em>Let $\mathcal{H}$ be a hypothesis class and $p_S$, $p_T$ be source and target marginals on $\mathcal{X}$. The target error of any $h \in \mathcal{H}$ satisfies</em></p>
+$$\epsilon_T(h) \leq \epsilon_S(h) + \frac{1}{2} d_{\mathcal{H}\Delta\mathcal{H}}(p_S, p_T) + \lambda,$$
+<p><em>where $d_{\mathcal{H}\Delta\mathcal{H}}$ is the $\mathcal{H}$-divergence between marginals and $\lambda$ is the combined optimal error.</em> This result makes the value of unlabeled target data explicit: estimating $d_{\mathcal{H}\Delta\mathcal{H}}$ from $\mathcal{U}$ allows one to bound the domain-shift penalty, even without target labels. The unlabeled set is informative precisely because it reveals the geometry of $p_T(x)$.</p>
+<p>The <em>cluster assumption</em> — that decision boundaries should not cross high-density regions of $p(x)$ — provides a complementary inductive bias. Under this assumption, unlabeled data tightens the hypothesis class by ruling out boundaries inconsistent with observed density. Rigorous formalization requires that $p(x)$ be locally smooth and that the true $h^*$ respects the cluster structure; both are non-trivial and can fail in practice (Lafferty & Wasserman, 2007).</p>
+<p><strong>What is known and what remains open.</strong> Successful SSL algorithms — label propagation, co-training (Blum & Mitchell, 1998), $\Pi$-models, MixMatch, and FixMatch — exploit either manifold structure or consistency regularization. The gains are well-documented on vision benchmarks. However, <em>when</em> unlabeled data hurts — a phenomenon observed empirically in high label-noise and covariate-shift regimes — lacks a tight theoretical characterization. The interaction between the cluster assumption, model capacity, and data augmentation policy is not yet fully understood.</p>
+<p><strong>Suggested investigation.</strong> Design a controlled experiment on a tabular or low-dimensional synthetic dataset where the cluster assumption can be manually violated. Train a neural network classifier with $n \in \{10, 50, 200\}$ labeled points and $m = 5000$ unlabeled points. Sweep two conditions: (i) $p(x)$ respects the cluster assumption and (ii) $p(x)$ deliberately places high density across the true boundary. Measure test error as a function of $m$ under both conditions, and estimate $d_{\mathcal{H}\Delta\mathcal{H}}$ from the data using a domain discriminator. This operationalizes the Ben-David bound and gives a concrete diagnostic for when to trust unlabeled augmentation.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the theoretical prediction under each condition, (2) empirical error curves with confidence intervals, (3) the estimated $\mathcal{H}$-divergence and whether it correlates with observed gain or loss, and (4) a discussion of whether the cluster assumption can be tested from data alone prior to committing to SSL. The write-up should situate findings against the FixMatch and FlexMatch papers, which represent the current empirical frontier on image benchmarks, and identify which aspects of those results depend on properties of $p(x)$ that may not transfer to your synthetic setting.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

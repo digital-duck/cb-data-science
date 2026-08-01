@@ -35,34 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="training-testing-set">Training Testing Set</h2>
-<p><strong>Definition.</strong> Given a dataset $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$, a <em>train–test split</em> is a partition $\mathcal{D} = \mathcal{D}_{\text{train}} \cup \mathcal{D}_{\text{test}}$ with $\mathcal{D}_{\text{train}} \cap \mathcal{D}_{\text{test}} = \emptyset$. The training set $\mathcal{D}_{\text{train}}$ (typically $70$–$80\%$ of $\mathcal{D}$) is used to fit a model $\hat{f}$; the test set $\mathcal{D}_{\text{test}}$ is held out and used solely to evaluate the generalization error of $\hat{f}$ on unseen data. The split must be performed <em>before</em> any modeling decision is made; otherwise information from the test set contaminates the training procedure, a pathology called <strong>data leakage</strong>.</p>
-<p><strong>Worked Example.</strong> Suppose $\mathcal{D}$ contains $n = 100$ observations drawn from the linear model $y = 3x + \varepsilon$, where $x \sim \mathcal{U}(0,1)$ and $\varepsilon \sim \mathcal{N}(0, 0.25)$. We allocate $80$ points to $\mathcal{D}_{\text{train}}$ and $20$ to $\mathcal{D}_{\text{test}}$. Ordinary least squares on $\mathcal{D}_{\text{train}}$ yields an estimate $\hat{\beta}$; the test mean-squared error is then</p>
-$$
-\text{MSE}_{\text{test}} = \frac{1}{|\mathcal{D}_{\text{test}}|} \sum_{(\mathbf{x},y)\in\mathcal{D}_{\text{test}}} \bigl(y - \hat{f}(\mathbf{x})\bigr)^2.
-$$
-<p>Because $\hat{f}$ was never exposed to $\mathcal{D}_{\text{test}}$, $\text{MSE}_{\text{test}}$ is an unbiased estimate of the true expected loss $\mathbb{E}[(y - \hat{f}(\mathbf{x}))^2]$.</p>
-<p><strong>Key Theorem (Bias–Variance Decomposition).</strong> For any estimator $\hat{f}$ and a fresh test point $(x_0, y_0)$,</p>
-$$
-\mathbb{E}\!\left[(y_0 - \hat{f}(x_0))^2\right] = \underbrace{\operatorname{Bias}^2(\hat{f}(x_0))}_{\text{underfitting}} + \underbrace{\operatorname{Var}(\hat{f}(x_0))}_{\text{overfitting}} + \sigma^2_\varepsilon.
-$$
-<p>The irreducible noise $\sigma^2_\varepsilon$ cannot be eliminated; a model evaluated only on training data cannot distinguish its own variance from noise, making an independent test set essential for honest model selection.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-import numpy as np
-
-rng = np.random.default_rng(42)
-x = rng.uniform(0, 1, 100)
-y = 3 * x + rng.normal(0, 0.5, 100)
-
-X = x.reshape(-1, 1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-model = LinearRegression().fit(X_train, y_train)
-print("Test MSE:", mean_squared_error(y_test, model.predict(X_test)))
-print("Estimated slope:", model.coef_[0])   # should be near 3</code></pre>
-<p>Running this cell illustrates that the test MSE reflects generalization performance, not memorization of training patterns.</p>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ denote an input space, $\mathcal{Y}$ a label space, and $\mathcal{D}$ an unknown joint distribution over $\mathcal{X} \times \mathcal{Y}$. A <em>dataset</em> $S = \{(x_i, y_i)\}_{i=1}^{n}$ consists of $n$ i.i.d. draws from $\mathcal{D}$. A <em>training–testing split</em> partitions $S$ into disjoint subsets $S_{\mathrm{tr}}$ and $S_{\mathrm{te}}$, with $|S_{\mathrm{tr}}| = m$ and $|S_{\mathrm{te}}| = n - m$, such that a hypothesis $h : \mathcal{X} \to \mathcal{Y}$ is selected using only $S_{\mathrm{tr}}$ and evaluated using only $S_{\mathrm{te}}$. The <em>empirical risk</em> on each partition is</p>
+$$\hat{R}_{S'}(h) = \frac{1}{|S'|} \sum_{(x,y) \in S'} \ell(h(x), y),$$
+<p>for loss $\ell : \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}_{\geq 0}$. The fundamental quantity of interest is the <em>true risk</em> $R(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(h(x), y)]$, which remains inaccessible; the test risk $\hat{R}_{S_{\mathrm{te}}}(h)$ serves as its surrogate.</p>
+<p><strong>Generalization Bound (PAC framework).</strong> Let $\mathcal{H}$ be a hypothesis class with finite VC dimension $d = \mathrm{VCdim}(\mathcal{H})$. For any $\delta \in (0,1)$, with probability at least $1-\delta$ over draws of $S_{\mathrm{tr}}$, every $h \in \mathcal{H}$ satisfies</p>
+$$R(h) \leq \hat{R}_{S_{\mathrm{tr}}}(h) + \sqrt{\frac{d \log(m/d) + \log(1/\delta)}{m}}.$$
+<p>This classical result (Vapnik–Chervonenkis, 1971; Blumer et al., 1989) is derived via a symmetrization argument and the Sauer–Shelah lemma. The proof proceeds by (i) constructing a ghost sample of size $m$ drawn independently from $\mathcal{D}$; (ii) bounding the probability that empirical and true risks deviate by exchanging real and ghost samples; and (iii) counting the number of dichotomies $\mathcal{H}$ can induce on a sample of size $2m$, which is at most $(2m)^d$ by Sauer–Shelah. The logarithmic factor $\log(m/d)$ reflects this combinatorial growth.</p>
+<p><strong>What Is Known and What Remains Open.</strong> The PAC bound is worst-case over $\mathcal{D}$ and $\mathcal{H}$, which makes it notoriously loose in practice — modern overparameterized neural networks generalize well despite violating classical complexity conditions, a phenomenon described by Zhang et al. (2017) as <em>benign overfitting</em>. Subsequent work (Bartlett et al., 2020; Belkin et al., 2019) established that interpolating estimators can still achieve near-Bayes-optimal risk under specific data geometry assumptions, yet a tight characterization of when and why this occurs remains open. A second open question concerns <em>distribution shift</em>: when $S_{\mathrm{tr}}$ and $S_{\mathrm{te}}$ are drawn from different marginals $\mathcal{D}_{\mathrm{tr}} \neq \mathcal{D}_{\mathrm{te}}$, the test risk no longer unbiasedly estimates $R(h)$ under $\mathcal{D}_{\mathrm{tr}}$, invalidating the standard split protocol. Domain adaptation bounds (Ben-David et al., 2010) introduce a divergence term $d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{D}_{\mathrm{tr}}, \mathcal{D}_{\mathrm{te}})$, but estimating this term from finite samples is itself an open problem.</p>
+<p><strong>Suggested Investigation.</strong> Choose a fixed architecture (e.g., a two-layer ReLU network) and dataset (e.g., CIFAR-10 subsets of varying size $n$). Vary the split ratio $m/(n-m)$ across $\{0.5, 0.7, 0.9, 0.95\}$ and, for each ratio, record the gap $\hat{R}_{S_{\mathrm{te}}}(h) - \hat{R}_{S_{\mathrm{tr}}}(h)$. Overlay the empirical gap against the VC bound's predicted $O(\sqrt{d/m})$ scaling. A secondary experiment: deliberately introduce covariate shift by training on one digit-rotation angle and testing on another; quantify how much the test risk inflates relative to the standard i.i.d. split.</p>
+<p><strong>Report-Writing Note.</strong> A write-up of this investigation should establish: (i) an explicit statement of the i.i.d. assumption and where it is or is not satisfied; (ii) a log–log plot of generalization gap versus $m$ with slope comparison to theory; (iii) discussion of whether observed gaps are consistent with VC-dimension-based bounds or suggest a tighter complexity measure; and (iv) a quantitative characterization of how covariate shift degrades the test-risk estimate as a proxy for true risk.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

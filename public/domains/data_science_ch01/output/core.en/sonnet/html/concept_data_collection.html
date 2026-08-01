@@ -35,29 +35,20 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-collection">Data Collection</h2>
-<p><strong>Definition.</strong> <em>Data collection</em> is the systematic process of gathering observations from a population or process in accordance with a pre-specified protocol, such that each recorded value can be associated with a measurable quantity, a unit of measurement, and a source. Formally, if $\Omega$ denotes the sample space of all possible outcomes, a data collection procedure defines a measurable function $X : \Omega \to \mathbb{R}^d$ together with an index set $\mathcal{I}$ of observation timestamps or identifiers. The result is a dataset $\mathcal{D} = \{(i, \mathbf{x}_i) : i \in \mathcal{I},\; \mathbf{x}_i \in \mathbb{R}^d\}$.</p>
-<p>A collection procedure is called <em>well-posed</em> if it satisfies three properties: (1) <strong>reproducibility</strong> — independent repetitions under identical conditions yield statistically equivalent samples; (2) <strong>traceability</strong> — every datum can be traced to its instrument, timestamp, and operator; and (3) <strong>representativeness</strong> — the sample distribution approximates the target population distribution within a stated tolerance.</p>
-<p><strong>Worked Example.</strong> Suppose a laboratory measures the boiling point of water at varying altitudes. At altitude $h_i$ (in metres), the atmospheric pressure follows $P_i \approx 101{,}325 \cdot e^{-h_i/8500}$ Pa. An experimenter records $n = 5$ paired observations:</p>
-$$\mathcal{D} = \{(h_i,\, T_i)\}_{i=1}^{5} = \{(0, 100.0),\, (500, 98.3),\, (1000, 96.7),\, (1500, 95.0),\, (2000, 93.4)\}$$
-<p>where $T_i$ is in degrees Celsius. Each entry is traceable to a calibrated thermometer ($\pm 0.1\,^\circ\text{C}$) and a GPS altimeter ($\pm 5\,\text{m}$), satisfying the traceability requirement.</p>
-<p><strong>Key Theorem (Law of Large Numbers — Weak Form).</strong> Let $X_1, X_2, \ldots, X_n$ be independent, identically distributed random variables with finite mean $\mu = \mathbb{E}[X_1]$. Then the sample mean $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$ converges in probability to $\mu$:</p>
-$$\bar{X}_n \xrightarrow{P} \mu \quad \text{as } n \to \infty.$$
-<p>This theorem provides the theoretical justification for increasing sample size to improve accuracy: systematic collection of more observations reduces the gap between observed statistics and true population parameters.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, exp, lambdify, Rational
-import numpy as np
-
-h = symbols('h', positive=True)
-P = 101325 * exp(-h / 8500)          # atmospheric pressure model
-P_func = lambdify(h, P, 'numpy')
-
-altitudes = np.array([0, 500, 1000, 1500, 2000])
-pressures = P_func(altitudes)
-T_boil    = 100 - (101325 - pressures) / 3600   # linear approximation
-
-for hi, Ti in zip(altitudes, T_boil):
-    print(f"h = {hi:5d} m  →  T_boil ≈ {Ti:.2f} °C")</code></pre>
-<p>Running this cell reproduces the dataset $\mathcal{D}$ analytically, demonstrating how a physical model and a collection protocol together define a self-consistent, traceable experiment.</p>
+<p>You already have the right instinct: before you can learn anything from data, you need data. But <em>how</em> you collect it turns out to matter just as much as what you do with it afterward.</p>
+<p><strong>The structure underneath the intuition</strong></p>
+<p>Every data collection effort answers three questions: <em>What</em> are you measuring? <em>Who</em> or <em>what</em> are you measuring it from? <em>How</em> are you selecting your subjects?</p>
+<p>The things you measure are called <strong>variables</strong>. If you're tracking students' study hours and test scores, both are variables — one you control (or observe), one you care about predicting. We usually write these as $x$ for an input variable and $y$ for an output (or outcome) variable.</p>
+<p>The group you <em>want</em> to learn about is the <strong>population</strong>. Because you can't always measure everyone, you collect a <strong>sample</strong> — a smaller subset. The key rule:</p>
+$$\text{sample must represent the population}$$
+<p>A biased sample gives you a confident-sounding but wrong answer. If you survey only students who stayed after school, you've missed everyone who didn't — your $x$ and $y$ data no longer reflect the full population.</p>
+<p><strong>One simple pattern to remember</strong></p>
+<p>Random selection is the safest way to avoid bias. When every member of the population has an equal chance of being chosen, the sample tends to mirror the whole group, even if it's small.</p>
+<p><strong>Practice problem</strong></p>
+<p>A researcher wants to know the average sleep time of students at a 1,000-person school. She surveys 40 students from the school's swim team.</p>
+<li>What is the population? What is the sample?</li>
+<li>Identify one reason this sample might be biased.</li>
+<li>Suggest a more representative way to choose 40 students.</li>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

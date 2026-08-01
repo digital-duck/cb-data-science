@@ -35,26 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="sample-data">Sample Data</h2>
-<p><strong>Definition.</strong> A <em>sample</em> is a finite collection of observations drawn from a population. Formally, let $\Omega$ be a probability space and $X : \Omega \to \mathbb{R}$ a random variable. A <em>sample of size $n$</em> is an ordered tuple $(x_1, x_2, \ldots, x_n)$ where each $x_i$ is an independent realisation of $X$. The corresponding <em>sample data</em> is the numerical record of these realisations, from which we estimate properties of the underlying population distribution $F_X$.</p>
-<p>The distinction between a population parameter and its sample-based estimate is fundamental. We write $\mu$ for the true (unknown) population mean and $\bar{x}$ for the <em>sample mean</em>, defined as</p>
-$$\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i.$$
-<p>The sample mean is the single most important summary of a dataset: it aggregates $n$ individual measurements into one number that acts as a stand-in for the unknown $\mu$. Subsequent sections will introduce additional estimators—sample variance, sample median—but each builds on the foundation established here.</p>
-<p><strong>Worked Example.</strong> Suppose a laboratory measures the boiling point of water (in °C) at high altitude five times, yielding the sample $\mathbf{x} = (99.1,\, 98.9,\, 99.3,\, 99.0,\, 99.2)$. Then</p>
-$$\bar{x} = \frac{99.1 + 98.9 + 99.3 + 99.0 + 99.2}{5} = \frac{495.5}{5} = 99.1 \,{}^{\circ}\text{C}.$$
-<p>The sample mean lies inside the observed range $(98.9, 99.3)$, as must always be the case, providing a useful sanity check for arithmetic.</p>
-<p><strong>Key Theorem (Law of Large Numbers).</strong> Let $(x_1, x_2, \ldots, x_n)$ be independent, identically distributed realisations of $X$ with finite mean $\mu$. Then</p>
-$$\bar{x} \xrightarrow{\,p\,} \mu \quad \text{as } n \to \infty,$$
-<p>where $\xrightarrow{p}$ denotes convergence in probability. In practical terms, increasing the sample size forces the sample mean arbitrarily close to the true population mean, justifying the use of $\bar{x}$ as an estimator of $\mu$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-data = [sp.Rational(991,10), sp.Rational(989,10),
-        sp.Rational(993,10), sp.Rational(990,10),
-        sp.Rational(992,10)]
-n = len(data)
-x_bar = sum(data) / n
-print("Sample mean:", x_bar)   # 991/10</code></pre>
-<p>Running this cell confirms $\bar{x} = 99.1$ using exact rational arithmetic, eliminating floating-point rounding errors that could obscure the pedagogical result.</p>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P)$ be a probability space and $X : \Omega \to \mathcal{X}$ a measurable random variable with distribution $\mu = P \circ X^{-1}$ on $(\mathcal{X}, \mathcal{B}(\mathcal{X}))$. A <em>sample</em> of size $n$ is a finite sequence $(x_1, \ldots, x_n)$ of realized values drawn i.i.d. from $\mu$; the corresponding collection is the <em>sample data</em>. The canonical summary of a univariate sample is the <em>empirical cumulative distribution function</em></p>
+$$\hat{F}_n(t) = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[x_i \le t],$$
+<p>which is itself a random object—a step function that concentrates unit mass $1/n$ at each observation. The central question animating the theory of sample data is how faithfully $\hat{F}_n$ approximates the true CDF $F$ as a function on $\mathbb{R}$, and at what rate.</p>
+<p><strong>Theorem (Glivenko–Cantelli).</strong> Let $\mu$ be any probability measure on $(\mathbb{R}, \mathcal{B}(\mathbb{R}))$ with CDF $F$, and let $\hat{F}_n$ be the empirical CDF of an i.i.d. sample of size $n$. Then</p>
+$$\sup_{t \in \mathbb{R}} \left|\hat{F}_n(t) - F(t)\right| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> The Strong Law of Large Numbers gives $\hat{F}_n(t) \to F(t)$ a.s. pointwise at each fixed $t$. Uniform convergence then follows from the joint monotonicity of $\hat{F}_n$ and $F$: for any $\varepsilon > 0$, choose a finite $\varepsilon$-net $\{t_j\}$ of continuity points of $F$ partitioning $\mathbb{R}$; pointwise a.s. convergence at each $t_j$ together with the sandwiching property of monotone functions yields uniform control over all of $\mathbb{R}$ (Billingsley 1995, §20). $\square$</p>
+<p>The rate of uniform convergence is made precise by the Dvoretzky–Kiefer–Wolfowitz inequality: for any $\varepsilon > 0$,</p>
+$$P\!\left(\sup_t |\hat{F}_n(t) - F(t)| > \varepsilon\right) \le 2e^{-2n\varepsilon^2},$$
+<p>with the constant $2$ shown to be tight by Massart (1990). Inverting this bound yields a simultaneous $1-\alpha$ confidence band around $\hat{F}_n$ of half-width $\varepsilon^* = \sqrt{\log(2/\alpha)/(2n)}$—a distribution-free guarantee, valid for any continuous $F$, that is the basis for nonparametric goodness-of-fit tests and finite-sample bounds in learning theory (Devroye et al. 1996).</p>
+<p><strong>Literature context.</strong> The classical theory is essentially complete for the univariate i.i.d. setting. Open questions arise in three directions. First, the <em>multivariate</em> empirical CDF $\hat{F}_n(\mathbf{t}) = n^{-1}\sum_i \mathbf{1}[x_i \preceq \mathbf{t}]$ satisfies a Glivenko–Cantelli analogue, but the DKW rate degrades with dimension $d$ and the sharp constant is unknown beyond $d=1$ (Kiefer and Wolfowitz 1958; Blum 1955). Second, for <em>dependent</em> samples—Markov chains, mixing processes—uniform convergence still holds under appropriate mixing conditions, but the effective sample size and tail constants depend on the mixing rate in ways that remain an active topic (Mohri and Rostamizadeh 2010). Third, connections to <em>VC theory</em> and <em>Rademacher complexity</em> generalize the DKW phenomenon to arbitrary function classes, where the analog of $2e^{-2n\varepsilon^2}$ involves the VC dimension or covering number of the class (Vapnik 1998).</p>
+<p><strong>Suggested investigation.</strong> Fix a distribution $F$ (e.g., standard normal, or a bimodal mixture) and simulate the DKW confidence band as a function of $n \in \{50, 200, 500, 2000\}$. For each $n$: (a) generate $B = 1000$ independent samples of size $n$, compute $\sup_t |\hat{F}_n(t) - F(t)|$ for each, and verify empirically that the exceedance probability at $\varepsilon^<em>$ stays below $\alpha = 0.05$; (b) overlay the theoretical band on the empirical CDFs and visualize the shrinkage; (c) test whether the $O(n^{-1/2})$ half-width prediction holds by fitting $\varepsilon^</em> \sim C \cdot n^{-\beta}$ and checking whether $\hat{\beta} \approx 0.5$. As a contrast, repeat with samples drawn from a first-order autoregressive process $x_i = \rho x_{i-1} + \varepsilon_i$ at several values of $\rho$; observe how the empirical coverage degrades when the i.i.d. assumption is violated.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should precisely define the supremum norm used, state the DKW inequality and its tightness result, report the observed coverage probabilities with Monte Carlo standard errors, and compare the estimated convergence exponent $\hat{\beta}$ to the theoretical $1/2$. Any gap under dependent sampling should be diagnosed against the known mixing-time correction for AR processes, and the write-up should articulate whether the discrepancy constitutes a finite-sample artifact, a violation of the theoretical assumptions, or evidence of a tighter bound for specific distribution families.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

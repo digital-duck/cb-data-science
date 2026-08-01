@@ -35,38 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-visualization-choice">Data Visualization Choice</h2>
-<p><strong>Definition.</strong> A <em>data visualization</em> is a mapping $V: \mathcal{D} \to \mathcal{G}$, where $\mathcal{D}$ is a dataset with attributes of specified measurement levels (nominal, ordinal, interval, or ratio) and $\mathcal{G}$ is a graphical representation drawn from a vocabulary of geometric primitives — position, length, area, angle, color hue, and color saturation. The <em>visualization choice problem</em> is the task of selecting the element of $\mathcal{G}$ that maximizes perceptual accuracy and communicative efficiency for a given analytic goal $Q$ (comparison, distribution, composition, or relationship).</p>
-<p>The foundational constraint comes from Cleveland and McGill's 1984 ranking of perceptual accuracy. Formally, let $\epsilon_k$ denote the mean absolute decoding error when a reader recovers a numerical quantity encoded by channel $k$. The empirical ordering is</p>
-$$\epsilon_{\text{position}} < \epsilon_{\text{length}} < \epsilon_{\text{angle}} < \epsilon_{\text{area}} < \epsilon_{\text{color saturation}}.$$
-<p>Any principled visualization choice should prefer channels appearing earlier in this ordering, subject to the constraints imposed by the measurement level of the data.</p>
-<p><strong>Worked Example.</strong> Suppose $\mathbf{x} = (x_1, \dots, x_n)$ is a continuous ratio-scale variable representing exam scores, and the goal $Q$ is to display its distribution. A pie chart encodes magnitudes as angles, placing it third in the ranking above. A histogram encodes frequency as bar length (second) and uses position on a common scale (first) for the score axis. The histogram therefore dominates the pie chart under the Cleveland–McGill criterion. Formally, if we denote the chosen visualization by $V^*$, then</p>
-$$V^* = \arg\min_{V \in \mathcal{G}} \epsilon(V, Q),$$
-<p>and for $Q = \text{distribution}$, the histogram achieves the minimum among standard chart types.</p>
-<p><strong>Theorem (Measurement–Channel Compatibility).</strong> A visualization is <em>valid</em> only if the geometric channel is at least as expressive as the measurement level of the encoded attribute: nominal data may use any channel, but ratio-scale data requires a channel that preserves the zero point and proportional distances, such as linear position.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-import matplotlib.pyplot as plt
-import numpy as np
-
-# Simulate exam scores and compare histogram vs. pie chart
-rng = np.random.default_rng(42)
-scores = rng.normal(loc=72, scale=12, size=200).clip(0, 100)
-bins = np.arange(0, 101, 10)
-
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
-
-ax1.hist(scores, bins=bins, edgecolor="black")
-ax1.set_title("Histogram (position + length)")
-ax1.set_xlabel("Score"); ax1.set_ylabel("Frequency")
-
-counts, _ = np.histogram(scores, bins=bins)
-ax2.pie(counts, labels=[f"{b}–{b+10}" for b in bins[:-1]], autopct="%1.0f%%")
-ax2.set_title("Pie Chart (angle)")
-
-plt.tight_layout()
-plt.show()
-# Observe that bin-to-bin comparisons are far easier in the histogram.</code></pre>
-<p>Running this cell makes the perceptual difference immediate: recovering that the $70$–$80$ bin is roughly $1.4\times$ larger than the $60$–$70$ bin requires mental arithmetic from the pie chart but is directly readable as a length ratio in the histogram.</p>
+<p><strong>Definition.</strong> A <em>visualization mapping</em> is a function $\phi: \mathcal{D} \times \mathcal{T} \to \mathcal{V}$, where $\mathcal{D}$ is the space of datasets (typed relational schemas), $\mathcal{T}$ is a space of analytical tasks (e.g., comparison, distribution estimation, correlation detection), and $\mathcal{V}$ is a space of visual encodings (mark types $\times$ retinal variable assignments). The <em>visualization choice problem</em> asks: among all $\phi$ consistent with data type and task constraints, which minimizes a cost functional that combines perceptual error, expressive completeness, and cognitive load?</p>
+<p><strong>Formal framework.</strong> Let $X \in \mathbb{R}^n$ be a univariate sample drawn from an unknown distribution $F$. A visualization encodes a statistic $T(X)$ via a retinal channel $c$ (position, length, angle, area, hue, saturation). Cleveland and McGill (1984) experimentally established a partial order on perceptual accuracy:</p>
+$$\text{position} \succ \text{length} \succ \text{angle} \succ \text{area} \succ \text{color saturation} \succ \text{hue}$$
+<p>where $A \succ B$ means channel $A$ supports lower mean absolute error in magnitude judgment. Formally, if $\hat{T}_c$ denotes the viewer's decoded estimate of $T$ under channel $c$, then $\mathbb{E}[|\hat{T}_c - T|] \leq \mathbb{E}[|\hat{T}_{c'} - T|]$ for $c \succ c'$ across a wide range of stimuli. Mackinlay (1986) extended this into an automated presentation system (APT), defining <em>expressiveness</em> — an encoding expresses exactly the facts in the data — and <em>effectiveness</em> — ranked by the Cleveland–McGill order. APT selects $\phi^* = \arg\max_{\phi \in \Phi_{\text{expressive}}} \text{rank}_{\text{eff}}(\phi)$.</p>
+<p>For multivariate data $X \in \mathbb{R}^{n \times p}$, channel assignment becomes a combinatorial problem. If $\pi: [p] \to \mathcal{C}$ denotes a channel allocation over a set $\mathcal{C}$ of available retinal variables, then selecting $\pi$ to maximize mutual information $I(X_j; \hat{X}_j)$ for each dimension $j$ subject to channel distinguishability constraints is NP-hard in general (Tableau Research, 2020; Moritz et al., 2019 — <em>Formalizing Visualization Design Knowledge as Constraints</em>).</p>
+<p><strong>Literature context.</strong> Munzner's nested model (2009) separates domain characterization, data/task abstraction, encoding/interaction idiom, and algorithm — providing a normative hierarchy that, while influential, does not yield a computable optimality criterion. Vega-Lite (Satyanarayan et al., 2017) operationalizes a fragment of Mackinlay's theory as a declarative grammar with partial automation. Recent work frames visualization recommendation as learning: VizML (Hu et al., 2019) trains a neural classifier on $10^5$ Plotly charts, outperforming rule-based systems on held-out pairs. Luo et al. (2021) formulate it as a multi-armed bandit where reward is task completion time. Open questions include: (1) whether the Cleveland–McGill order is invariant across data distributions and tasks beyond magnitude comparison; (2) whether learned recommendation systems generalize to novel domain schemas; (3) how to incorporate uncertainty visualization into the expressiveness criterion.</p>
+<p><strong>Suggested investigation.</strong> Replicate the Cleveland–McGill experiment on a modern crowdsourcing platform (Prolific or MTurk) with a controlled factorial design: five retinal channels $\times$ three distribution types (uniform, bimodal, heavy-tailed) $\times$ two tasks (point estimation, rank ordering). Compute $\text{RMSE}$ per cell and test whether the partial order $\succ$ is statistically stable via a Friedman test with post-hoc Nemenyi correction. As an extension, implement a greedy APT variant and measure its alignment with both the empirical order and VizML recommendations on a public corpus (e.g., Vega datasets repository).</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: state the null hypothesis that channel order is distribution-invariant; present the RMSE matrix with confidence intervals; report the Friedman statistic and any violations of the canonical order; and discuss implications for automated recommendation when the data distribution is unknown at design time.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

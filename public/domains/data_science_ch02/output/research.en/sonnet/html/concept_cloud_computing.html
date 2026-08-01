@@ -35,33 +35,12 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="cloud-computing">Cloud Computing</h2>
-<p><strong>Definition.</strong> Cloud computing is the on-demand delivery of computing resources—processors, memory, storage, and software—over a network, typically the public internet, with usage billed in proportion to consumption. Rather than owning physical hardware, a consumer rents capacity from a provider who operates large-scale data centers. The three canonical service models are <em>Infrastructure as a Service</em> (IaaS), which exposes raw virtual machines; <em>Platform as a Service</em> (PaaS), which abstracts the operating system and runtime; and <em>Software as a Service</em> (SaaS), which delivers fully managed applications. Resource allocation is governed by an <em>elasticity</em> principle: capacity scales up or down automatically in response to workload, subject to provider limits and a cost function.</p>
-<p>Formally, let $D(t)$ denote the computational demand at time $t$ (measured in CPU-core-seconds per unit time) and let $C(n)$ denote the hourly cost of provisioning $n$ virtual cores. For a provider offering linear pricing, $C(n) = c \cdot n$ for some rate constant $c > 0$. The total cost over an interval $[0, T]$ is</p>
-$$
-\text{Cost} = c \int_{0}^{T} n(t)\, dt,
-$$
-<p>where $n(t) = \lceil D(t) \rceil$ is the number of cores allocated at each instant, assuming the scheduler rounds demand up to the nearest integer.</p>
-<p><strong>Worked example.</strong> Suppose demand follows a sinusoidal pattern: $D(t) = 50 + 30\sin\!\bigl(\tfrac{2\pi t}{24}\bigr)$ cores over a 24-hour period, with $c = \$0.05$ per core-hour. The average demand is $\bar{D} = 50$ cores, so the expected daily cost is approximately $c \cdot \bar{D} \cdot T = 0.05 \times 50 \times 24 = \$60$. A fixed on-premises deployment sized for peak demand ($80$ cores) would cost $0.05 \times 80 \times 24 = \$96$, a 37.5 % premium.</p>
-<p><strong>Key theorem (Cost–Elasticity Trade-off).</strong> For any non-constant demand signal $D(t) \geq 0$ and linear pricing $C(n) = cn$, elastic provisioning satisfies</p>
-$$
-\int_{0}^{T} C\!\bigl(\lceil D(t) \rceil\bigr)\, dt \;\leq\; C\!\bigl(\max_{t} D(t)\bigr) \cdot T,
-$$
-<p>with equality only when $D(t)$ is constant. Elastic clouds therefore weakly dominate static provisioning in cost.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>import sympy as sp
-
-t, T, c = sp.symbols('t T c', positive=True)
-D = 50 + 30 * sp.sin(2 * sp.pi * t / 24)
-
-# Average demand over one day
-avg_demand = sp.integrate(D, (t, 0, 24)) / 24
-elastic_cost = c * avg_demand * 24
-static_cost  = c * 80 * 24          # peak-sized fixed deployment
-
-print("Elastic cost :", sp.simplify(elastic_cost))
-print("Static cost  :", static_cost)
-print("Savings ratio:", sp.simplify(1 - elastic_cost / static_cost))</code></pre>
-<p>Running this cell confirms the 37.5 % savings derived analytically and demonstrates how symbolic integration makes cost-model reasoning tractable before any real workload data is collected.</p>
+<p><strong>Definition.</strong> Cloud computing is a model for on-demand network access to a shared pool of configurable computing resources—processors, memory, storage, networks, and services—that can be rapidly provisioned and released with minimal management overhead. Formally, let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ denote a finite set of heterogeneous resources, each characterized by a capacity vector $\mathbf{c}_i \in \mathbb{R}^d_{\geq 0}$ (CPU cores, RAM, bandwidth, etc.). A <em>cloud allocation</em> is a function $\alpha: \mathcal{W} \to 2^{\mathcal{R}}$ mapping a workload set $\mathcal{W}$ to subsets of resources, subject to the feasibility constraint $\sum_{w:\, r \in \alpha(w)} \mathbf{d}_w \leq \mathbf{c}_r$ for all $r$, where $\mathbf{d}_w$ is the demand vector of workload $w$. The cloud provider's optimization objective is typically a linear program minimizing cost $\sum_r p_r \mathbf{1}[r \text{ active}]$ subject to feasibility and quality-of-service (QoS) constraints on latency, throughput, and availability.</p>
+<p><strong>Theorem (Optimal Bin-Packing is NP-Hard in General).</strong> The decision problem of whether a feasible allocation exists for $|\mathcal{W}|$ workloads into $k$ resources of uniform capacity is NP-complete by reduction from bin packing (Garey & Johnson 1979). Consequently, practical cloud schedulers—including Google Borg, Apache Mesos, and Kubernetes—employ polynomial-time approximation algorithms. The First Fit Decreasing (FFD) heuristic achieves an asymptotic ratio of $\frac{11}{9}\text{OPT} + \frac{6}{9}$, while online algorithms must contend with an $\Omega(\log n)$ competitive ratio lower bound (Yao 1980) under adversarial workload arrival.</p>
+<p><em>Proof sketch.</em> Map $k$-bin packing to the 3-dimensional vector bin packing on $(\text{CPU}, \text{RAM}, \text{net})$. Any poly-time exact solver implies P = NP. The FFD ratio follows from the classical analysis of Johnson (1973), generalized to vector packing by Chekuri & Khanna (2004) via an LP relaxation whose integrality gap governs the approximation constant. $\square$</p>
+<p><strong>Literature context.</strong> The NIST SP 800-145 definition (Mell & Grance 2011) codified three service models (IaaS, PaaS, SaaS) and four deployment models. Subsequent theoretical work has focused on <em>stochastic</em> workloads: Azar et al. (2013) prove that under Poisson arrivals with known service-time distributions, a randomized online algorithm achieves $O(1)$ competitive ratio. The open question of <em>robustness</em>—maintaining QoS guarantees under adversarial, heavy-tailed, or correlated failure distributions—remains active. Foundational open problems include: tight competitive ratios for multi-dimensional vector packing under unknown distributions, optimal preemption policies for spot-instance markets, and the interaction between autoscaling laws and tail-latency SLOs at scale.</p>
+<p><strong>Suggested investigation.</strong> Implement a discrete-event simulation (Python <code>simpy</code> or Julia <code>SimJulia</code>) of a cloud cluster with $n = 100$ nodes, each with capacity $\mathbf{c} = (16 \text{ vCPU}, 64 \text{ GB})$. Generate synthetic workloads from a Pareto distribution for service times (shape $\alpha \in \{1.2, 1.5, 2.0\}$) and measure tail latency (P99) as a function of cluster utilization $\rho \in [0.5, 0.95]$. Compare FFD, best-fit, and a learned policy (a simple neural network trained via policy gradient on simulated rollouts). Report how the performance gap between learned and classical schedulers widens as $\alpha$ decreases toward 1 (heavier tails).</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should: (1) state the formal scheduling model with all constraints explicit; (2) derive or cite the FFD approximation ratio for vector packing; (3) present empirical CDF plots of P99 latency for each policy under each $\alpha$; (4) discuss statistical significance via bootstrap confidence intervals; (5) identify the regime where the learned policy fails (e.g., distribution shift) and connect this to the open robustness question. The conclusion should position the experiment within the broader question of when theoretical approximation guarantees translate to empirical gains under realistic workload statistics.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

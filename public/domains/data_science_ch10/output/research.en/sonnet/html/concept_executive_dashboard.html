@@ -35,30 +35,19 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="executive-dashboard">Executive Dashboard</h2>
-<p><strong>Definition.</strong> An <em>executive dashboard</em> is a real-time aggregation surface that maps a high-dimensional state vector of an organization into a low-dimensional set of <em>key performance indicators</em> (KPIs) chosen to support decision-making at the strategic level. Formally, let $\mathbf{x}(t) \in \mathbb{R}^n$ denote the full operational state of a system at time $t$. A dashboard is a tuple $\mathcal{D} = (f_1, f_2, \ldots, f_k)$ where each $f_i : \mathbb{R}^n \to \mathbb{R}$ is a summary functional and $k \ll n$. The projection $\mathbf{y}(t) = \bigl(f_1(\mathbf{x}(t)), \ldots, f_k(\mathbf{x}(t))\bigr)$ is the <em>dashboard state</em>. Effective design requires that $\mathbf{y}$ retains sufficient information for the decisions under consideration — a constraint formalised by information-theoretic sufficiency.</p>
-<p><strong>Worked Example.</strong> Consider a retail operation whose full state $\mathbf{x}$ includes daily unit sales $s_i$ for $n = 500$ SKUs. The executive needs only three indicators:</p>
-$$f_1(\mathbf{x}) = \sum_{i=1}^{n} p_i s_i \quad (\text{total revenue}), \qquad f_2(\mathbf{x}) = \frac{\sum_i s_i - \mu_s}{\sigma_s} \quad (\text{standardised volume}), \qquad f_3(\mathbf{x}) = \max_i \frac{s_i - \hat{s}_i}{\hat{s}_i} \quad (\text{peak deviation}).$$
-<p>Here $p_i$ is unit price, $\mu_s$ and $\sigma_s$ are rolling mean and standard deviation of total volume, and $\hat{s}_i$ is a forecast. These three scalars compress 500 dimensions into an actionable signal.</p>
-<p><strong>Key Theorem (Sufficient Statistic Reduction).</strong> Let $\mathbf{x}$ follow a parametric family $p(\mathbf{x}\mid\theta)$. A statistic $T(\mathbf{x})$ is <em>sufficient</em> for $\theta$ if and only if the conditional distribution $p(\mathbf{x}\mid T(\mathbf{x}), \theta)$ does not depend on $\theta$ (Fisher–Neyman factorisation). A dashboard whose KPI vector is a sufficient statistic for the decision-relevant parameter $\theta$ incurs zero information loss relative to observing $\mathbf{x}$ in full. In practice, sufficiency is rarely exact; the design problem becomes minimising the <em>Fisher information loss</em> $\mathcal{I}(\theta; \mathbf{x}) - \mathcal{I}(\theta; \mathbf{y})$ subject to the cardinality constraint $k \leq k_{\max}$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-# Symbolic revenue KPI
-n = 4
-p, s = sp.symbols('p0:4'), sp.symbols('s0:4')
-revenue = sum(p[i]*s[i] for i in range(n))
-print("Revenue KPI:", revenue)
-
-# Marginal contribution of SKU j
-j = 2
-print(f"∂revenue/∂s{j} =", sp.diff(revenue, s[j]))
-
-# Standardised volume (symbolic mean μ, std σ)
-mu, sigma = sp.symbols('mu sigma', positive=True)
-total_vol = sum(s)
-z_volume = (total_vol - mu) / sigma
-print("Standardised volume:", sp.simplify(z_volume))</code></pre>
-<p>Running this cell confirms that the marginal revenue contribution of SKU $j$ equals its unit price $p_j$, illustrating how symbolic differentiation of dashboard functionals supports sensitivity analysis without numerical approximation.</p>
+<p><strong>Definition.</strong> Let $\mathcal{S} = \mathbb{R}^d$ denote the <em>organizational state space</em>, where each coordinate represents a time-indexed operational signal (revenue, latency, headcount, defect rate, etc.) observed over a horizon $T$. An <em>executive dashboard</em> is a measurable map</p>
+$$
+\phi: \mathcal{S} \times \mathcal{T} \to \mathcal{D}
+$$
+<p>where $\mathcal{D}$ is a low-dimensional <em>display space</em> (typically $|\mathcal{D}| \ll d$) and $\mathcal{T}$ is a time domain. The map $\phi$ is constructed to preserve decision-relevant structure while discarding operational detail. The central research question is not visual design but <em>epistemic compression</em>: under what conditions does $\phi$ induce a <em>sufficient reduction</em> of $\mathcal{S}$ for the executive's decision problem?</p>
+<p><strong>Theorem (Sufficiency of Dashboard Reduction).</strong> Let $\theta \in \Theta$ be a latent organizational parameter (strategy effectiveness, systemic risk, etc.) and let $X_{1:d}$ be observable signals with joint density $p(X_{1:d} \mid \theta)$. A statistic $T(X_{1:d}) = \phi(X_{1:d})$ is <em>sufficient</em> for $\theta$ if and only if the conditional distribution $p(X_{1:d} \mid T, \theta) = p(X_{1:d} \mid T)$ — that is, no residual information about $\theta$ remains in the raw signals once $T$ is known. By the Fisher–Neyman factorization theorem, this holds iff</p>
+$$
+p(x_{1:d} \mid \theta) = h(x_{1:d}) \cdot g(T(x_{1:d}), \theta)
+$$
+<p>for some non-negative functions $h, g$. The <em>information loss</em> of dashboard $\phi$ is then quantifiable as the mutual information gap $I(\theta; X_{1:d}) - I(\theta; \phi(X_{1:d})) \geq 0$, with equality characterizing a lossless (sufficient) dashboard.</p>
+<p><strong>Literature context.</strong> The sufficiency framing connects classical statistics (Fisher 1922; Lehmann & Scheffé 1950) to modern organizational theory. Galbraith's <em>information processing view of organizations</em> (1974) anticipated this formally: organizations are understood as bounded-information systems whose hierarchical aggregation must match the uncertainty of the task environment. More recent work in <em>management control systems</em> (Merchant & Van der Stede) and <em>balanced scorecard theory</em> (Kaplan & Norton 1996) offers normative aggregation heuristics but rarely derives optimality conditions. The algorithmic side intersects with sufficient dimensionality reduction (Cook 1998; Li 1991 via sliced inverse regression), principal component analysis under structured covariance, and causally-grounded aggregation (Peters, Mooij, Schölkopf 2017). An open question of practical importance: <em>when organizational signals exhibit non-stationary or heavy-tailed behavior, standard PCA-based aggregation systematically under-represents tail risk — is there a minimax-optimal dashboard under distributional shift?</em></p>
+<p><strong>Suggested investigation.</strong> Select a publicly available organizational dataset (e.g., a multi-KPI time-series from the M-competitions, or SEC filings with quarterly operational metrics). Fix a proxy for $\theta$ (e.g., next-quarter earnings surprise as a latent organizational health signal). Fit a sufficient reduction $T$ using sliced inverse regression alongside a baseline PCA dashboard, and measure $I(\theta; T_{\text{SIR}}) - I(\theta; T_{\text{PCA}})$ using a $k$-nearest-neighbor mutual information estimator (Kraskov et al. 2004). Additionally, perturb the signal distribution (covariate shift) and record how dashboard sufficiency degrades. This constitutes a controlled ablation on the information-theoretic quality of competing aggregation strategies.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a precise formalization of the decision problem and what $\theta$ represents, (2) the factorization check or MI estimate demonstrating sufficiency or its failure for each method, (3) the empirical degradation curve under distributional shift, and (4) a discussion of whether the sufficiency gap is practically significant relative to the executive's stated decision horizon — connecting the mathematical result back to organizational consequences.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

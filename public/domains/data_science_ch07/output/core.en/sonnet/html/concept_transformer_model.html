@@ -35,35 +35,21 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="transformer-model">Transformer Model</h2>
-<p><strong>Definition.</strong> A <em>transformer model</em> is a sequence-to-sequence neural architecture that computes output representations entirely through attention mechanisms and position-wise feed-forward layers, without any recurrence or convolution. Given an input sequence of token embeddings $\mathbf{X} \in \mathbb{R}^{n \times d_{\text{model}}}$, the model produces contextualized representations by stacking $L$ identical encoder blocks, each consisting of a multi-head self-attention sublayer followed by a feed-forward sublayer, with residual connections and layer normalization applied after each.</p>
-<p>The central computation is <em>scaled dot-product attention</em>. For query matrix $Q \in \mathbb{R}^{n \times d_k}$, key matrix $K \in \mathbb{R}^{n \times d_k}$, and value matrix $V \in \mathbb{R}^{n \times d_v}$, the attention output is</p>
-$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.$$
-<p>The factor $\sqrt{d_k}$ prevents the dot products from growing large in magnitude, which would push the softmax into regions of near-zero gradient. Multi-head attention projects $Q$, $K$, $V$ into $h$ independent subspaces, computes attention in each, then concatenates and projects the results:</p>
-$$\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\ldots,\text{head}_h)\,W^O, \quad \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V).$$
-<p><strong>Worked example.</strong> Let $n = 2$, $d_k = 2$, and suppose</p>
-$$Q = K = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}, \quad V = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}.$$
-<p>The raw score matrix is $QK^\top / \sqrt{2} = I/\sqrt{2}$. After softmax row-wise, each row becomes approximately $(0.731, 0.269)$ (the diagonal entry wins). The output is a convex combination of value rows, so token 1 attends primarily to itself — a sensible identity-like behavior confirming that the mechanism recovers local focus when no cross-token signal is present.</p>
-<p><strong>Key theorem (Universal approximation via attention).</strong> Any continuous sequence-to-sequence function on a compact domain can be approximated to arbitrary precision by a sufficiently deep transformer with ReLU feed-forward sublayers. This result, established by Yun et al. (2020), parallels the classical universal approximation theorem for MLPs but applies to the sequence-function setting.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>import sympy as sp
-
-d_k = 2
-Q = sp.Matrix([[1, 0], [0, 1]])
-K = Q; V = Q
-scores = Q * K.T / sp.sqrt(d_k)
-
-def softmax_row(M):
-    rows = []
-    for i in range(M.rows):
-        row = M.row(i)
-        exps = [sp.exp(x) for x in row]
-        s = sum(exps)
-        rows.append([e / s for e in exps])
-    return sp.Matrix(rows)
-
-A = softmax_row(scores)
-output = A * V
-sp.pprint(output.applyfunc(lambda x: sp.nsimplify(x, rational=False)))</code></pre>
+<p>You may have heard that modern AI like ChatGPT "reads" your whole sentence before responding, rather than word by word. That intuition is right — and the mechanism behind it is called the <strong>Transformer</strong>.</p>
+<h3 id="the-core-idea-attention">The Core Idea: Attention</h3>
+<p>When you read "The bank near the river flooded," you instantly know "bank" means a riverbank, not a financial institution, because you weigh the word "river" heavily. Transformers do exactly this through a process called <strong>self-attention</strong>.</p>
+<p>For each word (called a <strong>token</strong>), the model computes three vectors:</p>
+<li>$\mathbf{q}$ — a <strong>query</strong>: "what am I looking for?"</li>
+<li>$\mathbf{k}$ — a <strong>key</strong>: "what do I contain?"</li>
+<li>$\mathbf{v}$ — a <strong>value</strong>: "what information do I carry?"</li>
+<p>The attention score between two tokens $i$ and $j$ is:</p>
+$$\text{score}(i, j) = \frac{\mathbf{q}_i \cdot \mathbf{k}_j}{\sqrt{d}}$$
+<p>where $d$ is the dimension of the vectors (a scaling factor to keep numbers stable). Higher scores mean token $i$ pays more attention to token $j$. These scores are passed through a softmax so they sum to 1, then used to blend together the value vectors.</p>
+<h3 id="the-pattern">The Pattern</h3>
+<p>Every layer of a Transformer refines each token's representation by asking: <em>which other tokens are most relevant to me right now?</em> Stacking many such layers lets the model capture subtle, long-range relationships in text, code, or even images.</p>
+<h3 id="practice-problem">Practice Problem</h3>
+<p>A sentence has four tokens: <code>[The, cat, sat, quietly]</code>. Token "sat" produces query $\mathbf{q} = [1, 0]$. The keys for the four tokens are $[0,1],\,[1,1],\,[1,0],\,[0,0]$.</p>
+<p>Compute the raw attention score from "sat" to each token using the dot product $\mathbf{q} \cdot \mathbf{k}_j$. Which token does "sat" attend to most?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

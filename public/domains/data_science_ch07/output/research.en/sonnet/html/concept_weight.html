@@ -35,36 +35,17 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="weight">Weight</h2>
-<p><strong>Definition.</strong> In Newtonian mechanics, the <em>weight</em> of an object is the gravitational force exerted on it by a massive body (typically Earth). For an object of mass $m$ located near Earth's surface, weight is defined as</p>
-$$W = mg,$$
-<p>where $g \approx 9.81\ \mathrm{m\,s^{-2}}$ is the standard acceleration due to gravity. Weight is a vector quantity directed toward the center of the attracting body; its SI unit is the <strong>newton</strong> (N $= \mathrm{kg\cdot m\cdot s^{-2}}$). Mass, by contrast, is an intrinsic scalar property of matter measured in kilograms. The distinction is fundamental: a 70 kg astronaut retains that mass on the Moon but experiences a weight of only $70 \times 1.62 \approx 113\ \mathrm{N}$, compared with $70 \times 9.81 \approx 687\ \mathrm{N}$ on Earth.</p>
-<p><strong>Worked Example.</strong> A textbook of mass $m = 1.5\ \mathrm{kg}$ rests on a desk. Determine its weight and the normal force the desk exerts on it.</p>
-<p>Apply Newton's second law in the vertical direction. Since the book is in static equilibrium, the net force is zero:</p>
-$$\sum F_y = N - W = 0 \implies N = W = mg = 1.5 \times 9.81 = 14.715\ \mathrm{N}.$$
-<p>The desk therefore pushes upward on the book with a normal force of approximately $14.7\ \mathrm{N}$.</p>
-<p><strong>Key Theorem (Universal Gravitation and Surface Approximation).</strong> Newton's law of universal gravitation states that the magnitude of the gravitational force between two point masses $M$ and $m$ separated by distance $r$ is</p>
-$$F = \frac{GMm}{r^2},$$
-<p>where $G = 6.674 \times 10^{-11}\ \mathrm{N\cdot m^2\cdot kg^{-2}}$ is the gravitational constant. Setting $M = M_\oplus$ and $r = R_\oplus$ (Earth's mean radius), one recovers the surface approximation $W = mg$ with $g = GM_\oplus / R_\oplus^2$. This confirms that $g$ is not a universal constant but depends on the planet and altitude.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, Rational, N as sym_N
-
-m, g, G, M_e, R_e = symbols('m g G M_e R_e', positive=True)
-
-# Symbolic weight
-W = m * g
-print("Weight:", W)
-
-# Numerical surface gravity
-G_val   = 6.674e-11   # N m^2 kg^-2
-M_val   = 5.972e24    # kg
-R_val   = 6.371e6     # m
-g_val   = G_val * M_val / R_val**2
-print(f"Computed g = {g_val:.4f} m/s^2")
-
-# Weight of the textbook
-m_val   = 1.5         # kg
-print(f"Weight of textbook = {m_val * g_val:.3f} N")</code></pre>
-<p>Running this cell yields $g \approx 9.8197\ \mathrm{m\,s^{-2}}$ and a textbook weight of $\approx 14.73\ \mathrm{N}$, consistent with the worked example.</p>
+<p><strong>Definition.</strong> Let $\mathbf{w} = (w_1, \ldots, w_n)^\top$ with each $w_i > 0$. The <em>weight matrix</em> $W = \operatorname{diag}(\mathbf{w})$ induces a <strong>weighted inner product</strong> on $\mathbb{R}^n$:</p>
+$$\langle \mathbf{u}, \mathbf{v} \rangle_W := \mathbf{u}^\top W \mathbf{v} = \sum_{i=1}^n w_i \, u_i v_i,$$
+<p>with associated <em>weighted norm</em> $\|\mathbf{u}\|_W = \sqrt{\mathbf{u}^\top W \mathbf{u}}$. Because $W$ is symmetric positive definite, $(\mathbb{R}^n, \langle \cdot, \cdot \rangle_W)$ is a valid inner product space, and all Hilbert-space geometry — projection, orthogonality, Gram–Schmidt — carries over in this weighted metric. This single change of geometry is the primitive that underlies weighted least squares, iteratively reweighted algorithms, and kernel-weighted regression; the present section develops only the first of these.</p>
+<p><strong>Theorem (Gauss–Markov, weighted form).</strong> Consider the linear model $\mathbf{y} = A\mathbf{x} + \boldsymbol{\varepsilon}$, where $A \in \mathbb{R}^{n \times p}$, $\mathbb{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$, and $\operatorname{Cov}(\boldsymbol{\varepsilon}) = \sigma^2 W^{-1}$ for a known positive-definite $W$. The <em>weighted least squares</em> (WLS) estimator,</p>
+$$\hat{\mathbf{x}}_{\mathrm{WLS}} = \arg\min_{\mathbf{x}} \|\mathbf{y} - A\mathbf{x}\|_W^2 = (A^\top W A)^{-1} A^\top W \mathbf{y},$$
+<p>is the Best Linear Unbiased Estimator (BLUE) of $\mathbf{x}$.</p>
+<p><em>Proof sketch.</em> Let $\tilde{\mathbf{x}} = L\mathbf{y}$ be any linear unbiased estimator, so $LA = I$. Write $L = (A^\top W A)^{-1} A^\top W + D$ with $DA = 0$. Then $\operatorname{Cov}(\tilde{\mathbf{x}}) = \sigma^2 L W^{-1} L^\top = \sigma^2 [(A^\top W A)^{-1} + DW^{-1}D^\top]$. Since $DW^{-1}D^\top \succeq 0$, the WLS covariance is minimal among all linear unbiased estimators. $\square$</p>
+<p>The key step to internalize is that the normal equations for $\|\mathbf{y} - A\mathbf{x}\|_W^2$ are identical in form to those for ordinary least squares once the ambient inner product is replaced by $\langle \cdot, \cdot \rangle_W$. OLS is the special case $W = I$.</p>
+<p><strong>Literature context.</strong> Aitken (1935) established the generalized Gauss–Markov theorem in this form. The central open problem is that $W$ is rarely known in practice: it must be estimated or modeled. White (1980) introduced heteroskedasticity-consistent (HC) covariance estimators that remain valid without specifying $W$ exactly. Goldberger (1962) formalized feasible generalized least squares (FGLS), in which a pilot OLS fit yields residuals that are used to estimate $W$, and the procedure is iterated. A foundational question that remains incompletely resolved is how much efficiency is lost at each FGLS iteration when the pilot estimate of $W$ is noisy, particularly in finite samples. Recent work connecting weighted projections to attention mechanisms in neural networks (Tsai et al., 2019) suggests that the geometry introduced here has implications well beyond classical statistics, though making that connection rigorous is an open research direction.</p>
+<p><strong>Suggested investigation.</strong> Generate a synthetic regression dataset with known heteroskedastic noise: $\varepsilon_i \sim \mathcal{N}(0, \sigma_i^2)$ where $\sigma_i = f(x_i)$ for some chosen function $f$. Fit the model using (1) OLS, (2) oracle WLS with true $W = \operatorname{diag}(1/\sigma_i^2)$, and (3) feasible GLS with $W$ estimated from OLS residuals. Compare the sampling distributions of estimator variance across 1,000 Monte Carlo trials. Derive analytically the efficiency loss of OLS relative to oracle WLS using $\operatorname{tr}(\operatorname{Cov}_{\mathrm{OLS}}) / \operatorname{tr}(\operatorname{Cov}_{\mathrm{WLS}})$ as a scalar summary. A natural extension is to vary the severity of heteroskedasticity and plot how this efficiency gap scales with the spread of the $\sigma_i$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish three things explicitly: the algebraic derivation of the WLS normal equations from the weighted inner product, making clear that the geometry is the primitive and WLS is its immediate consequence; a proof or citation of the BLUE property with the unbiasedness constraint stated precisely; and an empirical section that reports estimator variance — not merely point estimates — across simulation trials, with Monte Carlo standard errors stated. The identification of $W$ with the inverse noise covariance should be stated as a theorem, not an analogy, so that the scope and assumptions of the result are unambiguous.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

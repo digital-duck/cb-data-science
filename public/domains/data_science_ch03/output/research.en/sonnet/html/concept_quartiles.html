@@ -35,28 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="quartiles">Quartiles</h2>
-<p><strong>Definition.</strong> Let $X$ be a dataset of $n$ real observations arranged in non-decreasing order: $x_{(1)} \le x_{(2)} \le \cdots \le x_{(n)}$. The <strong>quartiles</strong> partition this ordered dataset into four groups of approximately equal size. Specifically, the <strong>first quartile</strong> $Q_1$, <strong>second quartile</strong> $Q_2$ (the median), and <strong>third quartile</strong> $Q_3$ are the values at the 25th, 50th, and 75th percentiles, respectively. A common interpolation rule defines the $p$-th percentile position as $L = p(n+1)/100$; if $L$ is not an integer, one linearly interpolates between the observations at positions $\lfloor L \rfloor$ and $\lceil L \rceil$.</p>
-<p>The <strong>interquartile range</strong> (IQR) is defined as</p>
-$$\mathrm{IQR} = Q_3 - Q_1.$$
-<p>It measures the spread of the central 50 % of the data and is robust to extreme values, unlike the full range $x_{(n)} - x_{(1)}$.</p>
-<p><strong>Worked example.</strong> Consider the dataset $\{3, 7, 8, 12, 14, 17, 21, 25\}$, so $n = 8$.</p>
-<li>$Q_2$: the median lies between the 4th and 5th values, giving $Q_2 = (12 + 14)/2 = 13$.</li>
-<li>$Q_1$: apply the rule to the lower half $\{3, 7, 8, 12\}$; the median of this half is $(7+8)/2 = 7.5$, so $Q_1 = 7.5$.</li>
-<li>$Q_3$: the upper half is $\{14, 17, 21, 25\}$; its median is $(17+21)/2 = 19$, so $Q_3 = 19$.</li>
-<li>$\mathrm{IQR} = 19 - 7.5 = 11.5$.</li>
-<p><strong>Theorem (Tukey fence criterion).</strong> An observation $x$ is a <em>mild outlier</em> if it lies outside the interval $[Q_1 - 1.5\,\mathrm{IQR},\; Q_3 + 1.5\,\mathrm{IQR}]$, and an <em>extreme outlier</em> if it lies outside $[Q_1 - 3\,\mathrm{IQR},\; Q_3 + 3\,\mathrm{IQR}]$. These fences form the basis of the standard box-and-whisker plot and follow directly from the empirical observation that, for normally distributed data, fewer than 0.7 % of values fall beyond the mild fence.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>import numpy as np
-from sympy.stats import Normal, cdf
-data = [3, 7, 8, 12, 14, 17, 21, 25]
-q1, q2, q3 = np.percentile(data, [25, 50, 75])
-iqr = q3 - q1
-lower_fence = q1 - 1.5 * iqr
-upper_fence = q3 + 1.5 * iqr
-print(f"Q1={q1}, Q2={q2}, Q3={q3}, IQR={iqr}")
-print(f"Tukey fences: [{lower_fence}, {upper_fence}]")
-outliers = [x for x in data if x &lt; lower_fence or x &gt; upper_fence]
-print(f"Outliers: {outliers}")</code></pre>
+<p><strong>Definition.</strong> Let $X$ be a real-valued random variable with cumulative distribution function $F$. The $p$-th quantile of $F$ is the generalized inverse $Q(p) = F^{-1}(p) = \inf\{x \in \mathbb{R} : F(x) \geq p\}$ for $p \in (0,1)$. The <em>quartiles</em> are the three special cases $Q_1 = Q(1/4)$, $Q_2 = Q(1/2)$ (the median), and $Q_3 = Q(3/4)$. The <em>interquartile range</em> is $\mathrm{IQR} = Q_3 - Q_1$.</p>
+<p>This clean theoretical definition conceals a persistent ambiguity: given a finite sample $x_{(1)} \leq x_{(2)} \leq \cdots \leq x_{(n)}$, no single canonical estimator of $Q(p)$ emerges from first principles. The sample quantile function must interpolate between order statistics, and the choice of interpolation scheme is genuinely consequential.</p>
+<p><strong>Theorem (Asymptotic normality of sample quantiles).</strong> Let $X_1, \ldots, X_n$ be i.i.d.\ from $F$ with density $f$ satisfying $f(Q(p)) > 0$. Define the sample quantile $\hat{Q}_n(p)$ via any consistent interpolation scheme. Then</p>
+$$\sqrt{n}\bigl(\hat{Q}_n(p) - Q(p)\bigr) \xrightarrow{d} \mathcal{N}\!\left(0,\, \frac{p(1-p)}{f(Q(p))^2}\right).$$
+<p><em>Proof sketch.</em> Write $\hat{Q}_n(p) = F_n^{-1}(p)$ where $F_n$ is the empirical CDF. The Bahadur representation (Bahadur 1966) gives $\hat{Q}_n(p) = Q(p) + \frac{p - F_n(Q(p))}{f(Q(p))} + O(n^{-3/4}\log n)$ a.s. The leading term $\frac{p - F_n(Q(p))}{f(Q(p))}$ has mean zero and variance $\frac{p(1-p)}{f(Q(p))^2 n}$ by the variance of the empirical CDF, so the CLT applies. $\square$</p>
+<p>The variance $p(1-p)/[f(Q(p))^2 n]$ grows as $f(Q(p)) \to 0$, quantifying the familiar intuition that sparse regions of the distribution make quantile estimation hard.</p>
+<p><strong>Literature context.</strong> Hyndman and Fan (1996, <em>The American Statistician</em>) catalogued nine distinct sample quantile definitions in common use, differing in their type of interpolation between $x_{(\lfloor np \rfloor)}$ and $x_{(\lceil np \rceil)}$. Four are implemented in NumPy and R by default, yet produce meaningfully different results on small samples. This definitional multiplicity is not merely pedagogical: it affects downstream statistics such as IQR-based outlier thresholds and boxplot whiskers. A more recent line of work (Ma and Genton 2011; Serfling and Xiao 2007) extends the IQR concept to multivariate settings via halfspace depth, where the notion of "between the 25th and 75th percentile" requires a complete rethinking of order.</p>
+<p><strong>Suggested investigation.</strong> Fix $n \in \{10, 30, 100\}$ and draw samples from three distributions: $\mathcal{N}(0,1)$, $\mathrm{Exp}(1)$, and a heavy-tailed $t_3$. For each $(n, F)$ pair, compute $Q_1$ and $Q_3$ under all nine Hyndman–Fan definitions and record mean absolute error against the true theoretical quartile over $10^4$ Monte Carlo replications. Determine which definition minimizes bias and MSE for each distribution and sample size, and verify that the asymptotic variance formula above tightens with $n$ for the continuous-interpolation estimators (types 7–9). As a secondary experiment, compare IQR-based outlier detection rates ($x \notin [Q_1 - 1.5\,\mathrm{IQR},\, Q_3 + 1.5\,\mathrm{IQR}]$) across definitions: even small definitional differences can shift flagging thresholds substantially under skewed data.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: (1) state the precise Hyndman–Fan type used whenever quartiles are reported; (2) report Monte Carlo standard errors alongside bias to distinguish finite-sample and variance effects; (3) verify that the empirical variance of $\hat{Q}_n(p)$ converges to $p(1-p)/[f(Q(p))^2 n]$ as $n$ grows, establishing contact with the theoretical result; and (4) discuss whether the "best" definition is invariant to distributional family, since a recommendation that holds only for Gaussian data is of limited practical use.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

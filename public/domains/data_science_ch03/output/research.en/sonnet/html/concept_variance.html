@@ -35,30 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="variance">Variance</h2>
-<p><strong>Definition.</strong> Let $X$ be a random variable with finite mean $\mu = \mathbb{E}[X]$. The <em>variance</em> of $X$ is defined as</p>
-$$\operatorname{Var}(X) = \mathbb{E}\!\left[(X - \mu)^2\right].$$
-<p>Variance measures the average squared deviation of $X$ from its mean. Because the deviation is squared before averaging, large departures from $\mu$ are penalized disproportionately. The <em>standard deviation</em> $\sigma = \sqrt{\operatorname{Var}(X)}$ restores the original units. For a discrete variable taking values $x_1, x_2, \ldots, x_n$ with probabilities $p_1, p_2, \ldots, p_n$, the formula becomes</p>
-$$\operatorname{Var}(X) = \sum_{i=1}^{n} p_i\,(x_i - \mu)^2.$$
-<p><strong>Worked Example.</strong> Suppose a fair six-sided die is rolled once. The sample space is $\{1, 2, 3, 4, 5, 6\}$, each outcome occurring with probability $\tfrac{1}{6}$. The mean is</p>
-$$\mu = \frac{1+2+3+4+5+6}{6} = \frac{21}{6} = 3.5.$$
-<p>The variance is then</p>
-$$\operatorname{Var}(X) = \frac{1}{6}\sum_{k=1}^{6}(k - 3.5)^2 = \frac{1}{6}\bigl(6.25 + 2.25 + 0.25 + 0.25 + 2.25 + 6.25\bigr) = \frac{17.5}{6} \approx 2.917.$$
-<p>The standard deviation is $\sigma \approx 1.708$, meaning a typical roll deviates from the mean by roughly 1.7 units.</p>
-<p><strong>Key Theorem (Computational Formula).</strong> For any random variable $X$ with finite second moment,</p>
-$$\operatorname{Var}(X) = \mathbb{E}[X^2] - \left(\mathbb{E}[X]\right)^2.$$
-<p><em>Proof sketch.</em> Expand $(X - \mu)^2 = X^2 - 2\mu X + \mu^2$ and apply linearity of expectation:</p>
-$$\mathbb{E}[(X-\mu)^2] = \mathbb{E}[X^2] - 2\mu\,\mathbb{E}[X] + \mu^2 = \mathbb{E}[X^2] - \mu^2. \qquad \square$$
-<p>This identity is computationally convenient because $\mathbb{E}[X^2]$ and $\mathbb{E}[X]$ can be computed in a single pass over the data.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import Rational, sqrt, symbols, summation, simplify
-
-k = symbols('k', integer=True)
-outcomes = [Rational(i) for i in range(1, 7)]
-mu = sum(outcomes) / 6
-var = sum((x - mu)**2 for x in outcomes) / 6
-print("Mean:", mu)           # 7/2
-print("Variance:", var)      # 35/12
-print("Std dev:", sqrt(var)) # sqrt(105)/6</code></pre>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and $X : \Omega \to \mathbb{R}$ a random variable with $X \in L^2(\mathbb{P})$. The <em>variance</em> of $X$ is defined as</p>
+$$\mathrm{Var}(X) := \mathbb{E}\!\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2,$$
+<p>provided all expectations exist and are finite. The non-negative square root $\sigma(X) := \sqrt{\mathrm{Var}(X)}$ is the <em>standard deviation</em>, which restores dimensional homogeneity with $X$. The variance is the second central moment: $\mathrm{Var}(X) = \mu_2'$, where $\mu_k' := \mathbb{E}[(X - \mathbb{E}[X])^k]$.</p>
+<p><strong>Theorem (Bienaymé's identity).</strong> For any finite collection of pairwise uncorrelated random variables $X_1, \dots, X_n \in L^2(\mathbb{P})$,</p>
+$$\mathrm{Var}\!\left(\sum_{i=1}^n X_i\right) = \sum_{i=1}^n \mathrm{Var}(X_i).$$
+<p><em>Proof.</em> Write $S = \sum_i X_i$ and $\mu_i = \mathbb{E}[X_i]$. Then</p>
+$$\mathrm{Var}(S) = \mathbb{E}\!\left[\left(\sum_i (X_i - \mu_i)\right)^2\right] = \sum_i \mathrm{Var}(X_i) + 2\sum_{i < j} \mathrm{Cov}(X_i, X_j).$$
+<p>Pairwise uncorrelatedness gives $\mathrm{Cov}(X_i, X_j) = 0$ for $i \neq j$, and the cross terms vanish. $\square$</p>
+<p>Bienaymé's identity is the structural fact behind the $1/\sqrt{n}$ convergence rate in the Law of Large Numbers and the Central Limit Theorem; without it, error analysis in statistics would lose its additive backbone.</p>
+<p><strong>Literature context.</strong> The identity between $\mathrm{Var}(X)$ and the $L^2$ norm $\|X - \mathbb{E}[X]\|_2^2$ situates variance within functional analysis: the space $L^2(\mathbb{P})$ is a Hilbert space, and variance is the squared norm of the centered projection. This perspective, formalized in Loève (1963) and Billingsley (1995), underpins reproducing kernel Hilbert space methods and Gaussian process regression, where variance propagation governs posterior uncertainty. In robust statistics (Huber 1981; Hampel et al. 1986), variance as a dispersion measure is known to be <em>non-robust</em>: a single outlier can inflate $\mathrm{Var}(X)$ without bound, motivating median absolute deviation and interquartile range as alternatives. The bias–variance decomposition in statistical learning theory (Geman et al. 1992; Hastie, Tibshirani & Friedman 2009) further splits the expected squared error of an estimator into irreducible noise, squared bias, and variance, with open questions remaining about optimal bias–variance trade-off schedules in nonparametric regimes and modern overparameterized neural networks (Belkin et al. 2019, "double descent").</p>
+<p><strong>Suggested investigation.</strong> Derive the bias–variance decomposition for $k$-nearest-neighbor regression as $k$ varies from $1$ to $n$. Fix a data-generating process, e.g., $Y = \sin(2\pi X) + \varepsilon$, $\varepsilon \sim \mathcal{N}(0, \sigma^2)$, sample $B = 500$ bootstrap datasets of size $n = 100$, and estimate $\mathrm{Bias}^2(\hat{f})$ and $\mathrm{Var}(\hat{f})$ at a held-out grid of points as functions of $k$. Identify the optimal $k^<em>$ empirically, then compare to the theoretically predicted rate $k^</em> \asymp n^{4/5}$ (Stone 1980). Repeat for noisy labels ($\sigma^2 \in \{0.1, 0.5, 1.0\}$) and report how $k^*$ shifts with noise level.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state the decomposition theorem precisely and prove it for the mean squared error of an arbitrary estimator; (ii) describe the simulation design, including the seed, $B$, $n$, and grid density, so results are reproducible; (iii) present a single figure with bias², variance, and total error curves plotted against $k$ on the same axes; (iv) quantify the gap between empirical $k^*$ and the Stone rate and offer an explanation for any discrepancy; and (v) discuss whether the trade-off curve changes character in the overparameterized limit, connecting the experiment to the double-descent literature.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

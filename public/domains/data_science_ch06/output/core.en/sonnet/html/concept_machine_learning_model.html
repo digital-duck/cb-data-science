@@ -35,33 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="machine-learning-model">Machine Learning Model</h2>
-<p><strong>Definition.</strong> A <em>machine learning model</em> is a parametric function $f_{\boldsymbol{\theta}} : \mathcal{X} \to \mathcal{Y}$, where $\mathcal{X} \subseteq \mathbb{R}^d$ is the input space, $\mathcal{Y}$ is the output space, and $\boldsymbol{\theta} \in \Theta \subseteq \mathbb{R}^p$ is a vector of learnable parameters. Given a dataset $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$, learning consists of finding parameters $\boldsymbol{\theta}^*$ that minimize an empirical loss functional</p>
-$$\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta} \in \Theta} \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}\!\left(f_{\boldsymbol{\theta}}(\mathbf{x}_i),\, y_i\right),$$
-<p>where $\mathcal{L} : \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}_{\geq 0}$ is a loss function measuring discrepancy between predictions and targets. The model family (e.g., linear, polynomial, neural network) determines the hypothesis class $\mathcal{H} = \{f_{\boldsymbol{\theta}} : \boldsymbol{\theta} \in \Theta\}$.</p>
-<p><strong>Worked Example.</strong> Consider simple linear regression, where $\mathcal{X} = \mathbb{R}$, $\mathcal{Y} = \mathbb{R}$, and $f_{\boldsymbol{\theta}}(x) = \theta_1 x + \theta_0$. With squared loss $\mathcal{L}(\hat{y}, y) = (\hat{y} - y)^2$, the empirical risk becomes</p>
-$$R(\theta_0, \theta_1) = \frac{1}{n}\sum_{i=1}^{n}(\theta_1 x_i + \theta_0 - y_i)^2.$$
-<p>Setting $\partial R / \partial \theta_0 = 0$ and $\partial R / \partial \theta_1 = 0$ yields the closed-form ordinary least-squares solution:</p>
-$$\theta_1^* = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}, \qquad \theta_0^* = \bar{y} - \theta_1^* \bar{x},$$
-<p>where $\bar{x}$ and $\bar{y}$ denote sample means.</p>
-<p><strong>Key Theorem (Bias–Variance Decomposition).</strong> For any model $f_{\boldsymbol{\theta}}$ trained on a random dataset, the expected squared prediction error at a point $\mathbf{x}$ decomposes as</p>
-$$\mathbb{E}\!\left[(y - f_{\boldsymbol{\theta}}(\mathbf{x}))^2\right] = \underbrace{\mathrm{Bias}^2[f_{\boldsymbol{\theta}}(\mathbf{x})]}_{\text{systematic error}} + \underbrace{\mathrm{Var}[f_{\boldsymbol{\theta}}(\mathbf{x})]}_{\text{estimation variance}} + \underbrace{\sigma^2}_{\text{irreducible noise}}.$$
-<p>This result implies a fundamental trade-off: richer hypothesis classes reduce bias but increase variance, motivating regularization techniques such as ridge regression, which augments the loss with a penalty $\lambda\|\boldsymbol{\theta}\|_2^2$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, diff, solve, Rational, simplify
-
-x, y_sym, t0, t1 = symbols('x y t0 t1')
-# Toy dataset: three points
-data = [(1, 2), (2, 3), (3, 5)]
-n = len(data)
-
-R = sum((t1*xi + t0 - yi)**2 for xi, yi in data) / n
-dR_dt0 = diff(R, t0)
-dR_dt1 = diff(R, t1)
-solution = solve([dR_dt0, dR_dt1], [t0, t1])
-print("OLS solution:", solution)
-# Verify: f(x) = solution[t1]*x + solution[t0]
-f = solution[t1]*x + solution[t0]
-print("Fitted line:", simplify(f))</code></pre>
+<p>You already have the intuition: a machine learning model is a program that <em>learns from examples</em> rather than following hand-written rules. Now let's look at what's actually happening under the hood.</p>
+<p>A model is essentially a mathematical function. It takes some input $x$ — say, pixel values in an image — and produces an output $\hat{y}$, a prediction. The model has internal numbers called <strong>parameters</strong> (often written $\theta$) that control its behavior:</p>
+$$\hat{y} = f(x;\, \theta)$$
+<p>Training is the process of adjusting $\theta$ so that $f(x;\,\theta)$ gets as close as possible to the true answer $y$ across many examples. We measure "how wrong" the model is with a <strong>loss function</strong> $\mathcal{L}(\hat{y}, y)$ — a small loss means good predictions, a large loss means poor ones.</p>
+<p>The simplest model you'll meet is <strong>linear regression</strong>, where:</p>
+$$\hat{y} = w \cdot x + b$$
+<p>Here the parameters are just a slope $w$ and an intercept $b$. Training finds the $w$ and $b$ that minimize the total loss over all training examples. Neural networks follow exactly the same idea — they just stack many layers of these functions, giving them millions of parameters and far more expressive power.</p>
+<p><strong>The core pattern:</strong> every supervised model shares the same three-part story — a function family $f$, a loss $\mathcal{L}$, and an optimization step that nudges $\theta$ to reduce $\mathcal{L}$.</p>
+<hr>
+<p><strong>Practice problem:</strong> A one-parameter linear model predicts temperature in Celsius from altitude (km): $\hat{y} = -6.5x + 20$. If the true temperature at $x = 2$ km is $6°C$, compute the prediction $\hat{y}$ and the error $|\hat{y} - y|$.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,44 +35,21 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="median">Median</h2>
-<p><strong>Definition.</strong> Let $x_1, x_2, \ldots, x_n$ be a dataset of $n$ real numbers arranged in non-decreasing order, so that $x_{(1)} \leq x_{(2)} \leq \cdots \leq x_{(n)}$ (called the <em>order statistics</em>). The <strong>median</strong> is the value that divides this sorted sequence into two equal halves:</p>
-$$
-\tilde{x} =
-\begin{cases}
-x_{(m+1)} & \text{if } n = 2m+1 \text{ (odd)}, \\[4pt]
-\dfrac{x_{(m)} + x_{(m+1)}}{2} & \text{if } n = 2m \text{ (even)}.
-\end{cases}
-$$
-<p>Intuitively, at least half the observations lie at or below $\tilde{x}$ and at least half lie at or above it.</p>
-<p><strong>Worked Example.</strong> Consider the seven exam scores $\{72, 85, 91, 68, 74, 88, 95\}$. Sorting gives the order statistics</p>
-$$
-68,\; 72,\; 74,\; 75,\; 85,\; 88,\; 91,\; 95.
-$$
-<p>Wait—there are seven values, so $n = 7 = 2(3)+1$, giving $m = 3$. The median is the fourth order statistic:</p>
-$$
-\tilde{x} = x_{(4)} = 74.
-$$
-<p>The mean of the same dataset is $\bar{x} = (68+72+74+85+88+91+95)/7 \approx 81.9$. The gap illustrates how the median is insensitive to the cluster of high scores near 90, whereas the mean is pulled upward.</p>
-<p><strong>Key Theorem (Median minimises the $L^1$ loss).</strong> For any dataset $\{x_i\}_{i=1}^n$, the value $c^*$ that minimises the sum of absolute deviations</p>
-$$
-c^* = \underset{c \in \mathbb{R}}{\arg\min} \sum_{i=1}^{n} |x_i - c|
-$$
-<p>is the median $\tilde{x}$. <em>Proof sketch.</em> Write $f(c) = \sum_i |x_i - c|$. This piecewise-linear, convex function has derivative $f'(c) = \#\{i : x_i < c\} - \#\{i : x_i > c\}$, which changes sign exactly at the median. Convexity guarantees that any minimiser of $f'(c) = 0$ is a global minimum. $\square$</p>
-<p>This theorem explains why the median is the preferred measure of centre when outliers are present: it minimises the total $L^1$ error rather than the squared $L^2$ error minimised by the mean.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy.stats import median
-from statistics import median as py_median
-
-scores = [68, 72, 74, 85, 88, 91, 95]
-print(py_median(scores))          # 74
-
-# Verify the L1 minimisation property
-from sympy import symbols, Abs, solve, diff, Add
-c = symbols('c', real=True)
-L1 = Add(*[Abs(x - c) for x in scores])
-# Evaluate over a grid to confirm minimum at c = 74
-vals = {v: L1.subs(c, v) for v in range(68, 96)}
-print(min(vals, key=vals.get))    # 74</code></pre>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P)$ be a probability space and $X : \Omega \to \mathbb{R}$ a real-valued random variable with cumulative distribution function $F(x) = P(X \leq x)$. A <em>median</em> of $X$ is any value $m \in \mathbb{R}$ satisfying</p>
+$$P(X \leq m) \geq \tfrac{1}{2} \quad \text{and} \quad P(X \geq m) \geq \tfrac{1}{2}.$$
+<p>Equivalently, $m$ belongs to the set $\mathcal{M}(F) = \{ x : F(x^-) \leq \tfrac{1}{2} \leq F(x) \}$, where $F(x^-)$ denotes the left-hand limit. The median always exists; it is unique if and only if $F$ is strictly increasing at the unique crossing of the $\tfrac{1}{2}$ level.</p>
+<p><strong>Theorem (Median as an $L^1$ minimizer).</strong> Suppose $E[|X|] < \infty$. Then</p>
+$$m^* \in \underset{c \in \mathbb{R}}{\arg\min}\; E[|X - c|],$$
+<p>and the minimizing set is precisely $\mathcal{M}(F)$.</p>
+<p><em>Proof sketch.</em> Define $g(c) = E[|X - c|]$. By the dominated convergence theorem, $g$ is convex and continuous. Its subgradient is</p>
+$$\partial g(c) = E[\mathrm{sign}(X - c)] \in [-1, 1],$$
+<p>where $\mathrm{sign}(0)$ is taken as any value in $[-1, 1]$. The optimality condition $0 \in \partial g(c)$ reduces to $P(X < c) \leq \tfrac{1}{2} \leq P(X \leq c)$, which is identical to $c \in \mathcal{M}(F)$. $\square$</p>
+<p>This variational characterization distinguishes the median from the mean: the mean minimizes $E[(X-c)^2]$ and is sensitive to heavy tails, while the median's $L^1$ objective assigns equal weight to deviations irrespective of magnitude. The trade-off is not merely robustness versus efficiency — it is a genuine choice of loss geometry.</p>
+<p><strong>Literature context.</strong> The $L^1$ optimality property appears in Laplace's 1774 memoir on probability, predating least-squares by decades. In modern nonparametric statistics, the sample median $\hat{m}_n = F_n^{-1}(\tfrac{1}{2})$ (where $F_n$ is the empirical CDF) satisfies a central limit theorem: if $F$ has a positive density $f(m)$ at the true median, then</p>
+$$\sqrt{n}(\hat{m}_n - m) \xrightarrow{d} \mathcal{N}\!\left(0, \frac{1}{4f(m)^2}\right).$$
+<p>The single new primitive this CLT unlocks is the <em>asymptotic relative efficiency</em> (ARE): for two estimators $T_1$ and $T_2$ of the same parameter, $\mathrm{ARE}(T_1, T_2) = \lim_{n\to\infty} \mathrm{Var}(T_2) / \mathrm{Var}(T_1)$ under the same model. For the median versus the mean under Gaussian errors, this ratio equals $2/\pi \approx 0.637$ — the classical result of Fisher, indicating that the median requires roughly $57\%$ more observations to match the mean's precision when the model is correctly specified. For distributions with heavier-than-Gaussian tails — Laplace, Cauchy, $t_\nu$ with $\nu$ small — the ARE exceeds 1 and the median becomes the more efficient estimator. The ARE as a function of tail index is a central object in robust statistics (see Huber and Ronchetti, <em>Robust Statistics</em>, 2nd ed., 2009; Hampel et al., 1986), and its behavior under model misspecification and distributional contamination remains an active research question. Multivariate extensions of the median (Tukey's halfspace median, 1975; the spatial median of Gower, 1974) raise further open problems about efficient computation and analogous efficiency comparisons in $\mathbb{R}^d$.</p>
+<p><strong>Suggested investigation.</strong> Replicate the ARE comparison numerically: draw samples of size $n \in \{50, 200, 1000\}$ from Gaussian, Laplace, and $t_3$ distributions; compute both sample mean and median; estimate their mean-squared error over $B = 10{,}000$ Monte Carlo replicates; and plot the empirical ARE as a function of $n$ and tail weight. Compare the observed ARE values at each distribution against the theoretical limit $2/\pi$, $\pi/2 \approx 1.571$ (Laplace), and the unbounded limit as $\nu \to 1$ for the $t$ family. Observe the rate at which the empirical ARE converges to its asymptotic value, and note whether this convergence is monotone.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state the ARE formula with its regularity conditions (existence and positivity of $f$ at $m$), reproduce the CLT derivation via the delta method applied to the quantile functional, and provide a table of empirical versus theoretical ARE values across distributions and sample sizes. The report should discuss the rate of convergence to the asymptotic ARE, identify where finite-sample behavior departs from the limit, and assess what sample sizes are practically required before the asymptotic approximation is reliable.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

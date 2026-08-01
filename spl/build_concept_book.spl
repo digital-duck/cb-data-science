@@ -105,15 +105,15 @@ $$;
 
 WORKFLOW build_concept_book
     INPUT:
-        @domain_yaml TEXT DEFAULT 'linalg_graph.yaml',
-        @target TEXT DEFAULT 'spectral_theorem',
-        @style TEXT DEFAULT 'textbook',
+        @domain_yaml TEXT DEFAULT 'public/domains/data_science_ch01/input/graph.yaml',
+        @target TEXT DEFAULT 'internet_of_things',
+        @style TEXT DEFAULT 'college',
         @primitive_budget INT DEFAULT 2,
         @payoff_weight FLOAT DEFAULT 1.5,
         @language TEXT DEFAULT 'en',
         @output_html TEXT DEFAULT "",
         @output_dir TEXT DEFAULT "",
-        @log_dir TEXT DEFAULT 'cookbook/74_concept_book/logs-spl'
+        @log_dir TEXT DEFAULT 'logs/spl'
     OUTPUT:
         @textbook TEXT
 DO
