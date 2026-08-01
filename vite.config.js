@@ -14,7 +14,7 @@ export default defineConfig({
   base: `/${repoName}/`,
   server: {
     proxy: {
-      '/api': 'http://localhost:8200',
+      '/api': 'http://localhost:8204',
     },
   },
 })
