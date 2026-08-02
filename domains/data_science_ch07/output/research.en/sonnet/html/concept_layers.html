@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layers | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="layers">Layers</h2>
+<p><strong>Definition.</strong> A <em>layer</em> in a feedforward neural network is a parametric map $\ell_\theta : \mathbb{R}^{d_{\mathrm{in}}} \to \mathbb{R}^{d_{\mathrm{out}}}$ of the form</p>
+$$\ell_\theta(\mathbf{x}) = \sigma(W\mathbf{x} + \mathbf{b}),$$
+<p>where $W \in \mathbb{R}^{d_{\mathrm{out}} \times d_{\mathrm{in}}}$, $\mathbf{b} \in \mathbb{R}^{d_{\mathrm{out}}}$, and $\sigma : \mathbb{R} \to \mathbb{R}$ is applied elementwise. A <em>depth-$L$ network</em> is the composition $f = \ell_{\theta_L} \circ \cdots \circ \ell_{\theta_1}$, fully specified by the width sequence $(d_0, d_1, \ldots, d_L)$ and the nonlinearity $\sigma$. Replacing $\sigma$ with the identity collapses the entire composition to a single affine map regardless of depth, which makes the nonlinearity structurally non-negotiable rather than cosmetic.</p>
+<p><strong>Theorem (Cybenko 1989; Hornik, Stinchcombe & White 1989).</strong> Let $\sigma$ be a continuous, non-constant sigmoidal function. Then the class of single-hidden-layer networks of arbitrary width is dense in $C(K)$ for every compact $K \subset \mathbb{R}^n$ under the sup-norm.</p>
+<p><em>Proof sketch.</em> Suppose, for contradiction, that the closure $\mathcal{F}$ of this class is a proper subspace of $C(K)$. By the Hahn–Banach theorem, there exists a bounded linear functional $\mu \in C(K)^*$ — identified with a signed Borel measure — such that $\mu$ annihilates $\mathcal{F}$ but is not identically zero. Annihilation requires</p>
+$$\int_K \sigma(\mathbf{w}^\top \mathbf{x} + b)\, d\mu(\mathbf{x}) = 0 \quad \forall\, \mathbf{w} \in \mathbb{R}^n,\, b \in \mathbb{R}.$$
+<p>The <em>discriminatory</em> property of sigmoidal $\sigma$ — established via the Riemann–Stieltjes representation of the Fourier transform of $\mu$ — forces $\mu = 0$, a contradiction. $\square$</p>
+<p><strong>Literature context.</strong> The classical theorem establishes existence of a shallow approximator but says nothing about efficiency. The depth-efficiency literature — Eldan & Shamir (2016), Telgarsky (2016), Montufar et al. (2014) — shows that depth-$L$ ReLU networks can represent functions requiring exponentially large width at depth $L-1$, quantified via the number of linear regions: a depth-$L$ width-$w$ ReLU network achieves $O\!\left(w^{d_0}\right)^{L-1}$ linear regions, whereas a depth-2 network achieves only $O(w^{d_0})$. Yarotsky (2017) gives sharp rates for Sobolev balls $W^{p,\infty}([0,1]^d)$: ReLU networks of depth $O(\log(1/\varepsilon))$ achieve $L^\infty$ error $\varepsilon$ with $O(\varepsilon^{-d/p}\log(1/\varepsilon))$ parameters, matching the classical nonparametric lower bound. Open questions include the analogous tight rates for attention-based layers (transformers), the minimum depth required to represent solutions of specific PDE families, and whether implicit regularization of gradient descent selects parsimonious depth automatically.</p>
+<p><strong>Suggested investigation.</strong> Replicate the depth-separation construction of Telgarsky (2016, §4). Define the tent map $t(x) = \min(2x, 2-2x)$ on $[0,1]$ and let $t_k = t^{\circ k}$ be its $k$-fold composition. Fix $k \in \{4, 6, 8\}$. Train: (a) a depth-$\lceil k/2 \rceil$ ReLU network of moderate width, and (b) a depth-2 ReLU network whose width grows from $2^k$ to $4 \cdot 2^k$. Optimize both with Adam at learning rate $10^{-3}$ for 10,000 steps. Plot final $L^2$ test error against total parameter count. The theory predicts that network (a) achieves near-zero error with polynomial parameters while (b) fails to close below a constant-order gap at matched parameter budgets.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should state the closed form of $t_k$ explicitly (it is a piecewise-linear function with $2^k$ equal-length segments alternating between 0 and 1), report depth and width <em>separately</em> rather than aggregated parameter count (because the theoretical bound is width-conditional on depth), include an error table indexed by $k$ and architecture class, and explicitly compare the empirically observed crossover width against the theoretical $\Omega(2^k)$ lower bound to confirm or quantify deviation from the asymptotic prediction.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

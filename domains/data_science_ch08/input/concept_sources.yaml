@@ -1,0 +1,191 @@
+domain: data_science_ch8
+sources:
+  ethics_in_data_science:
+    label: Ethics in Data Science
+    sections: []
+  autonomy:
+    label: Autonomy
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  informed_consent:
+    label: Informed Consent
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  transparency:
+    label: Transparency
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  regulatory_compliance:
+    label: Regulatory Compliance
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  regulatory_compliance_officer:
+    label: Regulatory Compliance Officer (RCO)
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_sovereignty:
+    label: Data Sovereignty
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_retention:
+    label: Data Retention
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_breach:
+    label: Data Breach
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  data_security:
+    label: Data Security
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_privacy:
+    label: Data Privacy
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  confidentiality:
+    label: Confidentiality
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  personally_identifiable_information:
+    label: Personally Identifiable Information (PII)
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  anonymization:
+    label: Anonymization
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  anonymous_data:
+    label: Anonymous Data
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  pseudonymization:
+    label: Pseudonymization
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  hashing:
+    label: Hashing
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  k_anonymization:
+    label: k-Anonymization
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  encryption:
+    label: Encryption
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  cookies:
+    label: Cookies
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  intellectual_property:
+    label: Intellectual Property
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_sharing:
+    label: Data Sharing
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  data_governance_protocols:
+    label: Data Governance Protocols
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  bias:
+    label: Bias
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  fairness:
+    label: Fairness
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  explainable_ai:
+    label: Explainable AI (XAI)
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  data_validation:
+    label: Data Validation
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  outlier_detection:
+    label: Outlier Detection
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  cross_validation:
+    label: Cross-Validation
+    sections:
+    - id: ch08_s8_2
+      title: 8.2 Ethics in Data Analysis and Modeling
+  accurate_representation:
+    label: Accurate Representation
+    sections:
+    - id: ch08_s8_3
+      title: 8.3 Ethics in Visualization and Reporting
+  data_source_attribution:
+    label: Data Source Attribution
+    sections:
+    - id: ch08_s8_3
+      title: 8.3 Ethics in Visualization and Reporting
+  universal_design_principles:
+    label: Universal Design Principles
+    sections:
+    - id: ch08_s8_3
+      title: 8.3 Ethics in Visualization and Reporting
+  digital_divide:
+    label: Digital Divide
+    sections:
+    - id: ch08_s8_3
+      title: 8.3 Ethics in Visualization and Reporting
+  accessibility_and_inclusivity:
+    label: Accessibility and Inclusivity
+    sections:
+    - id: ch08_s8_3
+      title: 8.3 Ethics in Visualization and Reporting
+  hipaa:
+    label: HIPAA
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  ferpa:
+    label: FERPA
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection
+  gdpr_ccpa:
+    label: GDPR / CCPA-CPRA
+    sections:
+    - id: ch08_s8_1
+      title: 8.1 Ethics in Data Collection

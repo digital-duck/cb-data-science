@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Embedding | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="word-embedding">Word Embedding</h2>
+<p><strong>Definition.</strong> A <em>word embedding</em> is a map $\phi: \mathcal{V} \to \mathbb{R}^d$ from a finite vocabulary $\mathcal{V}$ (with $|\mathcal{V}| = V$) into a low-dimensional Euclidean space, $d \ll V$, such that geometric proximity in $\mathbb{R}^d$ reflects distributional similarity in a target corpus. Formally, given a corpus $\mathcal{C}$ drawn from a probability space over token sequences, the embedding is the solution to an optimization problem of the form</p>
+$$\phi^* = \arg\min_{\phi,\psi} \sum_{(w, c) \in \mathcal{D}} \ell\!\left(\phi(w)^\top \psi(c),\, y_{wc}\right),$$
+<p>where $\psi: \mathcal{V} \to \mathbb{R}^d$ is a context embedding, $\mathcal{D}$ is a dataset of (target, context) pairs sampled from $\mathcal{C}$, $y_{wc}$ is a label (co-occurrence count or binary indicator), and $\ell$ is a loss function (logistic, squared, or weighted least squares depending on the model family).</p>
+<p><strong>Central theoretical result.</strong> Levy and Goldberg (2014) established that the skip-gram model with negative sampling (SGNS), despite its neural framing, implicitly factorizes a shifted pointwise mutual information matrix. Specifically, the global optimum satisfies</p>
+$$\phi(w)^\top \psi(c) = \text{PMI}(w, c) - \log k,$$
+<p>where $k$ is the number of negative samples and $\text{PMI}(w,c) = \log \frac{p(w,c)}{p(w)p(c)}$ is the pointwise mutual information estimated from corpus frequencies. This connects word2vec to classical distributional semantics and to the theory of low-rank matrix approximation: the embedding matrices $W, C \in \mathbb{R}^{V \times d}$ form a rank-$d$ factorization of the (shifted) PMI matrix $M \in \mathbb{R}^{V \times V}$, analogous to a truncated SVD but learned via stochastic gradient descent on a non-convex surrogate.</p>
+<p>The GloVe model (Pennington et al., 2014) makes this factorization explicit, minimizing a weighted least-squares objective over log co-occurrence counts:</p>
+$$J = \sum_{i,j} f(X_{ij})\!\left(w_i^\top \tilde{w}_j + b_i + \tilde{b}_j - \log X_{ij}\right)^2,$$
+<p>where $X_{ij}$ is the co-occurrence count and $f$ is a capping weighting function. The equivalence between these families under infinite data is asymptotic and approximate in practice; the finite-sample gap remains an active area of study.</p>
+<p><strong>Literature context and open problems.</strong> The distributional hypothesis — that words appearing in similar contexts have similar meanings — dates to Harris (1954) and Firth (1957). Neural instantiations via word2vec (Mikolov et al., 2013) sparked renewed interest and produced embeddings with striking algebraic structure: the analogy relation $\phi(\text{king}) - \phi(\text{man}) + \phi(\text{woman}) \approx \phi(\text{queen})$. The geometric explanation of this phenomenon (linear subspace encoding of relational attributes) was formalized by Arora et al. (2016) under a generative model assumption. Open questions persist: why does the analogy structure emerge from a non-convex optimization? What is the sample complexity of recovering the true PMI structure? How does the embedding geometry depend on corpus domain, tokenization granularity, and dimensionality $d$?</p>
+<p><strong>Suggested investigation.</strong> Train GloVe and SGNS embeddings on a domain-specific corpus (e.g., arXiv abstracts from a single subfield) at dimensions $d \in \{50, 100, 200, 300\}$. For each configuration, compute the nearest-neighbor accuracy on a custom analogy dataset constructed from domain terminology. Plot downstream task performance (e.g., sentence classification via mean-pooled embeddings) against $d$, and compare against an SVD baseline on the raw PMI matrix. This replicates the Levy et al. (2015) comparison study in a controlled domain, exposing the effect of hyperparameter choices (window size, negative samples, minimum frequency threshold) that are often treated as implementation details but carry significant empirical weight.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the mathematical equivalence between the models under study, citing the Levy-Goldberg result precisely; (2) a clear experimental protocol specifying corpus size, vocabulary construction, and evaluation metric; (3) empirical results with error bars over multiple random seeds; and (4) a discussion of where the equivalence breaks down empirically and what that implies for practitioner model selection. The report should position itself relative to the Levy et al. (2015) benchmark and note which findings replicate, which do not, and what domain-specific factors may explain divergence.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

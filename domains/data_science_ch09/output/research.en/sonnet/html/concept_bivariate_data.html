@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bivariate Data | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="bivariate-data">Bivariate Data</h2>
+<p><strong>Definition.</strong> A bivariate dataset is a collection of $n$ ordered pairs $\{(x_i, y_i)\}_{i=1}^n$ drawn from a joint probability space $(\Omega, \mathcal{F}, \mathbb{P})$, where $X, Y : \Omega \to \mathbb{R}$ are random variables with joint distribution $F_{X,Y}(x,y) = \mathbb{P}(X \leq x, Y \leq y)$. The central object of study is the dependence structure between $X$ and $Y$: how information about one variable constrains inference about the other, and in what senses that constraint is linear, monotone, or entirely general.</p>
+<p><strong>Theorem (Decomposition of Joint Entropy).</strong> For discrete $(X, Y)$ with joint pmf $p(x,y)$,</p>
+$$H(X, Y) = H(X) + H(Y \mid X) = H(Y) + H(X \mid Y),$$
+<p>where $H(X) = -\sum_x p(x)\log p(x)$ and $H(Y \mid X) = -\sum_{x,y} p(x,y)\log p(y \mid x)$. Independence holds if and only if $H(X,Y) = H(X) + H(Y)$, equivalently $I(X;Y) = 0$, where $I(X;Y) = H(X) + H(Y) - H(X,Y) \geq 0$ is the mutual information. The non-negativity follows from the Gibbs inequality (Klein's inequality for the KL divergence) applied to $D_{\mathrm{KL}}(p(x,y) \| p(x)p(y)) \geq 0$.</p>
+<p><strong>Literature context.</strong> The classical treatment of bivariate data — sample covariance, Pearson's $r$, ordinary least squares — rests on the assumption that $F_{X,Y}$ is bivariate Gaussian, under which linear correlation fully characterizes dependence (Anderson, 1958). Departures from normality expose the inadequacy of $r$: Anscombe's quartet (1973) demonstrates four datasets sharing identical $(n, \bar{x}, \bar{y}, s_x^2, s_y^2, r)$ yet exhibiting radically different geometric structure, making the quartet a canonical argument for exploratory visualization before inference. Beyond Pearson's $r$, rank-based measures — Spearman's $\rho_s$ and Kendall's $\tau$ — capture monotone dependence under weaker distributional assumptions, while copula theory (Sklar, 1959; Nelsen, 2006) separates marginal behavior from dependence structure entirely: $F_{X,Y}(x,y) = C(F_X(x), F_Y(y))$ for a unique copula $C$ when the marginals are continuous. Open problems include minimax-optimal estimation of $C$ under sparsity or smoothness constraints and efficient nonparametric testing of independence in high-dimensional bivariate summaries.</p>
+<p><strong>Suggested investigation.</strong> Replicate Anscombe's quartet computationally, then extend it: generate five synthetic bivariate datasets with identical first- and second-order moments but distinct copulas (Gaussian, Clayton, Gumbel, Frank, and empirical). For each, compute $r$, $\rho_s$, $\tau$, and a kernel-based mutual information estimator (Kraskov et al., 2004). Fit a linear model $\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x$ by OLS, compute residuals, and apply a Breusch–Pagan heteroskedasticity test. Quantify how badly the OLS confidence intervals for $\beta_1$ are miscalibrated when the Gaussian copula assumption fails. Finally, apply a nonparametric independence test (e.g., distance correlation, Székely & Rizzo, 2009) and compare power across the five settings.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up of this investigation should: (1) state the moment-matching construction explicitly (showing the five datasets share $\bar{x}, \bar{y}, s_x, s_y, r$ to three significant figures); (2) tabulate all dependence measures with bootstrap 95% confidence intervals; (3) include scatter plots and contour plots of the estimated bivariate density for each dataset; (4) derive analytically — or cite — the breakdown condition under which OLS standard errors are inconsistent; and (5) discuss what additional structure (copula family, tail index) would need to be assumed or estimated to restore valid inference.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

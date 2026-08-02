@@ -1,0 +1,1502 @@
+[
+  {
+    "id": "data_science_ch01",
+    "name": "Data Science Ch1: What Are Data and Data Science?",
+    "description": "OpenStax Principles of Data Science, Chapter 1: What Are Data and Data Science?.",
+    "capstone": "internet_of_things",
+    "nodes": 41,
+    "edges": 42,
+    "primitives": 5,
+    "concepts": 31,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "internet_of_things",
+        "file": "output/college.en/sonnet/html/book_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "predictive_analytics",
+        "file": "output/college.en/sonnet/html/book_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "business_analytics",
+        "file": "output/college.en/sonnet/html/book_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "recommendation_system",
+        "file": "output/college.en/sonnet/html/book_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "sports_analytics",
+        "file": "output/college.en/sonnet/html/book_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "business_analytics",
+        "label": "Business Analytics",
+        "file": "output/research.en/sonnet/html/concept_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data",
+        "label": "Data",
+        "file": "output/research.en/sonnet/html/concept_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_analysis",
+        "label": "Data Analysis",
+        "file": "output/research.en/sonnet/html/concept_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_collection",
+        "label": "Data Collection",
+        "file": "output/research.en/sonnet/html/concept_data_collection.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_preparation",
+        "label": "Data Preparation",
+        "file": "output/research.en/sonnet/html/concept_data_preparation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_science",
+        "label": "Data Science",
+        "file": "output/research.en/sonnet/html/concept_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information",
+        "label": "Information",
+        "file": "output/research.en/sonnet/html/concept_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "internet_of_things",
+        "label": "Internet Of Things",
+        "file": "output/research.en/sonnet/html/concept_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "predictive_analytics",
+        "label": "Predictive Analytics",
+        "file": "output/research.en/sonnet/html/concept_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "recommendation_system",
+        "label": "Recommendation System",
+        "file": "output/research.en/sonnet/html/concept_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sports_analytics",
+        "label": "Sports Analytics",
+        "file": "output/research.en/sonnet/html/concept_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch02",
+    "name": "Data Science Ch2: Collecting and Preparing Data",
+    "description": "OpenStax Principles of Data Science, Chapter 2: Collecting and Preparing Data.",
+    "capstone": "cloud_computing",
+    "nodes": 37,
+    "edges": 41,
+    "primitives": 13,
+    "concepts": 22,
+    "applications": 2,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "cloud_computing",
+        "file": "output/college.en/sonnet/html/book_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_dataset_management",
+        "file": "output/college.en/sonnet/html/book_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/research.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cloud_computing",
+        "label": "Cloud Computing",
+        "file": "output/research.en/sonnet/html/concept_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_chunking",
+        "label": "Data Chunking",
+        "file": "output/research.en/sonnet/html/concept_data_chunking.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_compression",
+        "label": "Data Compression",
+        "file": "output/research.en/sonnet/html/concept_data_compression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_indexing",
+        "label": "Data Indexing",
+        "file": "output/research.en/sonnet/html/concept_data_indexing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_processing",
+        "label": "Data Processing",
+        "file": "output/research.en/sonnet/html/concept_data_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_storage",
+        "label": "Data Storage",
+        "file": "output/research.en/sonnet/html/concept_data_storage.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "dbms",
+        "label": "Dbms",
+        "file": "output/research.en/sonnet/html/concept_dbms.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_dataset_management",
+        "label": "Large Dataset Management",
+        "file": "output/research.en/sonnet/html/concept_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "parsing_and_extraction",
+        "label": "Parsing And Extraction",
+        "file": "output/research.en/sonnet/html/concept_parsing_and_extraction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regular_expressions",
+        "label": "Regular Expressions",
+        "file": "output/research.en/sonnet/html/concept_regular_expressions.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "string_manipulation",
+        "label": "String Manipulation",
+        "file": "output/research.en/sonnet/html/concept_string_manipulation.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch03",
+    "name": "Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions",
+    "description": "OpenStax Principles of Data Science, Chapter 3: Descriptive Statistics: Statistical Measurements and Probability Distributions.",
+    "capstone": "python_data_analysis",
+    "nodes": 39,
+    "edges": 56,
+    "primitives": 9,
+    "concepts": 29,
+    "applications": 1,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "python_data_analysis",
+        "file": "output/college.en/sonnet/html/book_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "mean",
+        "label": "Mean",
+        "file": "output/research.en/sonnet/html/concept_mean.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "median",
+        "label": "Median",
+        "file": "output/research.en/sonnet/html/concept_median.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "percentiles",
+        "label": "Percentiles",
+        "file": "output/research.en/sonnet/html/concept_percentiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "population_data",
+        "label": "Population Data",
+        "file": "output/research.en/sonnet/html/concept_population_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability",
+        "label": "Probability",
+        "file": "output/research.en/sonnet/html/concept_probability.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability_distribution",
+        "label": "Probability Distribution",
+        "file": "output/research.en/sonnet/html/concept_probability_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_data_analysis",
+        "label": "Python Data Analysis",
+        "file": "output/research.en/sonnet/html/concept_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "quartiles",
+        "label": "Quartiles",
+        "file": "output/research.en/sonnet/html/concept_quartiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_variable",
+        "label": "Random Variable",
+        "file": "output/research.en/sonnet/html/concept_random_variable.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sample_data",
+        "label": "Sample Data",
+        "file": "output/research.en/sonnet/html/concept_sample_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "standard_deviation",
+        "label": "Standard Deviation",
+        "file": "output/research.en/sonnet/html/concept_standard_deviation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "variance",
+        "label": "Variance",
+        "file": "output/research.en/sonnet/html/concept_variance.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch04",
+    "name": "Data Science Ch4: Inferential Statistics and Regression Analysis",
+    "description": "OpenStax Principles of Data Science, Chapter 4: Inferential Statistics and Regression Analysis.",
+    "capstone": "python_statistical_computing",
+    "nodes": 36,
+    "edges": 51,
+    "primitives": 11,
+    "concepts": 24,
+    "applications": 1,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "python_statistical_computing",
+        "file": "output/college.en/sonnet/html/book_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "alternative_hypothesis",
+        "label": "Alternative Hypothesis",
+        "file": "output/core.en/sonnet/html/concept_alternative_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "anova",
+        "label": "Anova",
+        "file": "output/core.en/sonnet/html/concept_anova.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "confidence_interval",
+        "label": "Confidence Interval",
+        "file": "output/core.en/sonnet/html/concept_confidence_interval.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/core.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "critical_value",
+        "label": "Critical Value",
+        "file": "output/core.en/sonnet/html/concept_critical_value.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "f_distribution",
+        "label": "F Distribution",
+        "file": "output/core.en/sonnet/html/concept_f_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hypothesis_testing",
+        "label": "Hypothesis Testing",
+        "file": "output/core.en/sonnet/html/concept_hypothesis_testing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "level_of_significance",
+        "label": "Level Of Significance",
+        "file": "output/core.en/sonnet/html/concept_level_of_significance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "linear_regression",
+        "label": "Linear Regression",
+        "file": "output/core.en/sonnet/html/concept_linear_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "margin_of_error",
+        "label": "Margin Of Error",
+        "file": "output/core.en/sonnet/html/concept_margin_of_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "null_hypothesis",
+        "label": "Null Hypothesis",
+        "file": "output/core.en/sonnet/html/concept_null_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "point_estimate",
+        "label": "Point Estimate",
+        "file": "output/core.en/sonnet/html/concept_point_estimate.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_statistical_computing",
+        "label": "Python Statistical Computing",
+        "file": "output/core.en/sonnet/html/concept_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot",
+        "label": "Scatterplot",
+        "file": "output/core.en/sonnet/html/concept_scatterplot.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "test_statistic",
+        "label": "Test Statistic",
+        "file": "output/core.en/sonnet/html/concept_test_statistic.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch05",
+    "name": "Data Science Ch5: Time Series and Forecasting",
+    "description": "OpenStax Principles of Data Science, Chapter 5: Time Series and Forecasting.",
+    "capstone": "seasonal_trend_decomposition_loess",
+    "nodes": 46,
+    "edges": 68,
+    "primitives": 10,
+    "concepts": 31,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "seasonal_trend_decomposition_loess",
+        "file": "output/college.en/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "augmented_dickey_fuller_test",
+        "file": "output/college.en/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "naive_forecasting",
+        "file": "output/college.en/sonnet/html/book_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "linear_regression_forecasting",
+        "file": "output/college.en/sonnet/html/book_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/college.en/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/intro.zh/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "zh"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/research.en/sonnet/html/concept_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "arima_zh",
+        "label": "Arima Zh",
+        "file": "output/research.zh/sonnet/html/concept_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "augmented_dickey_fuller_test",
+        "label": "Augmented Dickey Fuller Test",
+        "file": "output/research.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/research.en/sonnet/html/concept_autoregressive_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "autoregressive_model_zh",
+        "label": "Autoregressive Model Zh",
+        "file": "output/research.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "cyclic_component",
+        "label": "Cyclic Component",
+        "file": "output/research.en/sonnet/html/concept_cyclic_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/research.en/sonnet/html/concept_differencing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "differencing_zh",
+        "label": "Differencing Zh",
+        "file": "output/research.zh/sonnet/html/concept_differencing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/research.en/sonnet/html/concept_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "error_zh",
+        "label": "Error Zh",
+        "file": "output/research.zh/sonnet/html/concept_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "forecasting",
+        "label": "Forecasting",
+        "file": "output/research.en/sonnet/html/concept_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/research.en/sonnet/html/concept_integrative_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "integrative_component_zh",
+        "label": "Integrative Component Zh",
+        "file": "output/research.zh/sonnet/html/concept_integrative_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/research.en/sonnet/html/concept_lag.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "lag_zh",
+        "label": "Lag Zh",
+        "file": "output/research.zh/sonnet/html/concept_lag_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "linear_regression_forecasting",
+        "label": "Linear Regression Forecasting",
+        "file": "output/research.en/sonnet/html/concept_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/research.en/sonnet/html/concept_moving_average_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "moving_average_model_zh",
+        "label": "Moving Average Model Zh",
+        "file": "output/research.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "naive_forecasting",
+        "label": "Naive Forecasting",
+        "file": "output/research.en/sonnet/html/concept_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "noise",
+        "label": "Noise",
+        "file": "output/research.en/sonnet/html/concept_noise.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_component",
+        "label": "Seasonal Component",
+        "file": "output/research.en/sonnet/html/concept_seasonal_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_trend_decomposition_loess",
+        "label": "Seasonal Trend Decomposition Loess",
+        "file": "output/research.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/research.en/sonnet/html/concept_sequence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sequence_zh",
+        "label": "Sequence Zh",
+        "file": "output/research.zh/sonnet/html/concept_sequence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "stationary",
+        "label": "Stationary",
+        "file": "output/research.en/sonnet/html/concept_stationary.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/research.en/sonnet/html/concept_time_series.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series_model",
+        "label": "Time Series Model",
+        "file": "output/research.en/sonnet/html/concept_time_series_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series_zh",
+        "label": "Time Series Zh",
+        "file": "output/research.zh/sonnet/html/concept_time_series_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/research.en/sonnet/html/concept_trend.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_cycle_component",
+        "label": "Trend Cycle Component",
+        "file": "output/research.en/sonnet/html/concept_trend_cycle_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_zh",
+        "label": "Trend Zh",
+        "file": "output/research.zh/sonnet/html/concept_trend_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "volatility",
+        "label": "Volatility",
+        "file": "output/research.en/sonnet/html/concept_volatility.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch06",
+    "name": "Data Science Ch6: Decision-Making Using Machine Learning Basics",
+    "description": "OpenStax Principles of Data Science, Chapter 6: Decision-Making Using Machine Learning Basics.",
+    "capstone": "data_mining",
+    "nodes": 43,
+    "edges": 51,
+    "primitives": 12,
+    "concepts": 26,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "data_mining",
+        "file": "output/college.en/sonnet/html/book_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "heart_disease_classification",
+        "file": "output/college.en/sonnet/html/book_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "facial_recognition",
+        "file": "output/college.en/sonnet/html/book_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "spam_filtering",
+        "file": "output/college.en/sonnet/html/book_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "temperature_prediction",
+        "file": "output/college.en/sonnet/html/book_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "bayes_theorem",
+        "label": "Bayes Theorem",
+        "file": "output/research.en/sonnet/html/concept_bayes_theorem.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/research.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "binary_multiclass_classification",
+        "label": "Binary Multiclass Classification",
+        "file": "output/research.en/sonnet/html/concept_binary_multiclass_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrap_aggregating",
+        "label": "Bootstrap Aggregating",
+        "file": "output/research.en/sonnet/html/concept_bootstrap_aggregating.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrapping",
+        "label": "Bootstrapping",
+        "file": "output/research.en/sonnet/html/concept_bootstrapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_mining",
+        "label": "Data Mining",
+        "file": "output/research.en/sonnet/html/concept_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "decision_tree",
+        "label": "Decision Tree",
+        "file": "output/research.en/sonnet/html/concept_decision_tree.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "facial_recognition",
+        "label": "Facial Recognition",
+        "file": "output/research.en/sonnet/html/concept_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "heart_disease_classification",
+        "label": "Heart Disease Classification",
+        "file": "output/research.en/sonnet/html/concept_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information_entropy",
+        "label": "Information Entropy",
+        "file": "output/research.en/sonnet/html/concept_information_entropy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "labeled_unlabeled_data",
+        "label": "Labeled Unlabeled Data",
+        "file": "output/research.en/sonnet/html/concept_labeled_unlabeled_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "logistic_regression",
+        "label": "Logistic Regression",
+        "file": "output/research.en/sonnet/html/concept_logistic_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "machine_learning_model",
+        "label": "Machine Learning Model",
+        "file": "output/research.en/sonnet/html/concept_machine_learning_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_bayes_classifier",
+        "label": "Naive Bayes Classifier",
+        "file": "output/research.en/sonnet/html/concept_naive_bayes_classifier.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_forest",
+        "label": "Random Forest",
+        "file": "output/research.en/sonnet/html/concept_random_forest.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sigmoid_function",
+        "label": "Sigmoid Function",
+        "file": "output/research.en/sonnet/html/concept_sigmoid_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spam_filtering",
+        "label": "Spam Filtering",
+        "file": "output/research.en/sonnet/html/concept_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "supervised_learning",
+        "label": "Supervised Learning",
+        "file": "output/research.en/sonnet/html/concept_supervised_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "temperature_prediction",
+        "label": "Temperature Prediction",
+        "file": "output/research.en/sonnet/html/concept_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "training_testing_set",
+        "label": "Training Testing Set",
+        "file": "output/research.en/sonnet/html/concept_training_testing_set.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch07",
+    "name": "Data Science Ch7: Deep Learning and AI Basics",
+    "description": "OpenStax Principles of Data Science, Chapter 7: Deep Learning and AI Basics.",
+    "capstone": "semantic_segmentation",
+    "nodes": 32,
+    "edges": 56,
+    "primitives": 5,
+    "concepts": 22,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "semantic_segmentation",
+        "file": "output/college.en/sonnet/html/book_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_language_model",
+        "file": "output/college.en/sonnet/html/book_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "generative_art",
+        "file": "output/college.en/sonnet/html/book_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "speech_recognition_tts",
+        "file": "output/college.en/sonnet/html/book_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "deepfake",
+        "file": "output/college.en/sonnet/html/book_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "activation_function",
+        "label": "Activation Function",
+        "file": "output/research.en/sonnet/html/concept_activation_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "file": "output/research.en/sonnet/html/concept_artificial_intelligence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/research.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "convolutional_neural_network",
+        "label": "Convolutional Neural Network",
+        "file": "output/research.en/sonnet/html/concept_convolutional_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deep_learning",
+        "label": "Deep Learning",
+        "file": "output/research.en/sonnet/html/concept_deep_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deepfake",
+        "label": "Deepfake",
+        "file": "output/research.en/sonnet/html/concept_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "depth",
+        "label": "Depth",
+        "file": "output/research.en/sonnet/html/concept_depth.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "feature_map",
+        "label": "Feature Map",
+        "file": "output/research.en/sonnet/html/concept_feature_map.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "generative_art",
+        "label": "Generative Art",
+        "file": "output/research.en/sonnet/html/concept_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_language_model",
+        "label": "Large Language Model",
+        "file": "output/research.en/sonnet/html/concept_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "layers",
+        "label": "Layers",
+        "file": "output/research.en/sonnet/html/concept_layers.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "multilayer_perceptron",
+        "label": "Multilayer Perceptron",
+        "file": "output/research.en/sonnet/html/concept_multilayer_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "natural_language_processing",
+        "label": "Natural Language Processing",
+        "file": "output/research.en/sonnet/html/concept_natural_language_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neural_network",
+        "label": "Neural Network",
+        "file": "output/research.en/sonnet/html/concept_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neuron",
+        "label": "Neuron",
+        "file": "output/research.en/sonnet/html/concept_neuron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "perceptron",
+        "label": "Perceptron",
+        "file": "output/research.en/sonnet/html/concept_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pooling_layer",
+        "label": "Pooling Layer",
+        "file": "output/research.en/sonnet/html/concept_pooling_layer.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "semantic_segmentation",
+        "label": "Semantic Segmentation",
+        "file": "output/research.en/sonnet/html/concept_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "speech_recognition_tts",
+        "label": "Speech Recognition Tts",
+        "file": "output/research.en/sonnet/html/concept_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transformer_model",
+        "label": "Transformer Model",
+        "file": "output/research.en/sonnet/html/concept_transformer_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "vector",
+        "label": "Vector",
+        "file": "output/research.en/sonnet/html/concept_vector.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "weight",
+        "label": "Weight",
+        "file": "output/research.en/sonnet/html/concept_weight.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "word_embedding",
+        "label": "Word Embedding",
+        "file": "output/research.en/sonnet/html/concept_word_embedding.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch08",
+    "name": "Data Science Ch8: Ethics Throughout the Data Science Cycle",
+    "description": "OpenStax Principles of Data Science, Chapter 8: Ethics Throughout the Data Science Cycle.",
+    "capstone": "cookies",
+    "nodes": 37,
+    "edges": 51,
+    "primitives": 10,
+    "concepts": 22,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "cookies",
+        "file": "output/college.en/sonnet/html/book_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "explainable_ai",
+        "file": "output/college.en/sonnet/html/book_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "hipaa",
+        "file": "output/college.en/sonnet/html/book_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "ferpa",
+        "file": "output/college.en/sonnet/html/book_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gdpr_ccpa",
+        "file": "output/college.en/sonnet/html/book_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/research.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cookies",
+        "label": "Cookies",
+        "file": "output/research.en/sonnet/html/concept_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_privacy",
+        "label": "Data Privacy",
+        "file": "output/research.en/sonnet/html/concept_data_privacy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ethics_in_data_science",
+        "label": "Ethics In Data Science",
+        "file": "output/research.en/sonnet/html/concept_ethics_in_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "explainable_ai",
+        "label": "Explainable Ai",
+        "file": "output/research.en/sonnet/html/concept_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "fairness",
+        "label": "Fairness",
+        "file": "output/research.en/sonnet/html/concept_fairness.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ferpa",
+        "label": "Ferpa",
+        "file": "output/research.en/sonnet/html/concept_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gdpr_ccpa",
+        "label": "Gdpr Ccpa",
+        "file": "output/research.en/sonnet/html/concept_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hipaa",
+        "label": "Hipaa",
+        "file": "output/research.en/sonnet/html/concept_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "personally_identifiable_information",
+        "label": "Personally Identifiable Information",
+        "file": "output/research.en/sonnet/html/concept_personally_identifiable_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regulatory_compliance",
+        "label": "Regulatory Compliance",
+        "file": "output/research.en/sonnet/html/concept_regulatory_compliance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transparency",
+        "label": "Transparency",
+        "file": "output/research.en/sonnet/html/concept_transparency.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch09",
+    "name": "Data Science Ch9: Visualizing Data",
+    "description": "OpenStax Principles of Data Science, Chapter 9: Visualizing Data.",
+    "capstone": "pareto_chart",
+    "nodes": 25,
+    "edges": 23,
+    "primitives": 9,
+    "concepts": 11,
+    "applications": 5,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "pareto_chart",
+        "file": "output/college.en/sonnet/html/book_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "choropleth_graph",
+        "file": "output/college.en/sonnet/html/book_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gis_mapping",
+        "file": "output/college.en/sonnet/html/book_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "correlation_heatmap",
+        "file": "output/college.en/sonnet/html/book_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "three_d_visualization",
+        "file": "output/college.en/sonnet/html/book_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "bivariate_data",
+        "label": "Bivariate Data",
+        "file": "output/research.en/sonnet/html/concept_bivariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "choropleth_graph",
+        "label": "Choropleth Graph",
+        "file": "output/research.en/sonnet/html/concept_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/research.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_heatmap",
+        "label": "Correlation Heatmap",
+        "file": "output/research.en/sonnet/html/concept_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "geospatial_data",
+        "label": "Geospatial Data",
+        "file": "output/research.en/sonnet/html/concept_geospatial_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gis_mapping",
+        "label": "Gis Mapping",
+        "file": "output/research.en/sonnet/html/concept_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "grid_heatmap",
+        "label": "Grid Heatmap",
+        "file": "output/research.en/sonnet/html/concept_grid_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pareto_chart",
+        "label": "Pareto Chart",
+        "file": "output/research.en/sonnet/html/concept_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot_color_encoding",
+        "label": "Scatterplot Color Encoding",
+        "file": "output/research.en/sonnet/html/concept_scatterplot_color_encoding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spatial_heatmap",
+        "label": "Spatial Heatmap",
+        "file": "output/research.en/sonnet/html/concept_spatial_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "three_d_visualization",
+        "label": "Three D Visualization",
+        "file": "output/research.en/sonnet/html/concept_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "univariate_data",
+        "label": "Univariate Data",
+        "file": "output/research.en/sonnet/html/concept_univariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  },
+  {
+    "id": "data_science_ch10",
+    "name": "Data Science Ch10: Reporting Results",
+    "description": "OpenStax Principles of Data Science, Chapter 10: Reporting Results.",
+    "capstone": "executive_dashboard",
+    "nodes": 28,
+    "edges": 27,
+    "primitives": 7,
+    "concepts": 20,
+    "applications": 1,
+    "tags": [
+      "science",
+      "math"
+    ],
+    "has_navigator": true,
+    "has_book": true,
+    "books": [
+      {
+        "target": "executive_dashboard",
+        "file": "output/college.en/sonnet/html/book_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "generated_concepts": [
+      {
+        "name": "audience",
+        "label": "Audience",
+        "file": "output/research.en/sonnet/html/concept_audience.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_visualization_choice",
+        "label": "Data Visualization Choice",
+        "file": "output/research.en/sonnet/html/concept_data_visualization_choice.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "executive_dashboard",
+        "label": "Executive Dashboard",
+        "file": "output/research.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      }
+    ],
+    "default_level": "college"
+  }
+]

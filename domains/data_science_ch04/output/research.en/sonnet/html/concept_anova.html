@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anova | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="anova">Anova</h2>
+<p><strong>Definition.</strong> Let $y_{ij}$ denote the $j$-th observation in group $i$, for $i = 1, \ldots, k$ and $j = 1, \ldots, n_i$, with $N = \sum_i n_i$. The one-way fixed-effects model is</p>
+$$y_{ij} = \mu + \alpha_i + \varepsilon_{ij}, \qquad \varepsilon_{ij} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2),$$
+<p>subject to the identifiability constraint $\sum_i n_i \alpha_i = 0$. The null hypothesis of interest is $H_0 : \alpha_1 = \cdots = \alpha_k = 0$, i.e., group membership carries no information beyond the grand mean $\mu$.</p>
+<p><strong>Theorem (Variance Decomposition).</strong> Under the model above, the total sum of squares decomposes orthogonally:</p>
+$$\underbrace{\sum_{i,j}(y_{ij} - \bar{y}_{\cdot\cdot})^2}_{\mathrm{SS}_{\mathrm{Total}}} = \underbrace{\sum_i n_i (\bar{y}_{i\cdot} - \bar{y}_{\cdot\cdot})^2}_{\mathrm{SS}_{\mathrm{Between}}} + \underbrace{\sum_{i,j}(y_{ij} - \bar{y}_{i\cdot})^2}_{\mathrm{SS}_{\mathrm{Within}}}.$$
+<p><em>Proof sketch.</em> Write $y_{ij} - \bar{y}_{\cdot\cdot} = (y_{ij} - \bar{y}_{i\cdot}) + (\bar{y}_{i\cdot} - \bar{y}_{\cdot\cdot})$. Squaring and summing, the cross-product vanishes because $\sum_j (y_{ij} - \bar{y}_{i\cdot}) = 0$ for each $i$. $\square$</p>
+<p>Under $H_0$, $\mathrm{SS}_{\mathrm{Between}}/\sigma^2 \sim \chi^2_{k-1}$ and $\mathrm{SS}_{\mathrm{Within}}/\sigma^2 \sim \chi^2_{N-k}$, independently by Cochran's theorem. The $F$-statistic</p>
+$$F = \frac{\mathrm{SS}_{\mathrm{Between}}/(k-1)}{\mathrm{SS}_{\mathrm{Within}}/(N-k)} \sim F_{k-1,\, N-k}$$
+<p>forms the canonical test. Under the alternative, the numerator follows a noncentral $\chi^2$ with noncentrality $\lambda = \sum_i n_i \alpha_i^2 / \sigma^2$, which governs power calculations.</p>
+<p><strong>Literature context.</strong> The decomposition originates with Fisher (1925) and is treated rigorously in Scheffé (1959). The Gaussian assumption is load-bearing: under heteroscedasticity, Welch's correction to degrees of freedom restores approximate $F$ validity (Welch 1951; Brown & Forsythe 1974). For non-Gaussian errors the Kruskal–Wallis test offers a rank-based alternative, but loses power when normality holds. A deeper open question concerns the tradeoff between robustness and power in high-dimensional settings where $k$ grows with $N$: classical $F$ theory breaks down when $k = O(N)$, and recent work (Cai & Xia 2014; Fan et al. 2020) develops corrected statistics under sparsity assumptions on $\{\alpha_i\}$. Multiple-comparison corrections post-$F$ (Tukey HSD, Bonferroni, Benjamini–Hochberg) remain an active methodological area, particularly in genomics where $k$ can reach $10^4$.</p>
+<p><strong>Suggested investigation.</strong> Generate synthetic balanced data ($k = 5$, $n_i = 20$) at several signal-to-noise ratios $\delta = \max_i |\alpha_i| / \sigma \in \{0, 0.2, 0.5, 1.0\}$ and empirically trace the power curve of the $F$-test against the theoretical noncentral-$F$ prediction. Then deliberately violate the homoscedasticity assumption (e.g., $\sigma_i^2 = i \cdot \sigma^2$) and compare the empirical Type-I error of the classical $F$-test versus Welch's correction. A natural extension is to apply Levene's test for equality of variances as a diagnostic preceding the omnibus $F$ test, and to quantify how that sequential testing inflates overall $\alpha$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) the exact form of the noncentrality parameter and how it connects observed effect sizes to power; (ii) empirical validation of the $\chi^2$ marginal distributions of $\mathrm{SS}_{\mathrm{Between}}$ and $\mathrm{SS}_{\mathrm{Within}}$ via Q–Q plots; (iii) a table comparing nominal versus empirical Type-I error rates under heteroscedasticity, with a clear recommendation for when Welch's correction is necessary; and (iv) a brief discussion of which post-hoc procedure is appropriate given the study design and the researcher's tolerance for false-discovery inflation.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

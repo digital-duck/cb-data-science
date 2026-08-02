@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Entropy | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="information-entropy">Information Entropy</h2>
+<p><strong>Definition.</strong> Let $(\mathcal{X}, \mathcal{F}, \mu)$ be a probability space and $X$ a discrete random variable taking values in a finite alphabet $\mathcal{X} = \{x_1, \ldots, x_n\}$ with distribution $p(x) = \Pr[X = x]$. The <em>Shannon entropy</em> of $X$ is</p>
+$$H(X) = -\sum_{x \in \mathcal{X}} p(x) \log_2 p(x),$$
+<p>with the convention $0 \log 0 = 0$. Units are bits when the logarithm is base-2, nats for base-$e$. The quantity $H$ is not an intrinsic property of $\mathcal{X}$ but of the <em>measure</em> $p$, a distinction that becomes load-bearing in the continuous generalisation, where the differential entropy $h(X) = -\int p(x)\log p(x)\,dx$ loses non-negativity and invariance under coordinate change.</p>
+<p><strong>Theorem (Shannon, 1948).</strong> Among all probability distributions on an alphabet of size $n$, the uniform distribution $p(x) = 1/n$ uniquely maximises $H$, achieving $H = \log_2 n$ bits. Moreover, $H$ is the unique functional (up to a positive constant) satisfying: (i) continuity in $p$, (ii) symmetry in the arguments, and (iii) the chain rule $H(X,Y) = H(X) + H(Y\mid X)$.</p>
+<p><em>Proof sketch.</em> Concavity of $-t\log t$ and Jensen's inequality give $H(p) \leq \log n$ with equality iff $p$ is uniform. Uniqueness via the axiomatic characterisation follows by showing any functional satisfying (i)–(iii) must agree with $H$ on rational probabilities and, by continuity, on all of $[0,1]^n$; see Khinchin (1957) for the complete argument. $\square$</p>
+<p><strong>Literature context.</strong> Shannon's 1948 paper <em>A Mathematical Theory of Communication</em> (Bell Syst. Tech. J.) established $H$ simultaneously as a measure of uncertainty, a lower bound on lossless compression, and—via the source coding theorem—an operational limit: no prefix-free code achieves expected length below $H(X)$ bits per symbol, and Huffman coding reaches $H(X) + 1$. The connection to statistical mechanics runs deep: Jaynes (1957, <em>Phys. Rev.</em>) showed that maximising entropy subject to moment constraints recovers the canonical ensemble, reframing thermodynamic equilibrium as an inference problem. What remains genuinely open is the <em>right</em> entropy for quantum and non-extensive systems: Tsallis entropy $S_q = (1 - \sum p_i^q)/(q-1)$ and Rényi entropy $H_\alpha = \frac{1}{1-\alpha}\log\sum p_i^\alpha$ each generalise Shannon's functional and collapse to it as $q,\alpha \to 1$, yet their operational coding theorems are not as tight, and their relationships to physical entropy in non-equilibrium settings remain active research (see Wilde, <em>Quantum Information Theory</em>, 2nd ed., 2017, Ch. 10–11).</p>
+<p><strong>Suggested investigation.</strong> A natural entry project is empirical verification of the source coding theorem under a controlled generative model. Fix a Markov chain on $\{A, C, G, T\}$ with known transition matrix $\mathbf{P}$; the entropy rate is $\bar{H} = -\sum_{i,j}\pi_i P_{ij}\log P_{ij}$ where $\pi$ is the stationary distribution. Generate $10^4$–$10^6$ symbol sequences, apply Huffman and arithmetic coding, and compare achieved compression rates against $\bar{H}$. A meaningful extension: vary $\mathbf{P}$ to interpolate between uniform (maximum entropy, incompressible) and deterministic (zero entropy, trivially compressed), and fit the empirical compression gap as a function of spectral gap $1 - \lambda_2(\mathbf{P})$. The convergence rate to the entropy rate is controlled by the mixing time, connecting to Markov chain theory in a way the standard coding-theory treatment elides.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: state the entropy rate formula and derive it from the ergodic theorem for Markov chains; report both the theoretical $\bar{H}$ and empirical code lengths with confidence intervals across realisations; include a log-log plot of compression gap versus sequence length to characterise finite-sample convergence; and discuss where the arithmetic coder outperforms Huffman and why (arithmetic coding achieves $\bar{H}$ exactly in the limit, while Huffman has an integer-length constraint). Situate findings relative to the asymptotic equipartition property (AEP), which should be stated and verified empirically as a secondary result.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

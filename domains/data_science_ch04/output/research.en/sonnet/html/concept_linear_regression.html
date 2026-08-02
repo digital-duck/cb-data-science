@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Regression | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="linear-regression">Linear Regression</h2>
+<p><strong>Definition.</strong> Let $\mathbf{X} \in \mathbb{R}^{n \times p}$ be a design matrix of $n$ observations on $p$ predictors, and let $\mathbf{y} \in \mathbb{R}^n$ be a response vector. The ordinary least-squares (OLS) linear regression model posits</p>
+$$\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}),$$
+<p>where $\boldsymbol{\beta} \in \mathbb{R}^p$ is the unknown coefficient vector. The OLS estimator minimizes the residual sum of squares: $\hat{\boldsymbol{\beta}} = \arg\min_{\boldsymbol{\beta}} \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2$.</p>
+<p><strong>Theorem (Normal Equations).</strong> If $\mathbf{X}^\top \mathbf{X}$ is invertible, the unique minimizer is</p>
+$$\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}.$$
+<p><em>Proof sketch.</em> The objective $L(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2$ is strictly convex in $\boldsymbol{\beta}$. Setting $\nabla_{\boldsymbol{\beta}} L = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) = \mathbf{0}$ yields the normal equations $\mathbf{X}^\top \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}^\top \mathbf{y}$. Invertibility of $\mathbf{X}^\top \mathbf{X}$ (equivalently, $\operatorname{rank}(\mathbf{X}) = p$) guarantees a unique solution. $\square$</p>
+<p><strong>Theorem (Gauss–Markov).</strong> Under the assumption $\mathbb{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$ and $\operatorname{Var}(\boldsymbol{\varepsilon}) = \sigma^2 \mathbf{I}$, the OLS estimator $\hat{\boldsymbol{\beta}}$ is the Best Linear Unbiased Estimator (BLUE): among all linear unbiased estimators $\tilde{\boldsymbol{\beta}} = \mathbf{C}\mathbf{y}$, the variance $\operatorname{Var}(\mathbf{c}^\top \tilde{\boldsymbol{\beta}}) \geq \operatorname{Var}(\mathbf{c}^\top \hat{\boldsymbol{\beta}})$ for every $\mathbf{c} \in \mathbb{R}^p$.</p>
+<p>The proof constructs $\mathbf{D} = \mathbf{C} - (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top$ and shows unbiasedness forces $\mathbf{D}\mathbf{X} = \mathbf{0}$; the excess variance $\sigma^2 \mathbf{c}^\top \mathbf{D}\mathbf{D}^\top \mathbf{c} \geq 0$ then follows by positive semi-definiteness.</p>
+<p><strong>Literature context.</strong> The classical theory is settled in standard references (Hastie, Tibshirani & Friedman, <em>ESL</em>, Ch. 3; Boyd & Vandenberghe, <em>Convex Optimization</em>, Ch. 4). Open questions concern the high-dimensional regime $p \gg n$: here $\mathbf{X}^\top\mathbf{X}$ is singular, and the minimum-norm pseudoinverse solution $\hat{\boldsymbol{\beta}} = \mathbf{X}^+\mathbf{y}$ has become central to the <em>double descent</em> phenomenon (Belkin et al., 2019; Bartlett et al., 2020). Why interpolating estimators generalize is not fully explained by classical bias-variance decomposition, and the implicit regularization induced by gradient descent on overparameterized models remains an active research frontier.</p>
+<p><strong>Suggested investigation.</strong> Replicate the double descent curve for OLS on a synthetic Gaussian design: fix $n = 200$, vary $p$ from $10$ to $500$, record test MSE at the interpolation threshold $p = n$ versus the classical and overparameterized regimes. Compare the pseudoinverse solution to ridge regression $\hat{\boldsymbol{\beta}}_\lambda = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$ across the same sweep. Vary the signal-to-noise ratio $\|\boldsymbol{\beta}\|_2 / \sigma$ to probe when overparameterization helps or hurts.</p>
+<p><strong>Report-writing note.</strong> A write-up should derive the normal equations and Gauss–Markov bound from first principles, then present the empirical double descent curve with error bars over repeated random splits. The report should make explicit which assumptions (Gaussian noise, isotropic design) are load-bearing and conjecture how relaxing them would affect the interpolation threshold — this positions the investigation within the ongoing literature rather than as a textbook exercise.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

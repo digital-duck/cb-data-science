@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Testing Set | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="training-testing-set">Training Testing Set</h2>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ denote an input space, $\mathcal{Y}$ a label space, and $\mathcal{D}$ an unknown joint distribution over $\mathcal{X} \times \mathcal{Y}$. A <em>dataset</em> $S = \{(x_i, y_i)\}_{i=1}^{n}$ consists of $n$ i.i.d. draws from $\mathcal{D}$. A <em>training–testing split</em> partitions $S$ into disjoint subsets $S_{\mathrm{tr}}$ and $S_{\mathrm{te}}$, with $|S_{\mathrm{tr}}| = m$ and $|S_{\mathrm{te}}| = n - m$, such that a hypothesis $h : \mathcal{X} \to \mathcal{Y}$ is selected using only $S_{\mathrm{tr}}$ and evaluated using only $S_{\mathrm{te}}$. The <em>empirical risk</em> on each partition is</p>
+$$\hat{R}_{S'}(h) = \frac{1}{|S'|} \sum_{(x,y) \in S'} \ell(h(x), y),$$
+<p>for loss $\ell : \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}_{\geq 0}$. The fundamental quantity of interest is the <em>true risk</em> $R(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(h(x), y)]$, which remains inaccessible; the test risk $\hat{R}_{S_{\mathrm{te}}}(h)$ serves as its surrogate.</p>
+<p><strong>Generalization Bound (PAC framework).</strong> Let $\mathcal{H}$ be a hypothesis class with finite VC dimension $d = \mathrm{VCdim}(\mathcal{H})$. For any $\delta \in (0,1)$, with probability at least $1-\delta$ over draws of $S_{\mathrm{tr}}$, every $h \in \mathcal{H}$ satisfies</p>
+$$R(h) \leq \hat{R}_{S_{\mathrm{tr}}}(h) + \sqrt{\frac{d \log(m/d) + \log(1/\delta)}{m}}.$$
+<p>This classical result (Vapnik–Chervonenkis, 1971; Blumer et al., 1989) is derived via a symmetrization argument and the Sauer–Shelah lemma. The proof proceeds by (i) constructing a ghost sample of size $m$ drawn independently from $\mathcal{D}$; (ii) bounding the probability that empirical and true risks deviate by exchanging real and ghost samples; and (iii) counting the number of dichotomies $\mathcal{H}$ can induce on a sample of size $2m$, which is at most $(2m)^d$ by Sauer–Shelah. The logarithmic factor $\log(m/d)$ reflects this combinatorial growth.</p>
+<p><strong>What Is Known and What Remains Open.</strong> The PAC bound is worst-case over $\mathcal{D}$ and $\mathcal{H}$, which makes it notoriously loose in practice — modern overparameterized neural networks generalize well despite violating classical complexity conditions, a phenomenon described by Zhang et al. (2017) as <em>benign overfitting</em>. Subsequent work (Bartlett et al., 2020; Belkin et al., 2019) established that interpolating estimators can still achieve near-Bayes-optimal risk under specific data geometry assumptions, yet a tight characterization of when and why this occurs remains open. A second open question concerns <em>distribution shift</em>: when $S_{\mathrm{tr}}$ and $S_{\mathrm{te}}$ are drawn from different marginals $\mathcal{D}_{\mathrm{tr}} \neq \mathcal{D}_{\mathrm{te}}$, the test risk no longer unbiasedly estimates $R(h)$ under $\mathcal{D}_{\mathrm{tr}}$, invalidating the standard split protocol. Domain adaptation bounds (Ben-David et al., 2010) introduce a divergence term $d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{D}_{\mathrm{tr}}, \mathcal{D}_{\mathrm{te}})$, but estimating this term from finite samples is itself an open problem.</p>
+<p><strong>Suggested Investigation.</strong> Choose a fixed architecture (e.g., a two-layer ReLU network) and dataset (e.g., CIFAR-10 subsets of varying size $n$). Vary the split ratio $m/(n-m)$ across $\{0.5, 0.7, 0.9, 0.95\}$ and, for each ratio, record the gap $\hat{R}_{S_{\mathrm{te}}}(h) - \hat{R}_{S_{\mathrm{tr}}}(h)$. Overlay the empirical gap against the VC bound's predicted $O(\sqrt{d/m})$ scaling. A secondary experiment: deliberately introduce covariate shift by training on one digit-rotation angle and testing on another; quantify how much the test risk inflates relative to the standard i.i.d. split.</p>
+<p><strong>Report-Writing Note.</strong> A write-up of this investigation should establish: (i) an explicit statement of the i.i.d. assumption and where it is or is not satisfied; (ii) a log–log plot of generalization gap versus $m$ with slope comparison to theory; (iii) discussion of whether observed gaps are consistent with VC-dimension-based bounds or suggest a tighter complexity measure; and (iv) a quantitative characterization of how covariate shift degrades the test-risk estimate as a proxy for true risk.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

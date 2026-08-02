@@ -1,0 +1,217 @@
+domain: principles_data_science_ch1
+sources:
+  data:
+    label: Data
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  information:
+    label: Information
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  data_science:
+    label: Data Science
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+  data_science_cycle:
+    label: Data Science Cycle
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+  data_collection:
+    label: Data Collection
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+  data_preparation:
+    label: Data Preparation
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+  data_analysis:
+    label: Data Analysis
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+  data_reporting:
+    label: Data Reporting
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  data_visualization:
+    label: Data Visualization
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+    - id: ch01_s1_4
+      title: 1.4 Using Technology for Data Science
+  data_management:
+    label: Data Management
+    sections:
+    - id: ch01_s1_1
+      title: 1.1 What Is Data Science?
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  data_warehousing:
+    label: Data Warehousing
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  business_analytics:
+    label: Business Analytics
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  predictive_analytics:
+    label: Predictive Analytics
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  sports_analytics:
+    label: Sports Analytics
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  recommendation_system:
+    label: Recommendation System
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  internet_of_things:
+    label: Internet of Things (IoT)
+    sections:
+    - id: ch01_s1_2
+      title: 1.2 Data Science in Practice
+  quantitative_data:
+    label: Quantitative Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  qualitative_data:
+    label: Qualitative Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  numeric_data:
+    label: Numeric Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  categorical_data:
+    label: Categorical Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  continuous_data:
+    label: Continuous Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  discrete_data:
+    label: Discrete Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  nominal_data:
+    label: Nominal Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  ordinal_data:
+    label: Ordinal Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  dataset:
+    label: Dataset
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  item:
+    label: Item (Entity/Instance)
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  attribute:
+    label: Attribute
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  structured_data:
+    label: Structured Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  unstructured_data:
+    label: Unstructured Data
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  csv_format:
+    label: Comma-Separated Values (CSV)
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  json_format:
+    label: JavaScript Object Notation (JSON)
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  xml_format:
+    label: Extensible Markup Language (XML)
+    sections:
+    - id: ch01_s1_3
+      title: 1.3 Data and Datasets
+  spreadsheet_program:
+    label: Spreadsheet Program
+    sections:
+    - id: ch01_s1_4
+      title: 1.4 Using Technology for Data Science
+  programming_language:
+    label: Programming Language
+    sections:
+    - id: ch01_s1_4
+      title: 1.4 Using Technology for Data Science
+  python:
+    label: Python
+    sections:
+    - id: ch01_s1_4
+      title: 1.4 Using Technology for Data Science
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python
+  r_language:
+    label: R
+    sections:
+    - id: ch01_s1_4
+      title: 1.4 Using Technology for Data Science
+  jupyter_notebook:
+    label: Jupyter Notebook
+    sections:
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python
+  google_colab:
+    label: Google Colaboratory (Colab)
+    sections:
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python
+  pandas_library:
+    label: Pandas
+    sections:
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python
+  dataframe:
+    label: DataFrame
+    sections:
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python
+  matplotlib_library:
+    label: Matplotlib
+    sections:
+    - id: ch01_s1_5
+      title: 1.5 Data Science with Python

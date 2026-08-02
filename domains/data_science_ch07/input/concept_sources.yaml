@@ -1,0 +1,168 @@
+domain: data_science_ch7
+sources:
+  artificial_intelligence:
+    label: Artificial Intelligence
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  neuron:
+    label: Neuron
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  weight:
+    label: Weight
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  bias:
+    label: Bias
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  activation_function:
+    label: Activation Function
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  vector:
+    label: Vector
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  neural_network:
+    label: Neural Network
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  layers:
+    label: Layers (Input, Hidden, Output)
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  perceptron:
+    label: Perceptron
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+  multilayer_perceptron:
+    label: Multilayer Perceptron (MLP)
+    sections:
+    - id: ch07_s7_1
+      title: 7.1 Introduction to Neural Networks
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  loss_function:
+    label: Loss (Cost) Function
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+    - id: ch07_s7_3
+      title: 7.3 Introduction to Deep Learning
+  gradient_descent:
+    label: Gradient Descent
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  backpropagation:
+    label: Backpropagation
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  epoch:
+    label: Epoch
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  recurrent_neural_network:
+    label: Recurrent Neural Network (RNN)
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  vanishing_exploding_gradient:
+    label: Vanishing/Exploding Gradient Problem
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  lstm:
+    label: Long Short-Term Memory (LSTM) Network
+    sections:
+    - id: ch07_s7_2
+      title: 7.2 Backpropagation
+  deep_learning:
+    label: Deep Learning
+    sections:
+    - id: ch07_s7_3
+      title: 7.3 Introduction to Deep Learning
+  depth:
+    label: Depth
+    sections:
+    - id: ch07_s7_3
+      title: 7.3 Introduction to Deep Learning
+  convolutional_neural_network:
+    label: Convolutional Neural Network (CNN)
+    sections:
+    - id: ch07_s7_4
+      title: 7.4 Convolutional Neural Networks
+  feature_map:
+    label: Feature Map
+    sections:
+    - id: ch07_s7_4
+      title: 7.4 Convolutional Neural Networks
+  pooling_layer:
+    label: Pooling Layer
+    sections:
+    - id: ch07_s7_4
+      title: 7.4 Convolutional Neural Networks
+  semantic_segmentation:
+    label: Semantic Segmentation
+    sections:
+    - id: ch07_s7_4
+      title: 7.4 Convolutional Neural Networks
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  natural_language_processing:
+    label: Natural Language Processing (NLP)
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  transformer_model:
+    label: Transformer Model
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  large_language_model:
+    label: Large Language Model (LLM)
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  word_embedding:
+    label: Word Embedding
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  generative_art:
+    label: Generative Art
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  speech_recognition_tts:
+    label: Speech Recognition and Text-to-Speech
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  ai_hallucination:
+    label: AI Hallucination
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  deepfake:
+    label: Deepfake
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing
+  responsible_ai:
+    label: Responsible AI
+    sections:
+    - id: ch07_s7_5
+      title: 7.5 Natural Language Processing

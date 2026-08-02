@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Data Analysis | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="python-data-analysis">Python Data Analysis</h2>
+<h3 id="definition">Definition</h3>
+<p>Python data analysis denotes the discipline of transforming raw, heterogeneous data into structured, statistically interpretable representations using a composable stack of scientific libraries. Formally, a data analysis pipeline may be modeled as a directed acyclic graph $G = (V, E)$ where each vertex $v_i \in V$ represents a pure transformation $f_i : \mathcal{D}_i \to \mathcal{D}_{i+1}$ over a data domain $\mathcal{D}$, and each edge encodes a data dependency. The canonical Python substrate—NumPy for array arithmetic, Pandas for labeled heterogeneous tables, SciPy for numerical methods, and scikit-learn for statistical learning—instantiates this graph as a sequence of memory-resident, vectorized operations. Crucially, the correctness and reproducibility of any downstream inference depends on the algebraic properties preserved across each node: commutativity of aggregations, associativity of group reductions, and invariance of summary statistics under permutation of records.</p>
+<h3 id="theorem-derivation">Theorem / Derivation</h3>
+<p>A foundational concern is numerical stability of columnar aggregations. Let $\mathbf{x} = (x_1, \ldots, x_n) \in \mathbb{R}^n$. Naïve single-pass sample variance,</p>
+$$s^2_{\text{naïve}} = \frac{1}{n-1}\left(\sum_{i=1}^n x_i^2 - n\bar{x}^2\right),$$
+<p>is algebraically correct but numerically unstable when $\sum x_i^2 \approx n\bar{x}^2$: catastrophic cancellation inflates the relative error to $O(\epsilon_{\text{mach}} \cdot \kappa)$, where $\kappa = \|\mathbf{x}\|_2^2 / \text{Var}(\mathbf{x})$ is a condition number. Welford's online algorithm computes a running mean $\mu_k$ and sum of squared deviations $M_k$ via</p>
+$$\mu_k = \mu_{k-1} + \frac{x_k - \mu_{k-1}}{k}, \qquad M_k = M_{k-1} + (x_k - \mu_{k-1})(x_k - \mu_k),$$
+<p>yielding relative error $O(\epsilon_{\text{mach}})$ uniformly in $n$. NumPy's <code>np.var</code> employs a two-pass algorithm that achieves comparable stability; Pandas <code>DataFrame.std</code> delegates to this path. The practical implication: analysts who replicate summary statistics using vectorized arithmetic may silently introduce condition-number-dependent errors not present in the library call.</p>
+<h3 id="literature-context">Literature Context</h3>
+<p>The numerical analysis of statistical computations is treated rigorously in Higham (2002) <em>Accuracy and Stability of Numerical Algorithms</em>, while the Python scientific stack's design principles are documented in Harris et al. (2020, <em>Nature</em>) for NumPy and McKinney (2010, <em>SciPy Proceedings</em>) for Pandas. Open questions cluster around three themes. First, <strong>type inference under schema drift</strong>: Pandas' <code>read_csv</code> dtype inference is heuristic and non-monotone—column types may change as row count grows—creating reproducibility hazards in streaming or incremental ingestion contexts with no formal guarantee. Second, <strong>lazy vs. eager evaluation tradeoffs</strong>: libraries such as Polars and Dask introduce deferred computation graphs; whether the resulting plans are semantically equivalent to their eager counterparts under all split strategies is an active correctness question. Third, <strong>missing-data algebra</strong>: <code>NaN</code> propagation in IEEE 754 floating-point does not compose with Pandas' <code>NA</code> for integer or boolean columns, producing silent type coercions whose interaction with groupby semantics remains incompletely specified.</p>
+<h3 id="suggested-investigation">Suggested Investigation</h3>
+<p>A well-scoped project is to <strong>benchmark condition-number sensitivity of variance estimators across real tabular datasets</strong>. Collect ten publicly available datasets spanning different dynamic ranges (e.g., census income, sensor time series, genomic expression matrices). For each column, compute $\kappa$, the naïve estimator, Welford's estimator, and NumPy's two-pass estimator. Record relative deviation from a 128-bit reference computed via <code>mpmath</code>. Plot error as a function of $\log \kappa$ and fit a linear model to test the $O(\epsilon_{\text{mach}} \cdot \kappa)$ prediction. Extend the investigation by introducing deliberate mean-shift to stress-test condition sensitivity, then verify whether Pandas <code>groupby().std()</code> inherits the same stability guarantee as the column-level call.</p>
+<h3 id="report-writing-note">Report-Writing Note</h3>
+<p>A write-up of this investigation should establish: (i) a precise statement of the stability theorem for each estimator with explicit error bounds, (ii) the experimental protocol including dataset provenance and Python/library versions, (iii) a figure showing error-vs-$\kappa$ with overlaid theoretical bounds, and (iv) a discussion of which practical analysis workflows encounter high-$\kappa$ columns and what mitigation (centering, log-transform, explicit dtype casting) is appropriate. The report should conclude with an open question: whether Pandas' missing-value semantics can be given a formal algebraic specification that guarantees stability properties compose across multi-step pipelines.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

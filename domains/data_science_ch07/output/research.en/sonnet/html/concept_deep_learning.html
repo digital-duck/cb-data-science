@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="deep-learning">Deep Learning</h2>
+<p><strong>Definition.</strong> A deep neural network is a parametric function $f_\theta : \mathcal{X} \to \mathcal{Y}$ defined by the composition $f_\theta = \ell_L \circ \ell_{L-1} \circ \cdots \circ \ell_1$, where each layer $\ell_k(\mathbf{x}) = \sigma(W_k \mathbf{x} + \mathbf{b}_k)$ applies an affine map followed by a pointwise nonlinearity $\sigma$. The parameter set $\theta = \{W_k, \mathbf{b}_k\}_{k=1}^L$ is optimized by minimizing an empirical risk $\hat{\mathcal{L}}(\theta) = \frac{1}{n}\sum_{i=1}^n \ell(f_\theta(\mathbf{x}_i), y_i)$ via stochastic gradient descent (SGD) or its adaptive variants (Adam, AdaGrad). Deep learning is not, however, a settled technology — its theoretical foundations remain substantively incomplete, and every practitioner encounters regimes where received intuitions fail.</p>
+<p><strong>Theorem (Universal Approximation, Hornik–Stinchcombe–White, 1989).</strong> Let $\sigma$ be a continuous, bounded, nonconstant function. For any $f \in C(\mathcal{K})$ on a compact $\mathcal{K} \subset \mathbb{R}^n$ and any $\varepsilon > 0$, there exists a single-hidden-layer network $\hat{f}$ such that $\sup_{\mathbf{x} \in \mathcal{K}} |f(\mathbf{x}) - \hat{f}(\mathbf{x})| < \varepsilon$.</p>
+<p><strong>Proof sketch.</strong> The proof uses the density of finite linear combinations of ridge functions $\sum_j c_j \sigma(\mathbf{w}_j^\top \mathbf{x} + b_j)$ in $C(\mathcal{K})$, established via the Stone–Weierstrass theorem and properties of the Fourier transform of $\sigma$. Width sufficient; depth not required. $\square$</p>
+<p>This result is frequently misread as a justification for depth. It is not: it guarantees existence of a width-$N$ shallow network for some $N$ that may be exponentially large in dimension. The depth-separation literature (Eldan–Shamir 2016, Telgarsky 2016) shows that there exist functions computed by depth-$L$ networks that require exponential width in depth-$(L-1)$ networks, but these separations are worst-case and rarely characterize practical learning scenarios.</p>
+<p><strong>What remains open.</strong> The central mysteries are not architectural but optimization-theoretic and statistical. Why does SGD on nonconvex loss landscapes find solutions that generalize well? The double-descent phenomenon (Belkin et al. 2019, Hastie et al. 2022) shows that interpolating models — trained to zero training loss — can achieve low test error, violating classical bias–variance tradeoffs. The implicit regularization of SGD (Gunasekar et al. 2018) and the edge-of-stability phenomenon (Cohen et al. 2021), wherein gradient descent operates stably above the theoretical stability threshold of $2/\eta_{\max}$, remain active research areas. Neural tangent kernel (NTK) theory (Jacot et al. 2018) provides a tractable infinite-width limit but does not explain finite-width generalization or feature learning.</p>
+<p><strong>Suggested investigation.</strong> Replicate the double-descent curve on a benchmark dataset (e.g., CIFAR-10 with a ResNet family). Vary model size from underparameterized ($d \ll n$) through the interpolation threshold to overparameterized ($d \gg n$). Plot test risk as a function of parameter count. Then perturb the training procedure — replace SGD with full-batch gradient descent, or change the learning rate schedule — and measure how the location and amplitude of the double-descent peak shift. This isolates the role of the optimizer versus the model class in producing the phenomenon.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) precise definitions of the underparameterized and interpolation regimes in terms of effective degrees of freedom; (2) a theoretical prediction for peak location derived from the random matrix theory literature (e.g., Mei–Montanari 2022 for random features); (3) quantitative comparison between prediction and experiment; and (4) a clear statement of which aspects of the observed behavior are explained by existing theory and which constitute open problems. Do not treat generalization as explained by any single existing framework — that claim would be false.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

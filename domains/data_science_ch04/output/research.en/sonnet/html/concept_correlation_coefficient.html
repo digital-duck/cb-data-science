@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correlation Coefficient | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="correlation-coefficient">Correlation Coefficient</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and let $X, Y \in L^2(\Omega)$ be square-integrable random variables with $\operatorname{Var}(X) > 0$ and $\operatorname{Var}(Y) > 0$. The <em>Pearson correlation coefficient</em> is</p>
+$$\rho(X, Y) = \frac{\operatorname{Cov}(X, Y)}{\sqrt{\operatorname{Var}(X)\,\operatorname{Var}(Y)}} = \frac{\mathbb{E}[(X - \mu_X)(Y - \mu_Y)]}{\sigma_X \sigma_Y},$$
+<p>where $\mu_X = \mathbb{E}[X]$ and $\sigma_X = \sqrt{\operatorname{Var}(X)}$. The empirical counterpart for a sample $\{(x_i, y_i)\}_{i=1}^n$ is</p>
+$$r = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2}\sqrt{\sum_{i=1}^n (y_i - \bar{y})^2}}.$$
+<p><strong>Theorem (Cauchy–Schwarz bound).</strong> For any $X, Y \in L^2(\Omega)$, $-1 \leq \rho(X,Y) \leq 1$. Moreover, $|\rho(X,Y)| = 1$ if and only if there exist constants $a \neq 0$ and $b$ such that $Y = aX + b$ almost surely.</p>
+<p><em>Proof sketch.</em> Consider the quadratic form $q(t) = \operatorname{Var}(X + tY) \geq 0$ for all $t \in \mathbb{R}$. Expanding, $q(t) = \sigma_X^2 + 2t\,\operatorname{Cov}(X,Y) + t^2\sigma_Y^2$. Non-negativity of this quadratic requires its discriminant to be non-positive: $4\operatorname{Cov}(X,Y)^2 - 4\sigma_X^2\sigma_Y^2 \leq 0$, which gives $|\rho| \leq 1$. Equality $|\rho| = 1$ forces the discriminant to vanish, meaning $q(t^<em>) = 0$ for some $t^</em> = -\operatorname{Cov}(X,Y)/\sigma_Y^2$, hence $\operatorname{Var}(X + t^<em> Y) = 0$ and $X + t^</em> Y = \mu_X + t^* \mu_Y$ a.s. $\square$</p>
+<p><strong>Literature context.</strong> Pearson introduced $r$ in 1896 as a measure of linear association; Galton's earlier work on regression provided the geometric intuition. The coefficient is the cosine of the angle between centered vectors in $\mathbb{R}^n$, making it a projection onto the unit sphere of the Hilbert space $L^2_0(\Omega)$. Its sampling distribution under bivariate normality is classical: Fisher showed that $\tanh^{-1}(r)$ (the Fisher $z$-transformation) is approximately $\mathcal{N}\!\left(\tanh^{-1}(\rho),\, (n-3)^{-1}\right)$, enabling confidence intervals and hypothesis tests. What remains actively studied is the behavior of $r$ under non-normality (robustness questions), its relationship to copula-based dependence measures (Spearman's $\rho_S$, Kendall's $\tau$), and its limitations as a dependence measure — notably, $\rho = 0$ does not imply independence unless joint normality holds. In high-dimensional settings, sparse estimation of correlation matrices (e.g., via thresholding or graphical lasso) is an active research frontier (Bickel and Levina, 2008; Cai, Liu, and Luo, 2011).</p>
+<p><strong>Suggested investigation.</strong> Design a simulation study in which $(X, Y)$ are drawn from a bivariate distribution with $\rho = 0$ but genuine statistical dependence — e.g., $Y = X^2 + \varepsilon$ with $X \sim \mathcal{N}(0,1)$ and $\varepsilon \perp X$. Compute $r$, Spearman's $\rho_S$, Kendall's $\tau$, and a kernel-based dependence measure (HSIC) across sample sizes $n \in \{50, 200, 1000\}$. Investigate the power of each measure's independence test under this specific alternative.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) an analytic proof that $\mathbb{E}[Y \mid X] \not\equiv \text{const}$ yet $\rho = 0$ for the chosen model, (ii) empirical power curves with bootstrap confidence bands, and (iii) a discussion connecting the result to the sufficient condition for $\rho = 0 \Rightarrow$ independence (joint Gaussianity) and what this implies for practical use of correlation in exploratory data analysis.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

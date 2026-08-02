@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Statistical Computing | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="python-statistical-computing">Python Statistical Computing</h2>
+<p><strong>Definition.</strong> Python statistical computing refers to the implementation of probabilistic and statistical algorithms in the Python ecosystem—primarily via NumPy, SciPy, and statsmodels—where mathematical operations on random variables, estimators, and probability distributions are realized as vectorized array computations. The central object is the $n \times p$ data matrix $\mathbf{X} \in \mathbb{R}^{n \times p}$, and the fundamental computational primitive is the BLAS/LAPACK-backed matrix routine invoked through <code>numpy.linalg</code> or <code>scipy.linalg</code>. The discipline is not merely applied statistics with a Python flavor; it encompasses a nontrivial intersection of floating-point arithmetic, algorithmic complexity, and the asymptotic theory of estimators.</p>
+<p><strong>Theorem and Derivation.</strong> Consider the ordinary least-squares estimator $\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}$. In exact arithmetic this is a closed-form expression, but in finite-precision computation the numerical stability depends critically on the condition number $\kappa(\mathbf{X}^\top \mathbf{X}) = \kappa(\mathbf{X})^2$. If $\mathbf{X}$ has singular values $\sigma_1 \geq \cdots \geq \sigma_p > 0$, then the relative forward error in $\hat{\boldsymbol{\beta}}$ satisfies</p>
+$$\frac{\|\delta\hat{\boldsymbol{\beta}}\|}{\|\hat{\boldsymbol{\beta}}\|} \lesssim \kappa(\mathbf{X})^2 \cdot \epsilon_{\text{mach}},$$
+<p>where $\epsilon_{\text{mach}} \approx 2.2 \times 10^{-16}$ for IEEE 754 double precision. The standard remedy is to compute $\hat{\boldsymbol{\beta}}$ via the QR decomposition $\mathbf{X} = \mathbf{Q}\mathbf{R}$, reducing the effective condition number to $\kappa(\mathbf{X})$ rather than $\kappa(\mathbf{X})^2$. In Python, <code>numpy.linalg.lstsq</code> invokes the LAPACK routine <code>_gelsd</code>, which uses a divide-and-conquer SVD and therefore achieves the optimal error bound $O(\kappa(\mathbf{X})\epsilon_{\text{mach}})$ at cost $O(np^2)$. The distinction between these approaches is not academic: for design matrices with $\kappa(\mathbf{X}) \sim 10^8$, the naive normal-equation route loses all significance in double precision.</p>
+<p><strong>Literature Context.</strong> The foundational numerical analysis is laid out in Golub and Van Loan (<em>Matrix Computations</em>, 4th ed.) and Higham (<em>Accuracy and Stability of Numerical Algorithms</em>). The statistical side—how numerical error propagates into confidence intervals and hypothesis tests—is less thoroughly treated. Longley (1967) gave an early empirical study of ill-conditioning in econometric data; more recent work by McCullough and Vinod (1999) benchmarked statistical packages against certified reference datasets, finding substantial variation. Open questions remain: the interaction between regularization (ridge, LASSO) and numerical precision for correlated predictors in high dimensions is not fully characterized, and the behavior of iterative solvers (conjugate gradient, LSQR) relative to direct factorization for large sparse statistical problems is an active area.</p>
+<p><strong>Suggested Investigation.</strong> Generate a family of design matrices $\mathbf{X}_k$ with condition numbers $\kappa_k = 10^k$ for $k = 1, \ldots, 14$ (using controlled SVD construction) and compare the forward error of four solvers: (1) explicit normal equations via <code>numpy.linalg.solve</code>, (2) <code>numpy.linalg.lstsq</code>, (3) <code>scipy.linalg.lstsq</code> with <code>lapack_driver='gelsy'</code>, and (4) iterative <code>scipy.sparse.linalg.lsqr</code>. Measure error against a reference solution computed in 128-bit arithmetic via Python's <code>mpmath</code>. Plot $\log_{10}(\text{relative error})$ against $\log_{10}(\kappa)$ and verify the theoretical slopes of $2$ and $1$ for the two regimes.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the theoretical error bounds with derivation, a reproducible code artifact for generating the test matrices, tables of empirical slopes with confidence intervals across repeated trials, and a practical recommendation for which <code>scipy.linalg</code> driver to use as a function of $n$, $p$, and estimated $\kappa(\mathbf{X})$. The report should also compare results against the certified reference values from NIST StRD (Statistical Reference Datasets), which provide ground-truth benchmarks for exactly this purpose.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

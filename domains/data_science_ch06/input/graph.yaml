@@ -1,0 +1,256 @@
+domain: machine_learning_ch6
+primitives:
+  machine_learning_model:
+    defines: A mathematical and computational model that finds a relationship between input and output
+      variables of a dataset by adjusting internal parameters to meet a level of accuracy.
+    tier: 0
+  labeled_unlabeled_data:
+    defines: Labeled data has specific labels, categories, or classes associated with each data point;
+      unlabeled data does not.
+    tier: 0
+  training_testing_set:
+    defines: The training set is the portion of data used for initial learning, and the testing set is
+      used afterward to determine whether the model is accurate enough.
+    tier: 0
+  cluster:
+    defines: A collection of data points that are closer to one another than to other data points, according
+      to some definition of closeness.
+    tier: 0
+  binary_multiclass_classification:
+    defines: Classification problems that sort data into either two categories (binary/binomial) or more
+      than two categories (multiclass/multinomial).
+    tier: 0
+  sigmoid_function:
+    defines: A function that maps any real-valued number to a value between 0 and 1, characterized by
+      an S-shaped graph, used to model probabilities.
+    tier: 0
+  odds:
+    defines: The ratio of the probability of an event occurring to the probability of it not occurring.
+    tier: 0
+  centroid:
+    defines: The geometric center (arithmetic mean) of a set of data points.
+    tier: 0
+  information_entropy:
+    defines: Information measures the surprise or uncertainty of an event based on its probability; entropy
+      measures the average amount of information across a probability distribution.
+    tier: 0
+  one_hot_encoding:
+    defines: A method of converting categorical data into numerical vectors, where each category is represented
+      by a vector with a single 1 and all other entries 0.
+    tier: 0
+  bayes_theorem:
+    defines: A theorem relating conditional probabilities, P(A|B) = P(B|A)P(A)/P(B), used to update prior
+      probabilities based on new evidence.
+    tier: 0
+  big_data:
+    defines: Extremely large and complex datasets, characterized by volume, velocity, and variety, that
+      exceed the capacity of traditional data processing tools.
+    tier: 0
+concepts:
+  supervised_learning:
+    defines: Machine learning that uses labeled data in training and testing, adjusting parameters based
+      on correctness compared to known labels.
+    composed_of:
+    - machine_learning_model
+    - labeled_unlabeled_data
+    - training_testing_set
+    tier: 1
+  unsupervised_learning:
+    defines: Machine learning that trains on unlabeled data to discover inherent structure such as clusters
+      or patterns.
+    composed_of:
+    - machine_learning_model
+    - labeled_unlabeled_data
+    tier: 1
+  regression_error_measures:
+    defines: Measures of error between predicted and actual numerical values used to evaluate regression
+      models, including MAE, MAPE, MSE, and RMSE.
+    composed_of:
+    - training_testing_set
+    tier: 1
+  overfitting:
+    defines: A modeling issue where the model fits the training data too closely, becoming too specific
+      and performing worse on new data (high variance).
+    composed_of:
+    - training_testing_set
+    tier: 1
+  underfitting:
+    defines: A modeling issue where the model is not robust enough to capture essential features of the
+      data (high bias).
+    composed_of:
+    - training_testing_set
+    tier: 1
+  bias_variance_tradeoff:
+    defines: The observation that a model with low variance tends to have high bias, and a model with
+      low bias tends to have high variance.
+    composed_of:
+    - overfitting
+    - underfitting
+    tier: 2
+  logit_function:
+    defines: The inverse function of the sigmoid, equal to the logarithm of the odds of an event, used
+      to linearize the sigmoid for regression.
+    composed_of:
+    - sigmoid_function
+    - odds
+    tier: 1
+  logistic_regression:
+    defines: A prediction model that fits a sigmoid function to labeled data to perform binary classification
+      based on log-odds.
+    composed_of:
+    - sigmoid_function
+    - binary_multiclass_classification
+    - supervised_learning
+    tier: 2
+  maximum_likelihood:
+    defines: A method for finding the logistic regression parameters that produce the highest likelihood
+      score, computed as the product of predicted probabilities matching known labels.
+    composed_of:
+    - logistic_regression
+    tier: 3
+  k_means_clustering:
+    defines: An unsupervised clustering algorithm that iteratively assigns data points to the nearest
+      of k centroids and recomputes centroids until they stabilize.
+    composed_of:
+    - cluster
+    - centroid
+    - unsupervised_learning
+    tier: 2
+  silhouette_score:
+    defines: A measure of how well-separated clusters are, ranging from -1 to 1, based on comparing intra-cluster
+      and nearest-cluster distances.
+    composed_of:
+    - cluster
+    - centroid
+    tier: 1
+  dbscan:
+    defines: A density-based clustering algorithm that groups core points within a given distance and
+      minimum neighbor count into clusters, marking unreachable points as noise.
+    composed_of:
+    - cluster
+    - unsupervised_learning
+    tier: 2
+  confusion_matrix:
+    defines: A table indicating how data was classified correctly or incorrectly by a model, with entry
+      (i,j) giving the count of label i classified as label j.
+    composed_of:
+    - binary_multiclass_classification
+    tier: 1
+  true_false_positive_negative:
+    defines: The four possible outcomes of a binary classification test—true positive, true negative,
+      false positive, and false negative—used to characterize test errors.
+    composed_of:
+    - confusion_matrix
+    - binary_multiclass_classification
+    tier: 2
+  accuracy_measures:
+    defines: Metrics such as accuracy, precision, recall, and F1 score used to evaluate the fitness of
+      a classification model.
+    composed_of:
+    - true_false_positive_negative
+    tier: 3
+  bootstrapping:
+    defines: A resampling technique that repeatedly samples with replacement from a dataset to estimate
+      variation and confidence intervals for model parameters.
+    composed_of:
+    - training_testing_set
+    tier: 1
+  multiple_linear_regression:
+    defines: A regression model that predicts an output variable using more than one input (predictor)
+      variable, of the form y = a + b1X1 + ... + bnXn.
+    composed_of:
+    - regression_error_measures
+    tier: 2
+  multicollinearity:
+    defines: A condition in which two or more input variables of a regression model are highly correlated
+      with one another.
+    composed_of:
+    - multiple_linear_regression
+    tier: 3
+  multiple_logistic_regression:
+    defines: An extension of logistic regression that estimates the probability of a binary outcome using
+      two or more input variables.
+    composed_of:
+    - logistic_regression
+    tier: 3
+  decision_tree:
+    defines: An algorithm that builds a hierarchical structure where each internal node represents a decision
+      based on a data feature and each leaf node represents a final label or prediction.
+    composed_of:
+    - information_entropy
+    - supervised_learning
+    tier: 2
+  information_gain:
+    defines: The reduction in entropy achieved by splitting a parent node into child nodes, used to choose
+      the best feature to split on when building a decision tree.
+    composed_of:
+    - information_entropy
+    - decision_tree
+    tier: 3
+  decision_tree_pruning:
+    defines: The process of reducing the size of a decision tree by removing branches that split the data
+      too finely, in order to reduce overfitting.
+    composed_of:
+    - decision_tree
+    - overfitting
+    tier: 3
+  bootstrap_aggregating:
+    defines: A technique of resampling from the same dataset multiple times to build multiple models that
+      are combined into an overall model, such as a random forest.
+    composed_of:
+    - bootstrapping
+    - decision_tree
+    tier: 3
+  random_forest:
+    defines: A classification algorithm that combines multiple decision trees (weak learners), each trained
+      on a bootstrapped sample and random subset of features, using majority vote for prediction.
+    composed_of:
+    - decision_tree
+    - bootstrap_aggregating
+    tier: 4
+  naive_bayes_classifier:
+    defines: A classification algorithm based on Bayes' Theorem that assumes independence of features
+      to predict the class or label of new data from prior probabilities.
+    composed_of:
+    - bayes_theorem
+    - binary_multiclass_classification
+    tier: 1
+  gaussian_naive_bayes:
+    defines: A variant of naïve Bayes classification designed for continuous features assumed to follow
+      a normal (Gaussian) distribution.
+    composed_of:
+    - naive_bayes_classifier
+    tier: 2
+applications:
+  data_mining:
+    defines: The process of discovering patterns, trends, and insights from large datasets using techniques
+      from machine learning, statistics, and database systems.
+    needs:
+    - big_data
+    - machine_learning_model
+    tier: 1
+  heart_disease_classification:
+    defines: An application of classification algorithms (e.g., logistic regression, decision trees) to
+      diagnose heart disease from patient features such as blood pressure and cholesterol.
+    needs:
+    - logistic_regression
+    - decision_tree
+    tier: 3
+  facial_recognition:
+    defines: An application of machine learning, often using random forests, that categorizes or labels
+      images of faces based on individual identities.
+    needs:
+    - random_forest
+    tier: 5
+  spam_filtering:
+    defines: An application of multinomial naïve Bayes classification used to identify and remove unwanted
+      or malicious email messages at scale.
+    needs:
+    - naive_bayes_classifier
+    tier: 2
+  temperature_prediction:
+    defines: An application of random forest regression to predict daily temperatures from features such
+      as prior-day temperature and forecasts.
+    needs:
+    - random_forest
+    tier: 5

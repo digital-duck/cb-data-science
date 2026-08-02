@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="cloud-computing">Cloud Computing</h2>
+<p><strong>Definition.</strong> Cloud computing is a model for on-demand network access to a shared pool of configurable computing resources—processors, memory, storage, networks, and services—that can be rapidly provisioned and released with minimal management overhead. Formally, let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ denote a finite set of heterogeneous resources, each characterized by a capacity vector $\mathbf{c}_i \in \mathbb{R}^d_{\geq 0}$ (CPU cores, RAM, bandwidth, etc.). A <em>cloud allocation</em> is a function $\alpha: \mathcal{W} \to 2^{\mathcal{R}}$ mapping a workload set $\mathcal{W}$ to subsets of resources, subject to the feasibility constraint $\sum_{w:\, r \in \alpha(w)} \mathbf{d}_w \leq \mathbf{c}_r$ for all $r$, where $\mathbf{d}_w$ is the demand vector of workload $w$. The cloud provider's optimization objective is typically a linear program minimizing cost $\sum_r p_r \mathbf{1}[r \text{ active}]$ subject to feasibility and quality-of-service (QoS) constraints on latency, throughput, and availability.</p>
+<p><strong>Theorem (Optimal Bin-Packing is NP-Hard in General).</strong> The decision problem of whether a feasible allocation exists for $|\mathcal{W}|$ workloads into $k$ resources of uniform capacity is NP-complete by reduction from bin packing (Garey & Johnson 1979). Consequently, practical cloud schedulers—including Google Borg, Apache Mesos, and Kubernetes—employ polynomial-time approximation algorithms. The First Fit Decreasing (FFD) heuristic achieves an asymptotic ratio of $\frac{11}{9}\text{OPT} + \frac{6}{9}$, while online algorithms must contend with an $\Omega(\log n)$ competitive ratio lower bound (Yao 1980) under adversarial workload arrival.</p>
+<p><em>Proof sketch.</em> Map $k$-bin packing to the 3-dimensional vector bin packing on $(\text{CPU}, \text{RAM}, \text{net})$. Any poly-time exact solver implies P = NP. The FFD ratio follows from the classical analysis of Johnson (1973), generalized to vector packing by Chekuri & Khanna (2004) via an LP relaxation whose integrality gap governs the approximation constant. $\square$</p>
+<p><strong>Literature context.</strong> The NIST SP 800-145 definition (Mell & Grance 2011) codified three service models (IaaS, PaaS, SaaS) and four deployment models. Subsequent theoretical work has focused on <em>stochastic</em> workloads: Azar et al. (2013) prove that under Poisson arrivals with known service-time distributions, a randomized online algorithm achieves $O(1)$ competitive ratio. The open question of <em>robustness</em>—maintaining QoS guarantees under adversarial, heavy-tailed, or correlated failure distributions—remains active. Foundational open problems include: tight competitive ratios for multi-dimensional vector packing under unknown distributions, optimal preemption policies for spot-instance markets, and the interaction between autoscaling laws and tail-latency SLOs at scale.</p>
+<p><strong>Suggested investigation.</strong> Implement a discrete-event simulation (Python <code>simpy</code> or Julia <code>SimJulia</code>) of a cloud cluster with $n = 100$ nodes, each with capacity $\mathbf{c} = (16 \text{ vCPU}, 64 \text{ GB})$. Generate synthetic workloads from a Pareto distribution for service times (shape $\alpha \in \{1.2, 1.5, 2.0\}$) and measure tail latency (P99) as a function of cluster utilization $\rho \in [0.5, 0.95]$. Compare FFD, best-fit, and a learned policy (a simple neural network trained via policy gradient on simulated rollouts). Report how the performance gap between learned and classical schedulers widens as $\alpha$ decreases toward 1 (heavier tails).</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should: (1) state the formal scheduling model with all constraints explicit; (2) derive or cite the FFD approximation ratio for vector packing; (3) present empirical CDF plots of P99 latency for each policy under each $\alpha$; (4) discuss statistical significance via bootstrap confidence intervals; (5) identify the regime where the learned policy fails (e.g., distribution shift) and connect this to the open robustness question. The conclusion should position the experiment within the broader question of when theoretical approximation guarantees translate to empirical gains under realistic workload statistics.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentiles | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="percentiles">Percentiles</h2>
+<p><strong>Definition.</strong> Let $X$ be a real-valued random variable with cumulative distribution function $F(x) = \Pr(X \leq x)$. The $p$-th percentile (or $100p$-th quantile) of $X$ is the value</p>
+$$Q(p) = F^{-1}(p) := \inf\{x \in \mathbb{R} : F(x) \geq p\}, \quad p \in (0,1).$$
+<p>This generalized inverse (the <em>quantile function</em>) is well-defined for any CDF, including those with jumps or flat regions, and coincides with the ordinary inverse when $F$ is strictly increasing and continuous. The 25th, 50th, and 75th percentiles are the <em>quartiles</em> $Q_1, Q_2, Q_3$; the interquartile range $\mathrm{IQR} = Q_3 - Q_1$ is a canonical robust measure of spread.</p>
+<p><strong>Theorem (Quantile Equivariance).</strong> For any strictly monotone increasing function $g : \mathbb{R} \to \mathbb{R}$ and random variable $X$,</p>
+$$Q_{g(X)}(p) = g(Q_X(p)).$$
+<p><em>Proof.</em> By the monotone transformation law, $\Pr(g(X) \leq y) = \Pr(X \leq g^{-1}(y))$ for $g$ strictly increasing. Hence $F_{g(X)}(y) = F_X(g^{-1}(y))$, and</p>
+$$F_{g(X)}^{-1}(p) = \inf\{y : F_X(g^{-1}(y)) \geq p\} = g\!\left(\inf\{x : F_X(x) \geq p\}\right) = g(Q_X(p)). \qquad \square$$
+<p>This result is practically important: a log-transform of data preserves the rank ordering, so percentiles of $\log X$ exponentiate back to percentiles of $X$ — a fact exploited in lognormal modeling throughout reliability engineering and finance.</p>
+<p><strong>Estimation.</strong> Given an i.i.d. sample $X_1, \ldots, X_n$ with order statistics $X_{(1)} \leq \cdots \leq X_{(n)}$, the empirical quantile $\hat{Q}(p) = X_{(\lceil np \rceil)}$ is strongly consistent by the Glivenko–Cantelli theorem. Under mild regularity ($f = F'$ exists and $f(Q(p)) > 0$), the asymptotic distribution is</p>
+$$\sqrt{n}\bigl(\hat{Q}(p) - Q(p)\bigr) \xrightarrow{d} \mathcal{N}\!\left(0,\, \frac{p(1-p)}{f(Q(p))^2}\right),$$
+<p>a classical result derived via the delta method applied to the empirical CDF (see Serfling, <em>Approximation Theorems of Mathematical Statistics</em>, 1980, §2.3). The variance blows up near the tails ($p \to 0$ or $1$), which is why extreme quantile estimation remains an active research area connected to extreme value theory (EVT) and the Fisher–Tippett–Gnedenko theorem.</p>
+<p><strong>What is open.</strong> Quantile estimation under dependence, heavy tails, and high dimensions is far from settled. Conformal prediction reframes quantile estimation as a coverage guarantee problem (Angelopoulos & Bates, 2023), while quantile regression (Koenker & Bassett, 1978) extends the concept to conditional quantiles $Q_{Y|X}(p)$ via the asymmetric loss $\rho_p(u) = u(p - \mathbf{1}_{u < 0})$, whose minimizer is exactly $Q(p)$ — a characterization that motivates neural quantile networks and conformal risk control.</p>
+<p><strong>Suggested investigation.</strong> Generate samples from a mixture distribution (e.g., $0.8\,\mathcal{N}(0,1) + 0.2\,\mathcal{N}(5,0.5)$) at sizes $n \in \{50, 200, 1000, 5000\}$. For each $n$, estimate $Q(0.5)$, $Q(0.9)$, and $Q(0.99)$ using (i) the standard empirical quantile and (ii) kernel-smoothed quantile estimation. Compare empirical variance against the asymptotic formula above. Repeat under $\mathrm{AR}(1)$ dependence with $\phi = 0.7$ to observe how the independence assumption inflates coverage error.</p>
+<p><strong>Report note.</strong> A write-up of this investigation should establish: (1) a table of empirical vs. theoretical asymptotic variance by $p$ and $n$; (2) QQ-plots confirming or refuting the Gaussian limit at each regime; (3) a discussion of where the asymptotic approximation breaks down and why the tail ($p = 0.99$) converges slowest; and (4) a short section connecting the dependence experiment to block-bootstrap corrections for time-series quantile inference.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

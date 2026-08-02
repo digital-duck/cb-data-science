@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bootstrap Aggregating | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="bootstrap-aggregating">Bootstrap Aggregating</h2>
+<p><strong>Definition.</strong> Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^{n}$ be a training set drawn i.i.d. from an unknown distribution $P$. A <em>bootstrap sample</em> $\mathcal{D}^{<em>b}$ is obtained by sampling $n$ observations from $\mathcal{D}$ uniformly with replacement. Given a base learner $\hat{f}$ and $B$ such bootstrap replicates, the </em>bootstrap aggregating* (bagging) estimator is</p>
+$$\hat{f}_{\text{bag}}(x) = \frac{1}{B} \sum_{b=1}^{B} \hat{f}^{*b}(x),$$
+<p>where $\hat{f}^{<em>b}$ is the model trained on $\mathcal{D}^{</em>b}$. For classification, majority vote replaces the average. The construction was introduced by Breiman (1996) as a computationally tractable approximation to the <em>ideal aggregate predictor</em> $f_A(x) = \mathbb{E}_P[\hat{f}(x)]$, which averages over all training sets of size $n$ drawn from $P$.</p>
+<p><strong>Theorem (Variance reduction via aggregation).</strong> Suppose the base learner satisfies $\mathbb{E}[\hat{f}(x)] = \mu(x)$ and $\operatorname{Var}[\hat{f}(x)] = \sigma^2(x)$, and that predictions from distinct bootstrap models have pairwise correlation $\rho$. Then</p>
+$$\operatorname{Var}[\hat{f}_{\text{bag}}(x)] = \rho \sigma^2(x) + \frac{1 - \rho}{B}\,\sigma^2(x).$$
+<p><em>Proof sketch.</em> The variance of a mean of $B$ identically distributed random variables with pairwise correlation $\rho$ decomposes as $\rho\sigma^2 + (1-\rho)\sigma^2/B$ by straightforward expansion of $\operatorname{Var}[\sum_b Z_b / B]$. As $B \to \infty$ the irreducible floor $\rho\sigma^2(x)$ remains; bias is unchanged throughout. $\square$</p>
+<p>The formula isolates the two levers of ensemble design: increasing $B$ drives the second term to zero, while reducing $\rho$ — by injecting randomness into the base learner — reduces the floor. This is the conceptual basis for Random Forests (Breiman 2001), where additional feature-subspace randomisation ($m \ll p$ features at each split) lowers $\rho$ at the cost of higher per-tree variance, trading off optimally for many practical regimes.</p>
+<p><strong>Literature context.</strong> The bias–variance decomposition for squared loss (Geman et al. 1992) gives the theoretical frame within which bagging operates: it attacks variance while leaving bias intact, so it is most effective for low-bias, high-variance learners such as deep unpruned decision trees. Bühlmann and Yu (2002) formalised this via the <em>subagging</em> analysis, showing that sampling fractions $s/n < 1$ without replacement achieves similar variance reduction with lower computational cost. The out-of-bag (OOB) error estimate — predictions formed from bootstrap replicates that did not contain a given observation — provides an approximately unbiased generalisation estimate without a held-out set; its consistency under mild regularity conditions was established by Wolpert and Macready (1999). Open questions remain around the optimal choice of $B$ for finite samples under distribution shift, and around theoretical guarantees for bagging in the interpolating (overparameterised) regime relevant to modern neural networks.</p>
+<p><strong>Suggested investigation.</strong> Implement bagging over unpruned CART trees on a moderately high-variance tabular dataset (e.g., UCI Abalone or California Housing). Vary $B \in \{1, 5, 10, 25, 100, 300\}$ and estimate $\hat{\rho}$ empirically as the average pairwise Pearson correlation of tree predictions on a held-out set. Plot $\operatorname{Var}[\hat{f}_{\text{bag}}]$ against $B$ and overlay the theoretical curve from the formula above using your estimated $\hat{\rho}$ and $\hat{\sigma}^2$. Compare with subagging at $s = 0.5n$ and with Random Forest ($m = \lfloor\sqrt{p}\rfloor$). Separately, measure OOB error versus $K$-fold cross-validated error as a function of $B$ to probe OOB consistency.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should clearly state the bias–variance decomposition being operationalised, derive or cite the $\rho$–$\sigma^2$ formula, and report empirical $\hat{\rho}$ values alongside the variance curves — not just aggregate test error. The comparison between OOB and cross-validated error should include confidence intervals. If the theoretical and empirical variance curves diverge, the write-up should diagnose whether the discrepancy arises from model correlation heterogeneity, finite-$B$ effects, or violation of the i.i.d. bootstrap assumption.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

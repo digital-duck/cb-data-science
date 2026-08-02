@@ -1,0 +1,211 @@
+domain: ai_neural_networks_ch7
+primitives:
+  artificial_intelligence:
+    defines: A branch of computer science that aims to create intelligent systems capable of simulating
+      humanlike cognitive abilities, including learning, reasoning, perception, and decision-making.
+    tier: 0
+  neuron:
+    defines: An individual decision-making unit of a neural network that takes some number of inputs and
+      produces an output.
+    tier: 0
+  weight:
+    defines: A value multiplied to the incoming signal, determining the strength of a connection.
+    tier: 0
+  bias:
+    defines: A value added to the weighted signal, making the neuron more or less likely to activate.
+    tier: 0
+  vector:
+    defines: An ordered list of numbers used to represent the inputs or weights of a neuron collectively.
+    tier: 0
+concepts:
+  activation_function:
+    defines: A non-decreasing function that determines whether a neuron activates and how strongly, given
+      the combined weighted and biased input.
+    composed_of:
+    - neuron
+    - weight
+    - bias
+    tier: 1
+  layers:
+    defines: Groups of neurons that receive the same inputs from previous groups and forward signals to
+      the next group, comprising the input layer, hidden layers, and output layer of a network.
+    composed_of:
+    - neuron
+    tier: 1
+  neural_network:
+    defines: A structure made up of interconnected neurons, organized into input, hidden, and output layers,
+      that takes input and produces classification output.
+    composed_of:
+    - neuron
+    - layers
+    - activation_function
+    tier: 2
+  perceptron:
+    defines: A single-layer neural network using the step function as activation function, designed for
+      binary classification tasks, trained via the perceptron learning rule.
+    composed_of:
+    - neuron
+    - activation_function
+    - weight
+    - bias
+    tier: 2
+  depth:
+    defines: The number of hidden layers a neural network contains, a defining characteristic of deep
+      learning models.
+    composed_of:
+    - layers
+    tier: 2
+  multilayer_perceptron:
+    defines: The basic paradigm for neural networks having multiple hidden layers, developed to extend
+      single-layer perceptrons.
+    composed_of:
+    - perceptron
+    - layers
+    - neural_network
+    tier: 3
+  loss_function:
+    defines: A mathematical function that measures the error between a neural network's predicted output
+      and the actual target values.
+    composed_of:
+    - neural_network
+    tier: 3
+  gradient_descent:
+    defines: A method for locating minimum values of a multivariable function, such as a loss function,
+      by taking small steps in the direction of greatest decrease.
+    composed_of:
+    - loss_function
+    tier: 4
+  recurrent_neural_network:
+    defines: A neural network that incorporates feedback loops, allowing it to process sequential data
+      of varying length by remembering prior inputs.
+    composed_of:
+    - neural_network
+    - multilayer_perceptron
+    tier: 4
+  deep_learning:
+    defines: The training and implementation of neural networks with many hidden layers to learn hierarchical,
+      structured representations of data.
+    composed_of:
+    - multilayer_perceptron
+    - depth
+    tier: 4
+  backpropagation:
+    defines: An algorithm used to train neural networks by determining how errors depend on changes in
+      weights and biases, propagating backward from the output layer through the network.
+    composed_of:
+    - gradient_descent
+    - loss_function
+    - multilayer_perceptron
+    tier: 5
+  vanishing_exploding_gradient:
+    defines: Training failures in RNNs caused by connecting weights becoming compounded to very large
+      (exploding) or very small (vanishing) values, destabilizing gradient descent.
+    composed_of:
+    - recurrent_neural_network
+    - gradient_descent
+    tier: 5
+  convolutional_neural_network:
+    defines: A class of neural network models developed to process structured, grid-like data such as
+      images, using the mathematical operation of convolution.
+    composed_of:
+    - deep_learning
+    - neural_network
+    tier: 5
+  natural_language_processing:
+    defines: An area of AI concerned with recognizing written or spoken language and generating new language
+      content.
+    composed_of:
+    - artificial_intelligence
+    - deep_learning
+    tier: 5
+  epoch:
+    defines: A single complete training cycle of a neural network over the training data, during which
+      weights and biases are adjusted based on the loss function.
+    composed_of:
+    - backpropagation
+    tier: 6
+  lstm:
+    defines: A type of RNN incorporating memory cells that overcome the vanishing/exploding gradient problem
+      to capture long-term dependencies.
+    composed_of:
+    - recurrent_neural_network
+    - vanishing_exploding_gradient
+    tier: 6
+  feature_map:
+    defines: The output of convolutional layers in a CNN, representing learned features of the input data
+      across spatial dimensions.
+    composed_of:
+    - convolutional_neural_network
+    tier: 6
+  word_embedding:
+    defines: The translation of words into vector representations in high-dimensional space in a way that
+      preserves semantic relationships among words.
+    composed_of:
+    - vector
+    - natural_language_processing
+    tier: 6
+  pooling_layer:
+    defines: A CNN layer that down-samples feature maps, reducing spatial dimensions while retaining important
+      information.
+    composed_of:
+    - convolutional_neural_network
+    - feature_map
+    tier: 7
+  transformer_model:
+    defines: A neural network architecture using a self-attention mechanism to capture long-range and
+      large-scale dependencies in input data.
+    composed_of:
+    - deep_learning
+    - word_embedding
+    - natural_language_processing
+    tier: 7
+  ai_hallucination:
+    defines: A generated response from an AI model, especially an LLM, that has no basis in reality yet
+      appears plausible.
+    composed_of:
+    - large_language_model
+    tier: 9
+  responsible_ai:
+    defines: The ethical and socially conscious development and deployment of AI technologies, aimed at
+      ensuring fairness, transparency, and accountability.
+    composed_of:
+    - artificial_intelligence
+    - ai_hallucination
+    tier: 10
+applications:
+  semantic_segmentation:
+    defines: A computer vision task, typically performed using CNNs, that assigns a semantic label to
+      each pixel of an image to partition it into meaningful regions.
+    needs:
+    - convolutional_neural_network
+    - feature_map
+    - pooling_layer
+    tier: 8
+  large_language_model:
+    defines: A powerful NLP model, such as ChatGPT, designed to understand and generate humanlike text
+      based on massive amounts of training data.
+    needs:
+    - transformer_model
+    - natural_language_processing
+    - word_embedding
+    tier: 8
+  generative_art:
+    defines: The use of AI tools to enhance or create new artistic and graphic works, such as visual art,
+      music, and video.
+    needs:
+    - deep_learning
+    - artificial_intelligence
+    tier: 5
+  speech_recognition_tts:
+    defines: NLP applications that convert spoken language into text and text into spoken language, respectively.
+    needs:
+    - natural_language_processing
+    - deep_learning
+    tier: 6
+  deepfake:
+    defines: A product of an AI system that appears realistic but is created with malicious intent to
+      mislead people.
+    needs:
+    - deep_learning
+    - generative_art
+    tier: 6

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data">Data</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P_\theta)$ be a probability space parametrized by $\theta \in \Theta \subseteq \mathbb{R}^d$. A <em>dataset</em> of size $n$ is a measurable map $\mathbf{X} = (X_1, \ldots, X_n) : \Omega \to \mathcal{X}^n$, where $\mathcal{X}$ is the <em>sample space</em>. The realized values $\mathbf{x} = (x_1, \ldots, x_n) \in \mathcal{X}^n$ constitute the <em>observed data</em>. This deceptively simple definition conceals a rich structure: data are not merely numbers but a sample from a geometry — the statistical manifold $\mathcal{M} = \{P_\theta : \theta \in \Theta\}$ equipped with the Fisher–Rao metric $g_{ij}(\theta) = \mathbb{E}_\theta[\partial_i \log p_\theta \, \partial_j \log p_\theta]$.</p>
+<p><strong>Theorem (Fisher–Neyman Factorization).</strong> A statistic $T(\mathbf{X})$ is <em>sufficient</em> for $\theta$ if and only if the likelihood factors as</p>
+$$
+p_\theta(\mathbf{x}) = h(\mathbf{x}) \cdot g_\theta(T(\mathbf{x}))
+$$
+<p>for non-negative measurable functions $h$ and $g_\theta$. The proof follows by verifying that the conditional distribution $P_\theta(\mathbf{X} = \mathbf{x} \mid T(\mathbf{X}) = t)$ is independent of $\theta$, so $T$ retains all information about $\theta$ that $\mathbf{X}$ carries. The exponential family $p_\theta(x) = h(x)\exp(\eta(\theta)^\top T(x) - A(\theta))$ attains the minimum sufficient statistic $T(\mathbf{X}) = \sum_{i=1}^n T(x_i)$, which by the Cramér–Rao bound achieves variance $[n \, \mathcal{I}(\theta)]^{-1}$, where $\mathcal{I}(\theta) = -\mathbb{E}_\theta[\nabla^2_\theta \log p_\theta]$ is the Fisher information.</p>
+<p><strong>Literature context.</strong> Classical statistics treats data as independent and identically distributed (i.i.d.) samples, but this assumption breaks in nearly every modern setting. Temporally correlated sequences, graph-structured observations, and distributional shift between training and deployment are the rule, not the exception. Amari's information geometry (2016) reframes the question: what is the intrinsic geometry of the data manifold, and how does it constrain estimation? Recent work in <em>data-centric AI</em> (Ng et al., 2021; Zha et al., 2023) argues that model performance saturates faster when data quality is improved than when architectures are scaled — a claim that lacks a tight formal theory. The question of <em>how much data is enough</em>, formally posed as the sample complexity of learning a concept class $\mathcal{H}$ to error $\epsilon$ with probability $1-\delta$, is answered by VC theory: $n = O(\epsilon^{-1}(\text{VCdim}(\mathcal{H}) + \log \delta^{-1}))$. Yet this bound is distribution-free and often vacuous for deep networks, whose effective complexity adapts to data geometry in ways still not fully understood.</p>
+<p><strong>Suggested investigation.</strong> Generate synthetic data from a two-component Gaussian mixture $P_\theta = \frac{1}{2}\mathcal{N}(\mu_1, \sigma^2) + \frac{1}{2}\mathcal{N}(\mu_2, \sigma^2)$ with known $\theta = (\mu_1, \mu_2, \sigma^2)$. For varying $n$, compute the MLE $\hat\theta$ and measure the empirical Fisher information matrix from the Hessian of the log-likelihood. Compare the observed variance of $\hat\theta$ against the Cramér–Rao lower bound. Then introduce a deliberate covariate shift by drawing test data from a perturbed mixture and quantify the degradation in estimation error. Extend to a kernel density estimator and compare bandwidth selection criteria (Silverman's rule vs. cross-validation) as a function of $n$.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up of this investigation should establish: (1) a precise statement of the model and identifiability conditions, (2) a derivation of $\mathcal{I}(\theta)$ for the mixture in closed form or via numerical quadrature with error bounds, (3) empirical convergence plots with confidence intervals across repeated trials, and (4) a discussion of how covariate shift invalidates the standard Cramér–Rao guarantee and what corrections (importance weighting, domain adaptation) partially restore it.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

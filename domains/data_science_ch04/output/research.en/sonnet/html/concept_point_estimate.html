@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Point Estimate | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="point-estimate">Point Estimate</h2>
+<p><strong>Definition.</strong> Let $(\mathcal{X}, \mathcal{F}, \{P_\theta\}_{\theta \in \Theta})$ be a statistical model parameterized by $\theta \in \Theta \subseteq \mathbb{R}^d$. A <em>point estimator</em> of $\theta$ (or of a functional $g(\theta)$) is a measurable function $\hat{\theta} : \mathcal{X}^n \to \Theta$ mapping an observed sample $X_1, \ldots, X_n$ to a single element of the parameter space. The estimator is distinct from the <em>estimate</em>, which is the realized value $\hat{\theta}(x_1, \ldots, x_n)$ for a specific data realization. This distinction is not merely pedantic: all finite-sample and asymptotic guarantees are properties of the <em>random variable</em> $\hat{\theta}(X_1, \ldots, X_n)$, not of any single observed number.</p>
+<p><strong>Optimality and the Cramér–Rao Lower Bound.</strong> The central question in point estimation is not merely <em>what</em> to estimate, but <em>how well</em> any estimator can perform. Suppose $P_\theta$ admits a density $p(x;\theta)$ satisfying standard regularity conditions (differentiability of the log-likelihood, dominated convergence permitting interchange of derivative and integral). Define the <em>Fisher information</em>:</p>
+$$\mathcal{I}(\theta) = \mathbb{E}_\theta\!\left[\left(\frac{\partial}{\partial \theta} \log p(X;\theta)\right)^2\right] = -\mathbb{E}_\theta\!\left[\frac{\partial^2}{\partial \theta^2} \log p(X;\theta)\right].$$
+<p><strong>Theorem (Cramér–Rao, 1945–1946).</strong> For any unbiased estimator $\hat{\theta}$ of $\theta$, the variance satisfies</p>
+$$\operatorname{Var}_\theta(\hat{\theta}) \geq \frac{1}{n\,\mathcal{I}(\theta)}.$$
+<p><strong>Proof sketch.</strong> Apply the Cauchy–Schwarz inequality to the covariance $\operatorname{Cov}_\theta(\hat{\theta}, \partial_\theta \log p(X;\theta))$, use the unbiasedness condition $\partial_\theta \mathbb{E}_\theta[\hat{\theta}] = 1$, and identify the Fisher information as the variance of the score. The full proof appears in Lehmann and Casella (1998, §2.5).</p>
+<p>An unbiased estimator achieving this bound uniformly in $\theta$ is called a <em>uniformly minimum variance unbiased estimator</em> (UMVUE). The Rao–Blackwell theorem provides a constructive route: conditioning any unbiased estimator on a <em>sufficient statistic</em> $T(X)$ — defined by the factorization $p(x;\theta) = g(T(x),\theta)\,h(x)$ — yields an estimator with variance no greater than the original. Combined with Lehmann–Scheffé's theorem (completeness of $T$ implies uniqueness of the UMVUE), this gives a complete theory for the exponential family.</p>
+<p><strong>What is known and what remains open.</strong> For exponential families, the MLE coincides with the UMVUE when a complete sufficient statistic exists, and asymptotic efficiency is characterized by Le Cam's local asymptotic normality (LAN) framework. Beyond exponential families, the picture is substantially more involved: the Cramér–Rao bound may be unachievable (e.g., in curved exponential families), the MLE can be inadmissible under squared-error loss (Stein's phenomenon for $d \geq 3$), and minimax-optimal estimators (James–Stein, ridge, LASSO in regression contexts) can dominate. In semiparametric and nonparametric models, efficiency theory requires Hilbert-space arguments (Bickel et al., 1993). Modern work on high-dimensional and robust estimation continues to revisit these foundations.</p>
+<p><strong>Suggested investigation.</strong> Replicate the James–Stein domination result numerically: generate $X \sim N(\theta, I_d)$ for $d = 1, 2, 5, 10, 50$ and compare the MSE of the MLE $\hat{\theta}_{\text{MLE}} = X$ against the James–Stein estimator $\hat{\theta}_{\text{JS}} = (1 - (d-2)/\|X\|^2)\,X$. Verify that domination fails for $d \leq 2$ and holds uniformly in $\theta$ for $d \geq 3$. Extend by examining the positive-part James–Stein estimator and plotting the risk function as a function of $\|\theta\|^2$. This is a self-contained weekend computation that reveals the geometry of inadmissibility far more viscerally than any theorem statement alone.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the formal definition of admissibility and the precise sense in which MLE is dominated; (2) the derivation or careful citation of the James–Stein risk formula; (3) empirical risk curves with confidence bands from simulation; (4) a discussion of what the result implies for practice — when shrinkage toward a chosen point meaningfully reduces expected loss, and when the choice of shrinkage target matters.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>
