@@ -175,25 +175,25 @@ python scripts/batch_generate.py \
   --level "intro,core,college,research" \
   --skip-cache 
 
-## [ ] contents
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch04 \
   --include "python_statistical_computing" \
   --level "intro,core,college,research" \
   --skip-cache 
 
-# [ ] multi-levels - lang = zh, en
+# [X] multi-levels - lang = zh, en
 python scripts/batch_generate.py \
   --domain data_science_ch05 \
   --include "linear_regression_forecasting" \
   --level "intro,core,college,research" \
-  --language zh \
+  --language en \
   --skip-cache 
 
 #  --include "arima" \
 
 
-## [ ] contents
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch06 \
   --include "data_mining,facial_recognition" \
@@ -203,7 +203,7 @@ python scripts/batch_generate.py \
 #  --include "heart_disease_classification" \
 
 
-## [ ] contents
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch07 \
   --include "speech_recognition_tts,deepfake,generative_art" \
@@ -213,7 +213,7 @@ python scripts/batch_generate.py \
 #  --include "large_language_model" \
 
 
-# [ ] multi-levels 
+# [X] multi-levels 
 python scripts/batch_generate.py \
   --domain data_science_ch08 \
   --include "explainable_ai" \
@@ -222,7 +222,7 @@ python scripts/batch_generate.py \
 
 #  --include "hipaa" \
 
-## [ ] contents
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch09 \
   --include "gis_mapping" \

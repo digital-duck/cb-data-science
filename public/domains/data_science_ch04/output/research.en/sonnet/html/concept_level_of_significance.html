@@ -35,31 +35,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="level-of-significance">Level Of Significance</h2>
-<p><strong>Definition.</strong> The <em>level of significance</em>, denoted $\alpha$, is the maximum probability of committing a Type I error that an investigator is willing to tolerate before observing any data. Formally, if $H_0$ denotes the null hypothesis and $R$ denotes the rejection region of a test statistic $T$, then</p>
-$$\alpha = P(T \in R \mid H_0 \text{ is true}).$$
-<p>The value $\alpha$ is chosen a priori—typically $0.05$, $0.01$, or $0.10$ depending on the field—and it fixes the boundary of the rejection region entirely. A smaller $\alpha$ demands stronger evidence before rejecting $H_0$, but simultaneously raises the chance of failing to reject a false $H_0$.</p>
-<hr>
-<p><strong>Worked Example.</strong> A pharmaceutical company claims a drug reduces systolic blood pressure by a mean of $\mu_0 = 10$ mmHg. A clinical trial measures $n = 25$ patients, yielding $\bar{x} = 8.2$ mmHg and sample standard deviation $s = 4.5$ mmHg. We test $H_0: \mu = 10$ against $H_1: \mu \neq 10$ at $\alpha = 0.05$.</p>
-<p>The test statistic is</p>
-$$t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}} = \frac{8.2 - 10}{4.5 / 5} = \frac{-1.8}{0.9} = -2.00.$$
-<p>With $\nu = 24$ degrees of freedom, the two-tailed critical value is $t_{0.025,\,24} \approx 2.064$. Since $|{-2.00}| = 2.00 < 2.064$, we fail to reject $H_0$ at the 5 % level. Had we chosen $\alpha = 0.10$, the critical value would be $t_{0.05,\,24} \approx 1.711$, and the conclusion would reverse. This illustrates why $\alpha$ must be declared before data collection.</p>
-<hr>
-<p><strong>Key Theorem (Neyman–Pearson).</strong> For a simple null $H_0: \theta = \theta_0$ versus a simple alternative $H_1: \theta = \theta_1$, the most powerful test at level $\alpha$ is obtained by rejecting $H_0$ when the ratio of likelihoods $L(\theta_1 \mid \mathbf{x}) / L(\theta_0 \mid \mathbf{x})$ exceeds a threshold determined by $\alpha$ alone. No other test of the same size achieves higher power.</p>
-<hr>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy.stats import StudentT, P
-from sympy import N
-
-t_stat = -2.00
-nu = 24
-T = StudentT('T', nu)
-
-# Two-tailed p-value
-p_value = float(N(2 * P(T &lt; t_stat)))
-print(f"p-value = {p_value:.4f}")          # → 0.0573
-print("Reject H0 at α=0.05?", p_value &lt; 0.05)  # → False
-print("Reject H0 at α=0.10?", p_value &lt; 0.10)  # → True</code></pre>
-<p>The output confirms the dual conclusion above, making the dependence of the decision on the pre-specified $\alpha$ concrete and reproducible.</p>
+<p><strong>Definition.</strong> Let $(\mathcal{X}, \mathcal{F}, \{P_\theta : \theta \in \Theta\})$ be a statistical model with null hypothesis $H_0 : \theta \in \Theta_0 \subseteq \Theta$. A test is a measurable function $\phi : \mathcal{X} \to [0,1]$, where $\phi(x)$ denotes the probability of rejecting $H_0$ upon observing $x$. The <em>size</em> of the test is $\sup_{\theta \in \Theta_0} \mathbb{E}_\theta[\phi(X)]$, and the test is said to have <em>level of significance</em> $\alpha \in (0,1)$ if its size does not exceed $\alpha$. In the classical Neyman–Pearson framework, $\alpha$ is fixed prior to data collection and represents the maximum tolerable probability of a Type I error — rejecting $H_0$ when it is true.</p>
+<p><strong>Theorem (Neyman–Pearson Lemma).</strong> Suppose $\Theta_0 = \{\theta_0\}$ and $\Theta_1 = \{\theta_1\}$ are simple hypotheses with densities $p_0, p_1$ with respect to a dominating measure $\mu$. For a fixed $\alpha \in (0,1)$, the most powerful level-$\alpha$ test takes the form</p>
+$$\phi^*(x) = \begin{cases} 1 & \text{if } \Lambda(x) > k, \\ \gamma & \text{if } \Lambda(x) = k, \\ 0 & \text{if } \Lambda(x) < k, \end{cases}$$
+<p>where $\Lambda(x) = p_1(x)/p_0(x)$ is the likelihood ratio, and the constants $k \geq 0$, $\gamma \in [0,1]$ are chosen so that $\mathbb{E}_{\theta_0}[\phi^<em>(X)] = \alpha$ exactly. The proof proceeds by showing that any competing test $\phi$ with $\mathbb{E}_{\theta_0}[\phi(X)] \leq \alpha$ satisfies $\mathbb{E}_{\theta_1}[\phi^</em>(X)] \geq \mathbb{E}_{\theta_1}[\phi(X)]$ via the inequality $(\phi^* - \phi)(p_1 - k p_0) \geq 0$ $\mu$-almost everywhere.</p>
+<p><strong>Literature context.</strong> The conventional choice $\alpha \in \{0.01, 0.05\}$ has no theoretical justification beyond historical convention traceable to Fisher (1925) and is the subject of ongoing debate. Benjamin et al. (2018) proposed redefining significance at $\alpha = 0.005$ to address replication failures, while Lakens et al. (2018) countered that the threshold should be calibrated per-domain. The relationship between $\alpha$ and false discovery rate (FDR) control — studied by Benjamini and Hochberg (1995) in the multiple-testing setting — reveals that naïve application of a fixed $\alpha$ to a family of $m$ simultaneous tests inflates the familywise error rate to $1 - (1-\alpha)^m$. In high-dimensional regimes (genomics, neuroimaging), $m$ can reach $10^5$–$10^6$, rendering per-test significance levels nearly meaningless without correction. Open questions persist around optimal $\alpha$ selection under composite nulls, adaptive procedures that tune $\alpha$ to observed data without invalidating Type I error guarantees, and the reconciliation of significance with Bayesian evidence thresholds (Sellke, Bayarri, and Berger, 2001).</p>
+<p><strong>Suggested investigation.</strong> A tractable graduate project is to replicate the power–size tradeoff curve for the likelihood ratio test under a specific parametric family (e.g., $\mathcal{N}(\mu, 1)$ with $H_0 : \mu = 0$) as $\alpha$ varies from $10^{-4}$ to $0.10$, then extend to the two-sample $t$-test with unequal variances. Compute empirical Type I and Type II error rates via Monte Carlo simulation at each $\alpha$ level, and overlay the theoretical Receiver Operating Characteristic (ROC) curve $(\alpha, \beta(\alpha))$ where $\beta(\alpha) = 1 - \mathbb{E}_{\theta_1}[\phi^*(X)]$ is the Type II error. A natural extension is to examine Bonferroni-corrected $\alpha' = \alpha/m$ versus BH-corrected thresholds across a grid of $m$ simultaneous tests, measuring empirical FDR and power at each correction scheme.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should clearly distinguish size from level (a test can have level $\alpha$ but size strictly less than $\alpha$, a distinction that matters for discrete distributions), state the simulation parameters and random seed for reproducibility, and provide a figure showing the empirical versus theoretical power function. The discussion should address whether the chosen $\alpha$ is appropriate given the cost asymmetry between Type I and Type II errors in the application domain — this cost analysis, often omitted, is what transforms a rote significance report into a scientifically defensible inference.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

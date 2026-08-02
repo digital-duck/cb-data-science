@@ -35,31 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="random-forest">Random Forest</h2>
-<p><strong>Definition.</strong> A <em>random forest</em> is an ensemble learning method that constructs a collection of $B$ decision trees $\{T_1, T_2, \ldots, T_B\}$, each trained on a bootstrap sample of the training data, and aggregates their predictions by majority vote (classification) or averaging (regression). Two sources of randomness distinguish a random forest from a simple collection of trees: (1) <em>bootstrap aggregation</em> (bagging), in which each tree $T_b$ is fit to a resample $\mathcal{D}_b$ of size $n$ drawn with replacement from the original dataset $\mathcal{D}$; and (2) <em>feature subsampling</em>, in which each candidate split considers only a randomly chosen subset of $m \ll p$ features, where $p$ is the total number of predictors. The standard recommendation is $m = \lfloor\sqrt{p}\rfloor$ for classification and $m = \lfloor p/3 \rfloor$ for regression.</p>
-<p>The final prediction for a new observation $\mathbf{x}$ is</p>
-$$\hat{f}(\mathbf{x}) = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}).$$
-<p><strong>Worked example.</strong> Suppose $p = 9$ features and $B = 3$ trees. Each tree uses $m = \lfloor\sqrt{9}\rfloor = 3$ candidate features per split. Bootstrap sample $\mathcal{D}_1$ might omit observation 4 but include observation 7 twice; $\mathcal{D}_2$ omits observations 2 and 6; and so on. If trees $T_1, T_2$ predict class 1 and $T_3$ predicts class 0 for a test point, the ensemble vote yields class 1. The out-of-bag (OOB) error is estimated using each observation's predictions from trees that did not include it in their bootstrap sample, providing an unbiased validation estimate without a separate hold-out set.</p>
-<p><strong>Key theorem (variance reduction).</strong> If $B$ trees each have prediction variance $\sigma^2$ and pairwise correlation $\rho$, then the variance of the ensemble average satisfies</p>
-$$\operatorname{Var}\!\left(\hat{f}\right) = \rho\,\sigma^2 + \frac{1 - \rho}{B}\,\sigma^2.$$
-<p>As $B \to \infty$, the second term vanishes and variance is bounded below by $\rho\,\sigma^2$. Feature subsampling reduces $\rho$, yielding a lower floor than bagging alone.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
-import numpy as np
-
-X, y = load_iris(return_X_y=True)
-rf = RandomForestClassifier(n_estimators=200, max_features="sqrt",
-                            oob_score=True, random_state=42)
-rf.fit(X, y)
-
-print(f"OOB accuracy : {rf.oob_score_:.3f}")
-cv_acc = cross_val_score(rf, X, y, cv=5).mean()
-print(f"5-fold CV    : {cv_acc:.3f}")
-importances = rf.feature_importances_
-for name, imp in zip(load_iris().feature_names, importances):
-    print(f"  {name:&lt;25s} {imp:.3f}")</code></pre>
-<p>Running this cell reveals that petal length and petal width dominate feature importance, consistent with the known separability structure of the Iris dataset.</p>
+<p><strong>Definition.</strong> A random forest is an ensemble of $M$ decision trees $\{h_m(\mathbf{x}; \Theta_m)\}_{m=1}^{M}$, where each $\Theta_m$ encodes independent randomness injected at two stages: (i) bootstrap resampling of the training set (bagging), and (ii) feature subsampling at each split node, drawing $k \ll p$ candidate features uniformly at random before selecting the locally optimal split. The ensemble prediction is the majority vote (classification) or arithmetic mean (regression):</p>
+$$\hat{f}(\mathbf{x}) = \frac{1}{M} \sum_{m=1}^{M} h_m(\mathbf{x};\Theta_m).$$
+<p>The canonical choice is $k = \lfloor \sqrt{p} \rfloor$ for classification and $k = \lfloor p/3 \rfloor$ for regression, though these are empirical defaults, not theoretical optima.</p>
+<p><strong>Bias–Variance Decomposition and the Strength–Correlation Trade-off.</strong> The population mean-squared error of the ensemble decomposes as</p>
+$$\mathrm{MSE}(\hat{f}) = \mathrm{bias}^2 + \frac{1 + (M-1)\bar{\rho}}{M}\bar{\sigma}^2,$$
+<p>where $\bar{\rho}$ is the average pairwise correlation between tree predictions and $\bar{\sigma}^2$ is the average per-tree variance. This is Breiman's (2001) fundamental identity. As $M \to \infty$ the variance term converges to $\bar{\rho}\,\bar{\sigma}^2$, so the irreducible variance floor is set entirely by inter-tree correlation. Feature subsampling reduces $\bar{\rho}$ at the cost of slightly increasing $\bar{\sigma}^2$ per tree (each tree sees a degraded feature set, raising individual tree bias). The practical algorithm navigates this trade-off without solving it analytically: the optimal $k$ is problem-dependent and unknown in general.</p>
+<p><strong>Generalization Bound.</strong> Breiman (2001) derived a margin-based bound: for any $\delta > 0$, with probability at least $1 - \delta$,</p>
+$$P_{XY}\!\left[\hat{f}(\mathbf{x}) \neq y\right] \leq P_{XY\Theta}\!\left[\mathrm{mr}(\mathbf{x},y) < 0\right] + O\!\left(\sqrt{\frac{\bar{\rho}\,s^2/\bar{\sigma}^2}{n}}\right),$$
+<p>where $\mathrm{mr}$ is the margin function and $s^2$ is the variance of the strength statistic. The bound is qualitatively informative but notoriously loose quantitatively, and tightening it remains open. More recent work (Wager & Walther 2015; Mentch & Hooker 2016) recasts individual trees as $U$-statistics, enabling asymptotically normal confidence intervals for forest predictions—an approach that connects random forests to classical nonparametric theory.</p>
+<p><strong>Literature Context.</strong> Breiman (2001, <em>Machine Learning</em> 45) is the founding reference; its theoretical analysis is partial and several claimed results were later clarified or corrected (e.g., Biau 2012, <em>JMLR</em>). Biau & Devroye (2010) establish $L^2$ consistency under mild regularity. Scornet, Biau & Vert (2015, <em>Ann. Statist.</em>) prove consistency of Breiman forests on additive models. The honest forest of Wager & Athey (2018) extends the framework to causal inference via heterogeneous treatment effects, with asymptotic normality guarantees. Open questions include: sharp minimax rates for forests on smooth function classes, optimal feature-subsample schedules, and theoretical justification for out-of-bag error as a generalization proxy.</p>
+<p><strong>Suggested Investigation.</strong> Fix a synthetic additive regression target $f^*(\mathbf{x}) = \sum_{j=1}^{5} \sin(x_j)$ in $p = 20$ dimensions. Train forests over a grid of $k \in \{1, 2, 5, 10, 20\}$ and $M \in \{10, 50, 200\}$; measure test MSE, $\hat{\bar{\rho}}$ (estimated from out-of-bag predictions), and per-tree variance. Verify empirically that the Breiman identity holds: compute both sides independently and compare. Then fit an honest causal forest (Wager & Athey) on a synthetic randomized experiment and examine whether the 95% confidence intervals achieve nominal coverage.</p>
+<p><strong>Report-Writing Note.</strong> A rigorous write-up should state the Breiman identity as a formal proposition and derive it from first principles, clearly separating approximation ($M$ finite) from asymptotic ($M \to \infty$) regimes. The empirical section must report $\hat{\bar{\rho}}$ alongside MSE—presenting MSE alone conflates the two components of the trade-off. Discuss whether the Scornet–Biau–Vert consistency conditions hold for your chosen $f^*$, and note any gap between the theoretical bound and observed test error.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

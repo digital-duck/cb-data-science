@@ -35,25 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="forecasting">Forecasting</h2>
-<p><strong>Definition.</strong> <em>Forecasting</em> is the process of estimating the value of a quantity at a future time $t + h$ given observations up to and including time $t$. Formally, let $\{y_t\}_{t=1}^{T}$ be a discrete time series. An $h$-step-ahead point forecast is a function $\hat{y}_{T+h|T} = f(y_T, y_{T-1}, \ldots)$ that minimises a chosen loss, most commonly the mean squared error $\mathbb{E}[(y_{T+h} - \hat{y}_{T+h|T})^2]$. A <em>prediction interval</em> accompanies the point forecast to express uncertainty: $[\hat{y}_{T+h|T} \pm z_{\alpha/2}\,\hat{\sigma}_h]$, where $\hat{\sigma}_h$ is the estimated $h$-step forecast standard deviation and $z_{\alpha/2}$ is the standard normal critical value for coverage $1-\alpha$.</p>
-<p><strong>Worked Example.</strong> Consider monthly average temperatures (°C) recorded over 24 months. Suppose the series exhibits a linear trend $\mu_t = \beta_0 + \beta_1 t$ with additive white noise $\varepsilon_t \sim \mathcal{N}(0, \sigma^2)$, so $y_t = \beta_0 + \beta_1 t + \varepsilon_t$. Ordinary least squares yields $\hat{\beta}_0 = 5.2$ and $\hat{\beta}_1 = 0.3$ from the 24 observations. The 3-step-ahead forecast is:</p>
-$$\hat{y}_{27|24} = 5.2 + 0.3 \times 27 = 13.3 \text{ °C.}$$
-<p>With residual standard deviation $\hat{\sigma} = 1.1$ °C and $z_{0.025} = 1.96$, the 95 % prediction interval is $[13.3 \pm 2.16] = [11.14,\ 15.46]$ °C.</p>
-<p><strong>Key Theorem (Unbiasedness of the Linear Trend Forecast).</strong> Let $y_t = \beta_0 + \beta_1 t + \varepsilon_t$ with $\mathbb{E}[\varepsilon_t] = 0$ and $\mathrm{Var}(\varepsilon_t) = \sigma^2 < \infty$. The OLS forecast $\hat{y}_{T+h|T} = \hat{\beta}_0 + \hat{\beta}_1(T+h)$ is unbiased: $\mathbb{E}[\hat{y}_{T+h|T}] = \beta_0 + \beta_1(T+h)$. Moreover, among all linear unbiased forecasts formed from $\{y_1, \ldots, y_T\}$, it achieves the smallest mean squared forecast error. The proof follows directly from the Gauss–Markov theorem applied to the design matrix evaluated at the future time point $T + h$.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>import sympy as sp
-
-t, beta0, beta1 = sp.symbols('t beta0 beta1')
-trend = beta0 + beta1 * t
-forecast = trend.subs([(beta0, sp.Rational(26, 5)),
-                       (beta1, sp.Rational(3, 10)),
-                       (t, 27)])
-print("Point forecast:", forecast)          # 13.3
-sigma_h = sp.Rational(11, 10)
-z = sp.Rational(196, 100)
-lower = forecast - z * sigma_h
-upper = forecast + z * sigma_h
-print(f"95% PI: [{lower}, {upper}]")        # [11.144, 15.456]</code></pre>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and let $\{Y_t\}_{t \in \mathbb{Z}}$ be a real-valued stochastic process adapted to a filtration $\{\mathcal{F}_t\}$. A <em>forecast</em> of $Y_{t+h}$ at horizon $h \geq 1$, given information up to time $t$, is a measurable function $\hat{Y}_{t+h|t} = f(Y_t, Y_{t-1}, \ldots)$. The <em>optimal point forecast</em> under squared-error loss is the conditional expectation $\mathbb{E}[Y_{t+h} \mid \mathcal{F}_t]$; this is the single primitive introduced here. The choice of loss function is not incidental — it determines what "optimal" means structurally — but squared-error is the canonical starting point because it admits a clean algebraic bound via the Wold decomposition.</p>
+<p><strong>Theorem (Wold Decomposition).</strong> Every covariance-stationary process $\{Y_t\}$ with no deterministic component admits the unique representation</p>
+$$Y_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j} + \eta_t,$$
+<p>where $\{\varepsilon_t\} \sim \mathrm{WN}(0, \sigma^2)$, $\sum_j \psi_j^2 < \infty$, $\psi_0 = 1$, and $\eta_t$ is linearly deterministic. The <em>h</em>-step-ahead forecast error under this representation satisfies</p>
+$$Y_{t+h} - \hat{Y}_{t+h|t} = \sum_{j=0}^{h-1} \psi_j \varepsilon_{t+h-j},$$
+<p>so the irreducible forecast variance at horizon $h$ is $\sigma^2 \sum_{j=0}^{h-1} \psi_j^2$, which is non-decreasing in $h$. This is a structural lower bound; no estimator can do better in the linear class regardless of sample size.</p>
+<p><strong>Literature context.</strong> Classical parametric forecasting — ARIMA, exponential smoothing, VAR — operates by estimating $\{\psi_j\}$ from finite samples and relies on correct model specification. Box and Jenkins (1970) systematized this. The subsequent literature has two major threads. First, <em>model uncertainty</em>: Bayesian model averaging (Hoeting et al., 1999) and forecast combination (Timmermann, 2006) aggregate over a model space rather than commit to one; the surprising empirical finding is that equal-weight averaging often beats sophisticated selection. Second, <em>nonlinear and nonstationary extensions</em>: Clements and Hendry (1999) show that structural breaks dominate in practice, motivating differencing, intercept corrections, and robust methods. More recently, transformer-based sequence models (Nie et al., 2023; Zeng et al., 2023) challenge the parametric paradigm, though whether attention mechanisms genuinely capture temporal dependencies or merely interpolate within training distributions remains actively contested.</p>
+<p>An open research question sits at this boundary: under what regularity conditions does a data-driven (e.g., neural) forecaster achieve the Wold lower bound, and at what sample-size cost relative to a correctly specified parametric model? Formal results here are sparse.</p>
+<p><strong>Suggested investigation.</strong> Construct a simulation study with a known DGP — say, an $\mathrm{AR}(2)$ with a structural break at time $T^*$. Fit three competing forecasters: OLS-estimated AR, a rolling-window AR, and a simple LSTM. Track the multi-step mean squared forecast error (MSFE) as a function of $h$ and break magnitude $\delta$. Derive the theoretical MSFE for each under the break, and compare with simulation. This replicates the spirit of Clements and Hendry (1999, Chapter 4) at small scale and isolates where model rigidity hurts.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) the theoretical MSFE expressions for each method pre- and post-break as closed-form functions of $\delta$ and $h$; (ii) Monte Carlo coverage of those expressions; (iii) a calibration table comparing MSFE at $h = 1, 4, 8$; and (iv) a clear statement of which assumptions were required to derive each bound and which were violated in the break scenario. Claims about neural forecaster performance require held-out test sets with no look-ahead contamination — this is a common failure mode worth flagging explicitly.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

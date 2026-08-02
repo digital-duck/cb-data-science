@@ -35,30 +35,24 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="bias">Bias</h2>
-<p><strong>Definition.</strong> Let $\hat{\theta}$ be an estimator of an unknown parameter $\theta$. The <em>bias</em> of $\hat{\theta}$ is defined as</p>
-$$\operatorname{Bias}(\hat{\theta}) = \mathbb{E}[\hat{\theta}] - \theta,$$
-<p>where the expectation is taken over all possible samples of the data. An estimator is called <em>unbiased</em> if $\operatorname{Bias}(\hat{\theta}) = 0$, meaning its expected value equals the true parameter it seeks to estimate. Bias is a systematic error: it persists no matter how large the sample grows, distinguishing it from random sampling variability, which vanishes as $n \to \infty$.</p>
-<p><strong>Worked Example.</strong> Suppose $X_1, X_2, \ldots, X_n$ are independent draws from a population with mean $\mu$ and variance $\sigma^2$. Consider the sample variance computed with denominator $n$:</p>
-$$S_n^2 = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})^2, \qquad \bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i.$$
-<p>A direct calculation shows $\mathbb{E}[S_n^2] = \frac{n-1}{n}\sigma^2$, so</p>
-$$\operatorname{Bias}(S_n^2) = \frac{n-1}{n}\sigma^2 - \sigma^2 = -\frac{\sigma^2}{n}.$$
-<p>The estimator systematically <em>underestimates</em> the true variance. Replacing the denominator with $n-1$ yields the corrected sample variance $s^2 = \frac{1}{n-1}\sum(X_i - \bar{X})^2$, which satisfies $\mathbb{E}[s^2] = \sigma^2$ and is therefore unbiased.</p>
-<p><strong>Key Theorem (Bias–Variance Decomposition).</strong> For any estimator $\hat{\theta}$ of $\theta$, the mean squared error (MSE) decomposes as</p>
-$$\operatorname{MSE}(\hat{\theta}) = \mathbb{E}\!\left[(\hat{\theta} - \theta)^2\right] = \operatorname{Var}(\hat{\theta}) + \left[\operatorname{Bias}(\hat{\theta})\right]^2.$$
-<p>This identity reveals the fundamental trade-off in statistical estimation: reducing bias often inflates variance, and vice versa. An unbiased estimator is not automatically preferable; if a small, controlled bias substantially reduces variance, the biased estimator may achieve lower MSE in practice.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-n, sigma2 = sp.symbols('n sigma^2', positive=True)
-
-# Bias of the naive sample variance (denominator n)
-E_Sn2 = (n - 1) / n * sigma2
-bias   = sp.simplify(E_Sn2 - sigma2)
-print("Bias(S_n^2) =", bias)          # -sigma^2/n
-
-# Confirm corrected estimator is unbiased
-E_s2 = sp.simplify((n / (n - 1)) * E_Sn2)
-print("E[s^2]      =", E_s2)          # sigma^2</code></pre>
+<p><strong>Definition.</strong> Let $\hat{\theta}_n$ be an estimator of a parameter $\theta \in \Theta$ based on $n$ i.i.d. observations $X_1, \ldots, X_n \sim P_\theta$. The <em>bias</em> of $\hat{\theta}_n$ is</p>
+$$
+\mathrm{Bias}(\hat{\theta}_n) = \mathbb{E}_{P_\theta}[\hat{\theta}_n] - \theta,
+$$
+<p>where the expectation is taken under the true data-generating measure $P_\theta$. An estimator with $\mathrm{Bias}(\hat{\theta}_n) = 0$ for all $\theta \in \Theta$ is called <em>unbiased</em>; one for which $\mathrm{Bias}(\hat{\theta}_n) \to 0$ as $n \to \infty$ is called <em>asymptotically unbiased</em>. The mean squared error decomposes as</p>
+$$
+\mathrm{MSE}(\hat{\theta}_n) = \mathrm{Var}(\hat{\theta}_n) + \mathrm{Bias}(\hat{\theta}_n)^2,
+$$
+<p>a decomposition that immediately frames bias not as an isolated defect but as one term in a fundamental trade-off.</p>
+<p><strong>Theorem (Cramér–Rao lower bound for biased estimators).</strong> Suppose $P_\theta$ satisfies standard regularity conditions (Fisher information $I(\theta)$ finite and positive, interchange of differentiation and integration). Let $b(\theta) = \mathrm{Bias}(\hat{\theta}_n)$. Then</p>
+$$
+\mathrm{Var}(\hat{\theta}_n) \geq \frac{(1 + b'(\theta))^2}{n\, I(\theta)}.
+$$
+<p><em>Proof sketch.</em> Apply the Cauchy–Schwarz inequality to $\mathrm{Cov}(\hat{\theta}_n,\, \partial_\theta \log p(X;\theta))$, noting that $\mathbb{E}[\partial_\theta \log p] = 0$ and $\mathbb{E}[\hat{\theta}_n \cdot \partial_\theta \log p] = 1 + b'(\theta)$ by differentiation under the integral sign. $\square$</p>
+<p>The bound reveals that a <em>carefully chosen</em> bias — one with $|b'(\theta)| < 0$ — can shrink the lower bound on variance, permitting a biased estimator to achieve smaller MSE than any unbiased competitor. The James–Stein estimator (1961) makes this precise: for estimating a mean vector $\mu \in \mathbb{R}^p$ with $p \geq 3$ under squared-error loss, the shrinkage estimator $\hat{\mu}_{\mathrm{JS}} = (1 - (p-2)/\|\bar{X}\|^2)\bar{X}$ dominates the MLE uniformly, despite being biased toward the origin.</p>
+<p><strong>Literature context.</strong> Stein's inadmissibility result overturned the century-old presumption that unbiasedness was a design virtue rather than an incidental property. It spawned the Stein phenomenon literature and, more recently, motivated regularization in high-dimensional statistics: ridge regression introduces bias $-(X^\top X + \lambda I)^{-1}\lambda\beta$ to reduce variance when $p/n$ is large (Hoerl and Kennard, 1970). Contemporary open questions include the optimal bias schedule in neural network training (implicit regularization via SGD; Gunasekar et al., 2017) and the formal characterization of <em>algorithmic bias</em> — systematic deviation arising from training data distributions rather than estimator design — a setting where the parameter space $\Theta$ itself may be ill-defined.</p>
+<p><strong>Suggested investigation.</strong> Replicate the bias–variance trade-off empirically on synthetic Gaussian data ($p = 50$, $n = 100$): compare the MLE, ridge, and James–Stein estimators over a grid of signal strengths $\|\mu\|$. Measure MSE by Monte Carlo averaging over $10^4$ trials. Identify the crossover $\|\mu\|^<em>$ at which shrinkage loses its MSE advantage. Then derive $\|\mu\|^</em>$ analytically from the Cramér–Rao bound and compare to your simulation.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should state the estimand and loss function precisely, reproduce the Cramér–Rao derivation for the biased case, report Monte Carlo standard errors alongside MSE estimates, and locate the analytic $\|\mu\|^*$ relative to the empirical crossover. Discussion should address whether the qualitative finding extends to non-Gaussian families and what it implies for the default choice of regularization strength in practice.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,28 +35,16 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="fairness">Fairness</h2>
-<p><strong>Definition.</strong> Let $\mathcal{X}$ denote a feature space, $Y \in \{0,1\}$ a binary outcome, and $A \in \{0,1\}$ a protected attribute (e.g., gender, race). A classifier $\hat{Y} = f(X)$ is said to satisfy <em>demographic parity</em> if</p>
-$$P(\hat{Y} = 1 \mid A = 0) = P(\hat{Y} = 1 \mid A = 1).$$
-<p>More generally, fairness is a family of constraints on the joint distribution of $(\hat{Y}, Y, A)$ that formalize the intuition that a model's decisions should not systematically disadvantage a protected group. Three canonical criteria are:</p>
-<li><strong>Demographic parity</strong>: equal positive-prediction rates across groups.</li>
-<li><strong>Equalized odds</strong>: $P(\hat{Y} = 1 \mid Y = y, A = 0) = P(\hat{Y} = 1 \mid Y = y, A = 1)$ for $y \in \{0,1\}$ — equal true-positive <em>and</em> false-positive rates.</li>
-<li><strong>Calibration</strong>: $P(Y = 1 \mid \hat{p}, A = a)$ is the same function of $\hat{p}$ for all $a$, meaning predicted probabilities carry the same meaning across groups.</li>
-<p><strong>Worked Example.</strong> A loan-approval model yields positive decisions at rate $0.60$ for Group $A=0$ and $0.45$ for Group $A=1$. The demographic-parity gap is $|0.60 - 0.45| = 0.15$, which exceeds the commonly adopted tolerance of $0.05$, so the model fails demographic parity. To measure equalized odds one additionally inspects the confusion matrix stratified by $A$; if the false-negative rate for $A=1$ exceeds that for $A=0$, qualified applicants in the minority group are systematically denied.</p>
-<p><strong>Key Theorem (Impossibility of Simultaneous Fairness, Chouldechova 2017).</strong> When base rates differ across groups ($P(Y=1 \mid A=0) \neq P(Y=1 \mid A=1)$) and $\hat{Y}$ is a non-trivial predictor, demographic parity, equalized odds, and calibration cannot all hold simultaneously. This result implies that practitioners must consciously choose which criterion to optimize given the application's ethical priorities.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Rational, Abs
-
-p0, p1 = Rational(60, 100), Rational(45, 100)   # positive-prediction rates
-gap = Abs(p0 - p1)
-print("Demographic-parity gap:", gap)            # 3/20
-
-# Equalized-odds check (illustrative confusion-matrix values)
-tpr0, tpr1 = Rational(80, 100), Rational(65, 100)
-fpr0, fpr1 = Rational(20, 100), Rational(18, 100)
-print("TPR gap:", Abs(tpr0 - tpr1))             # 3/20
-print("FPR gap:", Abs(fpr0 - fpr1))             # 1/50
-print("Equalized odds satisfied:", gap == 0 and Abs(tpr0-tpr1) == 0)</code></pre>
-<p>Running this cell reveals that neither demographic parity nor equalized odds is satisfied, illustrating how a single numeric threshold can encode multiple distinct forms of bias.</p>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ denote a feature space, $A \in \{0,1\}$ a protected attribute (e.g., group membership), $Y \in \{0,1\}$ a true label, and $\hat{Y} \in \{0,1\}$ a classifier's prediction. Three group-fairness criteria dominate the literature:</p>
+<li><em>Demographic parity</em> (DP): $P(\hat{Y}=1 \mid A=0) = P(\hat{Y}=1 \mid A=1)$.</li>
+<li><em>Equalized odds</em> (EO): $P(\hat{Y}=1 \mid Y=y, A=0) = P(\hat{Y}=1 \mid Y=y, A=1)$ for $y \in \{0,1\}$.</li>
+<li><em>Calibration</em>: $P(Y=1 \mid \hat{p}=s, A=a) = s$ for all score values $s$ and groups $a$.</li>
+<p>Individual fairness (Dwork et al., 2012) takes a metric-based view: a randomized classifier $M$ is $(D, d)$-fair if $D(M(x), M(x')) \leq d(x,x')$ for all $x,x' \in \mathcal{X}$, where $D$ is a divergence on distributions over outcomes and $d$ is a task-specific similarity metric on individuals.</p>
+<p><strong>Impossibility Theorem</strong> (Chouldechova, 2017; Kleinberg, Mullainathan, Raghavan, 2016). Suppose base rates differ across groups, i.e., $P(Y=1 \mid A=0) \neq P(Y=1 \mid A=1)$, and the classifier is not perfect ($0 < P(\hat{Y} \neq Y) < 1$). Then demographic parity, equalized odds, and calibration cannot all hold simultaneously.</p>
+<p><em>Proof sketch.</em> Calibration ties positive predictive value to the score. With unequal base rates, equalizing true positive rates across groups forces unequal false positive rates (or vice versa), violating equalized odds; simultaneously, achieving equal selection rates (DP) requires distorting the score away from its calibrated value. A one-page algebraic proof follows from writing each criterion as a linear constraint on the $2 \times 2$ confusion matrix per group and observing that the constraint system is overdetermined when base rates differ. See Barocas, Hardt, and Narayanan (2023, §3) for the full derivation.</p>
+<p><strong>Literature context.</strong> The impossibility results are well-established, but the field is far from settled. Hardt, Price, and Srebro (2016) give a post-processing algorithm that enforces equalized odds optimally by solving a linear program over the ROC convex hull — this is one of the few fairness interventions with an exact optimality guarantee. The individual-fairness framework of Dwork et al. (2012) sidesteps group criteria but requires specifying the metric $d$, which is itself a normative and empirical problem: Yurochkin et al. (2020) propose learning $d$ from proxy tasks, but whether learned metrics encode the intended similarity is an open question. A deeper open problem concerns <em>long-run dynamics</em>: Liu et al. (2018) show that equalizing opportunity in a myopic model can reduce the long-run representation of the disadvantaged group if feedback between predictions and future feature distributions is ignored. Causal formulations (Kusner et al., 2017; counterfactual fairness) attempt to disentangle direct and indirect discrimination via structural causal models, but identification assumptions are rarely testable from observational data.</p>
+<p><strong>Suggested investigation.</strong> Take the ProPublica COMPAS dataset (Angwin et al., 2016) and a logistic regression classifier trained without the protected attribute. Compute all three group-fairness measures empirically. Then apply Hardt et al.'s post-processing to enforce equalized odds and re-measure DP and calibration, quantifying the trade-off numerically. As an extension, derive the Pareto frontier of accuracy vs. equalized-odds violation as the enforcement threshold varies, and compare against the theoretical bound implied by the base-rate gap. A second thread: implement the individual-fairness constraint using a Mahalanobis distance on non-protected features and assess whether the resulting classifier agrees with the equalized-odds solution on disputed cases.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: (i) state precisely which fairness criterion is targeted and why, connecting the choice to the deployment context; (ii) derive or cite the impossibility result as motivation for the observed trade-offs; (iii) report confusion matrices and criterion values per group, not just aggregate accuracy; and (iv) discuss what normative assumption underlies the chosen criterion — the technical result alone does not resolve which criterion is appropriate.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

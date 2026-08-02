@@ -35,25 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="decision-tree">Decision Tree</h2>
-<p><strong>Definition.</strong> A <em>decision tree</em> is a rooted, directed acyclic graph $T = (V, E)$ in which every internal node $v \in V_{\text{int}}$ is associated with a <em>split function</em> $\phi_v : \mathcal{X} \to \{1, \ldots, k_v\}$, each leaf $\ell \in V_{\text{leaf}}$ carries a prediction $\hat{y}_\ell \in \mathcal{Y}$, and every input $\mathbf{x} \in \mathcal{X}$ follows a unique root-to-leaf path determined by evaluating successive split functions. For axis-aligned binary trees — the most common case — each split function takes the form $\phi_v(\mathbf{x}) = \mathbf{1}[x_j \leq \theta]$ for some feature index $j$ and threshold $\theta \in \mathbb{R}$, partitioning the feature space $\mathcal{X} \subseteq \mathbb{R}^d$ into a collection of non-overlapping rectangular regions $R_1, \ldots, R_M$. The tree's prediction is then $f(\mathbf{x}) = \sum_{m=1}^{M} \hat{y}_m \,\mathbf{1}[\mathbf{x} \in R_m]$.</p>
-<p><strong>Worked Example.</strong> Consider a dataset of students with two features: study hours $x_1$ and prior GPA $x_2$, and a binary label $y \in \{0, 1\}$ (fail/pass). Suppose a depth-2 tree first splits on $x_1 \leq 3$: students studying three or fewer hours go left, the rest go right. The right branch then splits on $x_2 \leq 2.5$. This produces three leaf regions: $R_1 = \{x_1 \leq 3\}$, $R_2 = \{x_1 > 3,\, x_2 \leq 2.5\}$, and $R_3 = \{x_1 > 3,\, x_2 > 2.5\}$, with predictions $\hat{y} = 0, 0, 1$ respectively.</p>
-<p><strong>Key Theorem (CART Greedy Optimality).</strong> At each node $v$ containing sample set $S_v$, the CART algorithm selects the split $(j^<em>, \theta^</em>)$ minimising the weighted impurity reduction:</p>
-$$\Delta I(j,\theta) = I(S_v) - \frac{|S_L|}{|S_v|} I(S_L) - \frac{|S_R|}{|S_v|} I(S_R),$$
-<p>where $S_L, S_R$ are the left and right child subsets and $I$ denotes an impurity measure (Gini: $I(S) = 1 - \sum_c p_c^2$; entropy: $I(S) = -\sum_c p_c \log p_c$). Although this greedy criterion does not guarantee a globally optimal tree — finding the minimum-depth consistent tree is NP-hard — it yields strong empirical performance in $O(dn \log n)$ time per level.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Piecewise, And
-
-x1, x2 = symbols('x1 x2', real=True)
-
-predict = Piecewise(
-    (0, x1 &lt;= 3),
-    (0, And(x1 &gt; 3, x2 &lt;= 2.5)),
-    (1, True)
-)
-
-# Evaluate for a student with x1=4, x2=3.0
-print(predict.subs({x1: 4, x2: 3.0}))   # expected: 1</code></pre>
-<p>Running this cell confirms that the symbolic piecewise expression correctly encodes the tree's three decision regions, illustrating how a decision tree is, at its core, a structured partition of input space.</p>
+<p><strong>Definition.</strong> A <em>decision tree</em> is a recursive partitioning of the input space $\mathcal{X} \subseteq \mathbb{R}^d$ into axis-aligned rectangular regions, each assigned a constant prediction. Formally, a binary tree $T$ of depth $D$ defines a partition $\{R_1, \ldots, R_m\}$ of $\mathcal{X}$ such that the predictor takes the form</p>
+$$f_T(\mathbf{x}) = \sum_{j=1}^{m} c_j \,\mathbf{1}[\mathbf{x} \in R_j],$$
+<p>where $c_j \in \mathbb{R}$ (regression) or $c_j \in \{0,1\}^K$ (classification). Each internal node selects a coordinate $k \in [d]$ and a threshold $\tau$, routing left if $x_k \leq \tau$ and right otherwise. The tree structure and the split parameters $(k, \tau)$ at every node are jointly the object of learning.</p>
+<p><strong>The Greedy Splitting Criterion and Its Optimality Gap.</strong> The canonical training algorithm (CART; Breiman et al. 1984) greedily minimizes an impurity measure at each node. For regression, this is the weighted mean-squared error reduction:</p>
+$$\Delta_\text{MSE}(k,\tau) = \frac{1}{n}\sum_{i=1}^n (y_i - \bar{y})^2 \;-\; \frac{n_L}{n}\sigma^2_L(k,\tau) \;-\; \frac{n_R}{n}\sigma^2_R(k,\tau),$$
+<p>where $n_L, n_R$ are the counts in the left and right child and $\sigma^2_{L/R}$ their response variances. For classification the Gini impurity $G = \sum_k \hat{p}_k(1-\hat{p}_k)$ or information gain replaces the MSE term.</p>
+<p><strong>Theorem (CART approximation ratio, informal; Klusowski 2021).</strong> For a regression tree of depth $D$ learned on $n$ samples from a Lipschitz target $f^*$, the excess risk satisfies</p>
+$$\mathbb{E}[\|f_T - f^*\|^2] = O\!\left(n^{-\frac{2}{d+2}} \log n\right)$$
+<p>under standard regularity, matching minimax rates for piecewise-constant estimators up to logarithmic factors. This rate degrades exponentially with dimension $d$—the manifestation of the <em>curse of dimensionality</em> for decision trees—but the constant depends only weakly on the global Lipschitz constant.</p>
+<p><strong>What Is Known and What Remains Open.</strong> The CART greedy criterion is <em>not</em> globally optimal: finding the depth-$D$ tree minimizing training loss exactly is NP-hard (Hyafil & Rivest 1976). This gap has motivated a line of work on <em>optimal decision trees</em> (Bertsimas & Dunn 2017; Aglin et al. 2020, the GOSDT framework) that formulate tree learning as integer programming and prove tighter generalization bounds for the resulting trees. A current open question is whether the computational intractability can be circumvented under distributional assumptions (e.g., margin conditions, low intrinsic dimension). Separately, the <em>interpolation regime</em>—where fully-grown trees memorize training data—exhibits benign overfitting only under strong structural constraints, unlike neural networks or random forests, making single-tree generalization in the over-parameterized regime an active area.</p>
+<p><strong>Suggested Investigation.</strong> Replicate the Hyafil–Rivest hardness argument for depth-2 trees on a synthetic dataset, then compare CART against GOSDT on a UCI benchmark (e.g., <code>adult</code> or <code>recidivism</code>) at depth $D \in \{3, 4, 5\}$. Measure: (i) training loss gap between greedy and optimal solutions, (ii) test accuracy, (iii) tree size. Vary $n$ from $10^3$ to $10^5$ and record wall-clock time, since GOSDT's MIP formulation scales super-linearly.</p>
+<p><strong>Report-Writing Note.</strong> A write-up of this investigation should establish: (a) a precise statement of the hardness result and the depth at which it first applies; (b) the empirical optimality gap as a function of $n$ and $D$; (c) whether the accuracy difference between greedy and optimal trees is statistically significant at the chosen test sizes; and (d) a discussion of when the computational overhead of optimal methods is justified versus when CART suffices.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,32 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="facial-recognition">Facial Recognition</h2>
-<p><strong>Definition.</strong> Facial recognition is the automated identification of individuals from digital images or video frames by extracting and comparing geometric or statistical features of the face. Formally, let $\mathcal{F}$ denote the space of facial images, each represented as a vector $\mathbf{x} \in \mathbb{R}^d$ where $d = H \times W$ (height times width in pixels). A facial recognition system learns a mapping $f: \mathbb{R}^d \to \mathbb{R}^k$ that projects each image into a low-dimensional <em>embedding space</em> $\mathbb{R}^k$ ($k \ll d$), such that images of the same individual are mapped to nearby points and images of different individuals are mapped to distant points. Recognition then reduces to nearest-neighbor search: given a query embedding $\mathbf{z}_q = f(\mathbf{x}_q)$, assign identity $i^<em>$ where $i^</em> = \arg\min_i \|\mathbf{z}_q - \mathbf{z}_i\|_2$.</p>
-<p><strong>Worked Example.</strong> Suppose we reduce $d = 100 \times 100 = 10{,}000$ pixel images to $k = 3$ principal components using PCA. Compute the mean face $\bar{\mathbf{x}} = \frac{1}{n}\sum_{i=1}^n \mathbf{x}_i$ and the covariance matrix $\Sigma = \frac{1}{n}\sum_{i=1}^n (\mathbf{x}_i - \bar{\mathbf{x}})(\mathbf{x}_i - \bar{\mathbf{x}})^\top$. The top-$k$ eigenvectors $\mathbf{u}_1, \mathbf{u}_2, \mathbf{u}_3$ of $\Sigma$ form the <em>eigenface</em> basis. A new image $\mathbf{x}$ is embedded as $\mathbf{z} = U^\top(\mathbf{x} - \bar{\mathbf{x}})$ where $U = [\mathbf{u}_1 \mid \mathbf{u}_2 \mid \mathbf{u}_3]$. Identity is determined by finding the gallery embedding $\mathbf{z}_i$ minimizing $\|\mathbf{z} - \mathbf{z}_i\|_2$.</p>
-<p><strong>Key Theorem (Eckart–Young–Mirsky).</strong> Among all rank-$k$ approximations $\hat{\Sigma}$ of a symmetric positive semidefinite matrix $\Sigma$, the truncated eigendecomposition $\hat{\Sigma}_k = \sum_{j=1}^k \lambda_j \mathbf{u}_j \mathbf{u}_j^\top$ minimizes $\|\Sigma - \hat{\Sigma}\|_F$, where $\|\cdot\|_F$ denotes the Frobenius norm. This guarantees that PCA retains the maximum variance in $k$ dimensions, making it the optimal linear dimensionality reduction for recognition tasks.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import numpy as np
-from sympy import Matrix, symbols, sqrt, Rational
-
-# Toy 4-pixel face gallery (each row = one flattened image)
-X = Matrix([
-    [1, 2, 3, 4],
-    [2, 3, 4, 5],
-    [9, 8, 7, 6],
-    [8, 7, 6, 5],
-])
-
-mean_face = X.T * Matrix([Rational(1,4)] * 4)
-X_centered = X - Matrix([[mean_face.T]] * 4)
-
-# Covariance (symbolic, small example)
-C = X_centered.T * X_centered * Rational(1, 4)
-print("Covariance matrix:")
-print(C)
-
-# Eigenvalues reveal dominant variance directions
-eigenvals = C.eigenvals()
-print("Eigenvalues:", eigenvals)</code></pre>
+<p><strong>Definition.</strong> Facial recognition is the computational problem of mapping a raw image $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$ to an identity $y \in \mathcal{Y}$ via a learned function $f_\theta : \mathcal{X} \to \mathcal{S}^{d-1}$, where $\mathcal{S}^{d-1}$ is the unit hypersphere in $\mathbb{R}^d$. Two images $\mathbf{x}_i, \mathbf{x}_j$ are declared a match when $\langle f_\theta(\mathbf{x}_i), f_\theta(\mathbf{x}_j) \rangle \geq \tau$ for some threshold $\tau \in [-1,1]$. The central challenge is learning an embedding geometry in which intra-class distances are small and inter-class distances are large — a requirement formalized by metric learning objectives.</p>
+<p><strong>Theorem (ArcFace margin condition).</strong> Let $\mathbf{W} \in \mathbb{R}^{d \times |\mathcal{Y}|}$ be a weight matrix with $\ell_2$-normalized columns and let $\hat{\mathbf{x}} = f_\theta(\mathbf{x}) / \|f_\theta(\mathbf{x})\|$. The ArcFace loss (Deng et al., 2019) is</p>
+$$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} \log \frac{e^{s(\cos(\theta_{y_i} + m))}}{e^{s(\cos(\theta_{y_i} + m))} + \sum_{j \neq y_i} e^{s \cos \theta_j}},$$
+<p>where $\theta_j = \arccos(\hat{\mathbf{x}}^\top \mathbf{w}_j)$ is the angle between embedding and class weight, $m > 0$ is an additive angular margin, and $s > 0$ is a scale factor. For the loss to be well-defined with a positive gradient, one must have $\theta_{y_i} + m < \pi$, constraining admissible angles to $\theta_{y_i} \in [0, \pi - m)$. The geodesic margin on $\mathcal{S}^{d-1}$ is then $m$ radians, and the decision boundary is the great-circle locus $\cos(\theta_i + m) = \cos \theta_j$.</p>
+<p><em>Proof sketch.</em> The constraint follows directly from the monotonicity of cosine on $[0, \pi]$: the angular penalty $\theta_{y_i} \mapsto \theta_{y_i} + m$ must remain in the domain where the softmax denominator exceeds the numerator for incorrect classes. One verifies this by requiring the logit of the true class after penalty to be less than the unpunished logit at the margin angle; see Deng et al. (2019), Proposition 1, for the full derivation. $\square$</p>
+<p><strong>Literature context.</strong> The field progresses along two largely independent axes: representation quality and evaluation fairness. On the first axis, contrastive and angular-margin losses — DeepFace (Taigman et al., 2014), FaceNet (Schroff et al., 2015), ArcFace, and their successors — have driven verification error on LFW below 0.2 %, effectively saturating that benchmark. The open problem has shifted to distribution shift: recognition under extreme pose ($>60°$ yaw), low resolution ($<32 \times 32$ pixels), and heterogeneous modalities (NIR, thermal). On the second axis, Buolamwini and Gebru (2018) demonstrated that commercial systems exhibit accuracy disparities exceeding 30 percentage points across gender–race strata, and subsequent work (Raji and Buolamwini, 2019) shows these gaps persist in updated systems. Whether margin-based losses inherently encode demographic bias through imbalanced class statistics remains an active and contested question.</p>
+<p><strong>Suggested investigation.</strong> Replicate the ArcFace training on a subset of MS-Celeb-1M (or its cleaned variant, MS1MV3) with $d = 512$ and $m \in \{0.3, 0.4, 0.5\}$. Evaluate verification AUC on LFW and separately report TAR@FAR=0.001 stratified by the Fitzpatrick skin-tone scale using the BUPT-Balancedface partition. Vary the per-class sample count $n_c$ by sub-sampling majority classes and examine how the angular margin $m$ interacts with class imbalance — specifically, whether a larger $m$ widens or closes the inter-demographic gap. A lightweight ablation is feasible in under 48 GPU-hours with a ResNet-50 backbone.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should rigorously separate two claims: (1) that the chosen loss achieves competitive aggregate verification performance, supported by standard ROC metrics on LFW or IJB-C; and (2) that performance is equitable across demographic groups, supported by stratified TAR/FAR tables. The report should state the exact training data provenance, since MS-Celeb-1M has known label noise and consent issues that affect reproducibility and ethical standing. Discuss whether observed disparities are attributable to the loss geometry, the training data imbalance, or the evaluation set construction — these three hypotheses have distinct experimental signatures and should not be conflated.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

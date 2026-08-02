@@ -35,32 +35,17 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="choropleth-graph">Choropleth Graph</h2>
-<p><strong>Definition.</strong> A <em>choropleth graph</em> (from Greek <em>chōra</em>, region, and <em>plēthos</em>, multitude) is a thematic map in which geographic regions are shaded or colored in proportion to a statistical variable defined on those regions. Formally, let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ be a finite collection of non-overlapping polygonal regions partitioning a domain $\Omega \subset \mathbb{R}^2$, and let $f : \mathcal{R} \to \mathbb{R}$ be a scalar-valued attribute function. A choropleth graph is the pair $(\mathcal{R}, f)$ together with a color map $\phi : [\min f, \max f] \to \mathcal{C}$, where $\mathcal{C}$ is a perceptually ordered color space. Each region $r_i$ is rendered with color $\phi(f(r_i))$.</p>
-<p>The color map $\phi$ is typically constructed by first normalizing values via</p>
-$$\hat{f}(r_i) = \frac{f(r_i) - \min_j f(r_j)}{\max_j f(r_j) - \min_j f(r_j)} \in [0, 1],$$
-<p>then mapping $\hat{f}(r_i)$ to a hue or luminance gradient. Sequential maps suit data with a natural zero; diverging maps center on a meaningful midpoint $\mu$, mapping deviations $f(r_i) - \mu$ symmetrically to two contrasting hues.</p>
-<p><strong>Worked Example.</strong> Suppose five counties have population densities (persons per km²): $\{12, 45, 78, 34, 91\}$. Normalizing gives $\hat{f}$ values of $\{0.00, 0.42, 0.84, 0.28, 1.00\}$. Under a sequential blue scale, the county with density $91$ receives the darkest shade, while the county with density $12$ receives the lightest, immediately conveying spatial clustering of high-density areas.</p>
-<p><strong>Key Theorem (Visual Preattentive Processing).</strong> Empirical studies in perceptual psychology establish that hue and luminance differences of sufficient magnitude ($\Delta E \geq 3$ in CIELAB space) are detected by the human visual system in under 250 ms, prior to focused attention. Consequently, a well-designed choropleth communicates the spatial distribution of $f$ as a gestalt, enabling pattern recognition at $O(1)$ cognitive cost relative to tabular data requiring $O(n)$ sequential scan.</p>
-<p>A critical limitation is the <em>area-size bias</em>: large regions dominate visual attention regardless of their $f$ value, potentially misleading interpretation. Cartogram transformations rescale region area proportionally to $f(r_i)$, partially correcting this distortion.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import geopandas as gpd
-import matplotlib.pyplot as plt
-
-world = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
-world["log_pop"] = world["pop_est"].apply(lambda x: x**0.5)
-
-fig, ax = plt.subplots(1, 1, figsize=(12, 6))
-world.plot(
-    column="log_pop",
-    cmap="YlOrRd",
-    legend=True,
-    legend_kwds={"label": r"$\sqrt{\mathrm{Population}}$"},
-    ax=ax,
-)
-ax.set_title("World Population Choropleth ($\\sqrt{\\cdot}$ scale)")
-plt.tight_layout()
-plt.show()</code></pre>
-<p>The square-root transform compresses the dynamic range of $f$, reducing the visual dominance of extreme outliers and revealing structure in mid-range regions.</p>
+<p>You've probably seen a weather map where some states are shaded dark red for extreme heat and others are pale yellow for mild temperatures. That's a choropleth graph — a map where regions are colored to represent a measured value. The word "choropleth" comes from Greek: <em>choros</em> (region) + <em>plethos</em> (multitude). It's essentially a heat map draped over geography.</p>
+<p><strong>How the structure works.</strong> A choropleth graph has three components working together:</p>
+<li><strong>Geographic regions</strong> — countries, states, counties, or any bounded area.</li>
+<li><strong>A quantitative variable</strong> — population density, average income, election results, COVID case rates.</li>
+<li><strong>A color scale</strong> — a sequential or diverging palette that maps numeric values to colors.</li>
+<p>The mapping is straightforward. If you have a value $v$ for each region and your data spans a range $[v_{\min}, v_{\max}]$, each region gets a color proportional to how $v$ sits in that range:</p>
+$$\text{intensity} = \frac{v - v_{\min}}{v_{\max} - v_{\min}}$$
+<p>An intensity of $0$ maps to the lightest shade; an intensity of $1$ maps to the darkest.</p>
+<p><strong>The key rule.</strong> Choropleth graphs reveal <em>spatial patterns</em> — clusters, borders, and gradients across geography. They work best with rates or normalized values (people <em>per square kilometer</em>) rather than raw totals, because large regions look artificially important if you color by count alone.</p>
+<hr>
+<p><strong>Practice problem.</strong> A map shows average household income by U.S. state. Maine has $v = \$58{,}000$, Connecticut has $v = \$83{,}000$, and the national range is $[\$45{,}000,\; \$90{,}000]$. Calculate the color intensity for each state. Which state receives the darker shade, and why?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

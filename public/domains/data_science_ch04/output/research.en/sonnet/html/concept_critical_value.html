@@ -35,28 +35,19 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="critical-value">Critical Value</h2>
-<p><strong>Definition.</strong> Let $f : I \to \mathbb{R}$ be a differentiable function on an open interval $I$. A point $c \in I$ is called a <em>critical point</em> of $f$ if</p>
-$$f'(c) = 0 \quad \text{or} \quad f'(c) \text{ does not exist.}$$
-<p>The corresponding output $f(c)$ is called a <em>critical value</em> of $f$. Critical values are candidates for local extrema — the highest or lowest outputs in some neighborhood of $c$ — though not every critical value need be an extremum.</p>
-<p><strong>Worked Example.</strong> Consider $f(x) = x^3 - 3x + 1$ on $\mathbb{R}$.</p>
-<p>Computing the derivative:</p>
-$$f'(x) = 3x^2 - 3 = 3(x-1)(x+1).$$
-<p>Setting $f'(x) = 0$ gives critical points $c = 1$ and $c = -1$. The corresponding critical values are:</p>
-$$f(1) = 1 - 3 + 1 = -1, \qquad f(-1) = -1 + 3 + 1 = 3.$$
-<p>To classify each, apply the <strong>Second Derivative Test</strong>: $f''(x) = 6x$, so $f''(1) = 6 > 0$ (local minimum, critical value $-1$) and $f''(-1) = -6 < 0$ (local maximum, critical value $3$). Neither is a global extremum since $f(x) \to \pm\infty$ as $x \to \pm\infty$.</p>
-<p><strong>Key Theorem (Fermat's Theorem).</strong> <em>If $f$ has a local extremum at an interior point $c$ of its domain and $f'(c)$ exists, then $f'(c) = 0$.</em></p>
-<p><em>Proof sketch.</em> Suppose $f$ has a local maximum at $c$. For small $h > 0$, the difference quotient satisfies $\frac{f(c+h)-f(c)}{h} \le 0$ and $\frac{f(c-h)-f(c)}{-h} \ge 0$. Taking $h \to 0^+$ in both inequalities forces $f'(c) \le 0$ and $f'(c) \ge 0$, hence $f'(c) = 0$. The minimum case is symmetric. $\blacksquare$</p>
-<p>Fermat's Theorem provides a necessary, not sufficient, condition: $f'(c) = 0$ guarantees only that $c$ is a <em>candidate</em>, as the example $f(x) = x^3$ at $c = 0$ illustrates (a critical point that is neither maximum nor minimum).</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>from sympy import symbols, diff, solve, latex
-
-x = symbols('x')
-f = x**3 - 3*x + 1
-fp = diff(f, x)
-critical_pts = solve(fp, x)
-critical_vals = {c: f.subs(x, c) for c in critical_pts}
-print(critical_vals)   # {-1: 3, 1: -1}</code></pre>
-<p>Running this cell confirms both critical values and invites the student to modify $f$ to explore how the count and nature of critical values changes with the degree of the polynomial.</p>
+<p><strong>Definition.</strong> Let $T$ be a test statistic with sampling distribution $F_T(\,\cdot\,;\theta_0)$ under the null hypothesis $H_0:\theta=\theta_0$. For a pre-specified significance level $\alpha\in(0,1)$, the <em>critical value</em> $c_\alpha$ is defined as the quantile satisfying</p>
+$$P_{\theta_0}(T > c_\alpha) = \alpha,$$
+<p>for a one-sided upper-tail test, or more generally as the boundary of a rejection region $\mathcal{R}_\alpha$ such that $P_{\theta_0}(T\in\mathcal{R}_\alpha)\leq\alpha$. For two-sided tests, $\mathcal{R}_\alpha=\{\lvert T\rvert > c_{\alpha/2}\}$. The null hypothesis is rejected when the observed statistic falls beyond $c_\alpha$, partitioning the sample space into the rejection region and its complement.</p>
+<p><strong>Theorem (Neyman–Pearson, 1933).</strong> Let $X_1,\ldots,X_n\sim f(\,\cdot\,;\theta)$ with $\theta\in\{\theta_0,\theta_1\}$. Among all level-$\alpha$ tests of $H_0:\theta=\theta_0$ against $H_1:\theta=\theta_1$, the likelihood-ratio test with rejection region</p>
+$$\mathcal{R}^* = \left\{\Lambda(\mathbf{X}) = \frac{f(\mathbf{X};\theta_1)}{f(\mathbf{X};\theta_0)} > k_\alpha\right\},$$
+<p>where $k_\alpha$ satisfies $P_{\theta_0}(\Lambda > k_\alpha)=\alpha$, is uniformly most powerful.</p>
+<p><em>Proof sketch.</em> Let $\phi^<em>$ be the likelihood-ratio test and $\phi$ any competing level-$\alpha$ test. Since $\phi^</em>(\mathbf{x})=1$ whenever $\Lambda(\mathbf{x})>k_\alpha$ and $0$ otherwise,</p>
+$$\bigl(\phi^*(\mathbf{x})-\phi(\mathbf{x})\bigr)\bigl(f(\mathbf{x};\theta_1)-k_\alpha f(\mathbf{x};\theta_0)\bigr)\geq 0 \quad\text{a.e.}$$
+<p>Integrating and applying the level constraint $E_{\theta_0}[\phi]\leq\alpha$ yields $E_{\theta_1}[\phi^*]\geq E_{\theta_1}[\phi]$. $\square$</p>
+<p>The critical value $k_\alpha$ here is not a table look-up but the solution to an integral equation that may have no closed form; finding or approximating it is already a nontrivial numerical task.</p>
+<p><strong>Literature context.</strong> The Neyman–Pearson framework gives critical values a decision-theoretic interpretation, but in practice $c_\alpha$ is almost always obtained asymptotically: by Slutsky's theorem, many statistics converge in distribution to $\mathcal{N}(0,1)$ or $\chi^2_k$ under $H_0$, so $c_\alpha=z_\alpha$ or $\chi^2_{k,\alpha}$ from standard tables. The open frontier concerns finite-sample validity. The <em>bootstrap critical value</em> $\hat{c}_\alpha^B$ is the one new primitive introduced here: one resamples $B$ datasets under the null (either by recentering draws around $\hat{\theta}_0$ or by exact null-resampling for permutation-invariant statistics), computes $T^{(b)}$ for each, and sets $\hat{c}_\alpha^B$ as the $(1-\alpha)$ empirical quantile of $\{T^{(1)},\ldots,T^{(B)}\}$. Hall (1992) and Efron and Tibshirani (1993) show this achieves higher-order accuracy via implicit Edgeworth correction, reducing size distortion by $O(n^{-1})$ relative to the normal critical value under i.i.d. sampling. The caveat is sharp: coverage guarantees degrade under heavy tails or dependence because the resampling scheme must correctly mimic the null distribution, and it does not when serial correlation invalidates the i.i.d. bootstrap. Extensions to block bootstrap and subsampling (Politis, Romano & Wolf 1999; Lahiri 2003) address the dependent-data case but introduce new tuning choices. The composite-null extension — requiring $\sup_{\theta\in H_0}P_\theta(T\in\mathcal{R}_\alpha)\leq\alpha$ — introduces further difficulty addressed by Lehmann and Romano (2005), and distribution-free alternatives (Vovk, Gammerman & Shafer 2005) recasting $c_\alpha$ as a nonconformity quantile are active research directions beyond the scope of this entry.</p>
+<p><strong>Suggested investigation.</strong> Simulate data from three generative models: $\mathcal{N}(0,1)$ (baseline), $t_3$ (heavy tails), and $\mathrm{AR}(1)$ with $\rho=0.5$ (dependence). For each setting and $n\in\{20,50,200\}$, compute the empirical null-rejection rate at $\alpha=0.05$ under three critical-value schemes: (1) the asymptotic normal value $z_\alpha$; (2) the bootstrap critical value $\hat{c}_\alpha^B$ obtained by resampling under the null; (3) a permutation critical value $\hat{c}_\alpha^P$. Then sweep a local-alternatives sequence $\theta_1=\delta/\sqrt{n}$ for $\delta\in[0,4]$ to produce empirical power curves, comparing against the Neyman–Pearson power envelope where computable. Expected pattern: the asymptotic critical value over-rejects under $t_3$ at small $n$; the bootstrap corrects this for i.i.d. data but degrades under $\mathrm{AR}(1)$; the permutation test holds exact level under exchangeability but loses power when exchangeability fails.</p>
+<p><strong>Report-writing note.</strong> A write-up should establish: (i) null rejection rates as a joint function of $(n, \alpha, \text{DGP})$ with Monte Carlo standard errors; (ii) the power envelope comparison with explicit statement of which optimality conditions hold in each setting; (iii) a theoretical argument — at minimum via first-order Edgeworth expansion — explaining why $\hat{c}_\alpha^B$ reduces size distortion relative to $z_\alpha$; and (iv) a discussion of when the observed size distortions are practically consequential. Every assumption underlying each method must be stated explicitly and cross-referenced against each simulation setting.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

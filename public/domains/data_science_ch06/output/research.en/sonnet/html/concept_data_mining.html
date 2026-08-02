@@ -35,32 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-mining">Data Mining</h2>
-<p><strong>Definition.</strong> <em>Data mining</em> is the computational process of discovering structural patterns, statistical regularities, and predictive relationships in large datasets by combining methods from statistics, machine learning, and database theory. Formally, given a dataset $\mathcal{D} = \{x_1, x_2, \ldots, x_n\} \subset \mathbb{R}^d$, data mining seeks a model $f : \mathbb{R}^d \to \mathcal{Y}$ — or a set of rules $\mathcal{R}$ — that compactly describes the generating distribution $P(\mathbf{x})$ or a conditional distribution $P(y \mid \mathbf{x})$, where $y \in \mathcal{Y}$ is a target variable. The discipline is distinguished from pure statistics by its emphasis on scalability: algorithms must remain tractable as $n$ and $d$ grow to millions.</p>
-<p><strong>Worked Example.</strong> Consider a retail dataset of $n = 10{,}000$ transactions, each a binary vector $\mathbf{x} \in \{0,1\}^{500}$ indicating which of 500 products were purchased together. A foundational task is <em>association rule mining</em>: find pairs $(A, B)$ of item sets such that the <em>support</em></p>
-$$\text{supp}(A \Rightarrow B) = \frac{|\{\mathbf{x} \in \mathcal{D} : A \cup B \subseteq \mathbf{x}\}|}{n}$$
-<p>exceeds a threshold $\sigma$, and the <em>confidence</em></p>
-$$\text{conf}(A \Rightarrow B) = \frac{\text{supp}(A \cup B)}{\text{supp}(A)}$$
-<p>exceeds a threshold $\gamma$. Setting $\sigma = 0.02$ and $\gamma = 0.60$ might reveal, for example, that customers who purchase bread and butter also purchase jam with 63% confidence — an actionable insight for shelf placement.</p>
-<p><strong>Key Theorem (Apriori Anti-Monotonicity).</strong> If an item set $S$ has $\text{supp}(S) < \sigma$, then every superset $S' \supset S$ satisfies $\text{supp}(S') \leq \text{supp}(S) < \sigma$. This monotonicity of the support measure allows the Apriori algorithm to prune the exponential search space $2^{500}$ by discarding all extensions of low-support sets, reducing practical complexity to a manageable breadth-first traversal over frequent item sets only.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import Rational
-
-transactions = [
-    {"bread", "butter", "jam"},
-    {"bread", "butter"},
-    {"bread", "jam"},
-    {"butter", "jam"},
-    {"bread", "butter", "jam"},
-]
-
-n = len(transactions)
-supp_AB  = sum(1 for t in transactions if {"bread","butter"} &lt;= t) / n
-supp_ABC = sum(1 for t in transactions if {"bread","butter","jam"} &lt;= t) / n
-conf     = Rational(int(supp_ABC * n), int(supp_AB * n))
-
-print(f"supp(bread ∧ butter) = {supp_AB}")
-print(f"conf(bread,butter ⇒ jam) = {conf}")</code></pre>
-<p>Running this cell yields $\text{conf} = \tfrac{2}{3} \approx 0.667$, confirming the rule at a 60% threshold.</p>
+<p><strong>Definition.</strong> Let $\mathcal{D} = \{x_1, x_2, \ldots, x_n\} \subset \mathcal{X}$ be a finite sample drawn i.i.d. from an unknown distribution $P$ over a measurable space $(\mathcal{X}, \mathcal{F})$. Data mining is the algorithmic extraction of <em>statistically significant</em>, <em>previously unknown</em>, and <em>actionable</em> patterns from $\mathcal{D}$. Formally, a pattern is a statement $\varphi$ in some language $\mathcal{L}$ such that (i) $\varphi$ holds on a non-negligible fraction of $\mathcal{D}$, quantified by a <em>support</em> threshold $\sigma \in (0,1]$, and (ii) $\varphi$ would not be expected to hold under a null model $P_0$ at significance level $\alpha$. The tension between (i) and (ii) is not cosmetic: it defines the core statistical challenge of the field.</p>
+<p><strong>Theorem (Bonferroni bottleneck).</strong> Let $|\mathcal{L}|$ be the cardinality of the pattern language. If each pattern $\varphi_i$ is tested independently at level $\alpha$ under $P_0$, the expected number of false positives is $|\mathcal{L}| \cdot \alpha$. For association-rule mining with binary itemsets over $d$ items, $|\mathcal{L}| = 3^d - 2^{d+1} + 1$, which grows exponentially in $d$.</p>
+<p><em>Proof sketch.</em> By linearity of expectation and the union bound, $\mathbb{E}[\text{false positives}] = \sum_{i=1}^{|\mathcal{L}|} \Pr[\text{reject } H_0^{(i)} \mid H_0^{(i)} \text{ true}] = |\mathcal{L}| \cdot \alpha$. The itemset count follows from inclusion-exclusion on the power set $2^{[d]}$, subtracting singletons and the empty set. $\square$</p>
+<p>This observation underpins every modern correction strategy: Bonferroni control of the family-wise error rate (FWER), Benjamini–Hochberg control of the false discovery rate (FDR), and the more recent <em>pattern-team</em> approaches that treat the selected set as a random variable and bound its risk directly (Hämäläinen, 2012; Webb, 2007).</p>
+<p><strong>Literature context.</strong> The Apriori algorithm (Agrawal & Srikant, 1994) established the antimonotonicity of support as a pruning device, reducing exponential search to tractable lattice traversal. FP-Growth (Han et al., 2000) eliminated repeated database scans via a compressed tree structure, achieving near-linear scaling in practice. However, neither addresses statistical validity: a pattern with support $\sigma$ on $\mathcal{D}$ may not generalize to $P$. The <em>statistically valid pattern mining</em> (SVPM) programme (Terada et al., 2013; Llinares-López et al., 2015) reframes mining as a multiple-testing problem under a Westfall–Young permutation framework, enabling FWER control without sacrificing power by restricting the family to <em>testable</em> patterns — those whose support falls above the minimum testable threshold given $n$ and $\alpha$.</p>
+<p>An open question concerns the <em>power–interpretability frontier</em>: deep representation-learning methods (autoencoders, transformer embeddings) identify latent patterns that classical itemset miners miss, but these patterns resist the propositional form that SVPM requires. Bridging distributional representations with statistically grounded significance tests remains unsolved.</p>
+<p><strong>Suggested investigation.</strong> Implement Apriori and FP-Growth on a real tabular dataset (e.g., UCI Adult or a local transaction log). For each discovered rule $X \Rightarrow Y$, compute the chi-squared statistic against the independence null and apply Bonferroni and BH corrections. Plot the number of surviving rules against $\sigma$ to locate the <em>elbow</em> at which inflation artifacts dominate. Optionally, replicate the LAMP algorithm (Terada et al., 2013) and compare its testable-pattern set against the Bonferroni-corrected set for the same data.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the empirical relationship between $\sigma$ and rule count, demonstrating Bonferroni inflation; (2) a clean table comparing FWER-controlled and FDR-controlled rule sets; (3) a discussion of whether the surviving rules are interpretable and actionable by a domain expert. If the LAMP replication is included, quantify the power gain — number of rules recovered — relative to naïve Bonferroni at identical FWER, providing a concrete data point on the cost of ignoring testability.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

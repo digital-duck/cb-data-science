@@ -35,32 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="choropleth-graph">Choropleth Graph</h2>
-<p><strong>Definition.</strong> A <em>choropleth graph</em> (from Greek <em>chōra</em>, region, and <em>plēthos</em>, multitude) is a thematic map in which geographic regions are shaded or colored in proportion to a statistical variable defined on those regions. Formally, let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ be a finite collection of non-overlapping polygonal regions partitioning a domain $\Omega \subset \mathbb{R}^2$, and let $f : \mathcal{R} \to \mathbb{R}$ be a scalar-valued attribute function. A choropleth graph is the pair $(\mathcal{R}, f)$ together with a color map $\phi : [\min f, \max f] \to \mathcal{C}$, where $\mathcal{C}$ is a perceptually ordered color space. Each region $r_i$ is rendered with color $\phi(f(r_i))$.</p>
-<p>The color map $\phi$ is typically constructed by first normalizing values via</p>
-$$\hat{f}(r_i) = \frac{f(r_i) - \min_j f(r_j)}{\max_j f(r_j) - \min_j f(r_j)} \in [0, 1],$$
-<p>then mapping $\hat{f}(r_i)$ to a hue or luminance gradient. Sequential maps suit data with a natural zero; diverging maps center on a meaningful midpoint $\mu$, mapping deviations $f(r_i) - \mu$ symmetrically to two contrasting hues.</p>
-<p><strong>Worked Example.</strong> Suppose five counties have population densities (persons per km²): $\{12, 45, 78, 34, 91\}$. Normalizing gives $\hat{f}$ values of $\{0.00, 0.42, 0.84, 0.28, 1.00\}$. Under a sequential blue scale, the county with density $91$ receives the darkest shade, while the county with density $12$ receives the lightest, immediately conveying spatial clustering of high-density areas.</p>
-<p><strong>Key Theorem (Visual Preattentive Processing).</strong> Empirical studies in perceptual psychology establish that hue and luminance differences of sufficient magnitude ($\Delta E \geq 3$ in CIELAB space) are detected by the human visual system in under 250 ms, prior to focused attention. Consequently, a well-designed choropleth communicates the spatial distribution of $f$ as a gestalt, enabling pattern recognition at $O(1)$ cognitive cost relative to tabular data requiring $O(n)$ sequential scan.</p>
-<p>A critical limitation is the <em>area-size bias</em>: large regions dominate visual attention regardless of their $f$ value, potentially misleading interpretation. Cartogram transformations rescale region area proportionally to $f(r_i)$, partially correcting this distortion.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import geopandas as gpd
-import matplotlib.pyplot as plt
-
-world = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
-world["log_pop"] = world["pop_est"].apply(lambda x: x**0.5)
-
-fig, ax = plt.subplots(1, 1, figsize=(12, 6))
-world.plot(
-    column="log_pop",
-    cmap="YlOrRd",
-    legend=True,
-    legend_kwds={"label": r"$\sqrt{\mathrm{Population}}$"},
-    ax=ax,
-)
-ax.set_title("World Population Choropleth ($\\sqrt{\\cdot}$ scale)")
-plt.tight_layout()
-plt.show()</code></pre>
-<p>The square-root transform compresses the dynamic range of $f$, reducing the visual dominance of extreme outliers and revealing structure in mid-range regions.</p>
+<p><strong>Definition.</strong> Let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ be a finite partition of a domain $\Omega \subset \mathbb{R}^2$ into simply connected regions (countries, census tracts, electoral districts). A <em>choropleth graph</em> is the triple $\mathcal{C} = (G, f, \tau)$, where $G = (V, E)$ is the planar adjacency graph with vertex set $V = \mathcal{R}$ and edge set $E = \{(r_i, r_j) : \partial r_i \cap \partial r_j \neq \emptyset,\; i \neq j\}$; $f : V \to \mathbb{R}$ is a scalar field assigning an aggregate statistical value to each region (e.g., population density, unemployment rate); and $\tau : \mathbb{R} \to \mathcal{C}_k$ is a <em>color transfer function</em> mapping real values to a $k$-color palette. The resulting visualization encodes $f$ through filled region color rather than through position or size.</p>
+<p><strong>Theorem (Classification-Induced Distortion).</strong> Let $\hat{f} = \tau^{-1} \circ \tau \circ f$ be the piecewise-constant approximation of $f$ induced by any finite classification scheme that partitions $\text{range}(f)$ into $k$ bins. Then for any Lipschitz loss $\ell$,</p>
+$$\mathbb{E}_{r \sim \mu}\bigl[\ell(f(r), \hat{f}(r))\bigr] \;\geq\; \frac{1}{4k^2}\,\mathrm{Var}_\mu(f),$$
+<p>where $\mu$ is the area measure on $\Omega$. <em>Proof sketch.</em> By the classical $k$-bin quantization lower bound, any uniform-width partition achieves worst-case squared error at least $(1/4k^2)\mathrm{Var}(f)$; Lipschitz $\ell$ with constant $L$ then gives the result by Jensen's inequality. Optimal bin placement (Jenks–Fisher natural breaks) minimizes within-class variance $\sum_{j=1}^k \sum_{r \in B_j}(f(r) - \bar{f}_{B_j})^2$, but the lower bound is tight for adversarial $f$.</p>
+<p><strong>Literature context.</strong> The choropleth as a statistical graphic traces to Dupin (1826) and was formalized by Tobler's <em>First Law of Spatial Autocorrelation</em> (1970): nearby regions tend to exhibit similar values. This is captured by Moran's $I$,</p>
+$$I = \frac{n}{\sum_{i,j} w_{ij}} \cdot \frac{\sum_{i,j} w_{ij}(f_i - \bar{f})(f_j - \bar{f})}{\sum_i (f_i - \bar{f})^2},$$
+<p>where $w_{ij} = \mathbf{1}[(r_i, r_j) \in E]$ is the adjacency weight matrix. $I \approx 1$ signals strong positive spatial clustering; $I \approx -1$ signals dispersion. Open questions center on: (i) perceptual nonlinearity — sequential colorbrewer palettes may introduce perceived discontinuities not present in $f$; (ii) modifiable areal unit problem (MAUP), whereby identical underlying distributions yield different $I$ values under different partitions $\mathcal{R}$; (iii) optimal-transport formulations of choropleth comparison, wherein the Wasserstein distance $W_2(\mu_f, \mu_g)$ between two scalar fields is a partition-invariant dissimilarity.</p>
+<p><strong>Suggested investigation.</strong> Obtain a public dataset with two coincident partitions at different spatial scales (e.g., US counties vs. states, or NUTS-2 vs. NUTS-3 European regions). Fix a variable $f$ (e.g., median household income). Compute $I$ at both scales and record the ratio $I_{\text{fine}} / I_{\text{coarse}}$. Repeat under three classification schemes (equal interval, quantile, Jenks). Measure perceptual accuracy by presenting choropleth renderings to naive raters and asking them to rank regions, then computing Kendall's $\tau$ against ground truth $f$. The question of interest: does Jenks minimization of quantization distortion translate to higher $\tau$ in perceptual rank recovery, or does scale dominate scheme?</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) an explicit mathematical definition of the partition and the transfer function used; (2) the value of $I$ at each scale with a permutation-test $p$-value under spatial randomization; (3) a table of within-class variance by scheme and scale; (4) a psychophysical result reporting Kendall's $\tau$ with confidence intervals; and (5) a discussion section identifying whether observed accuracy differences survive MAUP resampling, connecting findings to the MAUP literature (Openshaw 1984) and recent optimal-transport critiques of choropleth comparison.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,24 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="explainable-ai">Explainable Ai</h2>
-<p><strong>Definition.</strong> An <em>explainable AI</em> (XAI) system is a machine-learning model $f : \mathcal{X} \to \mathcal{Y}$ paired with an explanation function $e : \mathcal{X} \times \mathcal{Y} \to \mathcal{E}$, where $\mathcal{E}$ is a human-interpretable representation space. Formally, $e(\mathbf{x}, \hat{y})$ produces a description—such as a feature-importance vector or a decision rule—that faithfully characterizes why $f(\mathbf{x}) = \hat{y}$. Faithfulness is quantified by the <em>fidelity</em> of $e$ with respect to $f$ on a neighborhood $\mathcal{N}(\mathbf{x})$:</p>
-$$\text{Fidelity}(e, f, \mathbf{x}) = 1 - \frac{1}{|\mathcal{N}(\mathbf{x})|}\sum_{\mathbf{z} \in \mathcal{N}(\mathbf{x})} \mathbf{1}\bigl[e(\mathbf{z}, f(\mathbf{z})) \neq f(\mathbf{z})\bigr].$$
-<p>A high-fidelity explanation approximates the black-box model locally, even when no globally interpretable surrogate exists.</p>
-<p><strong>Worked Example.</strong> Consider a neural network trained to approve or deny loan applications. Given an applicant vector $\mathbf{x} = (\text{income}, \text{debt}, \text{credit\_score})$, the model outputs $\hat{y} = \text{deny}$. Using the LIME algorithm (Local Interpretable Model-agnostic Explanations), we sample $N = 500$ perturbed neighbors $\mathbf{z}^{(i)}$ around $\mathbf{x}$, weight each by $\pi(\mathbf{x}, \mathbf{z}^{(i)}) = \exp\!\left(-\tfrac{\|\mathbf{x} - \mathbf{z}^{(i)}\|^2}{2\sigma^2}\right)$, and fit a weighted linear surrogate:</p>
-$$\hat{g}(\mathbf{z}) = \beta_0 + \beta_1 z_1 + \beta_2 z_2 + \beta_3 z_3.$$
-<p>Suppose the solution yields $\beta_3 = -0.72$ (the largest-magnitude coefficient). The explanation is: <em>credit score is the dominant negative factor for this decision</em>, giving the applicant actionable feedback.</p>
-<p><strong>Key Theorem (LIME Consistency).</strong> Let $g^<em>$ minimize the locally weighted squared loss $\mathcal{L}(g, f, \pi_\mathbf{x}) = \sum_{\mathbf{z}} \pi_\mathbf{x}(\mathbf{z})\,[f(\mathbf{z}) - g(\mathbf{z})]^2$ over a function class $\mathcal{G}$ with complexity $\Omega(g)$. Then $g^</em>$ converges to the first-order Taylor expansion of $f$ at $\mathbf{x}$ as $\sigma \to 0$, provided $f$ is differentiable at $\mathbf{x}$.</p>
-<p>This theorem shows that LIME explanations are locally exact in the limit—they are not arbitrary but grounded in the model's gradient structure.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, exp, diff, lambdify
-import numpy as np
-
-income, debt, credit = symbols('income debt credit')
-# Toy differentiable model proxy
-f_sym = 1 / (1 + exp(-(0.3*income - 0.5*debt - 0.8*credit + 2)))
-grad = [diff(f_sym, v) for v in (income, debt, credit)]
-print("Gradient at (50, 20, 650):", [g.subs({income:50, debt:20, credit:650}).evalf() for g in grad])</code></pre>
-<p>Running this cell reveals which feature direction most steeply shifts the model output, providing the theoretical basis for the LIME coefficient magnitudes observed above.</p>
+<p>You already know that AI models can make surprisingly good predictions — a model might correctly flag a suspicious bank transaction or recommend the perfect playlist. But here's a deeper question: <em>why</em> did it make that call? If the model can't tell you, that's a problem — especially in high-stakes situations like medical diagnoses or loan approvals.</p>
+<p><strong>Explainable AI (XAI)</strong> is the field that studies how to make model decisions transparent and interpretable.</p>
+<p>One of the most widely used tools is <strong>feature importance</strong>. Suppose a model predicts whether a student will pass an exam using three inputs: hours studied ($x_1$), sleep hours ($x_2$), and attendance rate ($x_3$). After training, we can ask: how much did each feature <em>contribute</em> to the prediction? A technique called <strong>SHAP</strong> (SHapley Additive exPlanations) assigns each feature a score $\phi_i$ so that:</p>
+$$\hat{y} = \phi_0 + \phi_1 + \phi_2 + \phi_3$$
+<p>Here $\phi_0$ is the baseline (average prediction), and each $\phi_i$ shows how much feature $x_i$ pushed the prediction up or down. A large positive $\phi_1$ means studying a lot helped; a large negative $\phi_2$ means poor sleep hurt.</p>
+<p>The key insight: <strong>a model is only trustworthy if you can audit its reasoning.</strong> A black-box model that happens to be right isn't necessarily safe — it might be right for the wrong reasons.</p>
+<p><strong>Practice Problem:</strong> A loan-approval model produces the SHAP values below for one applicant:</p>
+<p>| Feature | $\phi_i$ | |---|---| | Credit score | $+0.30$ | | Debt-to-income ratio | $-0.45$ | | Employment years | $+0.10$ | | Baseline $\phi_0$ | $0.60$ |</p>
+<p>What is the model's predicted approval score $\hat{y}$? Based on the signs, which single factor most hurt this applicant's chances?</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

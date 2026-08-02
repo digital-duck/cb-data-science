@@ -35,26 +35,15 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="deepfake">Deepfake</h2>
-<p><strong>Definition.</strong> A <em>deepfake</em> is a synthetic media artifact produced by a deep neural network that has learned to map one distribution of perceptual data (faces, voices, video frames) onto another, such that the output is statistically indistinguishable from authentic content to an unaided observer. Formally, let $\mathcal{X}$ denote the space of real facial images and $\mathcal{Y}$ a target identity space. A generative model $G_\theta : \mathcal{X} \to \mathcal{Y}$ is trained so that the distribution $G_\theta(\mathcal{X})$ closely approximates $\mathcal{Y}$ under some divergence measure $D(G_\theta(\mathcal{X}) \| \mathcal{Y})$. The predominant architecture is the <em>Generative Adversarial Network</em> (GAN), in which a generator $G$ and a discriminator $D$ engage in a minimax game:</p>
-$$\min_G \max_D \; \mathbb{E}_{x \sim p_{\text{data}}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))]$$
-<p>where $z$ is a latent noise vector drawn from a prior $p_z$, typically $\mathcal{N}(0, I)$.</p>
-<p><strong>Worked Example.</strong> Consider a face-swap pipeline operating on $128 \times 128$ RGB frames. An encoder $E$ extracts a latent embedding $\mathbf{h} = E(x) \in \mathbb{R}^{512}$ from a source frame $x$. A decoder $D_B$ trained on target identity $B$ reconstructs a new frame $\hat{x} = D_B(\mathbf{h})$. The pixel-wise reconstruction loss and a perceptual loss $\mathcal{L}_{\text{perc}} = \| \phi(\hat{x}) - \phi(x) \|_2^2$ (where $\phi$ denotes intermediate VGG feature maps) jointly supervise training. After convergence, the face of identity $A$ appears with the expressions and pose of $B$ in every output frame.</p>
-<p><strong>Key Theorem (GAN Optimality, Goodfellow et al., 2014).</strong> At the global optimum of the minimax objective, the generator minimises the Jensen–Shannon divergence between $p_{\text{data}}$ and $p_G$:</p>
-$$D_{\text{JS}}(p_{\text{data}} \| p_G) = 0 \implies p_G = p_{\text{data}}$$
-<p>The proof proceeds by showing that, for a fixed $G$, the optimal discriminator is $D^*(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_G(x)}$, and substituting back reduces the objective to $-\log 4 + 2\, D_{\text{JS}}(p_{\text{data}} \| p_G)$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, log, diff, solve, Rational
-
-p, q = symbols('p q', positive=True)
-# Optimal discriminator value
-D_star = p / (p + q)
-# JS divergence contribution at equilibrium
-js_term = p * log(p / (p + q)) + q * log(q / (p + q))
-print("JS term:", js_term)
-# Verify minimum when p == q
-sol = solve(diff(js_term, p).subs(q, p), p)
-print("Critical point (p=q):", sol)</code></pre>
-<p>Running this cell confirms that the divergence is extremised when $p = q$, consistent with $p_G = p_{\text{data}}$ at the generator's optimum.</p>
+<p><strong>Definition.</strong> A <em>deepfake</em> is a synthetic media artifact produced by a learned generative model $G_\theta : \mathcal{Z} \to \mathcal{X}$ that maps a latent code $z \in \mathcal{Z}$ (or a source identity embedding) to a target data manifold $\mathcal{X}$ (images, video frames, or audio waveforms), such that the output is perceptually indistinguishable from authentic recordings of a real individual. The canonical instantiation is face-swap synthesis: given a source face $x_s$ and a target scene $x_t$, a generative network produces $\hat{x} = G_\theta(x_s, x_t)$ satisfying two competing objectives — identity fidelity $d_{\text{id}}(\hat{x}, x_s) \approx 0$ and scene coherence $d_{\text{scene}}(\hat{x}, x_t) \approx 0$ — where $d_{\text{id}}$ and $d_{\text{scene}}$ are distances in a learned embedding space (e.g., ArcFace for identity, perceptual VGG features for texture).</p>
+<p><strong>Generative formulation and the detection dual.</strong> Deepfake generation is most cleanly framed as a minimax problem in the GAN setting (Goodfellow et al., 2014):</p>
+$$\min_{G} \max_{D} \; \mathbb{E}_{x \sim p_{\text{data}}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))].$$
+<p>At Nash equilibrium, $p_G = p_{\text{data}}$ and $D^<em> \equiv 1/2$, rendering detection impossible in principle. The </em>detection problem<em> is therefore a question of distributional shift: production deepfakes are drawn from $p_G \neq p_{\text{data}}$ due to finite model capacity and training corpus bias, so a detector $D^</em> : \mathcal{X} \to \{0, 1\}$ can exploit residual artifacts. This is formalized as a Neyman–Pearson hypothesis test:</p>
+$$H_0: x \sim p_{\text{data}}, \qquad H_1: x \sim p_G,$$
+<p>with the likelihood ratio $\Lambda(x) = p_G(x)/p_{\text{data}}(x)$ as the optimal test statistic. The central open question is characterizing how $\Lambda(x)$ concentrates in high-dimensional image space as model capacity scales, i.e., whether detector advantage vanishes polynomially or exponentially in generator parameter count.</p>
+<p><strong>Literature context.</strong> The dominant empirical finding is that GAN-generated images leave systematic traces in the Fourier domain — periodic grid artifacts from upsampling operations that manifest as peaks at spatial frequencies $\omega = 2\pi k / s$ where $s$ is the stride of transposed convolutions (Durall et al., 2020; Frank et al., 2020). Diffusion-based synthesizers (Rombach et al., 2022; Ho et al., 2020) substantially attenuate these artifacts, shifting the open frontier toward semantic and temporal inconsistencies (blink rate, micro-expression statistics, physiological signals such as rPPG). Cross-dataset generalization of detectors remains fragile; models trained on FaceForensics++ degrade substantially on in-the-wild distributions (Rossler et al., 2019), suggesting detectors learn generator fingerprints rather than universal forgery signatures.</p>
+<p><strong>Suggested investigation.</strong> Train a standard deepfake detector (e.g., EfficientNet-B4 fine-tuned on FaceForensics++) and evaluate its confusion matrix on (1) GAN-generated samples, (2) diffusion-generated samples, and (3) video codec re-compressed authentic footage. Compute the 2D power spectrum $|\mathcal{F}(x)|^2$ for each class and quantify spectral divergence via KL-divergence between radially averaged spectra. Determine whether detector accuracy correlates with spectral distinguishability across generation methods.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the experimental protocol for constructing each sample class with matched resolution and compression settings; the receiver operating characteristic (ROC) curves with AUC reported per class; the spectral analysis with annotated artifact frequencies; and a discussion of whether observed accuracy differences are explained by spectral artifacts alone or require other features, connecting findings explicitly to the capacity-scaling question left open above.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

@@ -35,32 +35,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="scatterplot">Scatterplot</h2>
-<p><strong>Definition.</strong> A <em>scatterplot</em> is a two-dimensional graphical display in which each observation in a dataset is represented by a single point. Given $n$ paired measurements $\{(x_i, y_i)\}_{i=1}^{n}$, the scatterplot maps each pair to Cartesian coordinates, placing $x_i$ on the horizontal axis and $y_i$ on the vertical axis. The resulting cloud of points allows the analyst to visualise the <em>joint distribution</em> of two quantitative variables and to detect patterns such as linear or nonlinear association, clustering, and the presence of outliers.</p>
-<p>Formally, let $X$ and $Y$ be two random variables with joint density $f_{X,Y}$. A scatterplot of a sample $\{(x_i, y_i)\}_{i=1}^n$ drawn from $f_{X,Y}$ provides a nonparametric visual estimate of the support and shape of that joint distribution.</p>
-<hr>
-<p><strong>Worked example.</strong> Suppose a student records the number of hours studied, $x_i$, and the exam score, $y_i$, for $n = 5$ classmates:</p>
-<p>| $i$ | $x_i$ (hours) | $y_i$ (score) | |-----|--------------|--------------| | 1   | 2            | 55           | | 2   | 4            | 68           | | 3   | 6            | 74           | | 4   | 8            | 83           | | 5   | 10           | 91           |</p>
-<p>Plotting the five points reveals an upward trend: as $x$ increases, $y$ tends to increase. The sample Pearson correlation coefficient,</p>
-$$r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\,\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}},$$
-<p>quantifies this visual impression; here $r \approx 0.997$, confirming a near-perfect positive linear relationship.</p>
-<hr>
-<p><strong>Key theorem (Anscombe, 1973).</strong> Four datasets can share identical values of $\bar{x}$, $\bar{y}$, $r$, and the least-squares regression line yet exhibit radically different scatterplot shapes — linear, curved, with a single influential outlier, or nearly constant. This result, known as <em>Anscombe's Quartet</em>, establishes that summary statistics alone are insufficient; graphical inspection via the scatterplot is an indispensable step in exploratory data analysis.</p>
-<hr>
-<p><strong>Lab cell.</strong></p>
-<pre><code>from sympy.stats import Normal, sample_stochastic_process
-import matplotlib.pyplot as plt
-
-xs = [2, 4, 6, 8, 10]
-ys = [55, 68, 74, 83, 91]
-
-plt.scatter(xs, ys, color="steelblue", zorder=3)
-plt.xlabel("Hours studied ($x$)")
-plt.ylabel("Exam score ($y$)")
-plt.title("Scatterplot: study time vs. exam score")
-plt.grid(True, linestyle="--", alpha=0.5)
-plt.tight_layout()
-plt.show()</code></pre>
-<p>Running this cell produces the scatterplot and visually confirms the positive linear trend quantified by $r \approx 0.997$.</p>
+<p><strong>Definition.</strong> Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n$ be a bivariate sample drawn from a joint distribution $P_{XY}$ on $\mathbb{R}^2$. The <em>scatterplot</em> of $\mathcal{D}$ is the point set $S(\mathcal{D}) = \{(x_i, y_i) : i = 1, \ldots, n\} \subset \mathbb{R}^2$, rendered as a map $\phi: \mathbb{R}^2 \to \mathbb{R}^2_{\text{display}}$ that preserves relative order in each coordinate margin. This definition extends naturally to $p$-dimensional data via the <em>scatterplot matrix</em> (SPLOM), which tiles the $\binom{p}{2}$ bivariate projections, and to three or more variables by encoding additional dimensions as aesthetic channels (color, size, shape).</p>
+<p><strong>Theorem (Perception–Accuracy Correspondence, Cleveland & McGill 1984).</strong> Among elementary graphical tasks — position along a common scale, position along non-aligned scales, length, angle, area, volume, color saturation — position along a common scale achieves the lowest mean absolute judgment error. Because the scatterplot encodes both $x$ and $y$ as Cartesian positions, it is, among the standard two-variable displays, the most accurate channel for joint value estimation.</p>
+<p><em>Proof sketch.</em> Cleveland and McGill formalized the task as: given two marked magnitudes on a shared or separated axis, estimate the ratio $r = a/b$. Fitting a power-law model $\log |\hat{r} - r| = \alpha + \beta \log r$ across graphical primitives, they showed that the exponent $\beta$ is smallest for positional encodings. A tighter theoretical grounding comes from the signal-detection framework of Macmillan & Creelman (2004): the discriminability $d'$ for positional judgments exceeds that for area or angle under matched signal-to-noise conditions, because the visual system's position channel has higher spatial bandwidth.</p>
+<p><strong>Literature context.</strong> The scatterplot is the empirical substrate for the two foundational inferential tasks of bivariate analysis: (i) estimating the dependence structure $\rho = \text{Corr}(X, Y)$ or, more generally, a copula $C_{XY}$, and (ii) detecting departures from a posited regression model $\mathbb{E}[Y \mid X = x] = f(x; \theta)$ via residual patterns. Anscombe's quartet (1973) remains the canonical demonstration that $\hat{\rho}$ is a statistically sufficient but perceptually insufficient summary: four datasets sharing identical means, variances, and Pearson correlation exhibit visually distinct scatterplots, motivating the principle that no single statistic substitutes for the display. More recently, the <em>datasaurus dozen</em> (Matejka & Fitzmaurice, 2017) extends this to 12 datasets with identical summary statistics but radically different visual configurations, constructed via simulated annealing on a target point cloud.</p>
+<p>Open questions persist at the boundary of perception and inference. The relationship between human detection of non-linearity in scatterplots and formal statistical power against alternatives to linearity has not been fully characterized for small $n$. Work by Majumder et al. (2013) on the <em>lineup protocol</em> formalizes scatterplot reading as a hypothesis test — observers identify a target plot among $m - 1$ null plots — enabling $p$-value calibration for visual inference, but optimal $m$ and plot-size choices remain empirically underdetermined.</p>
+<p><strong>Suggested investigation.</strong> Replicate the Anscombe quartet experiment computationally: (1) generate four datasets with matched first- and second-order moments but distinct structural forms (linear, quadratic, outlier-contaminated, leverage-point); (2) fit $\hat{\rho}$, $\hat{\beta}_{\text{OLS}}$, and a kernel density estimate of $P_{XY}$; (3) compare diagnostic power of the scatterplot against residual-vs-fitted plots and the Q–Q plot of residuals for detecting each departure. Extend by constructing a lineup ($m = 20$) and measuring human detection rates to estimate visual power.</p>
+<p><strong>Report note.</strong> A rigorous write-up should state the data-generating process and sample size, report all matched summary statistics to confirm the construction, display the four scatterplots at equal scale with identical axis limits, and interpret each visual pattern in terms of the corresponding regression diagnostic. The lineup experiment, if conducted, should report detection frequency, visual $p$-value, and confidence interval using the binomial model $k \sim \text{Binomial}(N, 1/m)$ under the null.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

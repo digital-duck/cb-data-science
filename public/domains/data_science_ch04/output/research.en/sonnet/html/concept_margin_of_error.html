@@ -35,33 +35,17 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="margin-of-error">Margin Of Error</h2>
-<p><strong>Definition.</strong> Let $\hat{p}$ be a sample proportion computed from a simple random sample of size $n$, and let $z_{\alpha/2}$ be the critical value corresponding to a confidence level of $(1-\alpha)\times 100\%$. The <em>margin of error</em> is the quantity</p>
-$$E = z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}},$$
-<p>so that the confidence interval for the true population proportion $p$ is $\hat{p} \pm E$. More generally, when estimating a population mean $\mu$ with known standard deviation $\sigma$, the margin of error takes the form</p>
-$$E = z_{\alpha/2}\frac{\sigma}{\sqrt{n}}.$$
-<p>The margin of error quantifies the maximum expected distance between the sample estimate and the true parameter value, at the stated confidence level.</p>
-<hr>
-<p><strong>Worked Example.</strong> A university surveys $n = 400$ students and finds that $\hat{p} = 0.62$ favour extending library hours. Construct a $95\%$ confidence interval for the true proportion $p$.</p>
-<p>For $95\%$ confidence, $z_{0.025} = 1.96$. The margin of error is</p>
-$$E = 1.96\sqrt{\frac{0.62 \times 0.38}{400}} = 1.96\sqrt{\frac{0.2356}{400}} = 1.96 \times 0.02426 \approx 0.0475.$$
-<p>The confidence interval is therefore $0.62 \pm 0.0475$, or $(0.5725,\; 0.6675)$. We interpret this as: were the survey repeated many times under identical conditions, approximately $95\%$ of the resulting intervals would contain the true value of $p$.</p>
-<hr>
-<p><strong>Key Theorem (Sample-Size Determination).</strong> To achieve a margin of error no greater than $E_0$ at confidence level $(1-\alpha)$, the required sample size satisfies</p>
-$$n \geq \left(\frac{z_{\alpha/2}}{E_0}\right)^2 \hat{p}(1-\hat{p}).$$
-<p>When $\hat{p}$ is unknown in advance, the conservative bound $\hat{p}(1-\hat{p}) \leq \tfrac{1}{4}$ gives $n \geq \tfrac{z_{\alpha/2}^2}{4E_0^2}$, which guarantees the desired precision regardless of the true proportion.</p>
-<hr>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import sqrt, Rational, N
-
-p_hat = Rational(62, 100)
-n     = 400
-z     = Rational(196, 100)          # z_{0.025} ≈ 1.96
-
-E = z * sqrt(p_hat * (1 - p_hat) / n)
-print("Margin of error:", N(E, 4))
-print("CI lower:", N(p_hat - E, 4))
-print("CI upper:", N(p_hat + E, 4))</code></pre>
-<p>Running this cell confirms $E \approx 0.0475$ and the interval $(0.5725, 0.6675)$, reproducing the hand calculation exactly.</p>
+<p><strong>Definition.</strong> Let $\hat{\theta}$ be an estimator of an unknown parameter $\theta \in \Theta$, constructed from $n$ independent and identically distributed observations $X_1, \ldots, X_n \sim P_\theta$. The <em>margin of error</em> at confidence level $1 - \alpha$ is the half-width $\varepsilon$ of a confidence interval such that</p>
+$$P_\theta\!\left(|\hat{\theta} - \theta| \leq \varepsilon\right) \geq 1 - \alpha, \quad \forall\, \theta \in \Theta.$$
+<p>For the canonical case of estimating a population proportion $p$ via the sample proportion $\hat{p} = \bar{X}$, the Central Limit Theorem gives</p>
+$$\hat{p} \approx \mathcal{N}\!\left(p,\, \frac{p(1-p)}{n}\right),$$
+<p>yielding the textbook margin of error</p>
+$$\varepsilon = z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}},$$
+<p>where $z_{\alpha/2} = \Phi^{-1}(1 - \alpha/2)$ is the standard normal quantile. Setting $\hat{p} = 0.5$ (the maximum-variance worst case) gives the survey-design formula $\varepsilon = z_{\alpha/2}/(2\sqrt{n})$, leading to the well-known $n \approx 1{,}068$ for $\varepsilon = 0.03$, $\alpha = 0.05$.</p>
+<p><strong>Theorem (Clopper–Pearson exactness).</strong> The Wald interval above is an <em>asymptotic</em> interval; its actual coverage can fall below $1 - \alpha$ for finite $n$ or extreme $p$. The Clopper–Pearson interval is <em>exact</em> — it guarantees $P(\theta \in \text{CI}) \geq 1 - \alpha$ for every $n$ — but is conservative (wider than necessary). Blyth and Still (1983) showed that no symmetric interval can be simultaneously exact and shortest-in-expectation for all $p$.</p>
+<p><strong>Literature context.</strong> The apparent simplicity of the margin of error conceals an active research landscape. Brown, Cai, and DasGupta (2001, <em>Statistical Science</em>) provided a comprehensive comparison of seven intervals for binomial proportions, demonstrating that the Wilson score interval achieves near-nominal coverage with shorter expected width than Clopper–Pearson. In complex survey settings — stratified sampling, cluster sampling, nonresponse weighting — the design effect $D_{\text{eff}} = \text{Var}_{\text{complex}} / \text{Var}_{\text{SRS}}$ inflates the naive margin of error; ignoring it is a frequent source of error in published polling analysis (Lohr, <em>Sampling: Design and Analysis</em>, 2nd ed.). Open questions remain in adaptive and sequential designs: how to report a margin of error when the sample size is itself a stopping-rule-dependent random variable (see Jennison and Turnbull, <em>Group Sequential Methods</em>, 2000).</p>
+<p><strong>Suggested investigation.</strong> Implement a simulation study in Python or R comparing Wald, Wilson, Agresti–Coull, and Clopper–Pearson intervals across a grid of $(n, p) \in \{10, 50, 200, 1{,}000\} \times \{0.01, 0.05, 0.5\}$. For each configuration, draw $10{,}000$ Monte Carlo samples and record empirical coverage and mean interval width. Examine where Wald coverage dips most severely below $1 - \alpha$. As an extension, introduce a two-stage adaptive design: after $n_1$ observations, stop early if $\hat{p}$ is extreme ($< 0.02$ or $> 0.98$), otherwise continue to $n_2$. Assess whether naively applying the Wald formula at the final sample size maintains nominal coverage.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a concise statement of the coverage guarantee each interval claims and the conditions under which the guarantee holds; (2) annotated simulation plots of coverage versus $p$ for each $n$; (3) a table of mean widths alongside empirical coverage, so the coverage–width trade-off is visible; and (4) a brief analysis of the adaptive-design scenario with a clear statement of where the standard margin-of-error formula breaks down and what correction (if any) restores nominal coverage.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

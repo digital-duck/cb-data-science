@@ -35,26 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="information-entropy">Information Entropy</h2>
-<p><strong>Definition.</strong> Let $X$ be a discrete random variable taking values in a finite alphabet $\mathcal{X} = \{x_1, x_2, \ldots, x_n\}$ with probability mass function $p(x_i) = P(X = x_i)$. The <em>Shannon entropy</em> of $X$ is</p>
-$$H(X) = -\sum_{i=1}^{n} p(x_i)\log_2 p(x_i),$$
-<p>where the convention $0 \log_2 0 = 0$ handles zero-probability outcomes. The unit is the <em>bit</em>. Entropy measures the average uncertainty inherent in $X$: how many binary questions, on average, are needed to determine an outcome drawn from this distribution.</p>
-<p><strong>Worked Example.</strong> Consider a fair coin: $p(\text{H}) = p(\text{T}) = \tfrac{1}{2}$. Then</p>
-$$H(X) = -\tfrac{1}{2}\log_2\tfrac{1}{2} - \tfrac{1}{2}\log_2\tfrac{1}{2} = -2 \cdot \tfrac{1}{2}\cdot(-1) = 1 \text{ bit}.$$
-<p>Now consider a biased coin with $p(\text{H}) = \tfrac{3}{4}$, $p(\text{T}) = \tfrac{1}{4}$:</p>
-$$H(X) = -\tfrac{3}{4}\log_2\tfrac{3}{4} - \tfrac{1}{4}\log_2\tfrac{1}{4} \approx 0.311 + 0.500 = 0.811 \text{ bits}.$$
-<p>The biased coin carries less uncertainty: knowing it is likely to land heads makes the outcome easier to anticipate.</p>
-<p><strong>Key Theorem (Maximum Entropy).</strong> Among all probability distributions over an alphabet of size $n$, the uniform distribution $p(x_i) = 1/n$ uniquely maximises entropy, achieving</p>
-$$H_{\max} = \log_2 n \text{ bits}.$$
-<p><em>Proof sketch.</em> By the concavity of $-p\log p$ and Jensen's inequality, $H(X) \leq \log_2 n$, with equality if and only if all $p(x_i)$ are equal. $\square$</p>
-<p>Entropy is also bounded below by $0$ bits, achieved when one outcome has probability $1$ — a deterministic variable contains no information.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import Rational, log, N
-
-probs = [Rational(1, 4), Rational(3, 4)]          # biased coin
-H = -sum(p * log(p, 2) for p in probs if p &gt; 0)
-print("Entropy (exact):", H)
-print("Entropy (decimal):", N(H, 6), "bits")</code></pre>
-<p>Running this cell returns $H = \tfrac{3}{4}\log_2\tfrac{4}{3} + \tfrac{1}{4}\log_2 4$ in symbolic form, confirming the numerical result of approximately $0.811$ bits. Modify <code>probs</code> to explore how concentration of probability mass reduces entropy toward zero.</p>
+<p><strong>Definition.</strong> Let $(\mathcal{X}, \mathcal{F}, \mu)$ be a probability space and $X$ a discrete random variable taking values in a finite alphabet $\mathcal{X} = \{x_1, \ldots, x_n\}$ with distribution $p(x) = \Pr[X = x]$. The <em>Shannon entropy</em> of $X$ is</p>
+$$H(X) = -\sum_{x \in \mathcal{X}} p(x) \log_2 p(x),$$
+<p>with the convention $0 \log 0 = 0$. Units are bits when the logarithm is base-2, nats for base-$e$. The quantity $H$ is not an intrinsic property of $\mathcal{X}$ but of the <em>measure</em> $p$, a distinction that becomes load-bearing in the continuous generalisation, where the differential entropy $h(X) = -\int p(x)\log p(x)\,dx$ loses non-negativity and invariance under coordinate change.</p>
+<p><strong>Theorem (Shannon, 1948).</strong> Among all probability distributions on an alphabet of size $n$, the uniform distribution $p(x) = 1/n$ uniquely maximises $H$, achieving $H = \log_2 n$ bits. Moreover, $H$ is the unique functional (up to a positive constant) satisfying: (i) continuity in $p$, (ii) symmetry in the arguments, and (iii) the chain rule $H(X,Y) = H(X) + H(Y\mid X)$.</p>
+<p><em>Proof sketch.</em> Concavity of $-t\log t$ and Jensen's inequality give $H(p) \leq \log n$ with equality iff $p$ is uniform. Uniqueness via the axiomatic characterisation follows by showing any functional satisfying (i)–(iii) must agree with $H$ on rational probabilities and, by continuity, on all of $[0,1]^n$; see Khinchin (1957) for the complete argument. $\square$</p>
+<p><strong>Literature context.</strong> Shannon's 1948 paper <em>A Mathematical Theory of Communication</em> (Bell Syst. Tech. J.) established $H$ simultaneously as a measure of uncertainty, a lower bound on lossless compression, and—via the source coding theorem—an operational limit: no prefix-free code achieves expected length below $H(X)$ bits per symbol, and Huffman coding reaches $H(X) + 1$. The connection to statistical mechanics runs deep: Jaynes (1957, <em>Phys. Rev.</em>) showed that maximising entropy subject to moment constraints recovers the canonical ensemble, reframing thermodynamic equilibrium as an inference problem. What remains genuinely open is the <em>right</em> entropy for quantum and non-extensive systems: Tsallis entropy $S_q = (1 - \sum p_i^q)/(q-1)$ and Rényi entropy $H_\alpha = \frac{1}{1-\alpha}\log\sum p_i^\alpha$ each generalise Shannon's functional and collapse to it as $q,\alpha \to 1$, yet their operational coding theorems are not as tight, and their relationships to physical entropy in non-equilibrium settings remain active research (see Wilde, <em>Quantum Information Theory</em>, 2nd ed., 2017, Ch. 10–11).</p>
+<p><strong>Suggested investigation.</strong> A natural entry project is empirical verification of the source coding theorem under a controlled generative model. Fix a Markov chain on $\{A, C, G, T\}$ with known transition matrix $\mathbf{P}$; the entropy rate is $\bar{H} = -\sum_{i,j}\pi_i P_{ij}\log P_{ij}$ where $\pi$ is the stationary distribution. Generate $10^4$–$10^6$ symbol sequences, apply Huffman and arithmetic coding, and compare achieved compression rates against $\bar{H}$. A meaningful extension: vary $\mathbf{P}$ to interpolate between uniform (maximum entropy, incompressible) and deterministic (zero entropy, trivially compressed), and fit the empirical compression gap as a function of spectral gap $1 - \lambda_2(\mathbf{P})$. The convergence rate to the entropy rate is controlled by the mixing time, connecting to Markov chain theory in a way the standard coding-theory treatment elides.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: state the entropy rate formula and derive it from the ergodic theorem for Markov chains; report both the theoretical $\bar{H}$ and empirical code lengths with confidence intervals across realisations; include a log-log plot of compression gap versus sequence length to characterise finite-sample convergence; and discuss where the arithmetic coder outperforms Huffman and why (arithmetic coding achieves $\bar{H}$ exactly in the limit, while Huffman has an integer-length constraint). Situate findings relative to the asymptotic equipartition property (AEP), which should be stated and verified empirically as a secondary result.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

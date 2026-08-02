@@ -35,29 +35,14 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="bootstrapping">Bootstrapping</h2>
-<p><strong>Definition.</strong> Let $X_1, X_2, \ldots, X_n$ be an independent and identically distributed (i.i.d.) sample drawn from an unknown population distribution $F$. The <em>bootstrap</em> is a resampling method that approximates the sampling distribution of a statistic $\hat{\theta} = g(X_1, \ldots, X_n)$ by treating the empirical distribution $\hat{F}_n$ as a surrogate for $F$. A <em>bootstrap sample</em> $X_1^<em>, X_2^</em>, \ldots, X_n^<em>$ is drawn with replacement from $\{X_1, \ldots, X_n\}$, and the bootstrap replicate $\hat{\theta}^</em> = g(X_1^<em>, \ldots, X_n^</em>)$ is computed. Repeating this procedure $B$ times produces replicates $\hat{\theta}^{<em>(1)}, \ldots, \hat{\theta}^{</em>(B)}$, whose empirical distribution estimates the true sampling distribution of $\hat{\theta}$.</p>
-<p><strong>Worked Example.</strong> Suppose $n = 6$ observations of exam scores are $\{72, 85, 90, 68, 77, 83\}$, and we wish to estimate the standard error of the sample median $\tilde{X}$. No closed-form formula exists for $\text{SE}(\tilde{X})$ under a general $F$. We draw $B = 5000$ bootstrap samples with replacement. For each sample, we record the median. The bootstrap standard error is then</p>
-$$\widehat{\text{SE}}_B = \sqrt{\frac{1}{B-1}\sum_{b=1}^{B}\left(\hat{\theta}^{*(b)} - \bar{\hat{\theta}}^*\right)^2},$$
-<p>where $\bar{\hat{\theta}}^<em> = B^{-1}\sum_{b=1}^{B}\hat{\theta}^{</em>(b)}$.</p>
-<p><strong>Key Theorem (Bootstrap Consistency).</strong> Under mild regularity conditions on $g$ and $F$, the bootstrap distribution of $\sqrt{n}(\hat{\theta}^* - \hat{\theta})$ converges weakly to the same limiting distribution as $\sqrt{n}(\hat{\theta} - \theta)$ as $n \to \infty$. Formally,</p>
-$$\sup_{t \in \mathbb{R}}\left|P^*\!\left(\sqrt{n}(\hat{\theta}^* - \hat{\theta}) \le t\right) - P\!\left(\sqrt{n}(\hat{\theta} - \theta) \le t\right)\right| \xrightarrow{p} 0,$$
-<p>where $P^<em>$ denotes probability under the bootstrap resampling mechanism. This result, due to Efron (1979) and refined by Bickel and Freedman (1981), justifies constructing confidence intervals as $\left[\hat{\theta} - z_{1-\alpha/2}\,\widehat{\text{SE}}_B,\; \hat{\theta} + z_{1-\alpha/2}\,\widehat{\text{SE}}_B\right]$ or, more accurately, via the percentile method using empirical quantiles of $\{\hat{\theta}^{</em>(b)}\}$.</p>
-<p><strong>Lab Cell (SymPy / NumPy).</strong></p>
-<pre><code>import numpy as np
-
-rng   = np.random.default_rng(42)
-data  = np.array([72, 85, 90, 68, 77, 83])
-B     = 5_000
-
-replicates = [
-    np.median(rng.choice(data, size=len(data), replace=True))
-    for _ in range(B)
-]
-se_boot = np.std(replicates, ddof=1)
-ci_lo, ci_hi = np.percentile(replicates, [2.5, 97.5])
-
-print(f"Bootstrap SE of median : {se_boot:.3f}")
-print(f"95% percentile CI      : ({ci_lo:.1f}, {ci_hi:.1f})")</code></pre>
+<p><strong>Definition.</strong> Let $X_1, \ldots, X_n \overset{\text{iid}}{\sim} F$ for some unknown distribution $F$ on $\mathbb{R}^d$, and let $\theta = T(F)$ be a functional of interest (e.g., the mean, median, or a regression coefficient). The <em>nonparametric bootstrap</em> (Efron, 1979) estimates the sampling distribution of $\hat{\theta}_n = T(\hat{F}_n)$, where $\hat{F}_n$ is the empirical distribution, by the following procedure: draw $B$ independent bootstrap samples $X_1^<em>, \ldots, X_n^</em> \overset{\text{iid}}{\sim} \hat{F}_n$ (i.e., sample with replacement from the observed data), compute $\hat{\theta}_n^{<em>(b)} = T(\hat{F}_n^{</em>(b)})$ for each replicate $b$, and approximate the distribution of $\hat{\theta}_n - \theta$ by that of $\hat{\theta}_n^* - \hat{\theta}_n$ over the bootstrap replicates.</p>
+<p><strong>Theorem (Bootstrap Consistency).</strong> Suppose $T$ is Hadamard differentiable at $F$ tangentially to a set $\mathcal{D}_0$ containing the support of the limit process of $\sqrt{n}(\hat{F}_n - F)$, and let $\mathbb{G}_F$ denote the $F$-Brownian bridge. Then, conditionally on the data (in probability),</p>
+$$\sqrt{n}\bigl(\hat{\theta}_n^* - \hat{\theta}_n\bigr) \xrightarrow{d} T'_F(\mathbb{G}_F),$$
+<p>where $T'_F$ is the Hadamard derivative of $T$ at $F$, and the limit coincides with the unconditional limit $\sqrt{n}(\hat{\theta}_n - \theta) \xrightarrow{d} T'_F(\mathbb{G}_F)$.</p>
+<p><strong>Sketch.</strong> The key ingredient is that the empirical process $\sqrt{n}(\hat{F}_n - F)$ converges weakly to $\mathbb{G}_F$ in $\ell^\infty(\mathcal{F})$ (the Glivenko–Cantelli and Donsker theorems). The bootstrap empirical process $\sqrt{n}(\hat{F}_n^* - \hat{F}_n)$ converges to the same limit conditionally on the data, by Multinomial$(n; 1/n, \ldots, 1/n)$ fluctuations of the bootstrap weights. Hadamard differentiability then propagates convergence through the functional $T$ via the functional delta method. See van der Vaart and Wellner (1996, Chapter 3.9) for the complete argument under minimal measurability conditions.</p>
+<p><strong>Literature context.</strong> The bootstrap is theoretically well-understood for smooth functionals and first-order statistics: consistency and second-order accuracy (Beran 1988; Hall 1992) are classical. The picture grows richer—and more open—at the boundaries: (i) <em>non-smooth functionals</em> such as the maximum or quantile regression at non-unique solutions can fail to be Hadamard differentiable, invalidating standard consistency (Dümbgen 1993; Fang and Santos 2019); (ii) <em>high-dimensional and heavy-tailed settings</em> where $d/n \not\to 0$ require multiplier bootstrap corrections (Chernozhukov, Chetverikov, and Kato 2013); (iii) <em>bootstrap for dependent data</em> (block bootstrap, stationary bootstrap) introduces tuning choices whose optimal block length remains an active estimation problem.</p>
+<p><strong>Suggested investigation.</strong> Fix a non-smooth functional — the $\ell^\infty$ norm $T(F) = \|F\|_\infty$, or the $p$-th sample quantile at $p = 0.5$ with a tied data-generating distribution — and compare (a) the standard nonparametric bootstrap, (b) the $m$-out-of-$n$ bootstrap with $m = n^{2/3}$, and (c) subsampling (Politis and Romano 1994) at coverage level $1 - \alpha = 0.95$. Vary $n \in \{50, 200, 1000\}$ and empirically measure coverage of the resulting confidence intervals over $R = 2000$ Monte Carlo replications. Derive analytically which of (a)–(c) is consistent in each case using the Hadamard differentiability criterion, and verify that the empirical coverages align with the theoretical prediction.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (1) state precisely which notion of bootstrap consistency is in play and what smoothness conditions $T$ must satisfy; (2) provide the functional delta method step explicitly rather than citing it as a black box; (3) separate Monte Carlo error from bootstrap error in the variance decomposition; and (4) document any discrepancy between the theoretical coverage guarantee and the finite-sample empirical coverage, framing it as a gap motivating higher-order or robust bootstrap corrections.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

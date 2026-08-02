@@ -35,25 +35,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="anova">Anova</h2>
-<p><strong>Analysis of Variance (ANOVA)</strong> is a statistical procedure for testing whether the means of two or more independent groups are equal by partitioning the total variability in a dataset into components attributable to different sources. Formally, given $k$ groups with sample sizes $n_1, n_2, \ldots, n_k$ and a grand total of $N = \sum_{i=1}^k n_i$ observations, the one-way ANOVA model assumes</p>
-$$y_{ij} = \mu + \alpha_i + \varepsilon_{ij}, \quad \varepsilon_{ij} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2),$$
-<p>where $\mu$ is the grand mean, $\alpha_i$ is the effect of group $i$, and $\varepsilon_{ij}$ is random error. The null hypothesis is $H_0: \alpha_1 = \alpha_2 = \cdots = \alpha_k = 0$, meaning no group differs from the grand mean.</p>
-<p><strong>Worked Example.</strong> Suppose three fertiliser treatments are applied to crops, yielding the following weekly growth (cm): Group A: $\{4, 5, 6\}$, Group B: $\{7, 8, 9\}$, Group C: $\{5, 5, 5\}$. The grand mean is $\bar{y} = (15+24+15)/9 = 6$. The group means are $\bar{y}_1 = 5$, $\bar{y}_2 = 8$, $\bar{y}_3 = 5$. The <strong>Sum of Squares Between</strong> groups is $SS_B = \sum_{i=1}^k n_i(\bar{y}_i - \bar{y})^2 = 3(1+4+1) = 18$. The <strong>Sum of Squares Within</strong> groups is $SS_W = \sum_{i,j}(y_{ij}-\bar{y}_i)^2 = 2+2+0 = 4$. With $df_B = k-1 = 2$ and $df_W = N-k = 6$, the $F$-statistic is</p>
-$$F = \frac{SS_B / df_B}{SS_W / df_W} = \frac{18/2}{4/6} = \frac{9}{0.\overline{6}} = 13.5.$$
-<p>Comparing to $F_{2,6}$ at $\alpha = 0.05$ (critical value $\approx 5.14$), we reject $H_0$: the fertilisers differ significantly.</p>
-<p><strong>Key Theorem (Fisher Decomposition).</strong> The total sum of squares decomposes orthogonally as $SS_T = SS_B + SS_W$, where $SS_B/\sigma^2 \sim \chi^2_{k-1}$ and $SS_W/\sigma^2 \sim \chi^2_{N-k}$ are independent under $H_0$. Consequently, $F = (SS_B/df_B)/(SS_W/df_W) \sim F_{k-1,\, N-k}$, which is the reference distribution for the test.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from scipy import stats
-import sympy as sp
-
-group_a = [4, 5, 6]
-group_b = [7, 8, 9]
-group_c = [5, 5, 5]
-
-F_stat, p_value = stats.f_oneway(group_a, group_b, group_c)
-print(f"F = {F_stat:.4f},  p = {p_value:.4f}")
-# Verify SS decomposition symbolically
-y = sp.symbols('y')</code></pre>
+<p><strong>Definition.</strong> Let $y_{ij}$ denote the $j$-th observation in group $i$, for $i = 1, \ldots, k$ and $j = 1, \ldots, n_i$, with $N = \sum_i n_i$. The one-way fixed-effects model is</p>
+$$y_{ij} = \mu + \alpha_i + \varepsilon_{ij}, \qquad \varepsilon_{ij} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2),$$
+<p>subject to the identifiability constraint $\sum_i n_i \alpha_i = 0$. The null hypothesis of interest is $H_0 : \alpha_1 = \cdots = \alpha_k = 0$, i.e., group membership carries no information beyond the grand mean $\mu$.</p>
+<p><strong>Theorem (Variance Decomposition).</strong> Under the model above, the total sum of squares decomposes orthogonally:</p>
+$$\underbrace{\sum_{i,j}(y_{ij} - \bar{y}_{\cdot\cdot})^2}_{\mathrm{SS}_{\mathrm{Total}}} = \underbrace{\sum_i n_i (\bar{y}_{i\cdot} - \bar{y}_{\cdot\cdot})^2}_{\mathrm{SS}_{\mathrm{Between}}} + \underbrace{\sum_{i,j}(y_{ij} - \bar{y}_{i\cdot})^2}_{\mathrm{SS}_{\mathrm{Within}}}.$$
+<p><em>Proof sketch.</em> Write $y_{ij} - \bar{y}_{\cdot\cdot} = (y_{ij} - \bar{y}_{i\cdot}) + (\bar{y}_{i\cdot} - \bar{y}_{\cdot\cdot})$. Squaring and summing, the cross-product vanishes because $\sum_j (y_{ij} - \bar{y}_{i\cdot}) = 0$ for each $i$. $\square$</p>
+<p>Under $H_0$, $\mathrm{SS}_{\mathrm{Between}}/\sigma^2 \sim \chi^2_{k-1}$ and $\mathrm{SS}_{\mathrm{Within}}/\sigma^2 \sim \chi^2_{N-k}$, independently by Cochran's theorem. The $F$-statistic</p>
+$$F = \frac{\mathrm{SS}_{\mathrm{Between}}/(k-1)}{\mathrm{SS}_{\mathrm{Within}}/(N-k)} \sim F_{k-1,\, N-k}$$
+<p>forms the canonical test. Under the alternative, the numerator follows a noncentral $\chi^2$ with noncentrality $\lambda = \sum_i n_i \alpha_i^2 / \sigma^2$, which governs power calculations.</p>
+<p><strong>Literature context.</strong> The decomposition originates with Fisher (1925) and is treated rigorously in Scheffé (1959). The Gaussian assumption is load-bearing: under heteroscedasticity, Welch's correction to degrees of freedom restores approximate $F$ validity (Welch 1951; Brown & Forsythe 1974). For non-Gaussian errors the Kruskal–Wallis test offers a rank-based alternative, but loses power when normality holds. A deeper open question concerns the tradeoff between robustness and power in high-dimensional settings where $k$ grows with $N$: classical $F$ theory breaks down when $k = O(N)$, and recent work (Cai & Xia 2014; Fan et al. 2020) develops corrected statistics under sparsity assumptions on $\{\alpha_i\}$. Multiple-comparison corrections post-$F$ (Tukey HSD, Bonferroni, Benjamini–Hochberg) remain an active methodological area, particularly in genomics where $k$ can reach $10^4$.</p>
+<p><strong>Suggested investigation.</strong> Generate synthetic balanced data ($k = 5$, $n_i = 20$) at several signal-to-noise ratios $\delta = \max_i |\alpha_i| / \sigma \in \{0, 0.2, 0.5, 1.0\}$ and empirically trace the power curve of the $F$-test against the theoretical noncentral-$F$ prediction. Then deliberately violate the homoscedasticity assumption (e.g., $\sigma_i^2 = i \cdot \sigma^2$) and compare the empirical Type-I error of the classical $F$-test versus Welch's correction. A natural extension is to apply Levene's test for equality of variances as a diagnostic preceding the omnibus $F$ test, and to quantify how that sequential testing inflates overall $\alpha$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) the exact form of the noncentrality parameter and how it connects observed effect sizes to power; (ii) empirical validation of the $\chi^2$ marginal distributions of $\mathrm{SS}_{\mathrm{Between}}$ and $\mathrm{SS}_{\mathrm{Within}}$ via Q–Q plots; (iii) a table comparing nominal versus empirical Type-I error rates under heteroscedasticity, with a clear recommendation for when Welch's correction is necessary; and (iv) a brief discussion of which post-hoc procedure is appropriate given the study design and the researcher's tolerance for false-discovery inflation.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>
