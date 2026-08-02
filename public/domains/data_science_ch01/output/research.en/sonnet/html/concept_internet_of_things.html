@@ -35,28 +35,17 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="internet-of-things">Internet Of Things</h2>
-<p><strong>Definition.</strong> The <em>Internet of Things</em> (IoT) is a networked system of physical devices — sensors, actuators, and embedded processors — that collect, transmit, and act upon data without continuous human intervention. Formally, an IoT system can be modeled as a directed graph $G = (V, E)$, where each vertex $v_i \in V$ represents a device with an associated state vector $\mathbf{s}_i(t) \in \mathbb{R}^d$, and each directed edge $(v_i, v_j) \in E$ represents a communication channel with latency $\ell_{ij} \geq 0$ and bandwidth $b_{ij} > 0$. A <em>gateway node</em> aggregates streams from sensor nodes and routes them to a cloud or edge-computing layer for storage and analysis.</p>
-<p><strong>Worked Example.</strong> Consider a smart-agriculture deployment with three soil-moisture sensors $v_1, v_2, v_3$ and one irrigation actuator $v_4$. Each sensor reports moisture level $m_i(t) \in [0, 1]$ every $\Delta t = 60$ seconds. A central controller computes the mean field</p>
-$$\bar{m}(t) = \frac{1}{3}\sum_{i=1}^{3} m_i(t)$$
-<p>and triggers irrigation when $\bar{m}(t) < \theta = 0.3$. If sensor readings at time $t = 0$ are $m_1 = 0.25$, $m_2 = 0.28$, $m_3 = 0.35$, then $\bar{m}(0) = 0.293 < 0.3$, so the actuator fires. This threshold-crossing logic exemplifies <em>event-driven control</em>, the dominant paradigm in IoT firmware.</p>
-<p><strong>Key Theorem (Nyquist–Shannon Sampling for IoT).</strong> Let a physical process $x(t)$ be bandlimited with maximum frequency $f_{\max}$. A sensor sampling at rate $f_s$ reconstructs $x(t)$ exactly if and only if</p>
-$$f_s > 2f_{\max}.$$
-<p>In practice, IoT designers apply a safety margin $f_s \geq 2.5\, f_{\max}$ to account for anti-aliasing filter roll-off, ensuring that the discrete time series $\{x(k\Delta t)\}$ faithfully represents the underlying continuous phenomenon.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-t, f_s, f_max = sp.symbols('t f_s f_max', positive=True)
-
-# Nyquist condition
-nyquist = sp.Gt(f_s, 2 * f_max)
-print("Nyquist condition:", nyquist)
-
-# Mean-field threshold check
-m = [0.25, 0.28, 0.35]
-m_bar = sp.Rational(sum(int(v * 100) for v in m), 300)
-theta = sp.Rational(3, 10)
-print("Mean moisture:", m_bar, "| Irrigate?", m_bar &lt; theta)</code></pre>
-<p>Running this cell confirms $\bar{m} = \tfrac{88}{300} \approx 0.293 < 0.3$, matching the worked example analytically.</p>
+<p><strong>Definition.</strong> The Internet of Things (IoT) denotes a distributed cyber-physical system in which a large population of resource-constrained sensing and actuating devices communicate over shared wireless channels to accomplish collective inference or control tasks. Formally, model the system as a time-varying graph $G(t) = (V, E(t))$ where each node $v_i \in V$ carries state $s_i(t) \in \mathcal{S}$ (sensor reading, battery level, buffer occupancy) and each edge $(v_i, v_j) \in E(t)$ represents an active wireless link with instantaneous capacity $C_{ij}(t)$ governed by path loss, fading, and interference. The system objective is typically to compute some aggregate function $f(s_1, \ldots, s_n)$ — a sum, maximum, histogram, or learned model parameter — at a designated sink node or cloud endpoint, subject to per-node energy budget $B_i$ and end-to-end latency bound $\tau$.</p>
+<p><strong>Theorem (Gupta–Kumar, 2000).</strong> Consider $n$ nodes distributed uniformly and independently on a disk of unit area, each attempting to communicate at rate $W$ bits/second over a shared wireless medium. The total <em>transport capacity</em> — the aggregate bit-meters per second supportable by the network — satisfies</p>
+$$
+\mathcal{C}(n) = \Theta\!\left(W \sqrt{n \cdot \frac{1}{\log n}}\right) \text{ bit-meters/second.}
+$$
+<p>Consequently, the per-node throughput scales as $\lambda(n) = \Theta\!\bigl(W / \sqrt{n \log n}\bigr)$, vanishing as $n \to \infty$.</p>
+<p><em>Proof sketch.</em> The argument proceeds in two parts. (Achievability) Partition the disk into $\Theta(n / \log n)$ cells of area $\Theta(\log n / n)$; within each cell, nodes communicate over disjoint frequency sub-bands using a TDMA schedule, achieving $\Omega(W / \sqrt{n \log n})$ per node. (Converse) Any transmission from node $i$ to node $j$ at distance $d_{ij}$ consumes spatial bandwidth proportional to $d_{ij}^2$; summing over all simultaneous transmissions and bounding by the disk area gives the $O$ upper bound. $\square$</p>
+<p>This result is a foundational constraint: IoT scale is physically bounded. Hierarchical architectures (edge servers, fog computing) circumvent it not by defeating the bound but by reducing effective $d_{ij}$ through locality.</p>
+<p><strong>Literature context.</strong> The Gupta–Kumar result (IEEE Trans. Inf. Theory 46(2), 2000) spawned a large literature on capacity scaling under mobility (Grossglauser–Tse, 2001), cooperation (Özgür et al., 2007), and heterogeneous topologies. More recent lines address <em>semantic communication</em> — transmitting compressed sufficient statistics of $f$ rather than raw bits — where the relevant metric becomes task-specific distortion rather than bit rate. The <em>Age of Information</em> (AoI) framework (Kaul et al., 2012) formalizes freshness: defining $\Delta_i(t) = t - u_i(t)$ where $u_i(t)$ is the generation timestamp of the last received update from node $i$, researchers seek scheduling policies minimizing $\mathbb{E}[\Delta_i(t)]$ subject to channel constraints. Open problems remain in heterogeneous protocol stacks (LoRaWAN, Zigbee, NB-IoT coexisting), energy-harvesting dynamics modeled as Markov chains, and privacy-preserving aggregation under differential privacy budgets $\varepsilon$.</p>
+<p><strong>Suggested investigation.</strong> Generate a random geometric graph on $n \in \{50, 100, 500\}$ nodes in the unit square with connection radius $r(n) = \sqrt{\log n / (\pi n)}$ (the connectivity threshold) using NetworkX or a custom simulator. Implement a TDMA-based flooding protocol and empirically measure per-node throughput $\hat{\lambda}(n)$. Plot $\hat{\lambda}(n)\sqrt{n \log n}$ against $n$; the Gupta–Kumar bound predicts this quantity converges to a constant. Extend by adding an edge server at the centroid and comparing hierarchical vs. flat aggregation latency.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the precise operating regime (connectivity threshold, interference model assumed), (2) how closely empirical throughput tracks the $\Theta(W / \sqrt{n \log n})$ scaling, (3) what fraction of the gap is attributable to protocol overhead versus the information-theoretic bound, and (4) a quantified benefit of the hierarchical architecture in terms of AoI or latency reduction, with error bars over random graph realizations.</p>
   </main>
   <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
 </div>

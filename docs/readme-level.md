@@ -137,7 +137,7 @@ was masking:**
 
 ## TODO
 
-- [ ] Cache-key fix (item 1 above) is now implemented in `concept-book-base` and
+- [X] Cache-key fix (item 1 above) is now implemented in `concept-book-base` and
   propagated to `cb-data-science/spl/build_concept_book.spl` (and all other `cb-*`
   forks). Regenerate the three test concepts (`data_science` ch1, `arima` ch5, `hipaa`
   ch8) across all four levels with `--skip-cache` and update the Results section above
@@ -155,26 +155,11 @@ python scripts/batch_generate.py \
 # [X] multi-levels
 python scripts/batch_generate.py \
   --domain data_science_ch01 \
-  --include "predictive_analytics" \
+  --include "internet_of_things" \
   --level "intro,core,college,research" \
   --skip-cache 
+#  --include "predictive_analytics" \
 
-
-# [X] multi-levels - lang = zh, en
-python scripts/batch_generate.py \
-  --domain data_science_ch05 \
-  --include "arima" \
-  --level "intro,core,college,research" \
-  --language zh \
-  --skip-cache 
-
-
-# [X] multi-levels 
-python scripts/batch_generate.py \
-  --domain data_science_ch08 \
-  --include "hipaa" \
-  --level "intro,core,college,research" \
-  --skip-cache 
 
 ## [X] contents
 python scripts/batch_generate.py \
@@ -183,7 +168,7 @@ python scripts/batch_generate.py \
   --level "intro,core,college,research" \
   --skip-cache 
 
-## [ ] contents
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch03 \
   --include "python_data_analysis" \
@@ -192,26 +177,61 @@ python scripts/batch_generate.py \
 
 ## [ ] contents
 python scripts/batch_generate.py \
-  --domain data_science_ch06 \
-  --include "heart_disease_classification" \
+  --domain data_science_ch04 \
+  --include "python_statistical_computing" \
   --level "intro,core,college,research" \
   --skip-cache 
+
+# [ ] multi-levels - lang = zh, en
+python scripts/batch_generate.py \
+  --domain data_science_ch05 \
+  --include "linear_regression_forecasting" \
+  --level "intro,core,college,research" \
+  --language zh \
+  --skip-cache 
+
+#  --include "arima" \
+
+
+## [ ] contents
+python scripts/batch_generate.py \
+  --domain data_science_ch06 \
+  --include "data_mining,facial_recognition" \
+  --level "intro,core,college,research" \
+  --skip-cache 
+
+#  --include "heart_disease_classification" \
+
 
 ## [ ] contents
 python scripts/batch_generate.py \
   --domain data_science_ch07 \
-  --include "large_language_model" \
+  --include "speech_recognition_tts,deepfake,generative_art" \
   --level "intro,core,college,research" \
   --skip-cache 
+
+#  --include "large_language_model" \
+
+
+# [ ] multi-levels 
+python scripts/batch_generate.py \
+  --domain data_science_ch08 \
+  --include "explainable_ai" \
+  --level "intro,core,college,research" \
+  --skip-cache 
+
+#  --include "hipaa" \
 
 ## [ ] contents
 python scripts/batch_generate.py \
   --domain data_science_ch09 \
-  --include "three_d_visualization" \
+  --include "gis_mapping" \
   --level "intro,core,college,research" \
   --skip-cache 
 
-## [ ] contents
+#   --include "three_d_visualization" \
+
+## [X] contents
 python scripts/batch_generate.py \
   --domain data_science_ch10 \
   --include "executive_dashboard" \
