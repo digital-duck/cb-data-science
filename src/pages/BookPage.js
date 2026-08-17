@@ -29,8 +29,24 @@ function conceptFilename(file) {
   return file.replace(/^.*\//, '')
 }
 
+// spl/tools.py's write_concept_html/build_book_index suffix every generated
+// filename with "_{language}" except English (kept unsuffixed for backward
+// compatibility). Strip whatever suffix the currently-open file carries
+// (from LANGUAGES, so a concept name that happens to end in a 2-letter word
+// is never mistaken for one) before re-adding the suffix for the requested
+// language — otherwise switching the Language control looks for the
+// English-named file under a different-language directory and 404s.
+const _LANG_CODES = LANGUAGES.map(l => l.code).filter(c => c !== 'en')
+const _LANG_SUFFIX_RE = new RegExp(`_(?:${_LANG_CODES.join('|')})(\\.html)$`)
+
+function withLangSuffix(fname, lang) {
+  const base = fname.replace(_LANG_SUFFIX_RE, '$1')
+  if (!lang || lang === 'en') return base
+  return base.replace(/\.html$/, `_${lang}.html`)
+}
+
 function buildUrl(domain, file, level, lang, model) {
-  const fname = conceptFilename(file)
+  const fname = withLangSuffix(conceptFilename(file), lang)
   const modelPart = model ? `${model}/` : ''
   return `${import.meta.env.BASE_URL}domains/${domain}/output/${level}.${lang}/${modelPart}html/${fname}`
 }
@@ -191,7 +207,15 @@ function hideTocInFrame(frame) {
     const doc = frame.contentDocument
     if (!doc) return
     const style = doc.createElement('style')
-    style.textContent = 'nav.toc { display: none !important; } .page { grid-template-columns: 1fr !important; } h1.book-title + section > h2:first-child { display: none !important; }'
+    // Book pages (book_*.html) use `.page{display:grid}` — force the nav
+    // column to collapse so `main` fills the iframe. Concept pages
+    // (concept_*.html) instead use `.page{max-width:780px;margin:0 auto}`,
+    // a standalone-reading layout that's centered with a hard cap — inside
+    // this app's wide main pane that leaves big blank margins on both
+    // sides. Override to the same left-aligned, capped-width treatment the
+    // book template's own `main` already uses, so both page types render
+    // consistently in the iframe.
+    style.textContent = 'nav.toc { display: none !important; } .page { grid-template-columns: 1fr !important; max-width: 860px !important; margin: 0 !important; } h1.book-title + section > h2:first-child { display: none !important; }'
     doc.head.appendChild(style)
   } catch (_) {}
 }

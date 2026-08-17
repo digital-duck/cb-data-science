@@ -181,6 +181,11 @@ def _mark_generated(domain_id: str, target: str, level: str, language: str, mode
     """Update catalog.json after a successful generation."""
     variant = f"{level}.{language}"
     html_dir = DOMAINS_DIR / domain_id / "output" / variant / model / "html"
+    # spl/tools.py's write_concept_html/build_book_index suffix every filename
+    # with "_{language}" except English — match that convention when
+    # recording book_file below, otherwise it points at a file that was
+    # never written for any non-English generation.
+    suffix = f"_{language}" if language and language != "en" else ""
     new_concepts = [
         {
             "name": p.stem[len("concept_"):],
@@ -196,7 +201,7 @@ def _mark_generated(domain_id: str, target: str, level: str, language: str, mode
             if d["id"] != domain_id:
                 continue
             books: list[dict] = d.setdefault("books", [])
-            book_file = f"output/{variant}/{model}/html/book_{target}.html"
+            book_file = f"output/{variant}/{model}/html/book_{target}{suffix}.html"
             if not any(
                 b["target"] == target and b.get("model") == model
                 and b.get("language", "en") == language

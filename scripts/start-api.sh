@@ -12,6 +12,6 @@
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO"
-API_PORT="$(grep -m1 '^API_PORT=' "$REPO/.env" 2>/dev/null | cut -d= -f2)"
+API_PORT="$(grep -m1 '^API_PORT=' "$REPO/.env" 2>/dev/null | cut -d= -f2 || true)"
 API_PORT="${API_PORT:-8204}"
 uvicorn api.app:app --host 0.0.0.0 --port "$API_PORT" --reload

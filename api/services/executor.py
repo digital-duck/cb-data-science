@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 from api.config import settings
+from api.services.catalog_svc import get_catalog
 
 _REPO_ROOT = Path(__file__).parent.parent.parent
 _SPL_DIR = _REPO_ROOT / "spl"
@@ -25,6 +26,29 @@ _MODEL_TO_LLM: dict[str, str] = {
     "haiku":   "claude_cli:claude-haiku-4-5-20251001",
     "opus":    "claude_cli:claude-opus-4-8",
 }
+
+# Keep in sync with scripts/batch_generate.py's _LEVEL_TO_STYLE /
+# _STEM_MATH_TAGS / _resolve_style: build_concept_book.spl's INPUT has no
+# @lvl parameter, only @style — passing --param lvl=... is silently ignored
+# by spl3 and every job generates at the hardcoded @style DEFAULT 'textbook'
+# regardless of the level requested through the UI. This mirrors
+# batch_generate.py's fix for the same issue so the web UI and the batch
+# script produce the same style for the same level.
+_LEVEL_TO_STYLE: dict[str, str] = {
+    "intro":    "feynman",
+    "core":     "core",
+    "college":  "college",
+    "research": "research",
+}
+_STEM_MATH_TAGS = {"math", "physics", "engineering"}
+
+
+def _resolve_style(level: str, domain_id: str) -> str:
+    style = _LEVEL_TO_STYLE.get(level, "college")
+    if style != "research":
+        return style
+    tags = next((d.get("tags", []) for d in get_catalog() if d["id"] == domain_id), [])
+    return style if (_STEM_MATH_TAGS & set(tags)) else "research_applied"
 
 
 async def stream_generate(
@@ -41,13 +65,22 @@ async def stream_generate(
     output_dir = settings.public_domains / domain_id / "output" / f"{level}.{language}" / model / "html"
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Absolute path, not a bare "{domain_id}_graph.yaml" filename: bare names
+    # are resolved by graph_lib.load_domain() relative to SPL.py's own
+    # cookbook/74_concept_book directory, which requires every domain's graph
+    # to also be hand-copied there. An absolute path is honored as-is and
+    # works for domains synced from an external pipeline (e.g.
+    # concept-book-press) that only ever exist under public/domains/.
+    domain_yaml_path = settings.public_domains / domain_id / "input" / "graph.yaml"
+    style = _resolve_style(level, domain_id)
+
     cmd = [
         "spl3", "run", str(_SPL_DIR / "build_concept_book.spl"),
         "--tools", str(_SPL_DIR / "tools.py"),
         "--llm", llm,
-        "--param", f"domain_yaml={domain_id}_graph.yaml",
+        "--param", f"domain_yaml={domain_yaml_path}",
         "--param", f"target={target}",
-        "--param", f"lvl={level}",
+        "--param", f"style={style}",
         "--param", f"language={language}",
         "--param", f"output_dir={output_dir}",
         "--param", f"skip_cache={'yes' if skip_cache else 'no'}",
