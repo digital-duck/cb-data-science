@@ -45,6 +45,12 @@
         "file": "output/college.en/sonnet/html/book_sports_analytics.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "internet_of_things",
+        "file": "output/college.zh/sonnet/html/book_internet_of_things_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -77,6 +83,13 @@
         "language": "en"
       },
       {
+        "name": "data_collection_zh",
+        "label": "Data Collection Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_collection_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_preparation",
         "label": "Data Preparation",
         "file": "output/research.en/sonnet/html/concept_data_preparation.html",
@@ -91,6 +104,13 @@
         "language": "en"
       },
       {
+        "name": "data_zh",
+        "label": "Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "information",
         "label": "Information",
         "file": "output/research.en/sonnet/html/concept_information.html",
@@ -103,6 +123,13 @@
         "file": "output/research.en/sonnet/html/concept_internet_of_things.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "internet_of_things_zh",
+        "label": "Internet Of Things Zh",
+        "file": "output/college.zh/sonnet/html/concept_internet_of_things_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "predictive_analytics",
