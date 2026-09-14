@@ -2,8 +2,6 @@ const translations = {
   en: {
     'app.title': 'ConceptBook',
     'app.tagline': 'Explore knowledge through concept graphs',
-    'nav.graph': 'Graph',
-    'nav.content': 'Content',
     'nav.about': 'About',
     'nav.settings': 'Settings',
     'home.subtitle': 'Choose a domain to explore',

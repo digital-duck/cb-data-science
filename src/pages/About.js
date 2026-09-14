@@ -22,12 +22,18 @@ export function About(container) {
       <li>Read the concept-book section for each concept in the path</li>
     </ol>
 
-    <h2>The founding use-case: Chinese Characters</h2>
+    <h2>Content source</h2>
     <p>
-      Chinese characters share the same structure as chemical elements — a small set of
-      elemental radicals (primitives) combine to form hundreds of compound characters.
-      Learning the ~12 elementals unlocks the ability to decode characters by structure alone.
-      The concept graph makes that derivation visible and navigable.
+      Source: <a href="https://openstax.org/details/books/principles-data-science" target="_blank" rel="noopener">Principles of Data Science</a>
+      by OpenStax (CC BY 4.0). Access for free at openstax.org.
+    </p>
+
+    <p>
+      This concept-book is a companion to the original text, not a replacement for it.
+      The graph and generated sections here help you see how the ideas connect and where
+      to start, but the full depth — proofs, worked examples, exercises, nuance — lives in
+      the source. Follow the link above to read it directly; that is where deep mastery
+      actually happens.
     </p>
 
     <h2>The content engine</h2>
@@ -43,6 +49,14 @@ export function About(container) {
       concept-book is open source under the Apache 2.0 license.
       Source and contribution guide at
       <a href="https://github.com/digital-duck/concept-book" target="_blank" rel="noopener">github.com/digital-duck/concept-book</a>.
+    </p>
+
+    <h2>The founding use-case: Chinese Characters</h2>
+    <p>
+      Chinese characters share the same structure as chemical elements — a small set of
+      elemental radicals (primitives) combine to form hundreds of compound characters.
+      Learning the ~12 elementals unlocks the ability to decode characters by structure alone.
+      The concept graph makes that derivation visible and navigable. See <a href="https://github.com/digital-duck/cb-zinets" target="_blank" rel="noopener">cb-zinets</a> — a concept-book fully built out around this founding use-case — if you'd like to dig deeper.
     </p>
   `
   container.appendChild(main)

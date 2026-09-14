@@ -18,7 +18,7 @@ function _resolve() {
   }
 
   // Generic: match on the path part, pass any ?query as params
-  // (e.g. /book?domain=x)
+  // (e.g. /settings?tab=x)
   const [path, qs] = hash.split('?')
   _routes[path]?.(Object.fromEntries(new URLSearchParams(qs || '')))
 }

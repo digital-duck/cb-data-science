@@ -31,36 +31,58 @@ def mark_book_generated(
     # written (e.g. "book_x.html" when spl actually wrote "book_x_zh.html"),
     # which the frontend then reports as "Content Not Available".
     suffix = f"_{language}" if language and language != "en" else ""
-    new_concepts = [
-        {
-            "name": p.stem[len("concept_"):],
-            "label": p.stem[len("concept_"):].replace("_", " ").title(),
-            "file": f"output/{variant}/{model}/html/{p.name}",
+    # model_seg avoids a double slash ("output/variant//html/...") when
+    # model="" — model is optional (falls back to CB_DEFAULT_MODEL).
+    model_seg = f"{model}/" if model else ""
+    new_concepts = []
+    for p in html_dir.glob("concept_*.html"):
+        stem = p.stem[len("concept_"):]
+        # Strip the same "_{language}" suffix write_concept_html appends to
+        # the filename — otherwise a Chinese "observation" concept gets
+        # named/labeled "observation_zh"/"Observation Zh", a different
+        # identity from the English "observation" entry rather than the
+        # same concept in a different language. That mismatch produces
+        # "Please generate the concept book for observation_zh first" even
+        # though Model/Level/Language already show the correct selection —
+        # the concept the user opened never truly existed under that
+        # mangled name in any language.
+        name = stem[:-len(suffix)] if suffix and stem.endswith(suffix) else stem
+        new_concepts.append({
+            "name": name,
+            "label": name.replace("_", " ").title(),
+            "file": f"output/{variant}/{model_seg}html/{p.name}",
             "model": model,
             "language": language,
-        }
-        for p in html_dir.glob("concept_*.html")
-    ]
+        })
 
     def mutate(catalog: list[dict]) -> None:
         for d in catalog:
             if d["id"] != domain_id:
                 continue
             books: list[dict] = d.setdefault("books", [])
-            book_file = f"output/{variant}/{model}/html/book_{target}{suffix}.html"
-            # Deduplicate by (target, model, language) triple
-            if not any(
-                b["target"] == target and b.get("model") == model
-                and b.get("language", "en") == language
-                for b in books
-            ):
+            book_file = f"output/{variant}/{model_seg}html/book_{target}{suffix}.html"
+            # Dedupe by the exact output file path (which already encodes
+            # level/language/model) rather than the (target, model, language)
+            # triple — that triple collided across levels: generating the
+            # same target/model/language at a level different from an
+            # earlier run matched the earlier run's entry and silently
+            # skipped recording the new file at all.
+            if not any(b.get("file") == book_file for b in books):
                 books.append({"target": target, "file": book_file, "model": model, "language": language})
             d["has_book"] = True
 
-            # Preserve legacy entries (no model field) and entries from other models/languages
+            # Preserve every entry except the ones this exact directory glob
+            # just superseded (same level/language/model). Filtering by
+            # (model, language) alone — the old behavior — wiped out a
+            # *different* level's already-generated concepts sharing the
+            # same model/language: e.g. generating "research" level for
+            # model=sonnet silently deleted the "college" level sonnet
+            # entries an earlier run had recorded, even though those files
+            # were untouched on disk.
+            variant_dir_prefix = f"output/{variant}/{model_seg}html/"
             other = [
                 c for c in d.get("generated_concepts", [])
-                if c.get("model") != model or c.get("language", "en") != language
+                if not c.get("file", "").startswith(variant_dir_prefix)
             ]
             d["generated_concepts"] = sorted(
                 other + new_concepts,

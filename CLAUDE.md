@@ -49,7 +49,9 @@ nodes).
 domain can have books at multiple levels — level is a content property, not a domain
 property.
 
-**Frontend** (`src/`): Vite + Vanilla JS with zero frameworks.
+**Frontend** (`src/`): Vite + Vanilla JS with zero frameworks. `/domain/:id` is a single
+consolidated Graph-IDE page — graph on the left, generated content + TOC on the right —
+not split across separate Graph/Content pages.
 - `router.js` — hash-based router (`#/`, `#/domain/:id`, plus any `path?query` route).
 - `config.js` — branding overrides (`appConfig.logoImage`, etc.) for derived apps.
 - `data/catalog.js` — fetches/caches `public/domains/catalog.json`, the domain
@@ -58,24 +60,67 @@ property.
   schema in one place; build/parse variant paths only through this module.
 - `lib/contentExists.js` — shared "does this generated page exist?" check (sniffs
   generated-page markers since dev servers 200 the SPA shell for unknown paths).
-- `pages/Domain.js` — splits the view into `GraphViewer` (left, iframe) and
-  `ConceptPanel` (right, node detail).
-- `components/GraphViewer.js` — the key integration point. Loads `graph.html` in an
-  iframe, then uses `contentWindow.eval()` to expose `RAW`/`nodeIndex`, patches
-  `handleSelect` to emit `cb:nodeSelected` custom events, and injects sidebar sections
-  into the iframe DOM via `insertAdjacentElement`. Same-origin, not cross-origin — both
-  `graph.html` and the shell are served from the same Vite dev server.
+- `pages/Domain.js` — the consolidated IDE page: top domain picker, `GraphViewer` (left,
+  iframe) and `ContentPanel` (right, TOC + content + Generate/Export PDF), all sharing
+  one Model/Level/Language state.
+- `components/GraphViewer.js` — the graph iframe integration point. Loads `graph.html`
+  in an iframe, then uses `contentWindow.eval()` to expose `RAW`/`nodeIndex`/
+  `__cb_network`, patches `handleSelect` to emit `cb:nodeSelected` custom events, and
+  exposes `getPath(nodeId)`/`selectNode(nodeId)` for `ContentPanel.js` to drive the TOC
+  and stay in sync with graph clicks. A CSS-only relayout (same
+  `insertAdjacentElement`/injected-`<style>` technique as before) hides `graph.html`'s
+  own learning-path/explanation panels and turns its Notes sidebar into a collapsible
+  bottom drawer under the graph — that panel's own `localStorage` note-taking JS is
+  untouched. Same-origin, not cross-origin — both `graph.html` and the shell are served
+  from the same Vite dev server.
+- `components/ContentPanel.js` — the right panel: Model / Level / Language / Refresh /
+  **Generate** / **Export PDF** controls, a flattened alphabetical TOC (concept/
+  application/primitive nodes on the selected node's prerequisite path, via
+  `graphViewer.getPath()`), and content resolution — loads `concept_{node}.html` in an
+  iframe when it exists, else shows a "not generated yet" prompt with Generate enabled.
+  Primitives get the same full Generate/content treatment as concepts and applications
+  (the backend's `write_section()` is kind-agnostic); only the *payoff* capstone section
+  is application-kind-gated (see `spl/build_concept_book.spl`). A resolve-token guard
+  prevents a slow lookup for a node the user has since clicked away from from
+  overwriting the currently-displayed content.
 
-**Backend** (`api/`): FastAPI.
-- `GET /api/generate` (SSE) — params: `domain`, `target`, `level`, `language`. Streams
-  `spl3 run` subprocess output as `log`/`done`/`gen_error` events.
+**Backend** (`api/`): FastAPI, bound to `127.0.0.1` only (see `scripts/start-api.sh`) —
+it holds user-supplied LLM API keys (Settings page) and has side-effecting GET
+endpoints, so it must never be reachable from the LAN or by an arbitrary website via
+CORS (`api/app.py`'s CORS origin list is derived from `DEV_PORT`).
+- `GET /api/generate` (SSE) — params: `domain`, `target`, `level`, `language`, `model`,
+  `skip_cache`. Streams `spl3 run` subprocess output as `log`/`done`/`gen_error` events.
+- `GET /api/pdf` — params: `domain`, `target`, `level`, `language`, `model`. Renders
+  whichever of `concept_{target}.html`/`book_{target}.html` exists to PDF.
 - `GET /api/domains` / `/api/domains/{id}/status` — reads `catalog.json`.
-- `api/config.py` — `Settings` reads env vars prefixed `CB_`.
+- `GET`/`PUT /api/settings` — LLM adapter/model, execution limits, and per-adapter API
+  keys (Anthropic/OpenAI/Gemini/OpenRouter — Claude CLI and Ollama need none). Settings
+  are in-memory only; a `--reload` or process restart wipes them back to `.env`
+  defaults — pre-seed a key durably via `.env`'s `CB_*_API_KEY` vars instead.
+- `api/services/adapters.py` — the single adapter-name ↔ env-var ↔ Settings-field table;
+  `executor.py`'s subprocess env injection and `settings.py`'s "is a key set" check both
+  read from it rather than each keeping their own copy.
+- `api/services/path_safety.py` — `safe_segment`/`safe_optional_segment` validate every
+  `domain`/`target`/`level`/`language`/`model` query param (letters/digits/`_`/`-` only)
+  before it touches a filesystem path; `assert_within` is a belt-and-suspenders check
+  that a resolved path is still inside `public_domains`. Every router building a path
+  from a query param must validate through this module first.
+- `api/config.py` — `Settings` reads env vars prefixed `CB_`; `spl_dir`/`public_domains`
+  are anchored to the repo root if given as a relative path, since `stream_generate`
+  runs the spl3 subprocess with a different `cwd`.
 - `api/services/catalog_lock.py` — the single write-path for `catalog.json`
   (`read_catalog`/`update_catalog`). Every writer must go through `update_catalog()` —
   it serializes concurrent writers with an fcntl lock and publishes atomically, so a
   generation task and a batch script running at the same time can't silently drop each
   other's updates.
+
+**Level → style:** `scripts/level_style.py` is the single level→style map
+(`intro`→`feynman`, `core`→`core`, `college`→`college`, `research`→`research`, with a
+`research`→`research_applied` fallback for domains not tagged `math`/`physics`/
+`engineering`) — `build_concept_book.spl`'s `@style` input is what actually controls
+generated content depth/rigor (`@lvl`/`@level` is not a workflow input and is silently
+ignored). Both `api/services/executor.py` (the web UI) and `scripts/batch_generate.py`
+(CLI batch runs) import this one module so they can't drift apart.
 
 **Deployment:** GitHub Pages (static). The backend is a local-only tool; generated
 book/concept HTML files are committed into `public/domains/` and included in the
@@ -143,12 +188,13 @@ thing:
 - **Auth / multi-user hosting** — `main.js` registers routes unguarded. An app that
   needs login-gated routes should wrap `register()` calls in its own guard rather than
   modifying `router.js`.
-- **Book page layout** — `pages/BookPage.js` is currently a single file. A derived app
-  with heavier book-reading needs (compare view, chat sidebar, TOC/nav split) should
-  factor it into `components/book/*.js` submodules rather than growing the one file
+- **Content panel layout** — `components/ContentPanel.js` is currently a single file. A
+  derived app with heavier reading needs (compare view, chat sidebar, richer TOC) should
+  factor it into `components/content/*.js` submodules rather than growing the one file
   indefinitely.
 - **Search** — `data/catalog.js`'s domain/concept search is plain substring matching.
   A domain with non-Latin-script or phonetic search needs (e.g. pinyin) should layer a
   matcher on top rather than special-casing catalog.js.
-- **Settings page** — ships a single flat form (SPL adapter/model, execution limits).
-  Multi-tab layouts or per-user API-key management belong in the fork, not the base.
+- **Settings page** — ships a single flat form (SPL adapter/model, execution limits,
+  per-adapter API keys). Multi-tab layouts or per-user API-key management belong in the
+  fork, not the base.

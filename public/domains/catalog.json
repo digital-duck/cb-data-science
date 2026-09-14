@@ -51,6 +51,96 @@
         "file": "output/college.zh/sonnet/html/book_internet_of_things_zh.html",
         "model": "sonnet",
         "language": "zh"
+      },
+      {
+        "target": "business_analytics",
+        "file": "output/core.en/sonnet/html/book_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "internet_of_things",
+        "file": "output/core.en/sonnet/html/book_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "predictive_analytics",
+        "file": "output/core.en/sonnet/html/book_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "recommendation_system",
+        "file": "output/core.en/sonnet/html/book_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "sports_analytics",
+        "file": "output/core.en/sonnet/html/book_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "business_analytics",
+        "file": "output/intro.en/sonnet/html/book_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "internet_of_things",
+        "file": "output/intro.en/sonnet/html/book_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "predictive_analytics",
+        "file": "output/intro.en/sonnet/html/book_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "recommendation_system",
+        "file": "output/intro.en/sonnet/html/book_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "sports_analytics",
+        "file": "output/intro.en/sonnet/html/book_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "business_analytics",
+        "file": "output/research.en/sonnet/html/book_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "internet_of_things",
+        "file": "output/research.en/sonnet/html/book_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "predictive_analytics",
+        "file": "output/research.en/sonnet/html/book_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "recommendation_system",
+        "file": "output/research.en/sonnet/html/book_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "sports_analytics",
+        "file": "output/research.en/sonnet/html/book_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -62,9 +152,51 @@
         "language": "en"
       },
       {
+        "name": "business_analytics",
+        "label": "Business Analytics",
+        "file": "output/college.en/sonnet/html/concept_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "business_analytics",
+        "label": "Business Analytics",
+        "file": "output/core.en/sonnet/html/concept_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "business_analytics",
+        "label": "Business Analytics",
+        "file": "output/intro.en/sonnet/html/concept_business_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data",
         "label": "Data",
         "file": "output/research.en/sonnet/html/concept_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data",
+        "label": "Data",
+        "file": "output/college.en/sonnet/html/concept_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data",
+        "label": "Data",
+        "file": "output/core.en/sonnet/html/concept_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data",
+        "label": "Data",
+        "file": "output/intro.en/sonnet/html/concept_data.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -76,9 +208,51 @@
         "language": "en"
       },
       {
+        "name": "data_analysis",
+        "label": "Data Analysis",
+        "file": "output/college.en/sonnet/html/concept_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_analysis",
+        "label": "Data Analysis",
+        "file": "output/core.en/sonnet/html/concept_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_analysis",
+        "label": "Data Analysis",
+        "file": "output/intro.en/sonnet/html/concept_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_collection",
         "label": "Data Collection",
         "file": "output/research.en/sonnet/html/concept_data_collection.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_collection",
+        "label": "Data Collection",
+        "file": "output/college.en/sonnet/html/concept_data_collection.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_collection",
+        "label": "Data Collection",
+        "file": "output/core.en/sonnet/html/concept_data_collection.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_collection",
+        "label": "Data Collection",
+        "file": "output/intro.en/sonnet/html/concept_data_collection.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -97,9 +271,51 @@
         "language": "en"
       },
       {
+        "name": "data_preparation",
+        "label": "Data Preparation",
+        "file": "output/college.en/sonnet/html/concept_data_preparation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_preparation",
+        "label": "Data Preparation",
+        "file": "output/core.en/sonnet/html/concept_data_preparation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_preparation",
+        "label": "Data Preparation",
+        "file": "output/intro.en/sonnet/html/concept_data_preparation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_science",
         "label": "Data Science",
         "file": "output/research.en/sonnet/html/concept_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_science",
+        "label": "Data Science",
+        "file": "output/college.en/sonnet/html/concept_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_science",
+        "label": "Data Science",
+        "file": "output/core.en/sonnet/html/concept_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_science",
+        "label": "Data Science",
+        "file": "output/intro.en/sonnet/html/concept_data_science.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -118,9 +334,51 @@
         "language": "en"
       },
       {
+        "name": "information",
+        "label": "Information",
+        "file": "output/college.en/sonnet/html/concept_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information",
+        "label": "Information",
+        "file": "output/core.en/sonnet/html/concept_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information",
+        "label": "Information",
+        "file": "output/intro.en/sonnet/html/concept_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "internet_of_things",
         "label": "Internet Of Things",
         "file": "output/research.en/sonnet/html/concept_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "internet_of_things",
+        "label": "Internet Of Things",
+        "file": "output/college.en/sonnet/html/concept_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "internet_of_things",
+        "label": "Internet Of Things",
+        "file": "output/core.en/sonnet/html/concept_internet_of_things.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "internet_of_things",
+        "label": "Internet Of Things",
+        "file": "output/intro.en/sonnet/html/concept_internet_of_things.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -139,6 +397,27 @@
         "language": "en"
       },
       {
+        "name": "predictive_analytics",
+        "label": "Predictive Analytics",
+        "file": "output/college.en/sonnet/html/concept_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "predictive_analytics",
+        "label": "Predictive Analytics",
+        "file": "output/core.en/sonnet/html/concept_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "predictive_analytics",
+        "label": "Predictive Analytics",
+        "file": "output/intro.en/sonnet/html/concept_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "recommendation_system",
         "label": "Recommendation System",
         "file": "output/research.en/sonnet/html/concept_recommendation_system.html",
@@ -146,9 +425,51 @@
         "language": "en"
       },
       {
+        "name": "recommendation_system",
+        "label": "Recommendation System",
+        "file": "output/college.en/sonnet/html/concept_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "recommendation_system",
+        "label": "Recommendation System",
+        "file": "output/core.en/sonnet/html/concept_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "recommendation_system",
+        "label": "Recommendation System",
+        "file": "output/intro.en/sonnet/html/concept_recommendation_system.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "sports_analytics",
         "label": "Sports Analytics",
         "file": "output/research.en/sonnet/html/concept_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sports_analytics",
+        "label": "Sports Analytics",
+        "file": "output/college.en/sonnet/html/concept_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sports_analytics",
+        "label": "Sports Analytics",
+        "file": "output/core.en/sonnet/html/concept_sports_analytics.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sports_analytics",
+        "label": "Sports Analytics",
+        "file": "output/intro.en/sonnet/html/concept_sports_analytics.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -183,6 +504,42 @@
         "file": "output/college.en/sonnet/html/book_large_dataset_management.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "cloud_computing",
+        "file": "output/core.en/sonnet/html/book_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_dataset_management",
+        "file": "output/core.en/sonnet/html/book_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "cloud_computing",
+        "file": "output/intro.en/sonnet/html/book_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_dataset_management",
+        "file": "output/intro.en/sonnet/html/book_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "cloud_computing",
+        "file": "output/research.en/sonnet/html/book_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_dataset_management",
+        "file": "output/research.en/sonnet/html/book_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -194,9 +551,51 @@
         "language": "en"
       },
       {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/college.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/core.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/intro.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "cloud_computing",
         "label": "Cloud Computing",
         "file": "output/research.en/sonnet/html/concept_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cloud_computing",
+        "label": "Cloud Computing",
+        "file": "output/college.en/sonnet/html/concept_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cloud_computing",
+        "label": "Cloud Computing",
+        "file": "output/core.en/sonnet/html/concept_cloud_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cloud_computing",
+        "label": "Cloud Computing",
+        "file": "output/intro.en/sonnet/html/concept_cloud_computing.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -208,9 +607,51 @@
         "language": "en"
       },
       {
+        "name": "data_chunking",
+        "label": "Data Chunking",
+        "file": "output/college.en/sonnet/html/concept_data_chunking.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_chunking",
+        "label": "Data Chunking",
+        "file": "output/core.en/sonnet/html/concept_data_chunking.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_chunking",
+        "label": "Data Chunking",
+        "file": "output/intro.en/sonnet/html/concept_data_chunking.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_compression",
         "label": "Data Compression",
         "file": "output/research.en/sonnet/html/concept_data_compression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_compression",
+        "label": "Data Compression",
+        "file": "output/college.en/sonnet/html/concept_data_compression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_compression",
+        "label": "Data Compression",
+        "file": "output/core.en/sonnet/html/concept_data_compression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_compression",
+        "label": "Data Compression",
+        "file": "output/intro.en/sonnet/html/concept_data_compression.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -222,9 +663,51 @@
         "language": "en"
       },
       {
+        "name": "data_indexing",
+        "label": "Data Indexing",
+        "file": "output/college.en/sonnet/html/concept_data_indexing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_indexing",
+        "label": "Data Indexing",
+        "file": "output/core.en/sonnet/html/concept_data_indexing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_indexing",
+        "label": "Data Indexing",
+        "file": "output/intro.en/sonnet/html/concept_data_indexing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_processing",
         "label": "Data Processing",
         "file": "output/research.en/sonnet/html/concept_data_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_processing",
+        "label": "Data Processing",
+        "file": "output/college.en/sonnet/html/concept_data_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_processing",
+        "label": "Data Processing",
+        "file": "output/core.en/sonnet/html/concept_data_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_processing",
+        "label": "Data Processing",
+        "file": "output/intro.en/sonnet/html/concept_data_processing.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -236,9 +719,51 @@
         "language": "en"
       },
       {
+        "name": "data_storage",
+        "label": "Data Storage",
+        "file": "output/college.en/sonnet/html/concept_data_storage.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_storage",
+        "label": "Data Storage",
+        "file": "output/core.en/sonnet/html/concept_data_storage.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_storage",
+        "label": "Data Storage",
+        "file": "output/intro.en/sonnet/html/concept_data_storage.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "dbms",
         "label": "Dbms",
         "file": "output/research.en/sonnet/html/concept_dbms.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "dbms",
+        "label": "Dbms",
+        "file": "output/college.en/sonnet/html/concept_dbms.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "dbms",
+        "label": "Dbms",
+        "file": "output/core.en/sonnet/html/concept_dbms.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "dbms",
+        "label": "Dbms",
+        "file": "output/intro.en/sonnet/html/concept_dbms.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -250,9 +775,51 @@
         "language": "en"
       },
       {
+        "name": "large_dataset_management",
+        "label": "Large Dataset Management",
+        "file": "output/college.en/sonnet/html/concept_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_dataset_management",
+        "label": "Large Dataset Management",
+        "file": "output/core.en/sonnet/html/concept_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_dataset_management",
+        "label": "Large Dataset Management",
+        "file": "output/intro.en/sonnet/html/concept_large_dataset_management.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "parsing_and_extraction",
         "label": "Parsing And Extraction",
         "file": "output/research.en/sonnet/html/concept_parsing_and_extraction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "parsing_and_extraction",
+        "label": "Parsing And Extraction",
+        "file": "output/college.en/sonnet/html/concept_parsing_and_extraction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "parsing_and_extraction",
+        "label": "Parsing And Extraction",
+        "file": "output/core.en/sonnet/html/concept_parsing_and_extraction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "parsing_and_extraction",
+        "label": "Parsing And Extraction",
+        "file": "output/intro.en/sonnet/html/concept_parsing_and_extraction.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -264,9 +831,51 @@
         "language": "en"
       },
       {
+        "name": "regular_expressions",
+        "label": "Regular Expressions",
+        "file": "output/college.en/sonnet/html/concept_regular_expressions.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regular_expressions",
+        "label": "Regular Expressions",
+        "file": "output/core.en/sonnet/html/concept_regular_expressions.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regular_expressions",
+        "label": "Regular Expressions",
+        "file": "output/intro.en/sonnet/html/concept_regular_expressions.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "string_manipulation",
         "label": "String Manipulation",
         "file": "output/research.en/sonnet/html/concept_string_manipulation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "string_manipulation",
+        "label": "String Manipulation",
+        "file": "output/college.en/sonnet/html/concept_string_manipulation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "string_manipulation",
+        "label": "String Manipulation",
+        "file": "output/core.en/sonnet/html/concept_string_manipulation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "string_manipulation",
+        "label": "String Manipulation",
+        "file": "output/intro.en/sonnet/html/concept_string_manipulation.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -295,6 +904,24 @@
         "file": "output/college.en/sonnet/html/book_python_data_analysis.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "python_data_analysis",
+        "file": "output/core.en/sonnet/html/book_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "python_data_analysis",
+        "file": "output/intro.en/sonnet/html/book_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "python_data_analysis",
+        "file": "output/research.en/sonnet/html/book_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -306,9 +933,51 @@
         "language": "en"
       },
       {
+        "name": "mean",
+        "label": "Mean",
+        "file": "output/college.en/sonnet/html/concept_mean.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "mean",
+        "label": "Mean",
+        "file": "output/core.en/sonnet/html/concept_mean.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "mean",
+        "label": "Mean",
+        "file": "output/intro.en/sonnet/html/concept_mean.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "median",
         "label": "Median",
         "file": "output/research.en/sonnet/html/concept_median.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "median",
+        "label": "Median",
+        "file": "output/college.en/sonnet/html/concept_median.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "median",
+        "label": "Median",
+        "file": "output/core.en/sonnet/html/concept_median.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "median",
+        "label": "Median",
+        "file": "output/intro.en/sonnet/html/concept_median.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -320,9 +989,51 @@
         "language": "en"
       },
       {
+        "name": "percentiles",
+        "label": "Percentiles",
+        "file": "output/college.en/sonnet/html/concept_percentiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "percentiles",
+        "label": "Percentiles",
+        "file": "output/core.en/sonnet/html/concept_percentiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "percentiles",
+        "label": "Percentiles",
+        "file": "output/intro.en/sonnet/html/concept_percentiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "population_data",
         "label": "Population Data",
         "file": "output/research.en/sonnet/html/concept_population_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "population_data",
+        "label": "Population Data",
+        "file": "output/college.en/sonnet/html/concept_population_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "population_data",
+        "label": "Population Data",
+        "file": "output/core.en/sonnet/html/concept_population_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "population_data",
+        "label": "Population Data",
+        "file": "output/intro.en/sonnet/html/concept_population_data.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -334,9 +1045,51 @@
         "language": "en"
       },
       {
+        "name": "probability",
+        "label": "Probability",
+        "file": "output/college.en/sonnet/html/concept_probability.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability",
+        "label": "Probability",
+        "file": "output/core.en/sonnet/html/concept_probability.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability",
+        "label": "Probability",
+        "file": "output/intro.en/sonnet/html/concept_probability.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "probability_distribution",
         "label": "Probability Distribution",
         "file": "output/research.en/sonnet/html/concept_probability_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability_distribution",
+        "label": "Probability Distribution",
+        "file": "output/college.en/sonnet/html/concept_probability_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability_distribution",
+        "label": "Probability Distribution",
+        "file": "output/core.en/sonnet/html/concept_probability_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "probability_distribution",
+        "label": "Probability Distribution",
+        "file": "output/intro.en/sonnet/html/concept_probability_distribution.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -348,9 +1101,51 @@
         "language": "en"
       },
       {
+        "name": "python_data_analysis",
+        "label": "Python Data Analysis",
+        "file": "output/college.en/sonnet/html/concept_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_data_analysis",
+        "label": "Python Data Analysis",
+        "file": "output/core.en/sonnet/html/concept_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_data_analysis",
+        "label": "Python Data Analysis",
+        "file": "output/intro.en/sonnet/html/concept_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "quartiles",
         "label": "Quartiles",
         "file": "output/research.en/sonnet/html/concept_quartiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "quartiles",
+        "label": "Quartiles",
+        "file": "output/college.en/sonnet/html/concept_quartiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "quartiles",
+        "label": "Quartiles",
+        "file": "output/core.en/sonnet/html/concept_quartiles.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "quartiles",
+        "label": "Quartiles",
+        "file": "output/intro.en/sonnet/html/concept_quartiles.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -362,9 +1157,51 @@
         "language": "en"
       },
       {
+        "name": "random_variable",
+        "label": "Random Variable",
+        "file": "output/college.en/sonnet/html/concept_random_variable.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_variable",
+        "label": "Random Variable",
+        "file": "output/core.en/sonnet/html/concept_random_variable.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_variable",
+        "label": "Random Variable",
+        "file": "output/intro.en/sonnet/html/concept_random_variable.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "sample_data",
         "label": "Sample Data",
         "file": "output/research.en/sonnet/html/concept_sample_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sample_data",
+        "label": "Sample Data",
+        "file": "output/college.en/sonnet/html/concept_sample_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sample_data",
+        "label": "Sample Data",
+        "file": "output/core.en/sonnet/html/concept_sample_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sample_data",
+        "label": "Sample Data",
+        "file": "output/intro.en/sonnet/html/concept_sample_data.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -376,9 +1213,51 @@
         "language": "en"
       },
       {
+        "name": "standard_deviation",
+        "label": "Standard Deviation",
+        "file": "output/college.en/sonnet/html/concept_standard_deviation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "standard_deviation",
+        "label": "Standard Deviation",
+        "file": "output/core.en/sonnet/html/concept_standard_deviation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "standard_deviation",
+        "label": "Standard Deviation",
+        "file": "output/intro.en/sonnet/html/concept_standard_deviation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "variance",
         "label": "Variance",
         "file": "output/research.en/sonnet/html/concept_variance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "variance",
+        "label": "Variance",
+        "file": "output/college.en/sonnet/html/concept_variance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "variance",
+        "label": "Variance",
+        "file": "output/core.en/sonnet/html/concept_variance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "variance",
+        "label": "Variance",
+        "file": "output/intro.en/sonnet/html/concept_variance.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -407,6 +1286,24 @@
         "file": "output/college.en/sonnet/html/book_python_statistical_computing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "python_statistical_computing",
+        "file": "output/core.en/sonnet/html/book_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "python_statistical_computing",
+        "file": "output/intro.en/sonnet/html/book_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "python_statistical_computing",
+        "file": "output/research.en/sonnet/html/book_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -418,9 +1315,51 @@
         "language": "en"
       },
       {
+        "name": "alternative_hypothesis",
+        "label": "Alternative Hypothesis",
+        "file": "output/college.en/sonnet/html/concept_alternative_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "alternative_hypothesis",
+        "label": "Alternative Hypothesis",
+        "file": "output/intro.en/sonnet/html/concept_alternative_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "alternative_hypothesis",
+        "label": "Alternative Hypothesis",
+        "file": "output/research.en/sonnet/html/concept_alternative_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "anova",
         "label": "Anova",
         "file": "output/core.en/sonnet/html/concept_anova.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "anova",
+        "label": "Anova",
+        "file": "output/college.en/sonnet/html/concept_anova.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "anova",
+        "label": "Anova",
+        "file": "output/intro.en/sonnet/html/concept_anova.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "anova",
+        "label": "Anova",
+        "file": "output/research.en/sonnet/html/concept_anova.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -432,9 +1371,51 @@
         "language": "en"
       },
       {
+        "name": "confidence_interval",
+        "label": "Confidence Interval",
+        "file": "output/college.en/sonnet/html/concept_confidence_interval.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "confidence_interval",
+        "label": "Confidence Interval",
+        "file": "output/intro.en/sonnet/html/concept_confidence_interval.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "confidence_interval",
+        "label": "Confidence Interval",
+        "file": "output/research.en/sonnet/html/concept_confidence_interval.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "correlation_coefficient",
         "label": "Correlation Coefficient",
         "file": "output/core.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/college.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/intro.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/research.en/sonnet/html/concept_correlation_coefficient.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -446,9 +1427,51 @@
         "language": "en"
       },
       {
+        "name": "critical_value",
+        "label": "Critical Value",
+        "file": "output/college.en/sonnet/html/concept_critical_value.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "critical_value",
+        "label": "Critical Value",
+        "file": "output/intro.en/sonnet/html/concept_critical_value.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "critical_value",
+        "label": "Critical Value",
+        "file": "output/research.en/sonnet/html/concept_critical_value.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "f_distribution",
         "label": "F Distribution",
         "file": "output/core.en/sonnet/html/concept_f_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "f_distribution",
+        "label": "F Distribution",
+        "file": "output/college.en/sonnet/html/concept_f_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "f_distribution",
+        "label": "F Distribution",
+        "file": "output/intro.en/sonnet/html/concept_f_distribution.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "f_distribution",
+        "label": "F Distribution",
+        "file": "output/research.en/sonnet/html/concept_f_distribution.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -460,9 +1483,51 @@
         "language": "en"
       },
       {
+        "name": "hypothesis_testing",
+        "label": "Hypothesis Testing",
+        "file": "output/college.en/sonnet/html/concept_hypothesis_testing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hypothesis_testing",
+        "label": "Hypothesis Testing",
+        "file": "output/intro.en/sonnet/html/concept_hypothesis_testing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hypothesis_testing",
+        "label": "Hypothesis Testing",
+        "file": "output/research.en/sonnet/html/concept_hypothesis_testing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "level_of_significance",
         "label": "Level Of Significance",
         "file": "output/core.en/sonnet/html/concept_level_of_significance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "level_of_significance",
+        "label": "Level Of Significance",
+        "file": "output/college.en/sonnet/html/concept_level_of_significance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "level_of_significance",
+        "label": "Level Of Significance",
+        "file": "output/intro.en/sonnet/html/concept_level_of_significance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "level_of_significance",
+        "label": "Level Of Significance",
+        "file": "output/research.en/sonnet/html/concept_level_of_significance.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -474,9 +1539,51 @@
         "language": "en"
       },
       {
+        "name": "linear_regression",
+        "label": "Linear Regression",
+        "file": "output/college.en/sonnet/html/concept_linear_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "linear_regression",
+        "label": "Linear Regression",
+        "file": "output/intro.en/sonnet/html/concept_linear_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "linear_regression",
+        "label": "Linear Regression",
+        "file": "output/research.en/sonnet/html/concept_linear_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "margin_of_error",
         "label": "Margin Of Error",
         "file": "output/core.en/sonnet/html/concept_margin_of_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "margin_of_error",
+        "label": "Margin Of Error",
+        "file": "output/college.en/sonnet/html/concept_margin_of_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "margin_of_error",
+        "label": "Margin Of Error",
+        "file": "output/intro.en/sonnet/html/concept_margin_of_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "margin_of_error",
+        "label": "Margin Of Error",
+        "file": "output/research.en/sonnet/html/concept_margin_of_error.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -488,9 +1595,51 @@
         "language": "en"
       },
       {
+        "name": "null_hypothesis",
+        "label": "Null Hypothesis",
+        "file": "output/college.en/sonnet/html/concept_null_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "null_hypothesis",
+        "label": "Null Hypothesis",
+        "file": "output/intro.en/sonnet/html/concept_null_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "null_hypothesis",
+        "label": "Null Hypothesis",
+        "file": "output/research.en/sonnet/html/concept_null_hypothesis.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "point_estimate",
         "label": "Point Estimate",
         "file": "output/core.en/sonnet/html/concept_point_estimate.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "point_estimate",
+        "label": "Point Estimate",
+        "file": "output/college.en/sonnet/html/concept_point_estimate.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "point_estimate",
+        "label": "Point Estimate",
+        "file": "output/intro.en/sonnet/html/concept_point_estimate.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "point_estimate",
+        "label": "Point Estimate",
+        "file": "output/research.en/sonnet/html/concept_point_estimate.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -502,6 +1651,27 @@
         "language": "en"
       },
       {
+        "name": "python_statistical_computing",
+        "label": "Python Statistical Computing",
+        "file": "output/college.en/sonnet/html/concept_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_statistical_computing",
+        "label": "Python Statistical Computing",
+        "file": "output/intro.en/sonnet/html/concept_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "python_statistical_computing",
+        "label": "Python Statistical Computing",
+        "file": "output/research.en/sonnet/html/concept_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "scatterplot",
         "label": "Scatterplot",
         "file": "output/core.en/sonnet/html/concept_scatterplot.html",
@@ -509,9 +1679,51 @@
         "language": "en"
       },
       {
+        "name": "scatterplot",
+        "label": "Scatterplot",
+        "file": "output/college.en/sonnet/html/concept_scatterplot.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot",
+        "label": "Scatterplot",
+        "file": "output/intro.en/sonnet/html/concept_scatterplot.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot",
+        "label": "Scatterplot",
+        "file": "output/research.en/sonnet/html/concept_scatterplot.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "test_statistic",
         "label": "Test Statistic",
         "file": "output/core.en/sonnet/html/concept_test_statistic.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "test_statistic",
+        "label": "Test Statistic",
+        "file": "output/college.en/sonnet/html/concept_test_statistic.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "test_statistic",
+        "label": "Test Statistic",
+        "file": "output/intro.en/sonnet/html/concept_test_statistic.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "test_statistic",
+        "label": "Test Statistic",
+        "file": "output/research.en/sonnet/html/concept_test_statistic.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -570,6 +1782,120 @@
         "file": "output/intro.zh/sonnet/html/book_arima.html",
         "model": "sonnet",
         "language": "zh"
+      },
+      {
+        "target": "arima",
+        "file": "output/college.zh/sonnet/html/book_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "arima",
+        "file": "output/core.en/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "augmented_dickey_fuller_test",
+        "file": "output/core.en/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "linear_regression_forecasting",
+        "file": "output/core.en/sonnet/html/book_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "naive_forecasting",
+        "file": "output/core.en/sonnet/html/book_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "seasonal_trend_decomposition_loess",
+        "file": "output/core.en/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/core.zh/sonnet/html/book_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "arima",
+        "file": "output/intro.en/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "augmented_dickey_fuller_test",
+        "file": "output/intro.en/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "linear_regression_forecasting",
+        "file": "output/intro.en/sonnet/html/book_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "naive_forecasting",
+        "file": "output/intro.en/sonnet/html/book_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "seasonal_trend_decomposition_loess",
+        "file": "output/intro.en/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/intro.zh/sonnet/html/book_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "arima",
+        "file": "output/research.en/sonnet/html/book_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "augmented_dickey_fuller_test",
+        "file": "output/research.en/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "linear_regression_forecasting",
+        "file": "output/research.en/sonnet/html/book_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "naive_forecasting",
+        "file": "output/research.en/sonnet/html/book_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "seasonal_trend_decomposition_loess",
+        "file": "output/research.en/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "arima",
+        "file": "output/research.zh/sonnet/html/book_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -579,6 +1905,48 @@
         "file": "output/research.en/sonnet/html/concept_arima.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/college.en/sonnet/html/concept_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/college.zh/sonnet/html/concept_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/core.en/sonnet/html/concept_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/core.zh/sonnet/html/concept_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/intro.en/sonnet/html/concept_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/intro.zh/sonnet/html/concept_arima_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "arima_zh",
@@ -595,11 +1963,74 @@
         "language": "en"
       },
       {
+        "name": "augmented_dickey_fuller_test",
+        "label": "Augmented Dickey Fuller Test",
+        "file": "output/college.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "augmented_dickey_fuller_test",
+        "label": "Augmented Dickey Fuller Test",
+        "file": "output/core.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "augmented_dickey_fuller_test",
+        "label": "Augmented Dickey Fuller Test",
+        "file": "output/intro.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "autoregressive_model",
         "label": "Autoregressive Model",
         "file": "output/research.en/sonnet/html/concept_autoregressive_model.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/college.en/sonnet/html/concept_autoregressive_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/college.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/core.en/sonnet/html/concept_autoregressive_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/core.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/intro.en/sonnet/html/concept_autoregressive_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/intro.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "autoregressive_model_zh",
@@ -616,11 +2047,74 @@
         "language": "en"
       },
       {
+        "name": "cyclic_component",
+        "label": "Cyclic Component",
+        "file": "output/college.en/sonnet/html/concept_cyclic_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cyclic_component",
+        "label": "Cyclic Component",
+        "file": "output/core.en/sonnet/html/concept_cyclic_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cyclic_component",
+        "label": "Cyclic Component",
+        "file": "output/intro.en/sonnet/html/concept_cyclic_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "differencing",
         "label": "Differencing",
         "file": "output/research.en/sonnet/html/concept_differencing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/college.en/sonnet/html/concept_differencing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/college.zh/sonnet/html/concept_differencing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/core.en/sonnet/html/concept_differencing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/core.zh/sonnet/html/concept_differencing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/intro.en/sonnet/html/concept_differencing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/intro.zh/sonnet/html/concept_differencing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "differencing_zh",
@@ -637,6 +2131,48 @@
         "language": "en"
       },
       {
+        "name": "error",
+        "label": "Error",
+        "file": "output/college.en/sonnet/html/concept_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/college.zh/sonnet/html/concept_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/core.en/sonnet/html/concept_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/core.zh/sonnet/html/concept_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/intro.en/sonnet/html/concept_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "error",
+        "label": "Error",
+        "file": "output/intro.zh/sonnet/html/concept_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "error_zh",
         "label": "Error Zh",
         "file": "output/research.zh/sonnet/html/concept_error_zh.html",
@@ -651,11 +2187,74 @@
         "language": "en"
       },
       {
+        "name": "forecasting",
+        "label": "Forecasting",
+        "file": "output/college.en/sonnet/html/concept_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "forecasting",
+        "label": "Forecasting",
+        "file": "output/core.en/sonnet/html/concept_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "forecasting",
+        "label": "Forecasting",
+        "file": "output/intro.en/sonnet/html/concept_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "integrative_component",
         "label": "Integrative Component",
         "file": "output/research.en/sonnet/html/concept_integrative_component.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/college.en/sonnet/html/concept_integrative_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/college.zh/sonnet/html/concept_integrative_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/core.en/sonnet/html/concept_integrative_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/core.zh/sonnet/html/concept_integrative_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/intro.en/sonnet/html/concept_integrative_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/intro.zh/sonnet/html/concept_integrative_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "integrative_component_zh",
@@ -672,6 +2271,48 @@
         "language": "en"
       },
       {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/college.en/sonnet/html/concept_lag.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/college.zh/sonnet/html/concept_lag_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/core.en/sonnet/html/concept_lag.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/core.zh/sonnet/html/concept_lag_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/intro.en/sonnet/html/concept_lag.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/intro.zh/sonnet/html/concept_lag_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "lag_zh",
         "label": "Lag Zh",
         "file": "output/research.zh/sonnet/html/concept_lag_zh.html",
@@ -686,11 +2327,74 @@
         "language": "en"
       },
       {
+        "name": "linear_regression_forecasting",
+        "label": "Linear Regression Forecasting",
+        "file": "output/college.en/sonnet/html/concept_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "linear_regression_forecasting",
+        "label": "Linear Regression Forecasting",
+        "file": "output/core.en/sonnet/html/concept_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "linear_regression_forecasting",
+        "label": "Linear Regression Forecasting",
+        "file": "output/intro.en/sonnet/html/concept_linear_regression_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "moving_average_model",
         "label": "Moving Average Model",
         "file": "output/research.en/sonnet/html/concept_moving_average_model.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/college.en/sonnet/html/concept_moving_average_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/college.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/core.en/sonnet/html/concept_moving_average_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/core.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/intro.en/sonnet/html/concept_moving_average_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/intro.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "moving_average_model_zh",
@@ -707,9 +2411,51 @@
         "language": "en"
       },
       {
+        "name": "naive_forecasting",
+        "label": "Naive Forecasting",
+        "file": "output/college.en/sonnet/html/concept_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_forecasting",
+        "label": "Naive Forecasting",
+        "file": "output/core.en/sonnet/html/concept_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_forecasting",
+        "label": "Naive Forecasting",
+        "file": "output/intro.en/sonnet/html/concept_naive_forecasting.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "noise",
         "label": "Noise",
         "file": "output/research.en/sonnet/html/concept_noise.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "noise",
+        "label": "Noise",
+        "file": "output/college.en/sonnet/html/concept_noise.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "noise",
+        "label": "Noise",
+        "file": "output/core.en/sonnet/html/concept_noise.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "noise",
+        "label": "Noise",
+        "file": "output/intro.en/sonnet/html/concept_noise.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -721,9 +2467,51 @@
         "language": "en"
       },
       {
+        "name": "seasonal_component",
+        "label": "Seasonal Component",
+        "file": "output/college.en/sonnet/html/concept_seasonal_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_component",
+        "label": "Seasonal Component",
+        "file": "output/core.en/sonnet/html/concept_seasonal_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_component",
+        "label": "Seasonal Component",
+        "file": "output/intro.en/sonnet/html/concept_seasonal_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "seasonal_trend_decomposition_loess",
         "label": "Seasonal Trend Decomposition Loess",
         "file": "output/research.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_trend_decomposition_loess",
+        "label": "Seasonal Trend Decomposition Loess",
+        "file": "output/college.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_trend_decomposition_loess",
+        "label": "Seasonal Trend Decomposition Loess",
+        "file": "output/core.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "seasonal_trend_decomposition_loess",
+        "label": "Seasonal Trend Decomposition Loess",
+        "file": "output/intro.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -733,6 +2521,48 @@
         "file": "output/research.en/sonnet/html/concept_sequence.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/college.en/sonnet/html/concept_sequence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/college.zh/sonnet/html/concept_sequence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/core.en/sonnet/html/concept_sequence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/core.zh/sonnet/html/concept_sequence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/intro.en/sonnet/html/concept_sequence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sequence",
+        "label": "Sequence",
+        "file": "output/intro.zh/sonnet/html/concept_sequence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "sequence_zh",
@@ -749,6 +2579,27 @@
         "language": "en"
       },
       {
+        "name": "stationary",
+        "label": "Stationary",
+        "file": "output/college.en/sonnet/html/concept_stationary.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "stationary",
+        "label": "Stationary",
+        "file": "output/core.en/sonnet/html/concept_stationary.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "stationary",
+        "label": "Stationary",
+        "file": "output/intro.en/sonnet/html/concept_stationary.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "time_series",
         "label": "Time Series",
         "file": "output/research.en/sonnet/html/concept_time_series.html",
@@ -756,9 +2607,72 @@
         "language": "en"
       },
       {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/college.en/sonnet/html/concept_time_series.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/college.zh/sonnet/html/concept_time_series_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/core.en/sonnet/html/concept_time_series.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/core.zh/sonnet/html/concept_time_series_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/intro.en/sonnet/html/concept_time_series.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/intro.zh/sonnet/html/concept_time_series_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "time_series_model",
         "label": "Time Series Model",
         "file": "output/research.en/sonnet/html/concept_time_series_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series_model",
+        "label": "Time Series Model",
+        "file": "output/college.en/sonnet/html/concept_time_series_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series_model",
+        "label": "Time Series Model",
+        "file": "output/core.en/sonnet/html/concept_time_series_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "time_series_model",
+        "label": "Time Series Model",
+        "file": "output/intro.en/sonnet/html/concept_time_series_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -777,9 +2691,72 @@
         "language": "en"
       },
       {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/college.en/sonnet/html/concept_trend.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/college.zh/sonnet/html/concept_trend_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/core.en/sonnet/html/concept_trend.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/core.zh/sonnet/html/concept_trend_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/intro.en/sonnet/html/concept_trend.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/intro.zh/sonnet/html/concept_trend_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "trend_cycle_component",
         "label": "Trend Cycle Component",
         "file": "output/research.en/sonnet/html/concept_trend_cycle_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_cycle_component",
+        "label": "Trend Cycle Component",
+        "file": "output/college.en/sonnet/html/concept_trend_cycle_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_cycle_component",
+        "label": "Trend Cycle Component",
+        "file": "output/core.en/sonnet/html/concept_trend_cycle_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_cycle_component",
+        "label": "Trend Cycle Component",
+        "file": "output/intro.en/sonnet/html/concept_trend_cycle_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -794,6 +2771,27 @@
         "name": "volatility",
         "label": "Volatility",
         "file": "output/research.en/sonnet/html/concept_volatility.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "volatility",
+        "label": "Volatility",
+        "file": "output/college.en/sonnet/html/concept_volatility.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "volatility",
+        "label": "Volatility",
+        "file": "output/core.en/sonnet/html/concept_volatility.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "volatility",
+        "label": "Volatility",
+        "file": "output/intro.en/sonnet/html/concept_volatility.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -846,6 +2844,96 @@
         "file": "output/college.en/sonnet/html/book_temperature_prediction.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "data_mining",
+        "file": "output/core.en/sonnet/html/book_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "facial_recognition",
+        "file": "output/core.en/sonnet/html/book_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "heart_disease_classification",
+        "file": "output/core.en/sonnet/html/book_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "spam_filtering",
+        "file": "output/core.en/sonnet/html/book_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "temperature_prediction",
+        "file": "output/core.en/sonnet/html/book_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "data_mining",
+        "file": "output/intro.en/sonnet/html/book_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "facial_recognition",
+        "file": "output/intro.en/sonnet/html/book_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "heart_disease_classification",
+        "file": "output/intro.en/sonnet/html/book_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "spam_filtering",
+        "file": "output/intro.en/sonnet/html/book_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "temperature_prediction",
+        "file": "output/intro.en/sonnet/html/book_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "data_mining",
+        "file": "output/research.en/sonnet/html/book_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "facial_recognition",
+        "file": "output/research.en/sonnet/html/book_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "heart_disease_classification",
+        "file": "output/research.en/sonnet/html/book_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "spam_filtering",
+        "file": "output/research.en/sonnet/html/book_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "temperature_prediction",
+        "file": "output/research.en/sonnet/html/book_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -857,9 +2945,51 @@
         "language": "en"
       },
       {
+        "name": "bayes_theorem",
+        "label": "Bayes Theorem",
+        "file": "output/college.en/sonnet/html/concept_bayes_theorem.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bayes_theorem",
+        "label": "Bayes Theorem",
+        "file": "output/core.en/sonnet/html/concept_bayes_theorem.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bayes_theorem",
+        "label": "Bayes Theorem",
+        "file": "output/intro.en/sonnet/html/concept_bayes_theorem.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "big_data",
         "label": "Big Data",
         "file": "output/research.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/college.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/core.en/sonnet/html/concept_big_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/intro.en/sonnet/html/concept_big_data.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -871,9 +3001,51 @@
         "language": "en"
       },
       {
+        "name": "binary_multiclass_classification",
+        "label": "Binary Multiclass Classification",
+        "file": "output/college.en/sonnet/html/concept_binary_multiclass_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "binary_multiclass_classification",
+        "label": "Binary Multiclass Classification",
+        "file": "output/core.en/sonnet/html/concept_binary_multiclass_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "binary_multiclass_classification",
+        "label": "Binary Multiclass Classification",
+        "file": "output/intro.en/sonnet/html/concept_binary_multiclass_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "bootstrap_aggregating",
         "label": "Bootstrap Aggregating",
         "file": "output/research.en/sonnet/html/concept_bootstrap_aggregating.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrap_aggregating",
+        "label": "Bootstrap Aggregating",
+        "file": "output/college.en/sonnet/html/concept_bootstrap_aggregating.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrap_aggregating",
+        "label": "Bootstrap Aggregating",
+        "file": "output/core.en/sonnet/html/concept_bootstrap_aggregating.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrap_aggregating",
+        "label": "Bootstrap Aggregating",
+        "file": "output/intro.en/sonnet/html/concept_bootstrap_aggregating.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -885,9 +3057,51 @@
         "language": "en"
       },
       {
+        "name": "bootstrapping",
+        "label": "Bootstrapping",
+        "file": "output/college.en/sonnet/html/concept_bootstrapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrapping",
+        "label": "Bootstrapping",
+        "file": "output/core.en/sonnet/html/concept_bootstrapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bootstrapping",
+        "label": "Bootstrapping",
+        "file": "output/intro.en/sonnet/html/concept_bootstrapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_mining",
         "label": "Data Mining",
         "file": "output/research.en/sonnet/html/concept_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_mining",
+        "label": "Data Mining",
+        "file": "output/college.en/sonnet/html/concept_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_mining",
+        "label": "Data Mining",
+        "file": "output/core.en/sonnet/html/concept_data_mining.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_mining",
+        "label": "Data Mining",
+        "file": "output/intro.en/sonnet/html/concept_data_mining.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -899,9 +3113,51 @@
         "language": "en"
       },
       {
+        "name": "decision_tree",
+        "label": "Decision Tree",
+        "file": "output/college.en/sonnet/html/concept_decision_tree.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "decision_tree",
+        "label": "Decision Tree",
+        "file": "output/core.en/sonnet/html/concept_decision_tree.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "decision_tree",
+        "label": "Decision Tree",
+        "file": "output/intro.en/sonnet/html/concept_decision_tree.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "facial_recognition",
         "label": "Facial Recognition",
         "file": "output/research.en/sonnet/html/concept_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "facial_recognition",
+        "label": "Facial Recognition",
+        "file": "output/college.en/sonnet/html/concept_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "facial_recognition",
+        "label": "Facial Recognition",
+        "file": "output/core.en/sonnet/html/concept_facial_recognition.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "facial_recognition",
+        "label": "Facial Recognition",
+        "file": "output/intro.en/sonnet/html/concept_facial_recognition.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -913,9 +3169,51 @@
         "language": "en"
       },
       {
+        "name": "heart_disease_classification",
+        "label": "Heart Disease Classification",
+        "file": "output/college.en/sonnet/html/concept_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "heart_disease_classification",
+        "label": "Heart Disease Classification",
+        "file": "output/core.en/sonnet/html/concept_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "heart_disease_classification",
+        "label": "Heart Disease Classification",
+        "file": "output/intro.en/sonnet/html/concept_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "information_entropy",
         "label": "Information Entropy",
         "file": "output/research.en/sonnet/html/concept_information_entropy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information_entropy",
+        "label": "Information Entropy",
+        "file": "output/college.en/sonnet/html/concept_information_entropy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information_entropy",
+        "label": "Information Entropy",
+        "file": "output/core.en/sonnet/html/concept_information_entropy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "information_entropy",
+        "label": "Information Entropy",
+        "file": "output/intro.en/sonnet/html/concept_information_entropy.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -927,9 +3225,51 @@
         "language": "en"
       },
       {
+        "name": "labeled_unlabeled_data",
+        "label": "Labeled Unlabeled Data",
+        "file": "output/college.en/sonnet/html/concept_labeled_unlabeled_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "labeled_unlabeled_data",
+        "label": "Labeled Unlabeled Data",
+        "file": "output/core.en/sonnet/html/concept_labeled_unlabeled_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "labeled_unlabeled_data",
+        "label": "Labeled Unlabeled Data",
+        "file": "output/intro.en/sonnet/html/concept_labeled_unlabeled_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "logistic_regression",
         "label": "Logistic Regression",
         "file": "output/research.en/sonnet/html/concept_logistic_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "logistic_regression",
+        "label": "Logistic Regression",
+        "file": "output/college.en/sonnet/html/concept_logistic_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "logistic_regression",
+        "label": "Logistic Regression",
+        "file": "output/core.en/sonnet/html/concept_logistic_regression.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "logistic_regression",
+        "label": "Logistic Regression",
+        "file": "output/intro.en/sonnet/html/concept_logistic_regression.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -941,9 +3281,51 @@
         "language": "en"
       },
       {
+        "name": "machine_learning_model",
+        "label": "Machine Learning Model",
+        "file": "output/college.en/sonnet/html/concept_machine_learning_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "machine_learning_model",
+        "label": "Machine Learning Model",
+        "file": "output/core.en/sonnet/html/concept_machine_learning_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "machine_learning_model",
+        "label": "Machine Learning Model",
+        "file": "output/intro.en/sonnet/html/concept_machine_learning_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "naive_bayes_classifier",
         "label": "Naive Bayes Classifier",
         "file": "output/research.en/sonnet/html/concept_naive_bayes_classifier.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_bayes_classifier",
+        "label": "Naive Bayes Classifier",
+        "file": "output/college.en/sonnet/html/concept_naive_bayes_classifier.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_bayes_classifier",
+        "label": "Naive Bayes Classifier",
+        "file": "output/core.en/sonnet/html/concept_naive_bayes_classifier.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "naive_bayes_classifier",
+        "label": "Naive Bayes Classifier",
+        "file": "output/intro.en/sonnet/html/concept_naive_bayes_classifier.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -955,9 +3337,51 @@
         "language": "en"
       },
       {
+        "name": "random_forest",
+        "label": "Random Forest",
+        "file": "output/college.en/sonnet/html/concept_random_forest.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_forest",
+        "label": "Random Forest",
+        "file": "output/core.en/sonnet/html/concept_random_forest.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "random_forest",
+        "label": "Random Forest",
+        "file": "output/intro.en/sonnet/html/concept_random_forest.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "sigmoid_function",
         "label": "Sigmoid Function",
         "file": "output/research.en/sonnet/html/concept_sigmoid_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sigmoid_function",
+        "label": "Sigmoid Function",
+        "file": "output/college.en/sonnet/html/concept_sigmoid_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sigmoid_function",
+        "label": "Sigmoid Function",
+        "file": "output/core.en/sonnet/html/concept_sigmoid_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "sigmoid_function",
+        "label": "Sigmoid Function",
+        "file": "output/intro.en/sonnet/html/concept_sigmoid_function.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -969,9 +3393,51 @@
         "language": "en"
       },
       {
+        "name": "spam_filtering",
+        "label": "Spam Filtering",
+        "file": "output/college.en/sonnet/html/concept_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spam_filtering",
+        "label": "Spam Filtering",
+        "file": "output/core.en/sonnet/html/concept_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spam_filtering",
+        "label": "Spam Filtering",
+        "file": "output/intro.en/sonnet/html/concept_spam_filtering.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "supervised_learning",
         "label": "Supervised Learning",
         "file": "output/research.en/sonnet/html/concept_supervised_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "supervised_learning",
+        "label": "Supervised Learning",
+        "file": "output/college.en/sonnet/html/concept_supervised_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "supervised_learning",
+        "label": "Supervised Learning",
+        "file": "output/core.en/sonnet/html/concept_supervised_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "supervised_learning",
+        "label": "Supervised Learning",
+        "file": "output/intro.en/sonnet/html/concept_supervised_learning.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -983,9 +3449,51 @@
         "language": "en"
       },
       {
+        "name": "temperature_prediction",
+        "label": "Temperature Prediction",
+        "file": "output/college.en/sonnet/html/concept_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "temperature_prediction",
+        "label": "Temperature Prediction",
+        "file": "output/core.en/sonnet/html/concept_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "temperature_prediction",
+        "label": "Temperature Prediction",
+        "file": "output/intro.en/sonnet/html/concept_temperature_prediction.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "training_testing_set",
         "label": "Training Testing Set",
         "file": "output/research.en/sonnet/html/concept_training_testing_set.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "training_testing_set",
+        "label": "Training Testing Set",
+        "file": "output/college.en/sonnet/html/concept_training_testing_set.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "training_testing_set",
+        "label": "Training Testing Set",
+        "file": "output/core.en/sonnet/html/concept_training_testing_set.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "training_testing_set",
+        "label": "Training Testing Set",
+        "file": "output/intro.en/sonnet/html/concept_training_testing_set.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -1038,6 +3546,96 @@
         "file": "output/college.en/sonnet/html/book_deepfake.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "deepfake",
+        "file": "output/core.en/sonnet/html/book_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "generative_art",
+        "file": "output/core.en/sonnet/html/book_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_language_model",
+        "file": "output/core.en/sonnet/html/book_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "semantic_segmentation",
+        "file": "output/core.en/sonnet/html/book_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "speech_recognition_tts",
+        "file": "output/core.en/sonnet/html/book_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "deepfake",
+        "file": "output/intro.en/sonnet/html/book_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "generative_art",
+        "file": "output/intro.en/sonnet/html/book_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_language_model",
+        "file": "output/intro.en/sonnet/html/book_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "semantic_segmentation",
+        "file": "output/intro.en/sonnet/html/book_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "speech_recognition_tts",
+        "file": "output/intro.en/sonnet/html/book_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "deepfake",
+        "file": "output/research.en/sonnet/html/book_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "generative_art",
+        "file": "output/research.en/sonnet/html/book_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "large_language_model",
+        "file": "output/research.en/sonnet/html/book_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "semantic_segmentation",
+        "file": "output/research.en/sonnet/html/book_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "speech_recognition_tts",
+        "file": "output/research.en/sonnet/html/book_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -1049,9 +3647,51 @@
         "language": "en"
       },
       {
+        "name": "activation_function",
+        "label": "Activation Function",
+        "file": "output/college.en/sonnet/html/concept_activation_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "activation_function",
+        "label": "Activation Function",
+        "file": "output/core.en/sonnet/html/concept_activation_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "activation_function",
+        "label": "Activation Function",
+        "file": "output/intro.en/sonnet/html/concept_activation_function.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "artificial_intelligence",
         "label": "Artificial Intelligence",
         "file": "output/research.en/sonnet/html/concept_artificial_intelligence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "file": "output/college.en/sonnet/html/concept_artificial_intelligence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "file": "output/core.en/sonnet/html/concept_artificial_intelligence.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "file": "output/intro.en/sonnet/html/concept_artificial_intelligence.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1063,9 +3703,51 @@
         "language": "en"
       },
       {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/college.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/core.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/intro.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "convolutional_neural_network",
         "label": "Convolutional Neural Network",
         "file": "output/research.en/sonnet/html/concept_convolutional_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "convolutional_neural_network",
+        "label": "Convolutional Neural Network",
+        "file": "output/college.en/sonnet/html/concept_convolutional_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "convolutional_neural_network",
+        "label": "Convolutional Neural Network",
+        "file": "output/core.en/sonnet/html/concept_convolutional_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "convolutional_neural_network",
+        "label": "Convolutional Neural Network",
+        "file": "output/intro.en/sonnet/html/concept_convolutional_neural_network.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1077,9 +3759,51 @@
         "language": "en"
       },
       {
+        "name": "deep_learning",
+        "label": "Deep Learning",
+        "file": "output/college.en/sonnet/html/concept_deep_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deep_learning",
+        "label": "Deep Learning",
+        "file": "output/core.en/sonnet/html/concept_deep_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deep_learning",
+        "label": "Deep Learning",
+        "file": "output/intro.en/sonnet/html/concept_deep_learning.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "deepfake",
         "label": "Deepfake",
         "file": "output/research.en/sonnet/html/concept_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deepfake",
+        "label": "Deepfake",
+        "file": "output/college.en/sonnet/html/concept_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deepfake",
+        "label": "Deepfake",
+        "file": "output/core.en/sonnet/html/concept_deepfake.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "deepfake",
+        "label": "Deepfake",
+        "file": "output/intro.en/sonnet/html/concept_deepfake.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1091,9 +3815,51 @@
         "language": "en"
       },
       {
+        "name": "depth",
+        "label": "Depth",
+        "file": "output/college.en/sonnet/html/concept_depth.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "depth",
+        "label": "Depth",
+        "file": "output/core.en/sonnet/html/concept_depth.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "depth",
+        "label": "Depth",
+        "file": "output/intro.en/sonnet/html/concept_depth.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "feature_map",
         "label": "Feature Map",
         "file": "output/research.en/sonnet/html/concept_feature_map.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "feature_map",
+        "label": "Feature Map",
+        "file": "output/college.en/sonnet/html/concept_feature_map.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "feature_map",
+        "label": "Feature Map",
+        "file": "output/core.en/sonnet/html/concept_feature_map.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "feature_map",
+        "label": "Feature Map",
+        "file": "output/intro.en/sonnet/html/concept_feature_map.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1105,9 +3871,51 @@
         "language": "en"
       },
       {
+        "name": "generative_art",
+        "label": "Generative Art",
+        "file": "output/college.en/sonnet/html/concept_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "generative_art",
+        "label": "Generative Art",
+        "file": "output/core.en/sonnet/html/concept_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "generative_art",
+        "label": "Generative Art",
+        "file": "output/intro.en/sonnet/html/concept_generative_art.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "large_language_model",
         "label": "Large Language Model",
         "file": "output/research.en/sonnet/html/concept_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_language_model",
+        "label": "Large Language Model",
+        "file": "output/college.en/sonnet/html/concept_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_language_model",
+        "label": "Large Language Model",
+        "file": "output/core.en/sonnet/html/concept_large_language_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "large_language_model",
+        "label": "Large Language Model",
+        "file": "output/intro.en/sonnet/html/concept_large_language_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1119,9 +3927,51 @@
         "language": "en"
       },
       {
+        "name": "layers",
+        "label": "Layers",
+        "file": "output/college.en/sonnet/html/concept_layers.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "layers",
+        "label": "Layers",
+        "file": "output/core.en/sonnet/html/concept_layers.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "layers",
+        "label": "Layers",
+        "file": "output/intro.en/sonnet/html/concept_layers.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "multilayer_perceptron",
         "label": "Multilayer Perceptron",
         "file": "output/research.en/sonnet/html/concept_multilayer_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "multilayer_perceptron",
+        "label": "Multilayer Perceptron",
+        "file": "output/college.en/sonnet/html/concept_multilayer_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "multilayer_perceptron",
+        "label": "Multilayer Perceptron",
+        "file": "output/core.en/sonnet/html/concept_multilayer_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "multilayer_perceptron",
+        "label": "Multilayer Perceptron",
+        "file": "output/intro.en/sonnet/html/concept_multilayer_perceptron.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1133,9 +3983,51 @@
         "language": "en"
       },
       {
+        "name": "natural_language_processing",
+        "label": "Natural Language Processing",
+        "file": "output/college.en/sonnet/html/concept_natural_language_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "natural_language_processing",
+        "label": "Natural Language Processing",
+        "file": "output/core.en/sonnet/html/concept_natural_language_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "natural_language_processing",
+        "label": "Natural Language Processing",
+        "file": "output/intro.en/sonnet/html/concept_natural_language_processing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "neural_network",
         "label": "Neural Network",
         "file": "output/research.en/sonnet/html/concept_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neural_network",
+        "label": "Neural Network",
+        "file": "output/college.en/sonnet/html/concept_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neural_network",
+        "label": "Neural Network",
+        "file": "output/core.en/sonnet/html/concept_neural_network.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neural_network",
+        "label": "Neural Network",
+        "file": "output/intro.en/sonnet/html/concept_neural_network.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1147,9 +4039,51 @@
         "language": "en"
       },
       {
+        "name": "neuron",
+        "label": "Neuron",
+        "file": "output/college.en/sonnet/html/concept_neuron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neuron",
+        "label": "Neuron",
+        "file": "output/core.en/sonnet/html/concept_neuron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "neuron",
+        "label": "Neuron",
+        "file": "output/intro.en/sonnet/html/concept_neuron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "perceptron",
         "label": "Perceptron",
         "file": "output/research.en/sonnet/html/concept_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "perceptron",
+        "label": "Perceptron",
+        "file": "output/college.en/sonnet/html/concept_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "perceptron",
+        "label": "Perceptron",
+        "file": "output/core.en/sonnet/html/concept_perceptron.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "perceptron",
+        "label": "Perceptron",
+        "file": "output/intro.en/sonnet/html/concept_perceptron.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1161,9 +4095,51 @@
         "language": "en"
       },
       {
+        "name": "pooling_layer",
+        "label": "Pooling Layer",
+        "file": "output/college.en/sonnet/html/concept_pooling_layer.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pooling_layer",
+        "label": "Pooling Layer",
+        "file": "output/core.en/sonnet/html/concept_pooling_layer.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pooling_layer",
+        "label": "Pooling Layer",
+        "file": "output/intro.en/sonnet/html/concept_pooling_layer.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "semantic_segmentation",
         "label": "Semantic Segmentation",
         "file": "output/research.en/sonnet/html/concept_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "semantic_segmentation",
+        "label": "Semantic Segmentation",
+        "file": "output/college.en/sonnet/html/concept_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "semantic_segmentation",
+        "label": "Semantic Segmentation",
+        "file": "output/core.en/sonnet/html/concept_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "semantic_segmentation",
+        "label": "Semantic Segmentation",
+        "file": "output/intro.en/sonnet/html/concept_semantic_segmentation.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1175,9 +4151,51 @@
         "language": "en"
       },
       {
+        "name": "speech_recognition_tts",
+        "label": "Speech Recognition Tts",
+        "file": "output/college.en/sonnet/html/concept_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "speech_recognition_tts",
+        "label": "Speech Recognition Tts",
+        "file": "output/core.en/sonnet/html/concept_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "speech_recognition_tts",
+        "label": "Speech Recognition Tts",
+        "file": "output/intro.en/sonnet/html/concept_speech_recognition_tts.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "transformer_model",
         "label": "Transformer Model",
         "file": "output/research.en/sonnet/html/concept_transformer_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transformer_model",
+        "label": "Transformer Model",
+        "file": "output/college.en/sonnet/html/concept_transformer_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transformer_model",
+        "label": "Transformer Model",
+        "file": "output/core.en/sonnet/html/concept_transformer_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transformer_model",
+        "label": "Transformer Model",
+        "file": "output/intro.en/sonnet/html/concept_transformer_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1189,6 +4207,27 @@
         "language": "en"
       },
       {
+        "name": "vector",
+        "label": "Vector",
+        "file": "output/college.en/sonnet/html/concept_vector.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "vector",
+        "label": "Vector",
+        "file": "output/core.en/sonnet/html/concept_vector.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "vector",
+        "label": "Vector",
+        "file": "output/intro.en/sonnet/html/concept_vector.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "weight",
         "label": "Weight",
         "file": "output/research.en/sonnet/html/concept_weight.html",
@@ -1196,9 +4235,51 @@
         "language": "en"
       },
       {
+        "name": "weight",
+        "label": "Weight",
+        "file": "output/college.en/sonnet/html/concept_weight.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "weight",
+        "label": "Weight",
+        "file": "output/core.en/sonnet/html/concept_weight.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "weight",
+        "label": "Weight",
+        "file": "output/intro.en/sonnet/html/concept_weight.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "word_embedding",
         "label": "Word Embedding",
         "file": "output/research.en/sonnet/html/concept_word_embedding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "word_embedding",
+        "label": "Word Embedding",
+        "file": "output/college.en/sonnet/html/concept_word_embedding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "word_embedding",
+        "label": "Word Embedding",
+        "file": "output/core.en/sonnet/html/concept_word_embedding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "word_embedding",
+        "label": "Word Embedding",
+        "file": "output/intro.en/sonnet/html/concept_word_embedding.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -1251,6 +4332,96 @@
         "file": "output/college.en/sonnet/html/book_gdpr_ccpa.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "cookies",
+        "file": "output/core.en/sonnet/html/book_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "explainable_ai",
+        "file": "output/core.en/sonnet/html/book_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "ferpa",
+        "file": "output/core.en/sonnet/html/book_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gdpr_ccpa",
+        "file": "output/core.en/sonnet/html/book_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "hipaa",
+        "file": "output/core.en/sonnet/html/book_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "cookies",
+        "file": "output/intro.en/sonnet/html/book_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "explainable_ai",
+        "file": "output/intro.en/sonnet/html/book_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "ferpa",
+        "file": "output/intro.en/sonnet/html/book_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gdpr_ccpa",
+        "file": "output/intro.en/sonnet/html/book_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "hipaa",
+        "file": "output/intro.en/sonnet/html/book_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "cookies",
+        "file": "output/research.en/sonnet/html/book_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "explainable_ai",
+        "file": "output/research.en/sonnet/html/book_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "ferpa",
+        "file": "output/research.en/sonnet/html/book_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gdpr_ccpa",
+        "file": "output/research.en/sonnet/html/book_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "hipaa",
+        "file": "output/research.en/sonnet/html/book_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -1262,9 +4433,51 @@
         "language": "en"
       },
       {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/college.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/core.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bias",
+        "label": "Bias",
+        "file": "output/intro.en/sonnet/html/concept_bias.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "cookies",
         "label": "Cookies",
         "file": "output/research.en/sonnet/html/concept_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cookies",
+        "label": "Cookies",
+        "file": "output/college.en/sonnet/html/concept_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cookies",
+        "label": "Cookies",
+        "file": "output/core.en/sonnet/html/concept_cookies.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "cookies",
+        "label": "Cookies",
+        "file": "output/intro.en/sonnet/html/concept_cookies.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1276,9 +4489,51 @@
         "language": "en"
       },
       {
+        "name": "data_privacy",
+        "label": "Data Privacy",
+        "file": "output/college.en/sonnet/html/concept_data_privacy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_privacy",
+        "label": "Data Privacy",
+        "file": "output/core.en/sonnet/html/concept_data_privacy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_privacy",
+        "label": "Data Privacy",
+        "file": "output/intro.en/sonnet/html/concept_data_privacy.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "ethics_in_data_science",
         "label": "Ethics In Data Science",
         "file": "output/research.en/sonnet/html/concept_ethics_in_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ethics_in_data_science",
+        "label": "Ethics In Data Science",
+        "file": "output/college.en/sonnet/html/concept_ethics_in_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ethics_in_data_science",
+        "label": "Ethics In Data Science",
+        "file": "output/core.en/sonnet/html/concept_ethics_in_data_science.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ethics_in_data_science",
+        "label": "Ethics In Data Science",
+        "file": "output/intro.en/sonnet/html/concept_ethics_in_data_science.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1290,9 +4545,51 @@
         "language": "en"
       },
       {
+        "name": "explainable_ai",
+        "label": "Explainable Ai",
+        "file": "output/college.en/sonnet/html/concept_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "explainable_ai",
+        "label": "Explainable Ai",
+        "file": "output/core.en/sonnet/html/concept_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "explainable_ai",
+        "label": "Explainable Ai",
+        "file": "output/intro.en/sonnet/html/concept_explainable_ai.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "fairness",
         "label": "Fairness",
         "file": "output/research.en/sonnet/html/concept_fairness.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "fairness",
+        "label": "Fairness",
+        "file": "output/college.en/sonnet/html/concept_fairness.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "fairness",
+        "label": "Fairness",
+        "file": "output/core.en/sonnet/html/concept_fairness.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "fairness",
+        "label": "Fairness",
+        "file": "output/intro.en/sonnet/html/concept_fairness.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1304,9 +4601,51 @@
         "language": "en"
       },
       {
+        "name": "ferpa",
+        "label": "Ferpa",
+        "file": "output/college.en/sonnet/html/concept_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ferpa",
+        "label": "Ferpa",
+        "file": "output/core.en/sonnet/html/concept_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "ferpa",
+        "label": "Ferpa",
+        "file": "output/intro.en/sonnet/html/concept_ferpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "gdpr_ccpa",
         "label": "Gdpr Ccpa",
         "file": "output/research.en/sonnet/html/concept_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gdpr_ccpa",
+        "label": "Gdpr Ccpa",
+        "file": "output/college.en/sonnet/html/concept_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gdpr_ccpa",
+        "label": "Gdpr Ccpa",
+        "file": "output/core.en/sonnet/html/concept_gdpr_ccpa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gdpr_ccpa",
+        "label": "Gdpr Ccpa",
+        "file": "output/intro.en/sonnet/html/concept_gdpr_ccpa.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1318,9 +4657,51 @@
         "language": "en"
       },
       {
+        "name": "hipaa",
+        "label": "Hipaa",
+        "file": "output/college.en/sonnet/html/concept_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hipaa",
+        "label": "Hipaa",
+        "file": "output/core.en/sonnet/html/concept_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "hipaa",
+        "label": "Hipaa",
+        "file": "output/intro.en/sonnet/html/concept_hipaa.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "personally_identifiable_information",
         "label": "Personally Identifiable Information",
         "file": "output/research.en/sonnet/html/concept_personally_identifiable_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "personally_identifiable_information",
+        "label": "Personally Identifiable Information",
+        "file": "output/college.en/sonnet/html/concept_personally_identifiable_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "personally_identifiable_information",
+        "label": "Personally Identifiable Information",
+        "file": "output/core.en/sonnet/html/concept_personally_identifiable_information.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "personally_identifiable_information",
+        "label": "Personally Identifiable Information",
+        "file": "output/intro.en/sonnet/html/concept_personally_identifiable_information.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1332,9 +4713,51 @@
         "language": "en"
       },
       {
+        "name": "regulatory_compliance",
+        "label": "Regulatory Compliance",
+        "file": "output/college.en/sonnet/html/concept_regulatory_compliance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regulatory_compliance",
+        "label": "Regulatory Compliance",
+        "file": "output/core.en/sonnet/html/concept_regulatory_compliance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "regulatory_compliance",
+        "label": "Regulatory Compliance",
+        "file": "output/intro.en/sonnet/html/concept_regulatory_compliance.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "transparency",
         "label": "Transparency",
         "file": "output/research.en/sonnet/html/concept_transparency.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transparency",
+        "label": "Transparency",
+        "file": "output/college.en/sonnet/html/concept_transparency.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transparency",
+        "label": "Transparency",
+        "file": "output/core.en/sonnet/html/concept_transparency.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "transparency",
+        "label": "Transparency",
+        "file": "output/intro.en/sonnet/html/concept_transparency.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -1387,6 +4810,96 @@
         "file": "output/college.en/sonnet/html/book_three_d_visualization.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "choropleth_graph",
+        "file": "output/core.en/sonnet/html/book_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "correlation_heatmap",
+        "file": "output/core.en/sonnet/html/book_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gis_mapping",
+        "file": "output/core.en/sonnet/html/book_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "pareto_chart",
+        "file": "output/core.en/sonnet/html/book_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "three_d_visualization",
+        "file": "output/core.en/sonnet/html/book_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "choropleth_graph",
+        "file": "output/intro.en/sonnet/html/book_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "correlation_heatmap",
+        "file": "output/intro.en/sonnet/html/book_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gis_mapping",
+        "file": "output/intro.en/sonnet/html/book_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "pareto_chart",
+        "file": "output/intro.en/sonnet/html/book_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "three_d_visualization",
+        "file": "output/intro.en/sonnet/html/book_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "choropleth_graph",
+        "file": "output/research.en/sonnet/html/book_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "correlation_heatmap",
+        "file": "output/research.en/sonnet/html/book_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "gis_mapping",
+        "file": "output/research.en/sonnet/html/book_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "pareto_chart",
+        "file": "output/research.en/sonnet/html/book_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "three_d_visualization",
+        "file": "output/research.en/sonnet/html/book_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -1398,9 +4911,51 @@
         "language": "en"
       },
       {
+        "name": "bivariate_data",
+        "label": "Bivariate Data",
+        "file": "output/college.en/sonnet/html/concept_bivariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bivariate_data",
+        "label": "Bivariate Data",
+        "file": "output/core.en/sonnet/html/concept_bivariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "bivariate_data",
+        "label": "Bivariate Data",
+        "file": "output/intro.en/sonnet/html/concept_bivariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "choropleth_graph",
         "label": "Choropleth Graph",
         "file": "output/research.en/sonnet/html/concept_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "choropleth_graph",
+        "label": "Choropleth Graph",
+        "file": "output/college.en/sonnet/html/concept_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "choropleth_graph",
+        "label": "Choropleth Graph",
+        "file": "output/core.en/sonnet/html/concept_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "choropleth_graph",
+        "label": "Choropleth Graph",
+        "file": "output/intro.en/sonnet/html/concept_choropleth_graph.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1412,9 +4967,51 @@
         "language": "en"
       },
       {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/college.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/core.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_coefficient",
+        "label": "Correlation Coefficient",
+        "file": "output/intro.en/sonnet/html/concept_correlation_coefficient.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "correlation_heatmap",
         "label": "Correlation Heatmap",
         "file": "output/research.en/sonnet/html/concept_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_heatmap",
+        "label": "Correlation Heatmap",
+        "file": "output/college.en/sonnet/html/concept_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_heatmap",
+        "label": "Correlation Heatmap",
+        "file": "output/core.en/sonnet/html/concept_correlation_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "correlation_heatmap",
+        "label": "Correlation Heatmap",
+        "file": "output/intro.en/sonnet/html/concept_correlation_heatmap.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1426,9 +5023,51 @@
         "language": "en"
       },
       {
+        "name": "geospatial_data",
+        "label": "Geospatial Data",
+        "file": "output/college.en/sonnet/html/concept_geospatial_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "geospatial_data",
+        "label": "Geospatial Data",
+        "file": "output/core.en/sonnet/html/concept_geospatial_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "geospatial_data",
+        "label": "Geospatial Data",
+        "file": "output/intro.en/sonnet/html/concept_geospatial_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "gis_mapping",
         "label": "Gis Mapping",
         "file": "output/research.en/sonnet/html/concept_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gis_mapping",
+        "label": "Gis Mapping",
+        "file": "output/college.en/sonnet/html/concept_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gis_mapping",
+        "label": "Gis Mapping",
+        "file": "output/core.en/sonnet/html/concept_gis_mapping.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "gis_mapping",
+        "label": "Gis Mapping",
+        "file": "output/intro.en/sonnet/html/concept_gis_mapping.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1440,9 +5079,51 @@
         "language": "en"
       },
       {
+        "name": "grid_heatmap",
+        "label": "Grid Heatmap",
+        "file": "output/college.en/sonnet/html/concept_grid_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "grid_heatmap",
+        "label": "Grid Heatmap",
+        "file": "output/core.en/sonnet/html/concept_grid_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "grid_heatmap",
+        "label": "Grid Heatmap",
+        "file": "output/intro.en/sonnet/html/concept_grid_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "pareto_chart",
         "label": "Pareto Chart",
         "file": "output/research.en/sonnet/html/concept_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pareto_chart",
+        "label": "Pareto Chart",
+        "file": "output/college.en/sonnet/html/concept_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pareto_chart",
+        "label": "Pareto Chart",
+        "file": "output/core.en/sonnet/html/concept_pareto_chart.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "pareto_chart",
+        "label": "Pareto Chart",
+        "file": "output/intro.en/sonnet/html/concept_pareto_chart.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1454,9 +5135,51 @@
         "language": "en"
       },
       {
+        "name": "scatterplot_color_encoding",
+        "label": "Scatterplot Color Encoding",
+        "file": "output/college.en/sonnet/html/concept_scatterplot_color_encoding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot_color_encoding",
+        "label": "Scatterplot Color Encoding",
+        "file": "output/core.en/sonnet/html/concept_scatterplot_color_encoding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "scatterplot_color_encoding",
+        "label": "Scatterplot Color Encoding",
+        "file": "output/intro.en/sonnet/html/concept_scatterplot_color_encoding.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "spatial_heatmap",
         "label": "Spatial Heatmap",
         "file": "output/research.en/sonnet/html/concept_spatial_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spatial_heatmap",
+        "label": "Spatial Heatmap",
+        "file": "output/college.en/sonnet/html/concept_spatial_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spatial_heatmap",
+        "label": "Spatial Heatmap",
+        "file": "output/core.en/sonnet/html/concept_spatial_heatmap.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "spatial_heatmap",
+        "label": "Spatial Heatmap",
+        "file": "output/intro.en/sonnet/html/concept_spatial_heatmap.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1468,9 +5191,51 @@
         "language": "en"
       },
       {
+        "name": "three_d_visualization",
+        "label": "Three D Visualization",
+        "file": "output/college.en/sonnet/html/concept_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "three_d_visualization",
+        "label": "Three D Visualization",
+        "file": "output/core.en/sonnet/html/concept_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "three_d_visualization",
+        "label": "Three D Visualization",
+        "file": "output/intro.en/sonnet/html/concept_three_d_visualization.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "univariate_data",
         "label": "Univariate Data",
         "file": "output/research.en/sonnet/html/concept_univariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "univariate_data",
+        "label": "Univariate Data",
+        "file": "output/college.en/sonnet/html/concept_univariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "univariate_data",
+        "label": "Univariate Data",
+        "file": "output/core.en/sonnet/html/concept_univariate_data.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "univariate_data",
+        "label": "Univariate Data",
+        "file": "output/intro.en/sonnet/html/concept_univariate_data.html",
         "model": "sonnet",
         "language": "en"
       }
@@ -1499,6 +5264,24 @@
         "file": "output/college.en/sonnet/html/book_executive_dashboard.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "executive_dashboard",
+        "file": "output/core.en/sonnet/html/book_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "executive_dashboard",
+        "file": "output/intro.en/sonnet/html/book_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "executive_dashboard",
+        "file": "output/research.en/sonnet/html/book_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -1510,6 +5293,27 @@
         "language": "en"
       },
       {
+        "name": "audience",
+        "label": "Audience",
+        "file": "output/college.en/sonnet/html/concept_audience.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "audience",
+        "label": "Audience",
+        "file": "output/core.en/sonnet/html/concept_audience.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "audience",
+        "label": "Audience",
+        "file": "output/intro.en/sonnet/html/concept_audience.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "data_visualization_choice",
         "label": "Data Visualization Choice",
         "file": "output/research.en/sonnet/html/concept_data_visualization_choice.html",
@@ -1517,9 +5321,51 @@
         "language": "en"
       },
       {
+        "name": "data_visualization_choice",
+        "label": "Data Visualization Choice",
+        "file": "output/college.en/sonnet/html/concept_data_visualization_choice.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_visualization_choice",
+        "label": "Data Visualization Choice",
+        "file": "output/core.en/sonnet/html/concept_data_visualization_choice.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "data_visualization_choice",
+        "label": "Data Visualization Choice",
+        "file": "output/intro.en/sonnet/html/concept_data_visualization_choice.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "executive_dashboard",
         "label": "Executive Dashboard",
         "file": "output/research.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "executive_dashboard",
+        "label": "Executive Dashboard",
+        "file": "output/college.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "executive_dashboard",
+        "label": "Executive Dashboard",
+        "file": "output/core.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "executive_dashboard",
+        "label": "Executive Dashboard",
+        "file": "output/intro.en/sonnet/html/concept_executive_dashboard.html",
         "model": "sonnet",
         "language": "en"
       }

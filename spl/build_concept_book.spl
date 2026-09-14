@@ -113,7 +113,9 @@ WORKFLOW build_concept_book
         @language TEXT DEFAULT 'en',
         @output_html TEXT DEFAULT "",
         @output_dir TEXT DEFAULT "",
-        @log_dir TEXT DEFAULT 'logs/spl'
+        @log_dir TEXT DEFAULT 'logs/spl',
+        @skip_cache TEXT DEFAULT 'no',
+        @model TEXT DEFAULT ''
     OUTPUT:
         @textbook TEXT
 DO
@@ -138,19 +140,27 @@ DO
     --    setup_domain raises ToolFailed if the graph has cycles or is not
     --    reducible to primitives, stopping the workflow before any LLM calls.
     CALL setup_domain(@domain_yaml, @target, @payoff_weight) INTO @_
+    -- Accept "true"/"1" as well as "yes" for @skip_cache (a direct spl3 CLI
+    -- caller might pass either; the IDE's checkbox always sends "yes"/"no").
+    CALL normalize_bool(@skip_cache) INTO @skip_cache
     CALL get_style_guide(@style) INTO @style_guide
     CALL language_name(@language) INTO @language_label
-    -- Cache key must vary with @language and @style: without @language, the
-    -- same concept generated in two languages collides on one cache slot and
-    -- the later write silently overwrites the earlier language's cached
-    -- content. Without @style, a concept generated once under any style
-    -- (e.g. the first --level run) gets silently reused for every later
-    -- --level/style request, regardless of what was actually asked for —
-    -- confirmed via cb-data-science/docs/readme-level.md's four-level
-    -- comparison, where concept_*.html was byte-identical across all four
-    -- levels until this fix.
+    -- Cache key must vary with @language, @style, and @model: without
+    -- @language, the same concept generated in two languages collides on one
+    -- cache slot and the later write silently overwrites the earlier
+    -- language's cached content. Without @style, a concept generated once
+    -- under any style (e.g. the first --level run) gets silently reused for
+    -- every later --level/style request, regardless of what was actually
+    -- asked for — confirmed via cb-data-science/docs/readme-level.md's
+    -- four-level comparison, where concept_*.html was byte-identical across
+    -- all four levels until this fix. Without @model, the content cache
+    -- (spl3.cache, keyed only by concept+params_json — not by output_dir,
+    -- which is model-specific) would let two different models silently
+    -- share one cache slot, so the second model's request would return the
+    -- first model's cached prose.
     CALL json_set("{}", "language", @language) INTO @_params_json
     CALL json_set(@_params_json, "style", @style) INTO @_params_json
+    CALL json_set(@_params_json, "model", @model) INTO @_params_json
     CALL order_length(@domain_yaml) INTO @order_len
     CALL order_bullets(@domain_yaml) INTO @_order_bullets
 
@@ -171,13 +181,24 @@ DO
         -- Content cache lookup (Layer 2): a hit costs zero LLM calls.
         -- params_json carries @language so the same concept in a different
         -- language is a distinct cache entry, not an overwrite.
-        CALL cache_get(@concept, params_json=@_params_json) INTO @section
+        -- @skip_cache="yes" (the UI's "Skip cache" checkbox) forces a fresh
+        -- LLM call by treating the lookup as a miss outright — the section
+        -- is still cache_put below, so the refreshed content becomes the
+        -- new cached entry for future non-skip runs.
+        EVALUATE @skip_cache
+            WHEN = "yes" THEN
+                LOGGING f"skip_cache=yes — forcing regeneration for {@concept}" LEVEL INFO
+                @section := "miss"
+            ELSE
+                CALL cache_get(@concept, params_json=@_params_json) INTO @section
+        END
         CALL concept_label(@concept) INTO @_label
+        CALL concept_context(@domain_yaml, @concept) INTO @_context
         EVALUATE @section
             WHEN = "miss" THEN
                 LOGGING f"cache MISS for {@concept} — generating with the LLM" LEVEL INFO
 
-                GENERATE write_section(@concept, @_label, @concept, @style_guide, @language_label) INTO @section
+                GENERATE write_section(@concept, @_label, @_context, @style_guide, @language_label) INTO @section
 
                 -- Primitive budget check
                 CALL count_new_primitives(@section, @domain_yaml) INTO @_prim_count
@@ -218,16 +239,58 @@ DO
         @_i := @_i + 1
     END
 
-    -- 3. Capstone: tie target to its payoff applications
-    CALL apps_list(@domain_yaml) INTO @apps
+    -- 3. Capstone: tie target to its payoff applications.
+    --    Only meaningful for an actual capstone (kind="application") — a
+    --    concept/primitive @target is usually just whichever prerequisite
+    --    node the user clicked directly in the IDE, not a true "natural
+    --    endpoint", so a payoff for it is both conceptually forced and (for
+    --    the IDE's per-node concept_*.html pages specifically) never even
+    --    displayed: write_concept_html() writes each concept's own section
+    --    only, payoff is baked exclusively into book_{target}.html. Skipping
+    --    it for non-applications removes a wasted LLM call with zero user-
+    --    visible effect on the page normally shown.
+    CALL target_kind(@domain_yaml) INTO @_target_kind
+    LOGGING f"Target kind: {@_target_kind}" LEVEL INFO
     CALL now_float() INTO @t_payoff_start
 
-    GENERATE write_payoff(@target, @apps, @style_guide, @language_label) INTO @capstone
+    EVALUATE @_target_kind
+        WHEN = "application" THEN
+            -- Cached the same way as sections (Layer 2) — a distinct
+            -- concept key ("{target}__payoff") keeps it from colliding with
+            -- the target's own section cache entry.
+            CALL apps_list(@domain_yaml) INTO @apps
+            @_payoff_key := @target + "__payoff"
+
+            EVALUATE @skip_cache
+                WHEN = "yes" THEN
+                    LOGGING f"skip_cache=yes — forcing regeneration for {@_payoff_key}" LEVEL INFO
+                    @capstone := "miss"
+                ELSE
+                    CALL cache_get(@_payoff_key, params_json=@_params_json) INTO @capstone
+            END
+            EVALUATE @capstone
+                WHEN = "miss" THEN
+                    LOGGING f"cache MISS for {@_payoff_key} — generating with the LLM" LEVEL INFO
+                    GENERATE write_payoff(@target, @apps, @style_guide, @language_label) INTO @capstone
+                    CALL cache_put(@_payoff_key, @capstone, params_json=@_params_json) INTO @_cache_key
+                    LOGGING f"Stored verified payoff — cache key {@_cache_key}" LEVEL INFO
+                ELSE
+                    LOGGING f"cache HIT for {@_payoff_key} — reusing verified payoff (0 LLM calls)" LEVEL INFO
+            END
+        ELSE
+            LOGGING f"target kind is '{@_target_kind}', not 'application' — skipping payoff (0 LLM calls)" LEVEL INFO
+            @capstone := ""
+    END
 
     CALL time_elapsed(@t_payoff_start) INTO @payoff_elapsed
     LOGGING f"[timing] payoff: {@payoff_elapsed}s" LEVEL INFO
 
-    @textbook := @textbook + "\n\n---\n\n" + @capstone
+    EVALUATE @capstone
+        WHEN != "" THEN
+            @textbook := @textbook + "\n\n---\n\n" + @capstone
+        ELSE
+            LOGGING "No payoff — leaving textbook as-is" LEVEL INFO
+    END
 
     CALL time_elapsed(@t_workflow_start) INTO @total_elapsed
     LOGGING f"[timing] workflow total: {@total_elapsed}s for {@order_len} sections + payoff" LEVEL INFO

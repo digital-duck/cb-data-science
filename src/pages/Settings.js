@@ -5,19 +5,49 @@ export function getContentLang() {
   return getLocale()
 }
 
+// Adapters that need a user-supplied API key (shown in the Settings form).
+// claude_cli authenticates via the local CLI's own login; ollama is local —
+// neither needs a key here. Keyed to match api/config.py's Settings field
+// names (settings.js sends `${key}_api_key` in the PUT body).
+const API_KEY_ADAPTERS = new Set(['anthropic', 'openai', 'google', 'openrouter'])
+
 const ADAPTERS = {
   claude_cli: {
     label: 'Claude CLI',
     models: [
-      { value: 'claude-sonnet-4-6', label: 'Sonnet 4.6' },
+      { value: 'claude-sonnet-5', label: 'Sonnet 5' },
       { value: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5' },
       { value: 'claude-opus-4-8', label: 'Opus 4.8' },
+    ],
+  },
+  anthropic: {
+    label: 'Anthropic',
+    models: [
+      { value: 'claude-sonnet-5', label: 'Claude Sonnet 5' },
+      { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
+      { value: 'claude-opus-4-8', label: 'Claude Opus 4.8' },
+    ],
+  },
+  openai: {
+    label: 'OpenAI',
+    models: [
+      { value: 'gpt-4.1', label: 'GPT-4.1' },
+      { value: 'gpt-5.4-mini', label: 'GPT 5.4 Mini' },
+      { value: 'o3-mini', label: 'o3-mini' },
+    ],
+  },
+  google: {
+    label: 'Gemini',
+    models: [
+      { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+      { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+      { value: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash' },
     ],
   },
   openrouter: {
     label: 'OpenRouter',
     models: [
-      { value: 'anthropic/claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
+      { value: 'anthropic/claude-sonnet-5', label: 'Claude Sonnet 5' },
       { value: 'anthropic/claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
       { value: 'anthropic/claude-opus-4-8', label: 'Claude Opus 4.8' },
       { value: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
@@ -70,15 +100,6 @@ async function populateModels(adapterSel, modelSel) {
   }
 }
 
-function ttlHint(hours) {
-  if (hours === 0) return 'never expires'
-  if (hours < 1) return `${Math.round(hours * 60)} min`
-  if (hours === 1) return '1 hour'
-  if (hours < 24) return `${hours} hours`
-  const days = hours / 24
-  return Number.isInteger(days) ? `${days} day${days > 1 ? 's' : ''}` : `${hours} hours`
-}
-
 export async function Settings(container) {
   container.innerHTML = ''
   container.appendChild(Header())
@@ -101,6 +122,14 @@ export async function Settings(container) {
         <div class="cb-settings__field cb-settings__field--grow">
           <label class="cb-settings__label">Model</label>
           <select id="cb-model" class="cb-settings__select"></select>
+        </div>
+      </div>
+      <div class="cb-settings__pair" id="cb-api-key-row" style="margin-top:12px">
+        <div class="cb-settings__field cb-settings__field--grow">
+          <label class="cb-settings__label">API Key</label>
+          <input id="cb-api-key" type="password" class="cb-settings__select"
+            placeholder="Enter your API key" autocomplete="off" style="width:100%">
+          <span id="cb-api-key-hint" style="font-size:0.78rem;color:#6b7280"></span>
         </div>
       </div>
       <div class="cb-settings__row" style="margin-top:16px">
@@ -130,24 +159,6 @@ export async function Settings(container) {
         <span id="cb-spl-limits-status" class="cb-settings__status"></span>
       </div>
     </section>
-    <section class="cb-settings__section">
-      <div class="cb-settings__section-title">AI Semantic Compare Cache</div>
-      <div class="cb-settings__pair">
-        <div class="cb-settings__field">
-          <label class="cb-settings__label">TTL (hours)</label>
-          <input id="cb-cache-ttl" type="number" min="0" step="1" value="24"
-            class="cb-settings__select" style="width:100px"
-            title="How long a cached comparison result is reused. 0 = never expire.">
-        </div>
-        <div class="cb-settings__field" style="align-self:flex-end;padding-bottom:4px">
-          <span id="cb-cache-ttl-hint" style="font-size:0.82rem;color:#6b7280"></span>
-        </div>
-      </div>
-      <div class="cb-settings__row" style="margin-top:16px">
-        <button id="cb-cache-save" class="cb-btn">Save</button>
-        <span id="cb-cache-status" class="cb-settings__status"></span>
-      </div>
-    </section>
   `
   container.appendChild(main)
 
@@ -157,26 +168,36 @@ export async function Settings(container) {
   const saveBtn = main.querySelector('#cb-settings-save')
   const status = main.querySelector('#cb-settings-status')
   const currentLlm = main.querySelector('#cb-current-llm')
+  const apiKeyRow = main.querySelector('#cb-api-key-row')
+  const apiKeyInput = main.querySelector('#cb-api-key')
+  const apiKeyHint = main.querySelector('#cb-api-key-hint')
 
-  adapterSel.addEventListener('change', () => populateModels(adapterSel, modelSel))
+  // Whether each adapter's key is already saved server-side (booleans only
+  // — the actual key value is never sent back). Populated once settings load.
+  let keysSet = {}
+
+  function updateApiKeyVisibility() {
+    const adapter = adapterSel.value
+    const needsKey = API_KEY_ADAPTERS.has(adapter)
+    apiKeyRow.style.display = needsKey ? '' : 'none'
+    apiKeyInput.value = ''
+    apiKeyHint.textContent = needsKey && keysSet[adapter]
+      ? 'A key is already saved — enter a new one to replace it, or leave blank to keep it.'
+      : ''
+  }
+
+  adapterSel.addEventListener('change', () => {
+    populateModels(adapterSel, modelSel)
+    updateApiKeyVisibility()
+  })
   await populateModels(adapterSel, modelSel)
+  updateApiKeyVisibility()
 
   // ── SPL Limits section ─────────────────────────────────────────────────────
   const whileMaxIterInput = main.querySelector('#cb-while-max-iter')
   const maxLlmCallsInput = main.querySelector('#cb-max-llm-calls')
   const splLimitsSaveBtn = main.querySelector('#cb-spl-limits-save')
   const splLimitsStatus = main.querySelector('#cb-spl-limits-status')
-
-  // ── Compare Cache section ──────────────────────────────────────────────────
-  const ttlInput = main.querySelector('#cb-cache-ttl')
-  const ttlHintEl = main.querySelector('#cb-cache-ttl-hint')
-  const cacheSaveBtn = main.querySelector('#cb-cache-save')
-  const cacheStatus = main.querySelector('#cb-cache-status')
-
-  ttlInput.addEventListener('input', () => {
-    const h = Number(ttlInput.value)
-    ttlHintEl.textContent = isNaN(h) || h < 0 ? '' : ttlHint(h)
-  })
 
   // ── Load current settings ──────────────────────────────────────────────────
   try {
@@ -196,14 +217,18 @@ export async function Settings(container) {
         }
       }
 
+      // API key "already set" flags
+      keysSet = {
+        anthropic: data.anthropic_api_key_set,
+        google: data.gemini_api_key_set,
+        openai: data.openai_api_key_set,
+        openrouter: data.openrouter_api_key_set,
+      }
+      updateApiKeyVisibility()
+
       // SPL limits
       if (data.spl_while_max_iter) whileMaxIterInput.value = data.spl_while_max_iter
       if (data.spl_max_llm_calls) maxLlmCallsInput.value = data.spl_max_llm_calls
-
-      // Compare Cache TTL — server stores seconds, UI shows hours
-      const hours = Math.round(data.compare_cache_ttl / 3600)
-      ttlInput.value = hours
-      ttlHintEl.textContent = ttlHint(hours)
     }
   } catch (_) {
     status.textContent = 'API not reachable — run the backend to change settings'
@@ -212,14 +237,30 @@ export async function Settings(container) {
 
   // ── Save LLM ───────────────────────────────────────────────────────────────
   saveBtn.addEventListener('click', async () => {
-    const llm = `${adapterSel.value}:${modelSel.value}`
+    const adapter = adapterSel.value
+    const llm = `${adapter}:${modelSel.value}`
+    const body = { llm }
+    // Only send a key field when the user actually typed something —
+    // omitting it leaves the previously-saved key untouched.
+    if (API_KEY_ADAPTERS.has(adapter) && apiKeyInput.value.trim()) {
+      const field = adapter === 'google' ? 'gemini_api_key' : `${adapter}_api_key`
+      body[field] = apiKeyInput.value.trim()
+    }
     try {
       const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ llm }),
+        body: JSON.stringify(body),
       })
       if (res.ok) {
+        const data = await res.json()
+        keysSet = {
+          anthropic: data.anthropic_api_key_set,
+          google: data.gemini_api_key_set,
+          openai: data.openai_api_key_set,
+          openrouter: data.openrouter_api_key_set,
+        }
+        updateApiKeyVisibility()
         currentLlm.textContent = `Current: ${llm}`
         status.textContent = 'Saved'
         status.style.color = '#16a34a'
@@ -262,36 +303,5 @@ export async function Settings(container) {
       splLimitsStatus.style.color = '#dc2626'
     }
     setTimeout(() => { splLimitsStatus.textContent = '' }, 3000)
-  })
-
-  // ── Save Compare Cache TTL ─────────────────────────────────────────────────
-  cacheSaveBtn.addEventListener('click', async () => {
-    const hours = Number(ttlInput.value)
-    if (isNaN(hours) || hours < 0) {
-      cacheStatus.textContent = 'Enter a valid number ≥ 0'
-      cacheStatus.style.color = '#dc2626'
-      setTimeout(() => { cacheStatus.textContent = '' }, 3000)
-      return
-    }
-    const seconds = Math.round(hours * 3600)
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ compare_cache_ttl: seconds }),
-      })
-      if (res.ok) {
-        ttlHintEl.textContent = ttlHint(hours)
-        cacheStatus.textContent = 'Saved'
-        cacheStatus.style.color = '#16a34a'
-      } else {
-        cacheStatus.textContent = 'Save failed'
-        cacheStatus.style.color = '#dc2626'
-      }
-    } catch (_) {
-      cacheStatus.textContent = 'API not reachable'
-      cacheStatus.style.color = '#dc2626'
-    }
-    setTimeout(() => { cacheStatus.textContent = '' }, 3000)
   })
 }

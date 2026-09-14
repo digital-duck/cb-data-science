@@ -41,16 +41,6 @@ export function Header({ domainName = '' } = {}) {
   const nav = document.createElement('nav')
   nav.className = 'cb-header__nav'
 
-  const graphLink = document.createElement('a')
-  graphLink.href = '#/graph'
-  graphLink.textContent = t('nav.graph')
-  nav.appendChild(graphLink)
-
-  const contentLink = document.createElement('a')
-  contentLink.href = '#/book'
-  contentLink.textContent = t('nav.content')
-  nav.appendChild(contentLink)
-
   const settingsLink = document.createElement('a')
   settingsLink.href = '#/settings'
   settingsLink.textContent = t('nav.settings')

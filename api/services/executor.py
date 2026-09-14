@@ -8,47 +8,56 @@ Run the backend inside the spl123 conda env so that `spl3` is on PATH:
 import asyncio
 import json
 import os
+import shutil
+import sys
 from pathlib import Path
-from urllib.parse import unquote
 
 from api.config import settings
+from api.services.adapters import ADAPTER_ENV_VAR as _ADAPTER_ENV_VAR
+from api.services.adapters import ADAPTER_SETTINGS_FIELD as _ADAPTER_SETTINGS_FIELD
 from api.services.catalog_svc import get_catalog
 
 _REPO_ROOT = Path(__file__).parent.parent.parent
 _SPL_DIR = _REPO_ROOT / "spl"
+
+sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+from level_style import resolve_style  # noqa: E402
+
+
+def _resolve_spl3() -> str:
+    """Locate the spl3 binary without trusting inherited PATH.
+
+    `uvicorn --reload` runs the actual app inside a supervisor/worker
+    process pair, and depending on how that reload machinery spawns the
+    worker, the conda-activated PATH from the launching shell doesn't
+    always make it through intact — even though this very process is
+    demonstrably running under the spl123 env's Python (that's the only
+    place fastapi/uvicorn/sse-starlette are installed). So look for spl3
+    as a sibling of `sys.executable` first — same env, no PATH involved —
+    and only fall back to a PATH search.
+    """
+    sibling = Path(sys.executable).parent / "spl3"
+    if sibling.is_file():
+        return str(sibling)
+    found = shutil.which("spl3")
+    return found or "spl3"
+
 
 # Maps short model names (used in folder paths and UI) to spl3 --llm strings.
 # gemma3 is the default: runs locally via Ollama without GPU, zero cost.
 _MODEL_TO_LLM: dict[str, str] = {
     "gemma3":  "ollama:gemma3",
     "gemma4":  "ollama:gemma4",
-    "sonnet":  "claude_cli:claude-sonnet-4-6",
+    "sonnet":  "claude_cli:claude-sonnet-5",
     "haiku":   "claude_cli:claude-haiku-4-5-20251001",
     "opus":    "claude_cli:claude-opus-4-8",
 }
 
-# Keep in sync with scripts/batch_generate.py's _LEVEL_TO_STYLE /
-# _STEM_MATH_TAGS / _resolve_style: build_concept_book.spl's INPUT has no
-# @lvl parameter, only @style — passing --param lvl=... is silently ignored
-# by spl3 and every job generates at the hardcoded @style DEFAULT 'textbook'
-# regardless of the level requested through the UI. This mirrors
-# batch_generate.py's fix for the same issue so the web UI and the batch
-# script produce the same style for the same level.
-_LEVEL_TO_STYLE: dict[str, str] = {
-    "intro":    "feynman",
-    "core":     "core",
-    "college":  "college",
-    "research": "research",
-}
-_STEM_MATH_TAGS = {"math", "physics", "engineering"}
-
-
-def _resolve_style(level: str, domain_id: str) -> str:
-    style = _LEVEL_TO_STYLE.get(level, "college")
-    if style != "research":
-        return style
-    tags = next((d.get("tags", []) for d in get_catalog() if d["id"] == domain_id), [])
-    return style if (_STEM_MATH_TAGS & set(tags)) else "research_applied"
+# SPL.py's own adapters (spl/adapters/{anthropic,openai,google,openrouter}.py)
+# each read their key from exactly this environment variable, with no CLI
+# param to pass one in directly — so a user-supplied key from the Settings
+# page has to be injected into the subprocess env under the right name.
+# claude_cli and ollama need no key (CLI auth / local respectively).
 
 
 async def stream_generate(
@@ -59,7 +68,6 @@ async def stream_generate(
     model: str = "gemma4",
     skip_cache: bool = False,
 ):
-    domain_id = unquote(domain_id)
     spl_dir: Path = settings.spl_dir
     llm = _MODEL_TO_LLM.get(model, settings.llm)
     output_dir = settings.public_domains / domain_id / "output" / f"{level}.{language}" / model / "html"
@@ -72,10 +80,21 @@ async def stream_generate(
     # works for domains synced from an external pipeline (e.g.
     # concept-book-press) that only ever exist under public/domains/.
     domain_yaml_path = settings.public_domains / domain_id / "input" / "graph.yaml"
-    style = _resolve_style(level, domain_id)
 
+    # build_concept_book.spl has no @lvl input — only @style — so --param
+    # lvl=... alone is a silent no-op; level_style.resolve_style() is what
+    # actually maps the requested level to the @style the LLM prompt uses.
+    # See scripts/level_style.py for the level->style map and math-tag
+    # fallback rationale. Shared with scripts/batch_generate.py so the web
+    # UI and the batch script produce the same style for the same level.
+    tags: list[str] = next(
+        (d.get("tags", []) for d in get_catalog() if d.get("id") == domain_id), []
+    )
+    style = resolve_style(level, tags)
+
+    spl3_bin = _resolve_spl3()
     cmd = [
-        "spl3", "run", str(_SPL_DIR / "build_concept_book.spl"),
+        spl3_bin, "run", str(_SPL_DIR / "build_concept_book.spl"),
         "--tools", str(_SPL_DIR / "tools.py"),
         "--llm", llm,
         "--param", f"domain_yaml={domain_yaml_path}",
@@ -84,7 +103,7 @@ async def stream_generate(
         "--param", f"language={language}",
         "--param", f"output_dir={output_dir}",
         "--param", f"skip_cache={'yes' if skip_cache else 'no'}",
-        "--param", f"llm={llm}",
+        "--param", f"model={model}",
     ]
 
     yield {"event": "started", "data": json.dumps({"domain": domain_id, "target": target, "model": model})}
@@ -94,14 +113,43 @@ async def stream_generate(
         "SPL_WHILE_MAX_ITER": str(settings.spl_while_max_iter),
         "SPL_MAX_LLM_CALLS": str(settings.spl_max_llm_calls),
     }
+    adapter = llm.split(":", 1)[0]
+    env_var = _ADAPTER_ENV_VAR.get(adapter)
+    if env_var:
+        key = getattr(settings, _ADAPTER_SETTINGS_FIELD.get(adapter, ""), "")
+        if key:
+            spl_env[env_var] = key
 
-    proc = await asyncio.create_subprocess_exec(
-        *cmd,
-        cwd=str(spl_dir),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.STDOUT,
-        env=spl_env,
-    )
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            cwd=str(spl_dir),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.STDOUT,
+            env=spl_env,
+        )
+    except FileNotFoundError:
+        # spl3 couldn't be found even via _resolve_spl3()'s sys.executable
+        # sibling lookup — meaning this Python process itself isn't running
+        # under an env with spl3 installed alongside it (not just a PATH
+        # issue). Report it as a normal gen_error SSE event rather than
+        # letting the exception crash the stream: an uncaught exception here
+        # kills the connection before any event is sent, which makes the
+        # browser's EventSource silently auto-reconnect (and fail the same
+        # way) forever, leaving the frontend's Generate button stuck on
+        # "Generating…" indefinitely.
+        yield {
+            "event": "gen_error",
+            "data": json.dumps({
+                "message": (
+                    f"spl3 not found (tried {spl3_bin!r} and PATH). "
+                    "This API process's own interpreter is "
+                    f"{sys.executable} — start it from inside the spl123 "
+                    "conda env: conda activate spl123 && bash scripts/start-api.sh"
+                ),
+            }),
+        }
+        return
 
     assert proc.stdout is not None
     async for raw in proc.stdout:
