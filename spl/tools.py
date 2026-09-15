@@ -169,10 +169,21 @@ def verify_section(section: str, domain_yaml: str) -> str:
 # ── Style ─────────────────────────────────────────────────────────────────────
 
 @spl_tool
-def get_style_guide(style: str) -> str:
-    """Return the style instruction text for the given style profile name."""
+def get_style_guide(style: str, domain_yaml: str = "") -> str:
+    """Return the style instruction text for the given style profile name.
+
+    When domain_yaml is given, its domain_id is classified into a subject
+    rigor tier (rigorous/moderate/minimal — see style_profiles.infer_subject_rigor)
+    so math/CS/physics content stays rigorous while biology/chemistry limits
+    unnecessary formalism and humanities/arts/language domains skip it
+    entirely.
+    """
     sp = _cb_module("style_profiles")
-    return sp.style_instruction(style)  # type: ignore[attr-defined]
+    subject_rigor = "rigorous"
+    if domain_yaml:
+        domain_id = _domain_id_from_yaml(domain_yaml)
+        subject_rigor = sp.infer_subject_rigor(domain_id)  # type: ignore[attr-defined]
+    return sp.style_instruction(style, subject_rigor)  # type: ignore[attr-defined]
 
 
 # ── Language ──────────────────────────────────────────────────────────────────
@@ -265,6 +276,69 @@ def _render(template: str, **kwargs: str) -> str:
     return template
 
 
+_OUTPUT_DIR_RE = re.compile(r'output[\\/]([^\\/]+)\.([^\\/]+)(?:[\\/]([^\\/]+))?[\\/]html$')
+
+_CATALOG_CACHE: dict[str, list] = {}
+
+
+def _load_catalog(catalog_path: Path) -> list:
+    key = str(catalog_path)
+    if key not in _CATALOG_CACHE:
+        try:
+            import json
+            _CATALOG_CACHE[key] = json.loads(catalog_path.read_text(encoding='utf-8'))
+        except Exception:
+            _CATALOG_CACHE[key] = []
+    return _CATALOG_CACHE[key]
+
+
+def _catalog_domain_name(output_dir: str, domain_id: str) -> str:
+    """This domain's full display name from public/domains/catalog.json (e.g.
+    'Data Science Ch5: Time Series and Forecasting') — richer than the
+    auto-titlecased domain_id ('Data Science Ch05') computed elsewhere.
+    Returns '' if output_dir is unset, the domain isn't in the catalog yet,
+    or catalog.json can't be found/parsed — callers fall back to the
+    auto-titlecased name in that case."""
+    if not output_dir:
+        return ''
+    p = Path(output_dir)
+    for parent in p.parents:
+        if parent.name == domain_id:
+            for entry in _load_catalog(parent.parent / 'catalog.json'):
+                if entry.get('id') == domain_id:
+                    return _esc(entry.get('name') or '')
+            break
+    return ''
+
+
+def _footer_meta(output_dir: str, language: str, domain_id: str, domain_title_fallback: str) -> str:
+    """Page footer text: '{domain title} (Level: … · Language: … · Model: …)'
+    — a downloaded/printed PDF loses the page's own domain-picker/breadcrumb
+    context, so the footer is the only place that survives to say which
+    domain and variant this page came from. Level/model parsed from
+    output_dir's own output/{level}.{lang}/{model}/html convention (see
+    api/services/executor.py's _get_output_dir) — no separate params needed
+    for those, since output_dir already encodes them for every real
+    generation call."""
+    level = model = ''
+    if output_dir:
+        m = _OUTPUT_DIR_RE.search(str(output_dir).replace('\\', '/'))
+        if m:
+            level, model = m.group(1), m.group(3) or ''
+    bits = []
+    if level:
+        bits.append(f'Level: {_esc(level.title())}')
+    if language:
+        bits.append(f'Language: {_esc(language.upper())}')
+    if model:
+        bits.append(f'Model: {_esc(model)}')
+    detail = ' &middot; '.join(bits)
+    title = _catalog_domain_name(output_dir, domain_id) or domain_title_fallback
+    if title and detail:
+        return f'{title} ({detail})'
+    return title or detail
+
+
 @spl_tool
 def concept_label(concept: str) -> str:
     """Return the human-readable label for a concept ID (underscores → spaces, title-case)."""
@@ -323,6 +397,7 @@ def write_concept_html(concept: str, section: str, domain_yaml: str, output_dir:
         concept_title=_esc(label),
         domain_title=domain_title,
         body=_md_to_html(section),
+        footer_meta=_footer_meta(output_dir, language, domain_id, domain_title),
     )
     suffix = f"_{language}" if language and language != "en" else ""
     out = Path(output_dir) / f"concept_{concept}{suffix}.html"
@@ -364,6 +439,7 @@ def build_book_index(domain_yaml: str, target: str, language: str, output_dir: s
         target_title=_esc(target.replace('_', ' ').title()),
         toc=toc_html,
         payoff=payoff_html,
+        footer_meta=_footer_meta(output_dir, language, domain, domain_title),
     )
     out = Path(output_dir) / f"book_{target}{suffix}.html"
     out.write_text(html, encoding="utf-8")
@@ -485,7 +561,9 @@ code{font-family:Menlo,Consolas,monospace;font-size:.87em}
 p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
-footer.spl-credit a{color:#2563eb;text-decoration:none}"""
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}"""
 
 _MATHJAX_HEAD = """\
 <script>
@@ -516,7 +594,7 @@ section:first-of-type{border-top:none;padding-top:0}
   <main>
     {body}
   </main>
-  <footer class="spl-credit">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">{footer_meta}</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>"""
@@ -563,7 +641,7 @@ nav.toc{position:relative;height:auto}}
     <section>
       {payoff}
     </section>
-    <footer class="spl-credit">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></footer>
+    <footer class="spl-credit"><span class="spl-credit__meta">{footer_meta}</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
   </main>
 </div>
 </body>

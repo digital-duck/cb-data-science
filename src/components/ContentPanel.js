@@ -15,7 +15,6 @@ const _TOC_KIND_TAG = {
 }
 
 const MODELS = [
-  { value: '', label: '— default —' },
   { value: 'gemma3', label: 'gemma3 (Ollama)' },
   { value: 'gemma4', label: 'gemma4 (Ollama)' },
   { value: 'sonnet', label: 'sonnet (Claude)' },
@@ -58,7 +57,10 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
 
   const conceptIndex = new Map()
   _fillConceptIndex(conceptIndex, domain)
-  const state = { model: '', level, lang }
+  // 'gemma4' matches api/config.py's default_model — the dropdown always
+  // reflects a real, generatable model, never an empty '' that displays as
+  // "— default —" but isn't a value the backend/catalog actually recognizes.
+  const state = { model: 'gemma4', level, lang }
   // anchorNode: the node clicked in the *graph* — defines the TOC's scope
   // (its prerequisite path) and stays fixed while browsing the TOC.
   // displayNode: whichever node's content is currently shown — starts equal
@@ -73,6 +75,10 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
   // has since clicked away from can resolve after the fast one and clobber
   // the currently-displayed (correct) content with stale content.
   let _resolveToken = 0
+  // True once the user has explicitly changed the Model select — from then
+  // on, findCatalogEntry() stops silently substituting whatever model *is*
+  // generated in place of the one requested (see modelSel's listener below).
+  let modelPinned = false
 
   // Finds a catalog-known file for this node at the current level/lang,
   // preferring an entry matching the selected model, else a model-less one,
@@ -82,9 +88,13 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
     const candidates = (conceptIndex.get(nodeId) || [])
       .filter(e => e.level === state.level && e.lang === state.lang)
     if (!candidates.length) return null
-    return candidates.find(e => e.model === state.model)
-      || candidates.find(e => !e.model)
-      || candidates[0]
+    const exact = candidates.find(e => e.model === state.model)
+    // Once the user has explicitly picked a model, respect it even when
+    // nothing's been generated under it yet — falling back to whatever
+    // *is* generated (below) would silently snap the dropdown back and
+    // make it look like the selection had no effect (see resolveContent()).
+    if (exact || modelPinned) return exact || null
+    return candidates.find(e => !e.model) || candidates[0]
   }
 
   // ── Controls row ─────────────────────────────────────────────────────────
@@ -164,7 +174,7 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
     state.lang = langSel.value
     resolveContent()
   }
-  modelSel.addEventListener('change', onControlsChange)
+  modelSel.addEventListener('change', () => { modelPinned = true; onControlsChange() })
   levelSel.addEventListener('change', onControlsChange)
   langSel.addEventListener('change', onControlsChange)
   refreshBtn.addEventListener('click', () => { clearExistsCache(); resolveContent() })
@@ -249,7 +259,9 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
     let url
     if (known) {
       url = `${import.meta.env.BASE_URL}domains/${domain.id}/${known.file}`
-      if (known.model !== state.model) {
+      // Only auto-follow the catalog's model when the user hasn't pinned
+      // one explicitly — see findCatalogEntry()/modelPinned above.
+      if (!modelPinned && known.model !== state.model) {
         state.model = known.model
         modelSel.value = known.model
       }
@@ -293,7 +305,7 @@ export function ContentPanel(domain, { level = 'intro', lang = 'en', graphViewer
         <div class="cb-ide-empty">
           <h3>${displayNode.label}</h3>
           ${displayNode.defines ? `<p>${displayNode.defines}</p>` : ''}
-          <p>⚠️ Missing content for model=<strong>${state.model || 'default'}</strong>, level=<strong>${state.level}</strong>, language=<strong>${state.lang}</strong>, click <strong>Generate</strong> button to create</p>
+          <p>⚠️ Missing content for model=<strong>${state.model}</strong>, level=<strong>${state.level}</strong>, language=<strong>${state.lang}</strong>, click <strong>Generate</strong> button to create</p>
         </div>
       `
     }

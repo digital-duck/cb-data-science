@@ -280,7 +280,6 @@ const visNodes = new vis.DataSet(RAW.nodes.map(n => ({
   level: bfsLevels[n.id] !== undefined ? bfsLevels[n.id] : n.tier,
   color: n.color,
   font: n.font,
-  title: `<b>${n.label}</b> [${n.kind}]<br>${n.defines || ''}`,
   shape: n.kind === 'concept' ? 'ellipse' : 'box',
 })));
 const visEdges = new vis.DataSet(RAW.edges.map((e, i) => ({

@@ -145,6 +145,57 @@ STYLE_PROFILES: dict[str, dict[str, str]] = {
 }
 
 
+SUBJECT_RIGOR: dict[str, str] = {
+    "rigorous": (
+        "This is a mathematical/theoretical subject (math, physics, computer "
+        "science, engineering) — formal notation, theorems, proofs, and "
+        "complexity/recurrence analysis are the substance of the concept, not "
+        "optional decoration. Do not downgrade an algorithm, physical law, or "
+        "mathematical structure to a 'practical tool' explanation just because "
+        "it can also be described procedurally — its rigor IS what needs "
+        "teaching. Include it whenever the concept calls for it."
+    ),
+    "moderate": (
+        "This is a natural science (biology, chemistry, earth/life science) "
+        "where math supports understanding but is not the main point. Use "
+        "quantitative detail (formulas, stoichiometry, rates, structures) only "
+        "where it is standard for a college course in this subject; do not add "
+        "derivations, proofs, or notation beyond that baseline."
+    ),
+    "minimal": (
+        "This subject is not mathematical in nature (language, arts, social "
+        "sciences, humanities). Avoid introducing mathematical notation, "
+        "formulas, or quantitative formalism; explain using the subject's own "
+        "native tools instead — examples, structure, rules, and context."
+    ),
+}
+
+# Substring keywords used to classify a domain_id into a SUBJECT_RIGOR tier.
+# Checked in this order (first match wins); unmatched domains default to
+# "rigorous" since most existing domains are STEM and this preserves prior
+# behavior (no subject-rigor note beyond what the level profile already says).
+_RIGOR_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("moderate", ("chemistry", "biology", "molecular", "medicine", "medic")),
+    ("minimal", ("chinese", "english", "language", "music", "arts", "poetry",
+                 "character", "literat")),
+)
+
+
+def infer_subject_rigor(domain_id: str) -> str:
+    """Classify a domain_id into a SUBJECT_RIGOR tier ('rigorous'/'moderate'/'minimal').
+
+    Keyword-substring match on the domain_id, since it is a stable, always-
+    available identifier (see tools.py's _domain_id_from_yaml) whereas
+    catalog.json's own 'tags' field is too coarse — e.g. 'science' is used for
+    both physics (rigorous) and chemistry/biology (moderate) domains.
+    """
+    d = (domain_id or "").lower()
+    for tier, keywords in _RIGOR_KEYWORDS:
+        if any(kw in d for kw in keywords):
+            return tier
+    return "rigorous"
+
+
 def get_style_profile(style: str) -> dict[str, str]:
     """Return the profile dict for the named style.
 
@@ -157,21 +208,28 @@ def get_style_profile(style: str) -> dict[str, str]:
     return profile
 
 
-def style_instruction(style: str) -> str:
+def style_instruction(style: str, subject_rigor: str = "rigorous") -> str:
     """Return a prose instruction block for injecting into LLM prompts.
 
     Called via SOLVE @style_guide TEXT := style_instruction(@style) in the
     SPL workflow.  The returned string is passed as {style_guide} into every
     GENERATE prompt template so the LLM writes in the chosen style.
+
+    subject_rigor (see SUBJECT_RIGOR / infer_subject_rigor) appends a
+    subject-specific note on how much mathematical rigor to apply — kept
+    separate from the level profiles above since rigor depends on the
+    domain's subject, not the learner's level.
     """
     p = get_style_profile(style)
+    rigor_note = SUBJECT_RIGOR.get(subject_rigor, SUBJECT_RIGOR["rigorous"])
     return (
         f"STYLE GUIDE — {p['label']}\n"
         f"Tone      : {p['tone']}\n"
         f"Depth     : {p['depth']}\n"
         f"Audience  : {p['audience']}\n"
         f"Length    : {p['length']}\n"
-        f"Structure : {p['structure']}"
+        f"Structure : {p['structure']}\n"
+        f"Subject rigor : {rigor_note}"
     )
 
 

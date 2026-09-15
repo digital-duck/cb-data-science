@@ -575,22 +575,12 @@ function topoSort(nodeSet) {{
 
 // ── vis.js network ──────────────────────────────────────────────────────────
 const container = document.getElementById('graph-container');
-// vis.js only renders a node's `title` as HTML when it's a DOM element —
-// a plain string (even one containing markup like `<b>`/`<br>`) is inserted
-// as literal text in the tooltip, so the tags show up raw on hover instead
-// of being interpreted.
-function _nodeTooltip(n) {{
-  const div = document.createElement('div');
-  div.innerHTML = `<b>${{n.label}}</b> [${{n.kind}}]<br>${{n.defines || ''}}`;
-  return div;
-}}
 const visNodes = new vis.DataSet(RAW.nodes.map(n => ({{
   id: n.id,
   label: n.label.replace(/ /g, '\\n'),
   level: bfsLevels[n.id] !== undefined ? bfsLevels[n.id] : n.tier,
   color: n.color,
   font: n.font,
-  title: _nodeTooltip(n),
   shape: n.kind === 'concept' ? 'ellipse' : 'box',
 }})));
 const visEdges = new vis.DataSet(RAW.edges.map((e, i) => ({{

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trend | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="trend">Trend</h2>
+<p>Trend describes the long-term direction of a time series – the overall tendency of data points to move upwards or downwards over an extended period. It’s the ‘drift’ in the data, distinct from short-term fluctuations like seasonality or random noise. Identifying trend is crucial because it allows us to understand the underlying forces shaping the data and make more informed predictions about its future behavior. Without accounting for trend, we risk misinterpreting cyclical patterns as sustained changes.</p>
+<p><strong>Picture this:</strong> Imagine tracking monthly sales figures for a new product over five years. Initially, sales might be relatively flat (a horizontal trend). However, after two years, you observe a steadily increasing upward slope – this is the trend. It’s important to recognize that trends aren't always perfectly linear; they can curve upwards or downwards.</p>
+<p><strong>Worked example:</strong> Let’s consider a dataset of daily stock prices for Company X over one year. The raw data shows significant daily variations, but when plotted on a graph, a clear upward trend emerges. Using moving averages – calculating the average price over a rolling window of days (e.g., 30 days) and plotting these averages – highlights this trend by smoothing out the short-term fluctuations. The resulting smoothed line reveals the overall direction of the stock’s value. In this case, we visually identify an upward trend, suggesting increasing investor confidence in Company X.</p>
+<p><strong>Problem-solving application:</strong> Suppose you are analyzing monthly electricity consumption data for a city over 10 years. You observe that, on average, electricity demand increases by approximately 2% per year. This persistent increase represents the trend in energy consumption. To quantify this trend, we can use linear regression – a statistical method to fit a straight line through the data. The equation of the line will be:</p>
+<p>$y = mx + b$</p>
+<p>Where <em>y</em> is the electricity demand (dependent variable), <em>x</em> is the time in years (independent variable), <em>m</em> is the slope representing the rate of increase, and <em>b</em> is the y-intercept. The slope (<em>m</em>) directly represents the trend – in our example, <em>m</em> = 0.02, meaning electricity demand increases by 2% annually.  This linear model provides a precise estimate of this growth rate, allowing energy planners to anticipate future demand and adjust infrastructure accordingly.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: EN &middot; Model: gemma3)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

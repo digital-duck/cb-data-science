@@ -1896,6 +1896,24 @@
         "file": "output/research.zh/sonnet/html/book_arima_zh.html",
         "model": "sonnet",
         "language": "zh"
+      },
+      {
+        "target": "period",
+        "file": "output/college.en/sonnet/html/book_period.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "trend",
+        "file": "output/college.en/sonnet/html/book_trend.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "target": "trend",
+        "file": "output/college.en/gemma3/html/book_trend.html",
+        "model": "gemma3",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -1903,13 +1921,6 @@
         "name": "arima",
         "label": "Arima",
         "file": "output/research.en/sonnet/html/concept_arima.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "arima",
-        "label": "Arima",
-        "file": "output/college.en/sonnet/html/concept_arima.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1949,6 +1960,13 @@
         "language": "zh"
       },
       {
+        "name": "arima",
+        "label": "Arima",
+        "file": "output/college.en/sonnet/html/concept_arima.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "arima_zh",
         "label": "Arima Zh",
         "file": "output/research.zh/sonnet/html/concept_arima_zh.html",
@@ -1959,13 +1977,6 @@
         "name": "augmented_dickey_fuller_test",
         "label": "Augmented Dickey Fuller Test",
         "file": "output/research.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "augmented_dickey_fuller_test",
-        "label": "Augmented Dickey Fuller Test",
-        "file": "output/college.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -1984,16 +1995,16 @@
         "language": "en"
       },
       {
-        "name": "autoregressive_model",
-        "label": "Autoregressive Model",
-        "file": "output/research.en/sonnet/html/concept_autoregressive_model.html",
+        "name": "augmented_dickey_fuller_test",
+        "label": "Augmented Dickey Fuller Test",
+        "file": "output/college.en/sonnet/html/concept_augmented_dickey_fuller_test.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "autoregressive_model",
         "label": "Autoregressive Model",
-        "file": "output/college.en/sonnet/html/concept_autoregressive_model.html",
+        "file": "output/research.en/sonnet/html/concept_autoregressive_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2033,6 +2044,13 @@
         "language": "zh"
       },
       {
+        "name": "autoregressive_model",
+        "label": "Autoregressive Model",
+        "file": "output/college.en/sonnet/html/concept_autoregressive_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "autoregressive_model_zh",
         "label": "Autoregressive Model Zh",
         "file": "output/research.zh/sonnet/html/concept_autoregressive_model_zh.html",
@@ -2043,13 +2061,6 @@
         "name": "cyclic_component",
         "label": "Cyclic Component",
         "file": "output/research.en/sonnet/html/concept_cyclic_component.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "cyclic_component",
-        "label": "Cyclic Component",
-        "file": "output/college.en/sonnet/html/concept_cyclic_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2068,16 +2079,16 @@
         "language": "en"
       },
       {
-        "name": "differencing",
-        "label": "Differencing",
-        "file": "output/research.en/sonnet/html/concept_differencing.html",
+        "name": "cyclic_component",
+        "label": "Cyclic Component",
+        "file": "output/college.en/sonnet/html/concept_cyclic_component.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "differencing",
         "label": "Differencing",
-        "file": "output/college.en/sonnet/html/concept_differencing.html",
+        "file": "output/research.en/sonnet/html/concept_differencing.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2117,6 +2128,13 @@
         "language": "zh"
       },
       {
+        "name": "differencing",
+        "label": "Differencing",
+        "file": "output/college.en/sonnet/html/concept_differencing.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "differencing_zh",
         "label": "Differencing Zh",
         "file": "output/research.zh/sonnet/html/concept_differencing_zh.html",
@@ -2127,13 +2145,6 @@
         "name": "error",
         "label": "Error",
         "file": "output/research.en/sonnet/html/concept_error.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "error",
-        "label": "Error",
-        "file": "output/college.en/sonnet/html/concept_error.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2173,6 +2184,13 @@
         "language": "zh"
       },
       {
+        "name": "error",
+        "label": "Error",
+        "file": "output/college.en/sonnet/html/concept_error.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "error_zh",
         "label": "Error Zh",
         "file": "output/research.zh/sonnet/html/concept_error_zh.html",
@@ -2183,13 +2201,6 @@
         "name": "forecasting",
         "label": "Forecasting",
         "file": "output/research.en/sonnet/html/concept_forecasting.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "forecasting",
-        "label": "Forecasting",
-        "file": "output/college.en/sonnet/html/concept_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2208,16 +2219,16 @@
         "language": "en"
       },
       {
-        "name": "integrative_component",
-        "label": "Integrative Component",
-        "file": "output/research.en/sonnet/html/concept_integrative_component.html",
+        "name": "forecasting",
+        "label": "Forecasting",
+        "file": "output/college.en/sonnet/html/concept_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "integrative_component",
         "label": "Integrative Component",
-        "file": "output/college.en/sonnet/html/concept_integrative_component.html",
+        "file": "output/research.en/sonnet/html/concept_integrative_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2257,6 +2268,13 @@
         "language": "zh"
       },
       {
+        "name": "integrative_component",
+        "label": "Integrative Component",
+        "file": "output/college.en/sonnet/html/concept_integrative_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "integrative_component_zh",
         "label": "Integrative Component Zh",
         "file": "output/research.zh/sonnet/html/concept_integrative_component_zh.html",
@@ -2267,13 +2285,6 @@
         "name": "lag",
         "label": "Lag",
         "file": "output/research.en/sonnet/html/concept_lag.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "lag",
-        "label": "Lag",
-        "file": "output/college.en/sonnet/html/concept_lag.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2313,6 +2324,13 @@
         "language": "zh"
       },
       {
+        "name": "lag",
+        "label": "Lag",
+        "file": "output/college.en/sonnet/html/concept_lag.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "lag_zh",
         "label": "Lag Zh",
         "file": "output/research.zh/sonnet/html/concept_lag_zh.html",
@@ -2323,13 +2341,6 @@
         "name": "linear_regression_forecasting",
         "label": "Linear Regression Forecasting",
         "file": "output/research.en/sonnet/html/concept_linear_regression_forecasting.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "linear_regression_forecasting",
-        "label": "Linear Regression Forecasting",
-        "file": "output/college.en/sonnet/html/concept_linear_regression_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2348,16 +2359,16 @@
         "language": "en"
       },
       {
-        "name": "moving_average_model",
-        "label": "Moving Average Model",
-        "file": "output/research.en/sonnet/html/concept_moving_average_model.html",
+        "name": "linear_regression_forecasting",
+        "label": "Linear Regression Forecasting",
+        "file": "output/college.en/sonnet/html/concept_linear_regression_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "moving_average_model",
         "label": "Moving Average Model",
-        "file": "output/college.en/sonnet/html/concept_moving_average_model.html",
+        "file": "output/research.en/sonnet/html/concept_moving_average_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2397,6 +2408,13 @@
         "language": "zh"
       },
       {
+        "name": "moving_average_model",
+        "label": "Moving Average Model",
+        "file": "output/college.en/sonnet/html/concept_moving_average_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "moving_average_model_zh",
         "label": "Moving Average Model Zh",
         "file": "output/research.zh/sonnet/html/concept_moving_average_model_zh.html",
@@ -2407,13 +2425,6 @@
         "name": "naive_forecasting",
         "label": "Naive Forecasting",
         "file": "output/research.en/sonnet/html/concept_naive_forecasting.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "naive_forecasting",
-        "label": "Naive Forecasting",
-        "file": "output/college.en/sonnet/html/concept_naive_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2432,16 +2443,16 @@
         "language": "en"
       },
       {
-        "name": "noise",
-        "label": "Noise",
-        "file": "output/research.en/sonnet/html/concept_noise.html",
+        "name": "naive_forecasting",
+        "label": "Naive Forecasting",
+        "file": "output/college.en/sonnet/html/concept_naive_forecasting.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "noise",
         "label": "Noise",
-        "file": "output/college.en/sonnet/html/concept_noise.html",
+        "file": "output/research.en/sonnet/html/concept_noise.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2460,16 +2471,23 @@
         "language": "en"
       },
       {
-        "name": "seasonal_component",
-        "label": "Seasonal Component",
-        "file": "output/research.en/sonnet/html/concept_seasonal_component.html",
+        "name": "noise",
+        "label": "Noise",
+        "file": "output/college.en/sonnet/html/concept_noise.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "period",
+        "label": "Period",
+        "file": "output/college.en/sonnet/html/concept_period.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "seasonal_component",
         "label": "Seasonal Component",
-        "file": "output/college.en/sonnet/html/concept_seasonal_component.html",
+        "file": "output/research.en/sonnet/html/concept_seasonal_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2488,16 +2506,16 @@
         "language": "en"
       },
       {
-        "name": "seasonal_trend_decomposition_loess",
-        "label": "Seasonal Trend Decomposition Loess",
-        "file": "output/research.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "name": "seasonal_component",
+        "label": "Seasonal Component",
+        "file": "output/college.en/sonnet/html/concept_seasonal_component.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "seasonal_trend_decomposition_loess",
         "label": "Seasonal Trend Decomposition Loess",
-        "file": "output/college.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
+        "file": "output/research.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2516,16 +2534,16 @@
         "language": "en"
       },
       {
-        "name": "sequence",
-        "label": "Sequence",
-        "file": "output/research.en/sonnet/html/concept_sequence.html",
+        "name": "seasonal_trend_decomposition_loess",
+        "label": "Seasonal Trend Decomposition Loess",
+        "file": "output/college.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "sequence",
         "label": "Sequence",
-        "file": "output/college.en/sonnet/html/concept_sequence.html",
+        "file": "output/research.en/sonnet/html/concept_sequence.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2581,13 +2599,6 @@
       {
         "name": "stationary",
         "label": "Stationary",
-        "file": "output/college.en/sonnet/html/concept_stationary.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "stationary",
-        "label": "Stationary",
         "file": "output/core.en/sonnet/html/concept_stationary.html",
         "model": "sonnet",
         "language": "en"
@@ -2600,16 +2611,16 @@
         "language": "en"
       },
       {
-        "name": "time_series",
-        "label": "Time Series",
-        "file": "output/research.en/sonnet/html/concept_time_series.html",
+        "name": "stationary",
+        "label": "Stationary",
+        "file": "output/college.en/sonnet/html/concept_stationary.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "time_series",
         "label": "Time Series",
-        "file": "output/college.en/sonnet/html/concept_time_series.html",
+        "file": "output/research.en/sonnet/html/concept_time_series.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2649,16 +2660,16 @@
         "language": "zh"
       },
       {
-        "name": "time_series_model",
-        "label": "Time Series Model",
-        "file": "output/research.en/sonnet/html/concept_time_series_model.html",
+        "name": "time_series",
+        "label": "Time Series",
+        "file": "output/college.en/sonnet/html/concept_time_series.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "time_series_model",
         "label": "Time Series Model",
-        "file": "output/college.en/sonnet/html/concept_time_series_model.html",
+        "file": "output/research.en/sonnet/html/concept_time_series_model.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2677,6 +2688,13 @@
         "language": "en"
       },
       {
+        "name": "time_series_model",
+        "label": "Time Series Model",
+        "file": "output/college.en/sonnet/html/concept_time_series_model.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
         "name": "time_series_zh",
         "label": "Time Series Zh",
         "file": "output/research.zh/sonnet/html/concept_time_series_zh.html",
@@ -2687,13 +2705,6 @@
         "name": "trend",
         "label": "Trend",
         "file": "output/research.en/sonnet/html/concept_trend.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "trend",
-        "label": "Trend",
-        "file": "output/college.en/sonnet/html/concept_trend.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2733,16 +2744,23 @@
         "language": "zh"
       },
       {
-        "name": "trend_cycle_component",
-        "label": "Trend Cycle Component",
-        "file": "output/research.en/sonnet/html/concept_trend_cycle_component.html",
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/college.en/sonnet/html/concept_trend.html",
         "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend",
+        "label": "Trend",
+        "file": "output/college.en/gemma3/html/concept_trend.html",
+        "model": "gemma3",
         "language": "en"
       },
       {
         "name": "trend_cycle_component",
         "label": "Trend Cycle Component",
-        "file": "output/college.en/sonnet/html/concept_trend_cycle_component.html",
+        "file": "output/research.en/sonnet/html/concept_trend_cycle_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2757,6 +2775,13 @@
         "name": "trend_cycle_component",
         "label": "Trend Cycle Component",
         "file": "output/intro.en/sonnet/html/concept_trend_cycle_component.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "trend_cycle_component",
+        "label": "Trend Cycle Component",
+        "file": "output/college.en/sonnet/html/concept_trend_cycle_component.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -2777,13 +2802,6 @@
       {
         "name": "volatility",
         "label": "Volatility",
-        "file": "output/college.en/sonnet/html/concept_volatility.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "volatility",
-        "label": "Volatility",
         "file": "output/core.en/sonnet/html/concept_volatility.html",
         "model": "sonnet",
         "language": "en"
@@ -2794,9 +2812,25 @@
         "file": "output/intro.en/sonnet/html/concept_volatility.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "volatility",
+        "label": "Volatility",
+        "file": "output/college.en/sonnet/html/concept_volatility.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
-    "default_level": "college"
+    "default_level": "college",
+    "pdfs": [
+      {
+        "target": "trend",
+        "level": "college",
+        "language": "en",
+        "model": "gemma3",
+        "file": "output/college.en/gemma3/pdf/concept_trend.pdf"
+      }
+    ]
   },
   {
     "id": "data_science_ch06",

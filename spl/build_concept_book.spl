@@ -143,7 +143,7 @@ DO
     -- Accept "true"/"1" as well as "yes" for @skip_cache (a direct spl3 CLI
     -- caller might pass either; the IDE's checkbox always sends "yes"/"no").
     CALL normalize_bool(@skip_cache) INTO @skip_cache
-    CALL get_style_guide(@style) INTO @style_guide
+    CALL get_style_guide(@style, @domain_yaml) INTO @style_guide
     CALL language_name(@language) INTO @language_label
     -- Cache key must vary with @language, @style, and @model: without
     -- @language, the same concept generated in two languages collides on one

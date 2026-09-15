@@ -24,7 +24,8 @@ pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
 code{font-family:Menlo,Consolas,monospace;font-size:.87em}
 p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
-      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
@@ -35,28 +36,11 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="time-series">Time Series</h2>
-<p><strong>Definition.</strong> A <em>time series</em> is a sequence of observations $\{x_t\}_{t=1}^{T}$ indexed by discrete time $t \in \mathbb{Z}$, where each $x_t$ is a realization of a random variable $X_t$. The collection $\{X_t\}$ is called a <em>stochastic process</em>. A time series is said to be <em>weakly stationary</em> (or <em>covariance-stationary</em>) if its mean and autocovariance structure are invariant under time shifts:</p>
-$$\mathbb{E}[X_t] = \mu \quad \text{for all } t,$$
-$$\operatorname{Cov}(X_t, X_{t+k}) = \gamma(k) \quad \text{for all } t, k,$$
-<p>where $\gamma(k)$ is called the <em>autocovariance function</em> at lag $k$. The normalized version, $\rho(k) = \gamma(k)/\gamma(0)$, is the <em>autocorrelation function</em> (ACF). These two quantities — $\gamma$ and $\rho$ — are the primary tools for characterizing the internal dependence structure of a stationary series.</p>
-<p><strong>Worked Example.</strong> Consider daily closing prices of a stock over $T = 5$ days: $x_1 = 100,\ x_2 = 102,\ x_3 = 101,\ x_4 = 105,\ x_5 = 103$. Compute the sample mean $\bar{x} = \frac{1}{5}\sum_{t=1}^{5} x_t = 102.2$. The lag-1 sample autocovariance is</p>
-$$\hat{\gamma}(1) = \frac{1}{T}\sum_{t=2}^{T}(x_t - \bar{x})(x_{t-1} - \bar{x}) = \frac{1}{5}\bigl[(-1.2)(-2.2) + (-1.2)(-0.2) + (2.8)(-1.2) + (0.8)(2.8)\bigr] = 0.56.$$
-<p>A positive $\hat{\gamma}(1)$ indicates that consecutive observations tend to move together — a feature common in financial data.</p>
-<p><strong>Key Theorem (Properties of the ACF).</strong> For any weakly stationary process $\{X_t\}$, the autocorrelation function satisfies:</p>
-$$\rho(0) = 1, \qquad \rho(-k) = \rho(k) \quad \text{for all } k \in \mathbb{Z}, \qquad |\rho(k)| \leq 1.$$
-<p>Symmetry follows directly from the definition of covariance; the bound $|\rho(k)| \leq 1$ is a consequence of the Cauchy–Schwarz inequality applied to $X_t$ and $X_{t+k}$. Together, these constraints rule out spurious correlation estimates outside $[-1, 1]$ and allow the ACF to be plotted on a standardized scale — the foundation of all graphical stationarity diagnostics.</p>
-<p><strong>Lab Cell (SymPy).</strong></p>
-<pre><code>import sympy as sp
-
-k = sp.Symbol('k', integer=True)
-phi, sigma2 = sp.symbols('phi sigma2', positive=True)
-
-# AR(1) autocovariance: gamma(k) = sigma^2 * phi^|k| / (1 - phi^2)
-gamma = sigma2 * phi**sp.Abs(k) / (1 - phi**2)
-rho   = sp.simplify(gamma / gamma.subs(k, 0))
-sp.pprint(rho)  # yields phi^|k|; verify rho(0)=1 and symmetry</code></pre>
+<p>A time series is a sequence of numerical measurements of the same variable, recorded at regular, ordered intervals — daily closing stock prices, monthly unemployment rates, hourly temperature readings. What distinguishes a time series from an ordinary list of numbers is that order matters: the value at time $t$ is understood to be related to the values that came before it. Formally, we write it as $x_1, x_2, \ldots, x_T$, where the subscript indexes time rather than an arbitrary label, and $T$ is the number of observations.</p>
+<p><strong>Worked example.</strong> Suppose a small bakery records weekly sales (in units) for eight weeks: 120, 135, 128, 150, 142, 160, 155, 170. Plotted against time, this sequence reveals two things a plain average would hide: an upward trend (sales are generally climbing) and short-term fluctuation (week-to-week ups and downs around that trend). A simple way to separate signal from noise is a moving average — replacing each point with the average of itself and its neighbors. A 3-week moving average centered on week 4, for instance, is $(128 + 150 + 142)/3 \approx 140$. Repeating this across the series smooths out the week-to-week bounce and makes the underlying trend easier to see.</p>
+<p><strong>Problem-solving application.</strong> Time series analysis is used whenever you need to forecast a future value, detect a change in pattern, or decide whether a fluctuation is "normal" or a genuine anomaly. The central question is always the same: how much of the movement in the data is trend, how much is a pattern that repeats at fixed intervals (seasonality, like higher retail sales every December), and how much is just random noise left over once both are accounted for? A data analyst forecasting next month's bakery sales would separate the trend and seasonal parts using tools like the moving average above, then look at how far the actual values deviate from that smoothed line — the size of those leftover deviations tells you how much confidence to place in the forecast. The same logic underlies far higher-stakes applications: epidemiologists tracking whether daily case counts are truly declining or just noisy, and central banks deciding whether an inflation uptick is a lasting trend or a temporary blip. In every case, the discipline is the same — don't react to a single data point; look at the ordered sequence, separate trend from noise, and only then draw a conclusion.</p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Level: College &middot; Language: EN &middot; Model: sonnet</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>
