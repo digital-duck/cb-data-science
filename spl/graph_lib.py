@@ -143,9 +143,12 @@ def acyclic(graph: nx.DiGraph) -> bool:
 def reducible(graph: nx.DiGraph, primitives: Iterable[str]) -> bool:
     """Return True if every concept/application reduces transitively to primitives.
 
-    A node is reducible iff every "leaf" (in-degree 0 node) in its ancestor
-    closure is a declared primitive. Any undeclared leaf signals a concept
-    that claims to be primitive but was not declared.
+    A root (in-degree 0 ancestor) is valid if it is either a declared primitive
+    OR an explicitly-declared node with no prerequisites (a foundation concept
+    whose composed_of list is empty — treated as given in this domain). Nodes
+    that appear only in composed_of/needs lists but were never declared have no
+    'kind' attribute (NetworkX adds them implicitly via G.add_edge); those are
+    the only invalid roots.
     """
     prim_set = set(primitives)
     for node in graph.nodes():
@@ -153,7 +156,8 @@ def reducible(graph: nx.DiGraph, primitives: Iterable[str]) -> bool:
             continue
         anc = nx.ancestors(graph, node)
         sources = {n for n in anc if graph.in_degree(n) == 0}
-        if not sources.issubset(prim_set):
+        invalid = {n for n in sources if n not in prim_set and "kind" not in graph.nodes[n]}
+        if invalid:
             return False
     return True
 

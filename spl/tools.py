@@ -366,7 +366,13 @@ def concept_context(domain_yaml: str, concept: str) -> str:
     for section in ("primitives", "concepts", "applications"):
         node = (data.get(section) or {}).get(concept)
         if node:
-            return node.get("defines") or concept
+            context = node.get("defines") or concept
+            diagram = node.get("diagram")
+            if diagram:
+                dtype = diagram.get("type", "auto")
+                hint = diagram.get("hint", "")
+                context += f" [Diagram: {dtype} — {hint}]"
+            return context
     return concept
 
 
@@ -475,15 +481,42 @@ def _md_to_html(md: str) -> str:
             out.append(f'<p>{" ".join(para_buf)}</p>')
             para_buf.clear()
 
+    # diagram feature state (raw HTML passthrough + mermaid fence lang tag)
+    in_raw_html = False
+    raw_html_buf: list[str] = []
+    code_lang = ''
+
     for line in lines:
+        # ── raw HTML passthrough (cb-figure blocks from diagram Option B) ─────
+        # Only <figure class="cb-figure"> is passed through unescaped; all other
+        # HTML is still escaped by _inline_md for XSS safety.
+        if not in_raw_html and line.startswith('<figure'):
+            flush_para()
+            in_raw_html = True
+            raw_html_buf = [line]
+            continue
+        if in_raw_html:
+            raw_html_buf.append(line)
+            if '</figure>' in line:
+                out.append('\n'.join(raw_html_buf))
+                raw_html_buf.clear()
+                in_raw_html = False
+            continue
+
         # ── fenced code blocks ────────────────────────────────────────────────
         if line.startswith('```'):
             if in_code:
-                out.append(f'<pre><code>{_esc(chr(10).join(code_buf))}</code></pre>')
+                if code_lang == 'mermaid':
+                    # Preserve unescaped so mermaid.js can parse the diagram.
+                    out.append(f'<pre class="mermaid">{chr(10).join(code_buf)}</pre>')
+                else:
+                    out.append(f'<pre><code>{_esc(chr(10).join(code_buf))}</code></pre>')
                 code_buf.clear()
+                code_lang = ''
                 in_code = False
             else:
                 flush_para()
+                code_lang = line[3:].strip().lower()
                 in_code = True
             continue
         if in_code:
@@ -563,7 +596,11 @@ footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
 footer.spl-credit span{display:block}
-footer.spl-credit .spl-credit__meta{margin-bottom:4px}"""
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}"""
 
 _MATHJAX_HEAD = """\
 <script>
@@ -572,7 +609,9 @@ MathJax = {
   options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
 };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>"""
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>"""
 
 _CONCEPT_PAGE_TEMPLATE = """\
 <!DOCTYPE html>

@@ -5316,6 +5316,12 @@
         "file": "output/research.en/sonnet/html/book_executive_dashboard.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "technical_report_structure",
+        "file": "output/college.en/sonnet/html/book_technical_report_structure.html",
+        "model": "sonnet",
+        "language": "en"
       }
     ],
     "generated_concepts": [
@@ -5323,13 +5329,6 @@
         "name": "audience",
         "label": "Audience",
         "file": "output/research.en/sonnet/html/concept_audience.html",
-        "model": "sonnet",
-        "language": "en"
-      },
-      {
-        "name": "audience",
-        "label": "Audience",
-        "file": "output/college.en/sonnet/html/concept_audience.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -5348,16 +5347,16 @@
         "language": "en"
       },
       {
-        "name": "data_visualization_choice",
-        "label": "Data Visualization Choice",
-        "file": "output/research.en/sonnet/html/concept_data_visualization_choice.html",
+        "name": "audience",
+        "label": "Audience",
+        "file": "output/college.en/sonnet/html/concept_audience.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "data_visualization_choice",
         "label": "Data Visualization Choice",
-        "file": "output/college.en/sonnet/html/concept_data_visualization_choice.html",
+        "file": "output/research.en/sonnet/html/concept_data_visualization_choice.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -5376,16 +5375,16 @@
         "language": "en"
       },
       {
-        "name": "executive_dashboard",
-        "label": "Executive Dashboard",
-        "file": "output/research.en/sonnet/html/concept_executive_dashboard.html",
+        "name": "data_visualization_choice",
+        "label": "Data Visualization Choice",
+        "file": "output/college.en/sonnet/html/concept_data_visualization_choice.html",
         "model": "sonnet",
         "language": "en"
       },
       {
         "name": "executive_dashboard",
         "label": "Executive Dashboard",
-        "file": "output/college.en/sonnet/html/concept_executive_dashboard.html",
+        "file": "output/research.en/sonnet/html/concept_executive_dashboard.html",
         "model": "sonnet",
         "language": "en"
       },
@@ -5400,6 +5399,20 @@
         "name": "executive_dashboard",
         "label": "Executive Dashboard",
         "file": "output/intro.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "executive_dashboard",
+        "label": "Executive Dashboard",
+        "file": "output/college.en/sonnet/html/concept_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "en"
+      },
+      {
+        "name": "technical_report_structure",
+        "label": "Technical Report Structure",
+        "file": "output/college.en/sonnet/html/concept_technical_report_structure.html",
         "model": "sonnet",
         "language": "en"
       }

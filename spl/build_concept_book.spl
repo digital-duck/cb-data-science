@@ -53,6 +53,38 @@ structural headers, entirely in {language}.
 Use LaTeX for all mathematics and notation; mathematical notation and LaTeX
 remain in their standard form regardless of language.
 Output only the section text. No preamble, no metadata.
+If the context includes a [Diagram: type — hint], generate a diagram
+immediately after the main explanation (before any closing summary). Choose
+whichever option better serves the hint:
+
+OPTION A — Mermaid diagram (preferred for flows, DAGs, sequences,
+comparisons, or any diagram that can be expressed in text-based syntax):
+Output a fenced mermaid block, immediately followed by a brief italic caption.
+Use the stated diagram type as the Mermaid diagram kind (e.g. "graph TD",
+"flowchart LR", "sequenceDiagram"). Keep it to ≤12 nodes. Write all node
+labels in {language}. Use valid Mermaid syntax only; no self-loops.
+```mermaid
+<diagram type>
+<diagram body>
+```
+*Caption in {language} describing what the diagram shows.*
+
+OPTION B — Public-domain image reference (preferred for molecular structures,
+anatomical figures, or any diagram requiring visual/spatial precision that
+Mermaid cannot represent):
+Output exactly this HTML block (no surrounding Markdown, no extra tags):
+<figure class="cb-figure">
+  <img src="IMAGE_URL" alt="ALT_TEXT" class="cb-figure-img">
+  <figcaption>CAPTION_IN_{language}. Source: <a href="SOURCE_URL">TITLE</a>, LICENSE.</figcaption>
+</figure>
+Use only images with verifiable, permanent URLs from Wikimedia Commons
+(upload.wikimedia.org/…), OpenStax (openstax.org/…), RCSB PDB (rcsb.org/…),
+or NCBI (ncbi.nlm.nih.gov/…). If you cannot identify a specific, real URL
+for a public-domain image that directly illustrates this concept, choose
+Option A instead. Never fabricate or guess a URL.
+
+If neither option produces a useful diagram for this concept, omit it entirely.
+Output only the section text. No preamble, no metadata.
 $$;
 
 CREATE FUNCTION refine_section(section TEXT, feedback TEXT, style_guide TEXT, language TEXT)
