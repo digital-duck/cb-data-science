@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,35 +43,12 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="cloud-computing">Cloud Computing</h2>
-<p><strong>Definition.</strong> Cloud computing is the on-demand delivery of computing resources—processors, memory, storage, and software—over a network, typically the public internet, with usage billed in proportion to consumption. Rather than owning physical hardware, a consumer rents capacity from a provider who operates large-scale data centers. The three canonical service models are <em>Infrastructure as a Service</em> (IaaS), which exposes raw virtual machines; <em>Platform as a Service</em> (PaaS), which abstracts the operating system and runtime; and <em>Software as a Service</em> (SaaS), which delivers fully managed applications. Resource allocation is governed by an <em>elasticity</em> principle: capacity scales up or down automatically in response to workload, subject to provider limits and a cost function.</p>
-<p>Formally, let $D(t)$ denote the computational demand at time $t$ (measured in CPU-core-seconds per unit time) and let $C(n)$ denote the hourly cost of provisioning $n$ virtual cores. For a provider offering linear pricing, $C(n) = c \cdot n$ for some rate constant $c > 0$. The total cost over an interval $[0, T]$ is</p>
-$$
-\text{Cost} = c \int_{0}^{T} n(t)\, dt,
-$$
-<p>where $n(t) = \lceil D(t) \rceil$ is the number of cores allocated at each instant, assuming the scheduler rounds demand up to the nearest integer.</p>
-<p><strong>Worked example.</strong> Suppose demand follows a sinusoidal pattern: $D(t) = 50 + 30\sin\!\bigl(\tfrac{2\pi t}{24}\bigr)$ cores over a 24-hour period, with $c = \$0.05$ per core-hour. The average demand is $\bar{D} = 50$ cores, so the expected daily cost is approximately $c \cdot \bar{D} \cdot T = 0.05 \times 50 \times 24 = \$60$. A fixed on-premises deployment sized for peak demand ($80$ cores) would cost $0.05 \times 80 \times 24 = \$96$, a 37.5 % premium.</p>
-<p><strong>Key theorem (Cost–Elasticity Trade-off).</strong> For any non-constant demand signal $D(t) \geq 0$ and linear pricing $C(n) = cn$, elastic provisioning satisfies</p>
-$$
-\int_{0}^{T} C\!\bigl(\lceil D(t) \rceil\bigr)\, dt \;\leq\; C\!\bigl(\max_{t} D(t)\bigr) \cdot T,
-$$
-<p>with equality only when $D(t)$ is constant. Elastic clouds therefore weakly dominate static provisioning in cost.</p>
-<p><strong>Lab cell.</strong></p>
-<pre><code>import sympy as sp
-
-t, T, c = sp.symbols('t T c', positive=True)
-D = 50 + 30 * sp.sin(2 * sp.pi * t / 24)
-
-# Average demand over one day
-avg_demand = sp.integrate(D, (t, 0, 24)) / 24
-elastic_cost = c * avg_demand * 24
-static_cost  = c * 80 * 24          # peak-sized fixed deployment
-
-print("Elastic cost :", sp.simplify(elastic_cost))
-print("Static cost  :", static_cost)
-print("Savings ratio:", sp.simplify(1 - elastic_cost / static_cost))</code></pre>
-<p>Running this cell confirms the 37.5 % savings derived analytically and demonstrates how symbolic integration makes cost-model reasoning tractable before any real workload data is collected.</p>
+<p>Cloud computing is a model for delivering computing resources — servers, storage, databases, networking, and software — over the internet, where users pay for access rather than owning and maintaining the underlying hardware. Instead of a company buying and racking its own servers, it rents capacity from a provider such as Amazon Web Services, Microsoft Azure, or Google Cloud, and that capacity can be scaled up or down within minutes. This shift matters because it converts a large upfront capital expense (buying machines) into a smaller, ongoing operating expense (paying for usage), and it lets small teams access computing power that would otherwise require a data center.</p>
+<p>Cloud services are typically organized into three layers. Infrastructure as a Service (IaaS) rents raw computing building blocks — virtual machines, storage volumes, networks — and the customer manages the operating system and applications on top. Platform as a Service (PaaS) goes further, providing a managed environment (like a database or a runtime for deploying code) so developers don't have to configure servers at all. Software as a Service (SaaS) delivers a complete application over the internet, such as Gmail or Salesforce, where the user only interacts with the finished product.</p>
+<p>Consider a startup building a photo-sharing app. On launch day, traffic is light, so the app runs on a single small virtual server (IaaS) costing a few dollars a day. When the app goes viral and traffic spikes 100-fold overnight, the cloud provider's auto-scaling feature detects rising CPU load and automatically launches additional server instances behind a load balancer, then removes them once traffic subsides. A company that had bought physical servers sized for viral-level traffic would have wasted money every ordinary day; a company that under-provisioned would have crashed during the spike. Elastic, pay-per-use scaling solves both problems simultaneously.</p>
+<p>In problem-solving terms, evaluating a cloud architecture means analyzing trade-offs: latency (how close is the server to the user?), cost (reserved capacity vs. on-demand pricing), and reliability (what happens if one server, or one entire data center, fails?). A well-designed cloud system distributes data across multiple physical locations and uses redundancy so that no single point of failure takes the whole service down — a discipline directly relevant to designing any large-scale, internet-facing system.</p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>

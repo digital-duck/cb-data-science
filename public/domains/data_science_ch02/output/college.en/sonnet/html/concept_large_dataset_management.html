@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,26 +43,20 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="large-dataset-management">Large Dataset Management</h2>
-<p><strong>Definition.</strong> A <em>large dataset</em> is a collection $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^{N}$ where $N$ is sufficiently large that loading all records into primary memory simultaneously is impractical or impossible. Formally, if $M$ denotes available RAM in bytes and $s$ the average record size, the dataset is <em>large</em> when $N \cdot s \gg M$. Effective large dataset management encompasses three interlocking concerns: <em>chunked access</em> (reading subsets $\mathcal{D}_k \subset \mathcal{D}$ of size $B \ll N$), <em>streaming aggregation</em> (computing statistics without full materialisation), and <em>lazy evaluation</em> (deferring computation until results are explicitly needed).</p>
-<p>A foundational quantity is the <em>sample mean</em> computed in a single pass. Suppose we receive records in non-overlapping chunks of size $B$. After processing chunk $k$ containing values $\{x_i\}_{i \in I_k}$, we maintain a running sum $S_k = S_{k-1} + \sum_{i \in I_k} x_i$ and a running count $C_k = C_{k-1} + |I_k|$. The global mean is recovered as $\bar{x} = S_K / C_K$ after all $K = \lceil N/B \rceil$ chunks. Memory cost is $O(B)$ rather than $O(N)$.</p>
-<p><strong>Worked Example.</strong> Suppose $N = 10^6$ temperature readings stored in a CSV file too large for RAM, and $B = 10^4$. We read each chunk of $10^4$ rows, accumulate their column sums and counts, and compute the grand mean once all chunks are processed. If chunks 1 through 100 yield partial sums $S_1, \ldots, S_{100}$, the global mean is $\bar{x} = \left(\sum_{k=1}^{100} S_k\right) / 10^6$. Welford's online algorithm extends this idea to variance without numerical cancellation: it updates $M_{2,k} = M_{2,k-1} + (x_i - \bar{x}_{k-1})(x_i - \bar{x}_k)$, giving $\sigma^2 = M_{2,N}/(N-1)$ at termination.</p>
-<p><strong>Key Theorem (Chunk-Independence of Linear Statistics).</strong> Let $f : \mathbb{R}^N \to \mathbb{R}$ be a linear statistic of the form $f(\mathcal{D}) = \sum_{i=1}^{N} g(x_i)$ for some function $g$. Then $f(\mathcal{D}) = \sum_{k=1}^{K} f(\mathcal{D}_k)$, and the statistic can be computed exactly using $O(B + K)$ memory regardless of $N$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-import pandas as pd
-
-# Simulate chunked mean on a large sequence
-chunk_size = 1000
-total, count = 0, 0
-for chunk in pd.read_csv("temperatures.csv", chunksize=chunk_size):
-    total += chunk["temp"].sum()
-    count += len(chunk)
-
-grand_mean = sp.Rational(int(total * 1e6), count * 1000000)  # exact rational
-print("Grand mean:", float(grand_mean))</code></pre>
-<p>This pattern generalises to any associative aggregation—sums, counts, extrema—making it the backbone of scalable data pipelines.</p>
+<p>Modern datasets routinely exceed the capacity of a single machine's memory or even its disk, forcing a shift from "load it all and compute" to a coordinated pipeline: <strong>compression</strong> shrinks data on disk and in transit, <strong>storage solutions</strong> (distributed file systems, object stores) hold it durably across many machines, <strong>indexing</strong> enables fast lookup without scanning everything, <strong>chunking</strong> breaks data into processable units, <strong>DBMS</strong> organize and query it, and <strong>cloud computing</strong> supplies elastic resources on demand. No single technique solves the scale problem alone — they compose.</p>
+<p>Consider a dataset of 50 TB of genomic sequencing reads. Stored raw, it would take days to transfer and cost a fortune to keep on fast disks. Applying compression (e.g., gzip or a domain-specific codec) might reduce it to 12 TB. Because no single server holds 12 TB affordably with redundancy, the data is partitioned into <strong>chunks</strong> — say, 128 MB blocks — and distributed across a cluster using a system like HDFS or Amazon S3, where each chunk is replicated three times for fault tolerance. To find all reads matching a genetic marker without scanning 12 TB, an <strong>index</strong> (a B-tree or inverted index mapping markers to chunk locations) narrows the search to a handful of chunks. A <strong>DBMS</strong> built on top (e.g., a NoSQL store or a query engine like Spark SQL) lets analysts express "find reads from chromosome 7 with mutation X" declaratively, and the underlying engine uses the index and chunk metadata to skip 99% of the data. Finally, <strong>cloud computing</strong> allows the lab to rent 200 compute nodes for the four hours needed to run this query, rather than owning that hardware permanently.</p>
+<p>The problem-solving skill here is matching technique to bottleneck. If the constraint is network bandwidth, prioritize compression. If it's query latency, prioritize indexing. If it's fault tolerance, prioritize replication and chunk placement strategy. If it's cost, prioritize cloud elasticity — scale compute up only during the query window, then release it. A common student mistake is treating these as interchangeable "big data tools" rather than diagnosing which specific constraint (storage cost, I/O throughput, query speed, availability) a given dataset is hitting, then choosing accordingly.</p>
+<pre class="mermaid">flowchart LR
+    A[Raw Dataset] --> B[Compression]
+    B --> C[Chunking]
+    C --> D[Distributed Storage]
+    D --> E[Indexing]
+    E --> F[DBMS Query Layer]
+    F --> G[Cloud Compute Resources]
+    G --> H[Query Result]</pre>
+<p><em>The pipeline transforming a raw large dataset into a queryable, scalable system: each stage addresses a distinct bottleneck (size, distribution, retrieval speed, and elastic compute).</em></p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>

@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,40 +43,32 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-chunking">Data Chunking</h2>
-<p><strong>Definition.</strong> Given a sequence of $n$ data elements $S = (s_1, s_2, \ldots, s_n)$ and a chunk size $k \in \mathbb{Z}^+$, <em>data chunking</em> is the partition of $S$ into $\lceil n/k \rceil$ contiguous subsequences (chunks) $C_1, C_2, \ldots, C_{\lceil n/k \rceil}$, where</p>
-$$C_i = \bigl(s_{(i-1)k+1},\, s_{(i-1)k+2},\, \ldots,\, s_{\min(ik,\, n)}\bigr), \quad i = 1, 2, \ldots, \lceil n/k \rceil.$$
-<p>The chunks are pairwise disjoint and their union recovers $S$ exactly:</p>
-$$\bigsqcup_{i=1}^{\lceil n/k \rceil} C_i = S.$$
-<p>Chunking transforms an arbitrarily large, monolithic sequence into bounded units amenable to parallel processing, memory-constrained computation, or windowed analysis.</p>
-<p><strong>Worked Example.</strong> Let $S = (2, 5, 1, 8, 4, 7, 3, 6)$ with $n = 8$ and chunk size $k = 3$. Then $\lceil 8/3 \rceil = 3$ chunks are formed:</p>
-$$C_1 = (2, 5, 1), \quad C_2 = (8, 4, 7), \quad C_3 = (3, 6).$$
-<p>Note that $|C_3| = 2 < k$; the final chunk holds the remainder $n \bmod k = 2$ elements. The per-chunk sum vector is $(8, 19, 9)$, and the global sum $\sum_{s \in S} s = 36$ equals $8 + 19 + 9$, illustrating that additive aggregates distribute perfectly across chunks.</p>
-<p><strong>Key Theorem (Additivity of Chunk Aggregates).</strong> Let $f : 2^S \to \mathbb{R}$ be a function expressible as a commutative, associative binary operation $\oplus$ applied to element-wise values $\phi(s)$. Then</p>
-$$f(S) = \bigoplus_{i=1}^{\lceil n/k \rceil} f(C_i).$$
-<p><em>Proof sketch.</em> By associativity and commutativity of $\oplus$, the order of application is immaterial. Partitioning $S$ into chunks and reducing each chunk independently before combining yields the same element-wise accumulation as processing $S$ in a single pass. $\square$</p>
-<p>This theorem underpins map-reduce architectures: functions such as sum, product, maximum, and count all satisfy the additivity condition.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, summation, floor, ceiling
+<p>Data chunking is the practice of dividing a large dataset or data stream into smaller, fixed- or variable-size units — called chunks — so that no single operation must hold, transmit, or process the entire dataset at once. This is a practical systems concept: the "correctness" of a chunking scheme is judged by whether it respects memory limits, preserves data integrity across boundaries, and keeps processing efficient, not by a mathematical proof.</p>
+<p>Consider a 50 GB CSV file that must be loaded into a machine with 8 GB of RAM. Reading the whole file with <code>pandas.read_csv()</code> will exhaust memory and crash the process. Instead, you read it in chunks:</p>
+<pre><code>import pandas as pd
 
-# Symbolic chunk count
-n, k = symbols('n k', positive=True, integer=True)
+total_rows = 0
+for chunk in pd.read_csv("large_file.csv", chunksize=100_000):
+    total_rows += len(chunk)
+    # process chunk, e.g., filter, aggregate, write to database
+    chunk.to_sql("staging_table", con=engine, if_exists="append")
 
-# Number of chunks
-num_chunks = ceiling(n / k)
-
-# Verify for n=8, k=3
-print(num_chunks.subs({n: 8, k: 3}))   # → 3
-
-# Concrete chunking utility
-def chunk(seq, k):
-    return [seq[i*k:(i+1)*k] for i in range(-(-len(seq) // k))]
-
-S = [2, 5, 1, 8, 4, 7, 3, 6]
-chunks = chunk(S, 3)
-print(chunks)            # [[2,5,1],[8,4,7],[3,6]]
-print(sum(sum(c) for c in chunks) == sum(S))  # True</code></pre>
+print(total_rows)</code></pre>
+<p>Each chunk (100,000 rows here) is loaded, transformed, and released before the next one arrives, so peak memory usage stays bounded regardless of the file's total size.</p>
+<p>Chunk size is a genuine engineering trade-off, not an arbitrary knob. Small chunks minimize memory footprint but increase overhead (more I/O calls, more function-call and network round-trip costs). Large chunks reduce overhead but risk memory pressure and longer recovery time if one chunk fails mid-process. A common problem-solving heuristic: pick a chunk size such that one chunk comfortably fits within a target fraction (e.g., 10–20%) of available RAM, then benchmark and adjust based on measured throughput.</p>
+<p>Chunking also matters when boundaries carry meaning. If you split a text corpus for a search index, cutting mid-sentence can destroy semantic units; a common fix is to chunk by paragraph or sentence with a small <strong>overlap</strong> (e.g., the last 50 words of chunk $n$ repeated at the start of chunk $n+1$) so that context spanning a boundary is not lost. In distributed systems, chunking additionally enables parallelism: independent chunks can be processed on separate workers simultaneously, which is why frameworks like Hadoop, Spark, and cloud object storage (e.g., splitting files into 64–128 MB blocks) chunk data by default — chunk boundaries double as units of parallel work distribution.</p>
+<pre class="mermaid">flowchart LR
+    A[Large Dataset] --> B[Split into Chunks]
+    B --> C1[Chunk 1]
+    B --> C2[Chunk 2]
+    B --> C3[Chunk 3]
+    C1 --> D[Process / Load]
+    C2 --> D
+    C3 --> D
+    D --> E[Aggregated Result]</pre>
+<p><em>A large dataset is split into chunks, processed independently (in sequence or in parallel), and combined into a final result.</em></p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>

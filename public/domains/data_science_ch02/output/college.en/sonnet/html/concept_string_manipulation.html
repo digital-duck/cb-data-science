@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,30 +43,13 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="string-manipulation">String Manipulation</h2>
-<p><strong>Definition.</strong> A <em>string</em> over an alphabet $\Sigma$ is a finite sequence of symbols drawn from $\Sigma$. Formally, a string $s$ of length $n$ is a function $s : \{0, 1, \ldots, n-1\} \to \Sigma$, and we write $|s| = n$. The set of all finite strings over $\Sigma$, including the empty string $\varepsilon$, is denoted $\Sigma^<em>$. String manipulation encompasses any operation that transforms one or more elements of $\Sigma^</em>$ into another: concatenation, slicing, substitution, splitting, and pattern matching, among others.</p>
-<p>The fundamental binary operation is <em>concatenation</em>. Given strings $s, t \in \Sigma^<em>$, their concatenation $s \cdot t$ (often written $st$) is the string of length $|s| + |t|$ obtained by appending $t$ to $s$. Concatenation is associative, $(r \cdot s) \cdot t = r \cdot (s \cdot t)$, and $\varepsilon$ serves as the identity element, making $(\Sigma^</em>, \cdot, \varepsilon)$ a <em>monoid</em>.</p>
-<p><strong>Worked Example.</strong> Let $\Sigma = \{a, b, \ldots, z\}$ and consider $s = \texttt{"linear"}$, $t = \texttt{"algebra"}$. Concatenation gives $st = \texttt{"linearalgebra"}$ with $|st| = 13 = 6 + 7$. The <em>reverse</em> of $s$, denoted $s^R$, is $\texttt{"raeniL"}$ (case-insensitive here). A string satisfying $s = s^R$ is called a <em>palindrome</em>; the string $\texttt{"racecar"}$ is a canonical example. Slicing extracts a <em>substring</em>: in zero-based indexing, $s[2:5] = \texttt{"nea"}$, corresponding to characters at positions $2, 3, 4$.</p>
-<p><strong>Key Theorem (String Equality via Hashing).</strong> The Rabin–Karp rolling-hash scheme assigns to each string $s = s_0 s_1 \cdots s_{n-1}$ the hash value</p>
-$$H(s) = \sum_{i=0}^{n-1} s_i \, p^{\,i} \pmod{q},$$
-<p>where $p$ is a prime base and $q$ a large prime modulus. With high probability, $H(s) = H(t)$ if and only if $s = t$, enabling substring search in expected $O(n + m)$ time for a text of length $n$ and a pattern of length $m$.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>from sympy import symbols, Function
-
-text    = "the cat sat on the mat"
-pattern = "at"
-
-# find all starting indices of pattern in text
-indices = [i for i in range(len(text)) if text[i:i+len(pattern)] == pattern]
-print("Occurrences of", repr(pattern), "at indices:", indices)
-
-# demonstrate rolling hash concept
-p, q = 31, 10**9 + 9
-def rhash(s):
-    return sum(ord(c) * p**i for i, c in enumerate(s)) % q
-
-print("Hash match:", rhash("at") == rhash("at"), "| Collision test:", rhash("at") == rhash("ta"))</code></pre>
+<p>A string is an ordered sequence of characters, and two operations account for most real-world text processing: <strong>slicing</strong>, which extracts a contiguous subsequence using index positions, and <strong>splitting</strong>, which divides a string into a list of substrings based on a delimiter. Both rely on the same underlying fact — strings are indexed from 0, and negative indices count backward from the end.</p>
+<p>Slicing uses the syntax <code>s[start:stop:step]</code>, where <code>start</code> is inclusive and <code>stop</code> is exclusive. For the string <code>s = "concept-book"</code>, <code>s[0:7]</code> returns <code>"concept"</code>, and <code>s[-4:]</code> returns <code>"book"</code> by counting four characters from the end. The <code>step</code> parameter lets you skip characters or reverse a string entirely: <code>s[::-1]</code> reverses <code>s</code>. Because <code>stop</code> is exclusive, the length of a slice is always <code>stop - start</code> (when step is 1), a detail that prevents off-by-one errors once internalized.</p>
+<p>Splitting solves a different problem: breaking a string into meaningful units. <code>"2026-09-27".split("-")</code> returns <code>["2026", "09", "27"]</code>, converting a flat string into structured fields you can index or convert to integers. <code>split()</code> with no argument splits on any whitespace and collapses repeated spaces, which is why it's the default choice for tokenizing sentences. The inverse operation, <code>"-".join(["2026", "09", "27"])</code>, reconstructs the original string, and mastering this split/join pair is essential for parsing CSV rows, log lines, or file paths.</p>
+<p><strong>Worked example.</strong> Suppose you receive a log line <code>"2026-09-27 14:32:01 ERROR disk full"</code> and need the date and the severity level. First split on whitespace with a limit: <code>parts = line.split(" ", maxsplit=2)</code> gives <code>["2026-09-27", "14:32:01", "ERROR disk full"]</code>. Then slice the first element to pull out just the year: <code>parts[0][:4]</code> yields <code>"2026"</code>. Combining split (to isolate fields) with slice (to extract sub-parts of a field) is the standard pattern for parsing semi-structured text without regular expressions.</p>
+<p><strong>Problem-solving application.</strong> Given a filename <code>"report_final_v3.spl"</code>, extract the version number as an integer. One robust approach: split on underscores to get <code>["report", "final", "v3.spl"]</code>, split the last element on <code>"."</code> to get <code>["v3", "spl"]</code>, then slice off the leading <code>"v"</code> from <code>"v3"</code> and convert with <code>int()</code>. Chaining split and slice operations like this — rather than writing a single complex expression — keeps each transformation legible and testable.</p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>

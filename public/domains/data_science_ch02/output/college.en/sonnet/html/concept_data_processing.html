@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,40 +43,18 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-processing">Data Processing</h2>
-<p><strong>Definition.</strong> <em>Data processing</em> is the systematic transformation of raw observations into a structured, analytically tractable form. Formally, let $\mathcal{D} = \{x_i\}_{i=1}^{n}$ be a finite sample drawn from a population with distribution $P$. A processing pipeline is a composition of functions</p>
-$$
-\phi = \phi_k \circ \phi_{k-1} \circ \cdots \circ \phi_1 : \mathcal{X}_{\text{raw}} \longrightarrow \mathcal{X}_{\text{clean}},
-$$
-<p>where each $\phi_j$ addresses a specific data quality concern: missing-value imputation, outlier removal, type coercion, or feature scaling. The goal is to produce a representation $\tilde{\mathcal{D}} = \phi(\mathcal{D})$ on which subsequent statistical or machine-learning methods yield valid and reproducible results.</p>
-<p><strong>Worked Example.</strong> Consider the sample $\mathcal{D} = \{2,\, 7,\, \text{NaN},\, 105,\, 4\}$ representing daily energy consumption (kWh). Three transformations are applied in sequence.</p>
-<li><strong>Imputation ($\phi_1$):</strong> Replace the missing value with the sample median. The sorted non-missing values are $\{2, 4, 7, 105\}$, giving median $\tilde{m} = (4+7)/2 = 5.5$. The result is $\mathcal{D}^{(1)} = \{2, 7, 5.5, 105, 4\}$.</li>
-<li><strong>Outlier removal ($\phi_2$):</strong> Retain only observations within $\mu \pm 3\sigma$. Here $\mu = 24.7$ and $\sigma \approx 41.8$, so the interval is $(-100.7,\; 150.1)$. All values pass, but in practice the value $105$ warrants domain scrutiny.</li>
-<li><strong>Min–max scaling ($\phi_3$):</strong> Map each observation to $[0,1]$ via</li>
-$$
-x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}.
-$$
-<p>With $x_{\min} = 2$ and $x_{\max} = 105$ the observation $7$ maps to $x' = 5/103 \approx 0.049$.</p>
-<p><strong>Key Theorem (Consistency of Sample Statistics Under Imputation).</strong> Let $\hat{\mu}_n$ denote the sample mean computed after mean imputation of $m$ missing values among $n$ total slots. Then $\hat{\mu}_n$ is identical to the complete-case mean $\bar{x}_{n-m}$, but its variance is underestimated by a factor of $(n-m)/n$. Consequently, imputation inflates the apparent precision of the estimate; variance-corrected inference requires multiple imputation or likelihood-based methods.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-import statistics
-
-data_raw = [2, 7, None, 105, 4]
-
-# Impute with median of non-missing values
-non_missing = [x for x in data_raw if x is not None]
-med = statistics.median(non_missing)
-data_imputed = [x if x is not None else med for x in data_raw]
-
-# Min-max scaling
-x_min, x_max = sp.Rational(min(data_imputed)), sp.Rational(max(data_imputed))
-data_scaled = [sp.Rational(x) - x_min) / (x_max - x_min) for x in data_imputed]
-
-print("Imputed:", data_imputed)
-print("Scaled: ", [float(v) for v in data_scaled])</code></pre>
-<p>Running this cell confirms $\phi_3(\phi_1(\mathcal{D})) = [0,\; 0.049,\; 0.034,\; 1.0,\; 0.019]$, providing a clean, bounded representation ready for downstream analysis.</p>
+<p>Data processing is the pipeline that converts raw, often messy data into a structured form suitable for analysis or modeling. Raw data collected from sensors, surveys, logs, or APIs typically contains missing values, duplicates, inconsistent formats, and outliers. The pipeline follows four stages: <strong>acquisition</strong> (collecting data from its source), <strong>cleaning</strong> (handling missing or erroneous values, removing duplicates, correcting types), <strong>transformation</strong> (reshaping, rescaling, or recoding values into a usable format), and <strong>loading</strong> (storing the result in a format ready for downstream use, such as a dataframe or database table). This four-stage pipeline is the core organizing idea of data processing: every messy-data problem can be located within one of these four stages, which tells you what kind of fix is appropriate.</p>
+<p><strong>Worked example.</strong> Suppose a table of student exam scores has rows with missing scores (<code>NaN</code>) and scores recorded on inconsistent scales (some out of 100, some out of 4.0). This is a cleaning-and-transformation problem. In the cleaning stage, missing values are handled by replacing <code>NaN</code> with the column median rather than the mean, since exam scores are often skewed by a few very low outliers. In the transformation stage, the 4.0-scale scores are converted to the 100-point scale via a linear rescaling: $s_{100} = \frac{s_{4.0}}{4.0} \times 100$. Once every score sits on a common scale with no missing entries, the table is ready to load into a model or summary statistic.</p>
+<p><strong>Problem-solving application.</strong> Consider a dataset where 15% of entries in a "temperature" column are missing, and the missing entries are concentrated among readings from older sensors. A student might be tempted to simply drop those rows, but the missingness here is not random with respect to the data itself — dropping them would bias the analysis toward newer sensors, and the resulting cleaned data would misrepresent the population. The better pipeline choice is to compute the replacement value separately for each sensor group rather than using one global fill value. This illustrates the core skill of data processing: not just mechanically applying cleaning rules, but diagnosing <em>why</em> data is missing and choosing a fix that keeps the cleaned dataset representative of the original.</p>
+<pre class="mermaid">flowchart LR
+    A[Raw Data] --> B[Acquisition]
+    B --> C[Cleaning]
+    C --> D[Transformation]
+    D --> E[Loading]
+    E --> F[Structured Dataset]</pre>
+<p><em>The four-stage data processing pipeline from raw input to analysis-ready output.</em></p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>

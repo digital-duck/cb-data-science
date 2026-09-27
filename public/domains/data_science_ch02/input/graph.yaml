@@ -21,6 +21,9 @@ primitives:
       a population.
     tier: 0
   sampling:
+    diagram:
+      type: flowchart LR
+      hint: "population box → sampling method node (random / stratified / cluster) → sample box → statistical inference arrow back to population; show sample is a subset"
     defines: The process of selecting a subset of a larger population to represent and analyze information
       about that population.
     tier: 0
@@ -41,6 +44,9 @@ primitives:
       by index range (slicing).
     tier: 0
   missing_data:
+    diagram:
+      type: flowchart TD
+      hint: "detect missing values → three strategy branches: impute with mean/median, drop the row, flag as its own category; label when each strategy is appropriate"
     defines: Data points or values absent from a dataset, occurring due to collection errors, corruption,
       or nonresponse, classified as MCAR, MAR, or MNAR.
     tier: 0
@@ -213,4 +219,6 @@ applications:
     - data_chunking
     - dbms
     - cloud_computing
+    - sampling
+    - missing_data
     tier: 5

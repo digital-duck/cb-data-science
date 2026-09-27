@@ -11,6 +11,8 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
@@ -26,6 +28,12 @@ p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
 footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
       font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
 footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
 .page{max-width:780px;margin:0 auto;padding:40px 32px}
 section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
 section:first-of-type{border-top:none;padding-top:0}
@@ -35,28 +43,12 @@ section:first-of-type{border-top:none;padding-top:0}
 <div class="page">
   <main>
     <h2 id="data-indexing">Data Indexing</h2>
-<p><strong>Definition.</strong> Given a finite sequence $A = (a_0, a_1, \ldots, a_{n-1})$ of $n$ elements drawn from a set $S$, a <em>data index</em> is a mapping $\iota : \{0, 1, \ldots, n-1\} \to S$ defined by $\iota(k) = a_k$. More generally, for a multi-dimensional array $A \in S^{d_1 \times d_2 \times \cdots \times d_m}$, the index is a tuple $(i_1, i_2, \ldots, i_m)$ satisfying $0 \le i_j < d_j$ for each $j$, and the element retrieved is $A[i_1, i_2, \ldots, i_m]$. Zero-based indexing — where the first element occupies position $0$ — is the convention adopted in most modern computing systems and throughout this text.</p>
-<p><strong>Worked Example.</strong> Let $A = (7, 3, 11, 5, 9)$, so $n = 5$. The valid indices are $\{0, 1, 2, 3, 4\}$. We have $\iota(0) = 7$, $\iota(2) = 11$, and $\iota(4) = 9$. For a negative offset $k = -1$, many languages define a <em>wrap-around</em> index equivalent to $k \bmod n$, giving $\iota((-1) \bmod 5) = \iota(4) = 9$. For a two-dimensional matrix</p>
-$$M = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix} \in \mathbb{Z}^{2 \times 3},$$
-<p>the element at row $1$, column $2$ is $M[1,2] = 6$, corresponding to the linear offset $1 \cdot 3 + 2 = 5$ in row-major (C-order) storage.</p>
-<p><strong>Key Theorem (Random-Access Cost).</strong> For an array stored in contiguous memory with element size $w$ bytes and base address $\alpha$, the address of $A[i_1, i_2, \ldots, i_m]$ under row-major layout is</p>
-$$\text{addr} = \alpha + w \sum_{j=1}^{m} i_j \prod_{k=j+1}^{m} d_k.$$
-<p>Each address computation requires $O(m)$ arithmetic operations and $O(1)$ memory accesses, so element retrieval runs in constant time $O(1)$ regardless of $n$, the central performance guarantee of array structures.</p>
-<p><strong>Lab Cell.</strong></p>
-<pre><code>import sympy as sp
-
-# Symbolic index address formula
-alpha, w = sp.symbols('alpha w', positive=True)
-i1, i2, d2 = sp.symbols('i1 i2 d2', nonneg=True)
-
-addr = alpha + w * (i1 * d2 + i2)
-print("Address formula:", addr)
-
-# Concrete evaluation: 3-column matrix, element M[1,2]
-print("M[1,2] offset:", addr.subs({alpha: 0, w: 4, i1: 1, i2: 2, d2: 3}))</code></pre>
-<p>Running this cell confirms that $M[1,2]$ lies at byte offset $20$ when each integer occupies $4$ bytes, matching the theoretical formula.</p>
+<p>A database index is an auxiliary data structure that maps values of one or more columns to the physical location of the corresponding rows, so that the database engine can locate matching records without scanning every row in a table. Without an index, a query like "find the customer with <code>id = 4821</code>" requires a full table scan — an $O(n)$ operation where $n$ is the number of rows. With an index built on a balanced search structure, the same lookup drops to $O(\log n)$. This distinction is not cosmetic: for a table with $10^8$ rows, it is the difference between comparing roughly 100 million rows versus about 27.</p>
+<p>Most production databases (PostgreSQL, MySQL, Oracle) implement indexes using a <strong>B-tree</strong> (or its variant, the B+tree), a self-balancing tree where each node holds multiple keys and pointers, and all leaves sit at the same depth. A B-tree of order $m$ guarantees that every internal node has between $\lceil m/2 \rceil$ and $m$ children, which bounds the tree's height at $O(\log_m n)$ — crucially, this base-$m$ logarithm (rather than base-2, as in a binary tree) means the tree stays shallow even for huge tables, minimizing the number of slow disk reads needed per lookup. For exact-match lookups on non-range queries (e.g., hash-map-style key retrieval), some engines instead use a <strong>hash index</strong>, giving expected $O(1)$ lookup but no support for range queries like <code>WHERE age BETWEEN 20 AND 30</code>, since a hash function destroys ordering.</p>
+<p>Consider a table <code>orders(order_id, customer_id, order_date, total)</code> with 50 million rows. A query filtering <code>WHERE customer_id = 4821</code> without an index forces a sequential scan of all 50 million rows. Creating <code>CREATE INDEX idx_customer ON orders(customer_id)</code> builds a B+tree keyed on <code>customer_id</code>; the query planner then traverses roughly $\log_{100}(50{,}000{,}000) \approx 4$ node accesses to locate matching rows.</p>
+<p>The tradeoff is write cost: every <code>INSERT</code> or <code>UPDATE</code> must also update the index, at $O(\log n)$ per index — so tables with many indexes suffer slower writes. The practical design problem is therefore not "index everything" but choosing indexes that match the actual query workload: index columns used in <code>WHERE</code>, <code>JOIN</code>, and <code>ORDER BY</code> clauses, and consider composite indexes when queries filter on multiple columns together, since a composite index's column order determines which query patterns it can serve efficiently.</p>
   </main>
-  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
 </div>
 </body>
 </html>
