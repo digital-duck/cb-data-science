@@ -1,0 +1,142 @@
+domain: data_science_ch10
+sources:
+  audience:
+    label: Audience
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  technical_report_structure:
+    label: Technical Report Structure
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  executive_dashboard:
+    label: Executive (Data) Dashboard
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  layered_approach:
+    label: Layered Approach
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  version_control_system:
+    label: Version Control System
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  data_visualization_choice:
+    label: Choosing Graphs vs. Tables
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  alt_text:
+    label: Alt Text
+    sections:
+    - id: ch10_s10_1
+      title: 10.1 Writing an Informative Report
+  assumption:
+    label: Assumption
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  constraint:
+    label: Constraint
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  implicit_bias:
+    label: Implicit Bias
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  measures_of_fit:
+    label: Measures of Fit
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  r_squared:
+    label: R-squared (Coefficient of Determination)
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  overfitting:
+    label: Overfitting
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  validation:
+    label: Validation
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  cross_validation:
+    label: Cross-Validation
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  bootstrap_method:
+    label: Bootstrap Method
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  k_fold_cross_validation:
+    label: K-Fold Cross-Validation
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  leave_one_out_cross_validation:
+    label: Leave-One-Out Cross-Validation (LOOCV)
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  classification_accuracy_metrics:
+    label: Classification Accuracy, Precision, Recall, F1
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  confusion_matrix:
+    label: Confusion Matrix
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  regression_error_measures:
+    label: Regression Error Measures
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  aic_bic:
+    label: AIC and BIC
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  sensitivity_analysis:
+    label: Sensitivity Analysis
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  monte_carlo_simulation:
+    label: Monte Carlo Simulation
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  documenting_strengths_weaknesses:
+    label: Documenting Strengths and Weaknesses
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  peer_feedback:
+    label: Peer Feedback
+    sections:
+    - id: ch10_s10_2
+      title: 10.2 Validating Your Model
+  executive_summary:
+    label: Executive Summary
+    sections:
+    - id: ch10_s10_3
+      title: 10.3 Effective Executive Summaries
+  actionable_advice:
+    label: Actionable Advice
+    sections:
+    - id: ch10_s10_3
+      title: 10.3 Effective Executive Summaries

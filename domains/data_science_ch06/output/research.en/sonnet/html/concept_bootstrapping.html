@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bootstrapping | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="bootstrapping">Bootstrapping</h2>
+<p><strong>Definition.</strong> Let $X_1, \ldots, X_n \overset{\text{iid}}{\sim} F$ for some unknown distribution $F$ on $\mathbb{R}^d$, and let $\theta = T(F)$ be a functional of interest (e.g., the mean, median, or a regression coefficient). The <em>nonparametric bootstrap</em> (Efron, 1979) estimates the sampling distribution of $\hat{\theta}_n = T(\hat{F}_n)$, where $\hat{F}_n$ is the empirical distribution, by the following procedure: draw $B$ independent bootstrap samples $X_1^<em>, \ldots, X_n^</em> \overset{\text{iid}}{\sim} \hat{F}_n$ (i.e., sample with replacement from the observed data), compute $\hat{\theta}_n^{<em>(b)} = T(\hat{F}_n^{</em>(b)})$ for each replicate $b$, and approximate the distribution of $\hat{\theta}_n - \theta$ by that of $\hat{\theta}_n^* - \hat{\theta}_n$ over the bootstrap replicates.</p>
+<p><strong>Theorem (Bootstrap Consistency).</strong> Suppose $T$ is Hadamard differentiable at $F$ tangentially to a set $\mathcal{D}_0$ containing the support of the limit process of $\sqrt{n}(\hat{F}_n - F)$, and let $\mathbb{G}_F$ denote the $F$-Brownian bridge. Then, conditionally on the data (in probability),</p>
+$$\sqrt{n}\bigl(\hat{\theta}_n^* - \hat{\theta}_n\bigr) \xrightarrow{d} T'_F(\mathbb{G}_F),$$
+<p>where $T'_F$ is the Hadamard derivative of $T$ at $F$, and the limit coincides with the unconditional limit $\sqrt{n}(\hat{\theta}_n - \theta) \xrightarrow{d} T'_F(\mathbb{G}_F)$.</p>
+<p><strong>Sketch.</strong> The key ingredient is that the empirical process $\sqrt{n}(\hat{F}_n - F)$ converges weakly to $\mathbb{G}_F$ in $\ell^\infty(\mathcal{F})$ (the Glivenko–Cantelli and Donsker theorems). The bootstrap empirical process $\sqrt{n}(\hat{F}_n^* - \hat{F}_n)$ converges to the same limit conditionally on the data, by Multinomial$(n; 1/n, \ldots, 1/n)$ fluctuations of the bootstrap weights. Hadamard differentiability then propagates convergence through the functional $T$ via the functional delta method. See van der Vaart and Wellner (1996, Chapter 3.9) for the complete argument under minimal measurability conditions.</p>
+<p><strong>Literature context.</strong> The bootstrap is theoretically well-understood for smooth functionals and first-order statistics: consistency and second-order accuracy (Beran 1988; Hall 1992) are classical. The picture grows richer—and more open—at the boundaries: (i) <em>non-smooth functionals</em> such as the maximum or quantile regression at non-unique solutions can fail to be Hadamard differentiable, invalidating standard consistency (Dümbgen 1993; Fang and Santos 2019); (ii) <em>high-dimensional and heavy-tailed settings</em> where $d/n \not\to 0$ require multiplier bootstrap corrections (Chernozhukov, Chetverikov, and Kato 2013); (iii) <em>bootstrap for dependent data</em> (block bootstrap, stationary bootstrap) introduces tuning choices whose optimal block length remains an active estimation problem.</p>
+<p><strong>Suggested investigation.</strong> Fix a non-smooth functional — the $\ell^\infty$ norm $T(F) = \|F\|_\infty$, or the $p$-th sample quantile at $p = 0.5$ with a tied data-generating distribution — and compare (a) the standard nonparametric bootstrap, (b) the $m$-out-of-$n$ bootstrap with $m = n^{2/3}$, and (c) subsampling (Politis and Romano 1994) at coverage level $1 - \alpha = 0.95$. Vary $n \in \{50, 200, 1000\}$ and empirically measure coverage of the resulting confidence intervals over $R = 2000$ Monte Carlo replications. Derive analytically which of (a)–(c) is consistent in each case using the Hadamard differentiability criterion, and verify that the empirical coverages align with the theoretical prediction.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (1) state precisely which notion of bootstrap consistency is in play and what smoothness conditions $T$ must satisfy; (2) provide the functional delta method step explicitly rather than citing it as a black box; (3) separate Monte Carlo error from bootstrap error in the variance decomposition; and (4) document any discrepancy between the theoretical coverage guarantee and the finite-sample empirical coverage, framing it as a gap motivating higher-order or robust bootstrap corrections.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

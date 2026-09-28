@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variance | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="variance">Variance</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and $X : \Omega \to \mathbb{R}$ a random variable with $X \in L^2(\mathbb{P})$. The <em>variance</em> of $X$ is defined as</p>
+$$\mathrm{Var}(X) := \mathbb{E}\!\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2,$$
+<p>provided all expectations exist and are finite. The non-negative square root $\sigma(X) := \sqrt{\mathrm{Var}(X)}$ is the <em>standard deviation</em>, which restores dimensional homogeneity with $X$. The variance is the second central moment: $\mathrm{Var}(X) = \mu_2'$, where $\mu_k' := \mathbb{E}[(X - \mathbb{E}[X])^k]$.</p>
+<p><strong>Theorem (Bienaymé's identity).</strong> For any finite collection of pairwise uncorrelated random variables $X_1, \dots, X_n \in L^2(\mathbb{P})$,</p>
+$$\mathrm{Var}\!\left(\sum_{i=1}^n X_i\right) = \sum_{i=1}^n \mathrm{Var}(X_i).$$
+<p><em>Proof.</em> Write $S = \sum_i X_i$ and $\mu_i = \mathbb{E}[X_i]$. Then</p>
+$$\mathrm{Var}(S) = \mathbb{E}\!\left[\left(\sum_i (X_i - \mu_i)\right)^2\right] = \sum_i \mathrm{Var}(X_i) + 2\sum_{i < j} \mathrm{Cov}(X_i, X_j).$$
+<p>Pairwise uncorrelatedness gives $\mathrm{Cov}(X_i, X_j) = 0$ for $i \neq j$, and the cross terms vanish. $\square$</p>
+<p>Bienaymé's identity is the structural fact behind the $1/\sqrt{n}$ convergence rate in the Law of Large Numbers and the Central Limit Theorem; without it, error analysis in statistics would lose its additive backbone.</p>
+<p><strong>Literature context.</strong> The identity between $\mathrm{Var}(X)$ and the $L^2$ norm $\|X - \mathbb{E}[X]\|_2^2$ situates variance within functional analysis: the space $L^2(\mathbb{P})$ is a Hilbert space, and variance is the squared norm of the centered projection. This perspective, formalized in Loève (1963) and Billingsley (1995), underpins reproducing kernel Hilbert space methods and Gaussian process regression, where variance propagation governs posterior uncertainty. In robust statistics (Huber 1981; Hampel et al. 1986), variance as a dispersion measure is known to be <em>non-robust</em>: a single outlier can inflate $\mathrm{Var}(X)$ without bound, motivating median absolute deviation and interquartile range as alternatives. The bias–variance decomposition in statistical learning theory (Geman et al. 1992; Hastie, Tibshirani & Friedman 2009) further splits the expected squared error of an estimator into irreducible noise, squared bias, and variance, with open questions remaining about optimal bias–variance trade-off schedules in nonparametric regimes and modern overparameterized neural networks (Belkin et al. 2019, "double descent").</p>
+<p><strong>Suggested investigation.</strong> Derive the bias–variance decomposition for $k$-nearest-neighbor regression as $k$ varies from $1$ to $n$. Fix a data-generating process, e.g., $Y = \sin(2\pi X) + \varepsilon$, $\varepsilon \sim \mathcal{N}(0, \sigma^2)$, sample $B = 500$ bootstrap datasets of size $n = 100$, and estimate $\mathrm{Bias}^2(\hat{f})$ and $\mathrm{Var}(\hat{f})$ at a held-out grid of points as functions of $k$. Identify the optimal $k^<em>$ empirically, then compare to the theoretically predicted rate $k^</em> \asymp n^{4/5}$ (Stone 1980). Repeat for noisy labels ($\sigma^2 \in \{0.1, 0.5, 1.0\}$) and report how $k^*$ shifts with noise level.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state the decomposition theorem precisely and prove it for the mean squared error of an arbitrary estimator; (ii) describe the simulation design, including the seed, $B$, $n$, and grid density, so results are reproducible; (iii) present a single figure with bias², variance, and total error curves plotted against $k$ on the same axes; (iv) quantify the gap between empirical $k^*$ and the Stone rate and offer an explanation for any discrepancy; and (v) discuss whether the trade-off curve changes character in the overparameterized limit, connecting the experiment to the double-descent literature.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

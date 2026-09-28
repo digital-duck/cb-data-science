@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geospatial Data | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="geospatial-data">Geospatial Data</h2>
+<p><strong>Definition.</strong> A <em>geospatial dataset</em> is a collection of observations $\mathcal{D} = \{(\mathbf{s}_i, y_i)\}_{i=1}^n$ where each $\mathbf{s}_i \in \mathcal{S} \subseteq \mathbb{R}^d$ denotes a spatial location (typically $d = 2$ on the sphere $\mathbb{S}^2$ or in a projected plane) and $y_i \in \mathbb{R}$ (or $\mathbb{R}^p$ for multivariate fields) is an attribute observed at that location. The defining feature is <em>spatial dependence</em>: the stochastic process $\{Y(\mathbf{s}) : \mathbf{s} \in \mathcal{S}\}$ generating the observations is assumed to satisfy Tobler's first law informally, and formally to violate the classical i.i.d. assumption in ways that are structured by proximity in $\mathcal{S}$.</p>
+<p><strong>Core model and result.</strong> The standard probabilistic framework models $Y(\mathbf{s})$ as a Gaussian process (GP), $Y \sim \mathcal{GP}(\mu(\cdot), k(\cdot, \cdot))$, with mean function $\mu$ and covariance kernel $k$. For a stationary and isotropic field, $k(\mathbf{s}_i, \mathbf{s}_j) = \sigma^2 \rho(\|\mathbf{s}_i - \mathbf{s}_j\|)$ where $\rho : [0,\infty) \to [-1,1]$ is the correlation function. A central result governing valid choices of $\rho$ is Bochner's theorem:</p>
+<p>> <strong>Theorem (Bochner).</strong> A continuous function $\rho : \mathbb{R}^d \to \mathbb{R}$ is positive definite if and only if it is the Fourier transform of a finite non-negative Borel measure $F$ on $\mathbb{R}^d$: > $$\rho(\mathbf{h}) = \int_{\mathbb{R}^d} e^{i \boldsymbol{\omega}^\top \mathbf{h}} \, dF(\boldsymbol{\omega}).$$</p>
+<p>This characterization is not merely theoretical machinery; it directly dictates which correlation families are permissible. The Matérn class $\rho_\nu(r) \propto r^\nu K_\nu(r)$, where $K_\nu$ is the modified Bessel function of the second kind and $\nu > 0$ controls differentiability, is the canonical choice because it interpolates continuously between exponential ($\nu = 1/2$) and squared-exponential ($\nu \to \infty$) behavior and places $\nu$ as an estimable parameter. Stein (1999) established that the Matérn class is <em>optimal</em> for interpolation under infill asymptotics: only the microergodic parameters matter for prediction, not the full parameter vector.</p>
+<p><strong>Literature context and open problems.</strong> The classical treatment in Cressie (1993) and the modern statistical perspective in Stein (1999) treat $\mathcal{S}$ as Euclidean. When $\mathcal{S} = \mathbb{S}^2$ (global data), valid isotropic covariance functions are characterized by Schoenberg's representation in terms of Legendre polynomials, and the Matérn class does not directly transfer — an active research problem. A further open challenge is <em>non-stationarity</em>: real geospatial processes (land temperature, precipitation) exhibit spatial variation in their covariance structure. Approaches include spatially varying parameters (Paciorek & Schervish 2006), deformation models (Sampson & Guttorp 1992), and deep kernel learning, but scalable and theoretically grounded non-stationary models remain an open frontier. Computational scaling is a parallel challenge: naïve GP inference is $\mathcal{O}(n^3)$; sparse approximations (Vecchia, NNGP, inducing points) reduce this to $\mathcal{O}(n)$ or $\mathcal{O}(nm^2)$ but introduce approximation error whose spatial distribution is not fully characterized.</p>
+<p><strong>Suggested investigation.</strong> Obtain a publicly available spatial dataset (e.g., NOAA temperature stations, WorldClim precipitation grids). Fit a stationary Matérn GP by maximum likelihood, estimating $(\sigma^2, \nu, \ell)$ jointly. Then test for non-stationarity using the residual variogram computed over spatial quadrants. If evidence of non-stationarity is found, implement a simple spatially-varying lengthscale via a log-GP prior on $\ell(\mathbf{s})$ and compare predictive log-likelihoods on held-out stations.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the estimated covariance parameters and their uncertainty (profile likelihood contours), (2) a variogram diagnostic plot comparing empirical and model-fitted semivariance, (3) a leave-one-out cross-validation comparison of stationary versus non-stationary models, and (4) a discussion of which parameters are microergodic and which are not identifiable under the sampling design used.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

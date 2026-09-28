@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="probability">Probability</h2>
+<p><strong>Definition.</strong> A <em>probability space</em> is a triple $(\Omega, \mathcal{F}, \mathbb{P})$ where $\Omega$ is a sample space, $\mathcal{F} \subseteq 2^{\Omega}$ is a $\sigma$-algebra of events, and $\mathbb{P} : \mathcal{F} \to [0,1]$ is a <em>probability measure</em> satisfying Kolmogorov's axioms: (K1) $\mathbb{P}(\Omega) = 1$; (K2) $\mathbb{P}(A) \geq 0$ for all $A \in \mathcal{F}$; (K3) for any countable collection of pairwise disjoint events $\{A_i\} \subset \mathcal{F}$,</p>
+$$\mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mathbb{P}(A_i).$$
+<p>A measurable function $X : (\Omega, \mathcal{F}) \to (\mathbb{R}, \mathcal{B}(\mathbb{R}))$ is a <em>random variable</em>; its distribution $\mu_X = \mathbb{P} \circ X^{-1}$ is the pushforward measure encoding all probabilistic information about $X$. A random variable is not a second independent primitive but the canonical way to extract numerical information from a fixed probability space — its properties are entirely inherited from the underlying $(\Omega, \mathcal{F}, \mathbb{P})$.</p>
+<p><strong>Theorem (Law of Large Numbers, strong form).</strong> Let $X_1, X_2, \ldots$ be i.i.d. with $\mathbb{E}[|X_1|] < \infty$ and $\mu = \mathbb{E}[X_1]$. Then</p>
+$$\bar{X}_n := \frac{1}{n}\sum_{i=1}^n X_i \xrightarrow{a.s.} \mu \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> Apply the Borel–Cantelli lemma to the truncated variables $X_i^{(M)} = X_i \mathbf{1}_{|X_i| \leq M}$, pass $M \to \infty$ by monotone convergence, and invoke the ergodic structure of the shift map on $\prod_i \Omega_i$. The moment condition $\mathbb{E}[|X_1|] < \infty$ is both necessary and sufficient for almost-sure convergence (Etemadi, 1981). $\square$</p>
+<p>The theorem makes the Kolmogorov measure do real work: axiom (K3) is what licenses passing limits through $\mathbb{P}$, and $\mathcal{F}$ must be rich enough to contain the event $\{\omega : \bar{X}_n(\omega) \to \mu\}$ for the almost-sure statement to be well-posed.</p>
+<p><strong>Literature context.</strong> The measure-theoretic axiomatisation (Kolmogorov, 1933) settled a foundational dispute among frequentist, Bayesian, and logical interpretations by making $\mathbb{P}$ a function on an agreed $\sigma$-algebra and deferring philosophical commitment to the interpretation layer. What remains genuinely open is how to extend the axioms coherently to <em>non-measurable</em> sets (an artefact of the Axiom of Choice), to <em>noncommutative</em> sample spaces (quantum probability, Segal 1947; Accardi 1981), and to <em>algorithmic</em> settings where $\mathbb{P}$ is replaced by descriptional complexity (Li & Vitányi, 2008). The central limit theorem and Berry–Esseen refinements quantify Gaussian approximation rates, but sharp constants in high-dimensional regimes remain active (Chatterjee 2006; Meckes 2019).</p>
+<p><strong>Suggested investigation.</strong> Use the LLN as a direct probe of axiom (K3). Fix four distributions: (i) $\mathrm{Uniform}(0,1)$, (ii) $\mathrm{Exponential}(1)$, (iii) Student-$t_3$ (finite mean, heavy tails), and (iv) $\mathrm{Cauchy}(0,1)$ (no finite mean). For each, simulate $10^4$ independent trajectories of $\bar{X}_n$ for $n \in \{10,\,10^2,\,10^3,\,10^4\}$ and plot the empirical distribution of $\bar{X}_n$ across trajectories at each $n$. Cases (i)–(iii) should concentrate around $\mu$; the Cauchy sample mean remains Cauchy regardless of $n$, exposing the necessity of $\mathbb{E}[|X_1|] < \infty$ as a structural condition rather than a proof artifact. As an extension, replace the Cauchy with a truncated Cauchy supported on $[-M, M]$, restore finite-mean and verify convergence, then estimate the truncation threshold $M^*(n)$ at which concentration becomes detectable at sample size $n$.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should open by specifying $(\Omega, \mathcal{F}, \mathbb{P})$ for each scenario — making explicit what $\Omega$ is, what $\mathcal{F}$ is generated by, and how $\mathbb{P}$ is defined — before any simulation results are presented. The analysis should state the LLN formally, identify where axiom (K3) enters the proof, and present Monte Carlo results with confidence intervals that separate sampling error from model uncertainty. The discussion should articulate precisely why the Cauchy failure is structural, identify the one assumption whose relaxation changes the qualitative behaviour of $\bar{X}_n$, and note where measure theory is load-bearing versus where elementary arguments suffice.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

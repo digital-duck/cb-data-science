@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gis Mapping | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="gis-mapping">Gis Mapping</h2>
+<p><strong>Definition.</strong> A <em>geographic information system</em> (GIS) map is a composition of three mathematical structures: a <em>geodetic datum</em> $(\mathcal{E}, \phi_0, \lambda_0, a, f)$ that fixes an ellipsoidal model of the Earth with semi-major axis $a$ and flattening $f$; a <em>map projection</em> $\pi: \mathcal{E} \to \mathbb{R}^2$ that carries geodetic coordinates $(\phi, \lambda)$ to Cartesian plane coordinates $(x, y)$; and a <em>spatial index</em> over the projected geometry, typically an R-tree or a space-filling curve. The projection $\pi$ is a smooth map between Riemannian manifolds, and its distortion properties are the central object of study.</p>
+<p><strong>Theorem (Gauss, 1827).</strong> No smooth map from a sphere $S^2$ (or any surface of non-zero Gaussian curvature) to the Euclidean plane $\mathbb{R}^2$ can preserve all of angle, area, and distance simultaneously. Equivalently, there is no isometric embedding of $S^2$ into $\mathbb{R}^2$.</p>
+<p><em>Proof sketch.</em> The Theorema Egregium states that Gaussian curvature $K$ is an intrinsic invariant: an isometry $f: (M, g) \to (N, h)$ satisfies $K_M = K_N \circ f$. Since $K_{S^2} = 1/R^2 > 0$ and $K_{\mathbb{R}^2} = 0$ everywhere, no such isometry can exist. $\square$</p>
+<p>Distortion is quantified via <strong>Tissot's indicatrix</strong>: at each point $p$, the differential $d\pi_p$ maps the unit circle in the tangent plane $T_p \mathcal{E}$ to an ellipse with semi-axes $a(p)$ and $b(p)$. An <em>equal-area</em> projection satisfies $a(p)b(p) = \text{const}$; a <em>conformal</em> projection satisfies $a(p) = b(p)$ (locally angle-preserving). The classic result is that these two properties are mutually exclusive everywhere unless the domain is flat. The <em>angular distortion</em> $\omega$ at $p$ satisfies $\sin(\omega/2) = (a - b)/(a + b)$, and the <em>areal distortion</em> is $S = ab/\sigma_0^2$ where $\sigma_0$ is the reference scale factor.</p>
+<p><strong>Computational geometry layer.</strong> On the plane, spatial queries (containment, intersection, $k$-nearest-neighbor) are answered using R-trees, whose worst-case query time is $O(\sqrt{n})$ for $n$ polygons in 2D, or approximately $O(\log n)$ in practice with good packing heuristics. The <em>Dimensionally Extended 9-Intersection Model</em> (DE-9IM) gives a formal predicate calculus over topological relations (touches, crosses, overlaps, etc.) between geometric objects, forming the semantic backbone of spatial SQL in systems like PostGIS.</p>
+<p><strong>Literature context.</strong> Snyder (1987) remains the canonical reference for projection formulae; Bugayevskiy & Snyder (1995) extend the theory to ellipsoidal models. Open questions of current interest include: (1) optimal projection design for minimizing total distortion over a given region of interest (a variational problem over the space of smooth maps); (2) differential-geometric formulations of conformal mapping via the Beltrami equation $f_{\bar{z}} = \mu f_z$ with complex dilatation $\mu$, which appears in quasi-conformal cartography (Choi et al., 2015); (3) data-driven projection learning, where $\pi$ is parameterized by a neural network trained to minimize distortion metrics over a dataset of query polygons.</p>
+<p><strong>Suggested investigation.</strong> Choose two projections of the same region — e.g., Web Mercator (EPSG:3857) and Albers Equal-Area Conic (EPSG:5070) for the contiguous United States. (i) Compute and visualize Tissot's indicatrices on a $5° \times 5°$ grid for each. (ii) Measure the relative area error and angular error at each grid point. (iii) Execute a fixed spatial join (e.g., county polygon intersects census tract centroid) under both projections and record whether topology is preserved. (iv) Profile R-tree query time as a function of $n$ for both projected datasets and compare empirical slopes against $O(\sqrt{n})$ and $O(\log n)$ bounds.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the theoretical distortion bound for each projection class (with derivation from Tissot's formula), the empirical distortion field measured from your grid experiment, a comparison of topological correctness across projections for the spatial join, and a performance table for the R-tree queries. The conclusion should argue which projection is more appropriate for the given analytical task and region, grounded in the distortion metrics rather than convention.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+domain: statistics_ch4
+primitives:
+  point_estimate:
+    defines: A single value, such as a sample mean or sample proportion, used to estimate an unknown population
+      parameter.
+    tier: 0
+  sampling_distribution:
+    defines: A probability distribution of a sample statistic based on all possible random samples of
+      a given size from a population.
+    tier: 0
+  critical_value:
+    defines: The z-score or t-score that cuts off the area under a distribution curve corresponding to
+      a specified confidence level, used in margin-of-error calculations.
+    tier: 0
+  t_distribution:
+    defines: A bell-shaped, symmetric distribution with thicker tails than the normal distribution, used
+      when the population standard deviation is unknown.
+    tier: 0
+  null_hypothesis:
+    defines: A statement of no effect or no change in the population, asserting a population parameter
+      equals a specific value.
+    tier: 0
+  alternative_hypothesis:
+    defines: The complementary statement to the null hypothesis, asserting the population parameter differs
+      from the null-hypothesized value.
+    tier: 0
+  level_of_significance:
+    defines: The maximum allowed probability of making a Type I error, used as the threshold for rejecting
+      the null hypothesis.
+    tier: 0
+  type_i_type_ii_errors:
+    defines: 'The two possible errors in hypothesis testing: rejecting a true null hypothesis (Type I)
+      or failing to reject a false null hypothesis (Type II).'
+    tier: 0
+  independent_vs_dependent_samples:
+    defines: A distinction between samples with no inherent pairing (independent) and samples that can
+      be matched or paired across two groups (dependent/matched pairs).
+    tier: 0
+  scatterplot:
+    defines: A graphical display of paired (x, y) data points used to visually assess the relationship
+      between two variables.
+    tier: 0
+  f_distribution:
+    defines: A right-skewed probability distribution used as the basis for ANOVA hypothesis testing, characterized
+      by numerator and denominator degrees of freedom.
+    tier: 0
+concepts:
+  central_limit_theorem:
+    defines: The theorem describing how the sampling distribution of sample means approximates a normal
+      distribution as sample size grows or when the population is normal.
+    composed_of:
+    - sampling_distribution
+    tier: 1
+  margin_of_error:
+    defines: The maximum expected distance between the point estimate and the true population parameter,
+      used to construct a confidence interval.
+    composed_of:
+    - critical_value
+    tier: 1
+  test_statistic:
+    defines: A standardized numerical value, such as a z-score or t-score, calculated from sample data
+      to assess evidence against the null hypothesis.
+    composed_of:
+    - point_estimate
+    - null_hypothesis
+    tier: 1
+  correlation_coefficient:
+    defines: A numeric measure, ranging from -1 to 1, of the strength and direction of the linear relationship
+      between two variables.
+    composed_of:
+    - scatterplot
+    tier: 1
+  confidence_interval:
+    defines: A range, centered on a point estimate, within which a population parameter is likely to fall
+      at a stated confidence level.
+    composed_of:
+    - point_estimate
+    - margin_of_error
+    tier: 2
+  sample_size_determination:
+    defines: Methods for calculating the minimum sample size needed to achieve a desired margin of error
+      when estimating a mean or proportion.
+    composed_of:
+    - margin_of_error
+    - critical_value
+    tier: 2
+  hypothesis_testing:
+    defines: A statistical method for using sample data to test claims about population parameters by
+      comparing a test statistic and p-value against a significance level.
+    composed_of:
+    - null_hypothesis
+    - alternative_hypothesis
+    - test_statistic
+    - level_of_significance
+    tier: 2
+  p_value:
+    defines: The probability of obtaining a sample statistic as extreme as, or more extreme than, the
+      observed value, assuming the null hypothesis is true.
+    composed_of:
+    - test_statistic
+    - null_hypothesis
+    tier: 2
+  linear_regression:
+    defines: A method for modeling the relationship between an independent and dependent variable using
+      a best-fit straight line equation.
+    composed_of:
+    - scatterplot
+    - correlation_coefficient
+    tier: 2
+  confidence_interval_mean_known_sd:
+    defines: A confidence interval for a population mean calculated using the normal distribution when
+      the population standard deviation is known.
+    composed_of:
+    - confidence_interval
+    - central_limit_theorem
+    tier: 3
+  confidence_interval_mean_unknown_sd:
+    defines: A confidence interval for a population mean calculated using the t-distribution and sample
+      standard deviation when the population standard deviation is unknown.
+    composed_of:
+    - confidence_interval
+    - t_distribution
+    tier: 3
+  confidence_interval_proportion:
+    defines: A confidence interval for a population proportion based on the normal approximation to the
+      binomial distribution.
+    composed_of:
+    - confidence_interval
+    - central_limit_theorem
+    tier: 3
+  bootstrapping:
+    defines: A nonparametric method for constructing a confidence interval by repeatedly resampling with
+      replacement from the observed data.
+    composed_of:
+    - point_estimate
+    - confidence_interval
+    tier: 3
+  one_sample_hypothesis_test_mean:
+    defines: A hypothesis test procedure for a population mean using the normal or t-distribution depending
+      on whether the population standard deviation is known.
+    composed_of:
+    - hypothesis_testing
+    - t_distribution
+    - p_value
+    tier: 3
+  one_sample_hypothesis_test_proportion:
+    defines: A hypothesis test procedure for a population proportion using the normal approximation to
+      the binomial distribution.
+    composed_of:
+    - hypothesis_testing
+    - p_value
+    tier: 3
+  two_sample_hypothesis_test_means:
+    defines: A hypothesis test comparing the means of two independent samples using the t-distribution
+      when population standard deviations are unknown.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    - t_distribution
+    tier: 3
+  matched_pairs_hypothesis_test:
+    defines: A hypothesis test for dependent (paired) samples based on the mean and standard deviation
+      of the differences between paired observations.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    - t_distribution
+    tier: 3
+  two_sample_hypothesis_test_proportions:
+    defines: A hypothesis test comparing the proportions of two independent samples using a weighted estimate
+      and the normal distribution.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    tier: 3
+  correlation_significance_test:
+    defines: A hypothesis test used to determine whether a sample correlation coefficient indicates a
+      statistically significant linear relationship in the population.
+    composed_of:
+    - correlation_coefficient
+    - hypothesis_testing
+    tier: 3
+  least_squares_method:
+    defines: A mathematical technique that determines the best-fit regression line by minimizing the sum
+      of squared residuals.
+    composed_of:
+    - linear_regression
+    tier: 3
+  residual:
+    defines: The difference between an observed y-value and the value predicted by the regression equation.
+    composed_of:
+    - linear_regression
+    tier: 3
+  regression_slope_intercept_interpretation:
+    defines: The practice of interpreting the regression slope as the average change in y per unit increase
+      in x, and the intercept as the expected y-value when x equals zero.
+    composed_of:
+    - linear_regression
+    tier: 3
+  anova:
+    defines: A statistical method for comparing three or more population means to determine if at least
+      one differs from the others.
+    composed_of:
+    - f_distribution
+    - hypothesis_testing
+    tier: 3
+  one_way_anova_procedure:
+    defines: The step-by-step calculation of sum of squares between/within, mean squares, and the F test
+      statistic to test equality of three or more means.
+    composed_of:
+    - anova
+    tier: 4
+applications:
+  python_statistical_computing:
+    defines: The use of Python libraries such as SciPy to compute confidence intervals, hypothesis tests,
+      correlation, regression, and ANOVA results.
+    needs:
+    - confidence_interval
+    - hypothesis_testing
+    - correlation_coefficient
+    - linear_regression
+    - anova
+    tier: 4

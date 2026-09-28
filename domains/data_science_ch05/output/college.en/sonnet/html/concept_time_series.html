@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Series | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="time-series">Time Series</h2>
+<p>A time series is a sequence of numerical measurements of the same variable, recorded at regular, ordered intervals — daily closing stock prices, monthly unemployment rates, hourly temperature readings. What distinguishes a time series from an ordinary list of numbers is that order matters: the value at time $t$ is understood to be related to the values that came before it. Formally, we write it as $x_1, x_2, \ldots, x_T$, where the subscript indexes time rather than an arbitrary label, and $T$ is the number of observations.</p>
+<p><strong>Worked example.</strong> Suppose a small bakery records weekly sales (in units) for eight weeks: 120, 135, 128, 150, 142, 160, 155, 170. Plotted against time, this sequence reveals two things a plain average would hide: an upward trend (sales are generally climbing) and short-term fluctuation (week-to-week ups and downs around that trend). A simple way to separate signal from noise is a moving average — replacing each point with the average of itself and its neighbors. A 3-week moving average centered on week 4, for instance, is $(128 + 150 + 142)/3 \approx 140$. Repeating this across the series smooths out the week-to-week bounce and makes the underlying trend easier to see.</p>
+<p><strong>Problem-solving application.</strong> Time series analysis is used whenever you need to forecast a future value, detect a change in pattern, or decide whether a fluctuation is "normal" or a genuine anomaly. The central question is always the same: how much of the movement in the data is trend, how much is a pattern that repeats at fixed intervals (seasonality, like higher retail sales every December), and how much is just random noise left over once both are accounted for? A data analyst forecasting next month's bakery sales would separate the trend and seasonal parts using tools like the moving average above, then look at how far the actual values deviate from that smoothed line — the size of those leftover deviations tells you how much confidence to place in the forecast. The same logic underlies far higher-stakes applications: epidemiologists tracking whether daily case counts are truly declining or just noisy, and central banks deciding whether an inflation uptick is a lasting trend or a temporary blip. In every case, the discipline is the same — don't react to a single data point; look at the ordered sequence, separate trend from noise, and only then draw a conclusion.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Level: College &middot; Language: EN &middot; Model: sonnet</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

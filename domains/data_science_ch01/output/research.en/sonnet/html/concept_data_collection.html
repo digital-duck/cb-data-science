@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Collection | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-collection">Data Collection</h2>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ be a measurable space (the <em>feature space</em>) and $\mathcal{Y}$ a response space. A <em>data collection protocol</em> is a triple $\mathcal{D} = (\Pi, \mu, n)$, where $\Pi : \mathcal{X} \to [0,1]$ is a sampling distribution over candidate instances, $\mu : \mathcal{X} \to \mathcal{Y}$ is the (unknown) labeling mechanism, and $n \in \mathbb{N}$ is the budget. The output is a dataset $S = \{(x_i, y_i)\}_{i=1}^n$ with $(x_i, y_i) \sim \Pi \otimes \mu$. The central question is not merely <em>how</em> to draw samples, but <em>which</em> $\Pi$ minimizes downstream estimation error under budget constraints — a question that remains incompletely answered for heterogeneous, high-dimensional, or sequentially-acquired data.</p>
+<p><strong>Theorem (Bias–Variance Decomposition under Covariate Shift).</strong> Let $\hat{f}_S$ be an estimator trained on $S$ and evaluated under a <em>test</em> distribution $Q \neq \Pi$. Define the importance weight $w(x) = dQ/d\Pi(x)$. Then for squared-error loss:</p>
+$$\mathbb{E}_S\left[\int_{\mathcal{X}} (\hat{f}_S(x) - \mu(x))^2 \, dQ(x)\right] = \underbrace{\int w(x)^2 \,\mathrm{Var}_S[\hat{f}_S(x)] \, d\Pi(x)}_{\text{weighted variance}} + \underbrace{\int (\mathbb{E}_S[\hat{f}_S(x)] - \mu(x))^2 \, dQ(x)}_{\text{bias}}.$$
+<p><em>Proof sketch.</em> Apply the standard bias–variance identity pointwise under $Q$, then write $dQ = w \, d\Pi$ and interchange expectation and integral by Fubini (justified when $w \in L^2(\Pi)$). $\square$</p>
+<p>The theorem makes the cost of a poorly chosen $\Pi$ explicit: large $w(x)$ inflates variance at regions where $\Pi$ under-samples. Active data collection — choosing $\Pi$ adaptively to reduce $\max_x w(x)$ — is therefore a principled design objective, not an engineering afterthought.</p>
+<p><strong>Literature context.</strong> Classical survey sampling (Cochran 1977) characterizes optimal stratified designs for finite populations, but assumes the model class and test distribution are known. The modern machine-learning literature reframes the problem under <em>active learning</em> (Settles 2009; Balcan et al. 2006), <em>optimal experimental design</em> (Fedorov 1972; Atkinson et al. 2007), and <em>distribution shift</em> (Sugiyama & Kawanabe 2012). Open problems include: (i) optimal $\Pi$ under <em>unknown</em> $Q$ with only unlabeled target samples available; (ii) budget allocation when labels arrive with delay or noise; (iii) sequential collection protocols that are provably near-optimal without oracle access to $\mu$.</p>
+<p><strong>Suggested investigation.</strong> Implement stratified vs. uncertainty-sampling active learning on a synthetic regression task where $Q$ is a shifted Gaussian. Fix $n = 200$ and vary $\Pi$ from uniform to oracle-optimal (derived analytically from $w$). Measure the integrated mean-squared error under $Q$ at each checkpoint $n \in \{20, 50, 100, 200\}$. Replicate the covariate-shift correction of Sugiyama et al. (2007) using kernel mean matching, and compare corrected vs. uncorrected estimators. Quantify how quickly the bias term in the decomposition above dominates variance as shift severity increases.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the precise sampling distribution $\Pi$ used at each stage and the rationale for its choice; an empirical verification of the bias–variance decomposition (plot each term separately across $n$); and a comparison against at least one baseline from the literature with matching hyperparameter budget. The conclusion should state whether the observed gap between sampling strategies is statistically significant (bootstrap confidence intervals) and identify which regime — low $n$, high shift, or noisy labels — most severely degrades the naive uniform baseline.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

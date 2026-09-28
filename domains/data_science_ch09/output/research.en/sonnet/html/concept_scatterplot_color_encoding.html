@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scatterplot Color Encoding | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="scatterplot-color-encoding">Scatterplot Color Encoding</h2>
+<p><strong>Definition.</strong> Let $\mathcal{D} = \{(x_i, y_i, z_i)\}_{i=1}^{n}$ be a dataset in which $(x_i, y_i) \in \mathbb{R}^2$ are spatial coordinates and $z_i \in \mathcal{Z}$ is an additional attribute. A <em>color encoding</em> is a mapping $\phi : \mathcal{Z} \to \mathcal{C}$, where $\mathcal{C}$ is a perceptual color space (typically CIELAB or a submanifold thereof), such that the visual representation of the scatterplot preserves semantically relevant structure of $z$. When $\mathcal{Z} \subseteq \mathbb{R}$ is ordinal, $\phi$ is a <em>sequential</em> or <em>diverging</em> colormap; when $\mathcal{Z}$ is a finite categorical set, $\phi$ is a <em>qualitative</em> palette. The central design problem is selecting $\phi$ so that human perception of $\mathcal{C}$ is a faithful proxy for the statistical structure of $\mathcal{Z}$.</p>
+<p><strong>Theorem (Perceptual uniformity and discrimination).</strong> Let $\Delta E_{ij} = \|\phi(z_i) - \phi(z_j)\|_{\mathrm{CIELAB}}$ denote the perceptual distance between colors assigned to values $z_i$ and $z_j$. A colormap $\phi$ is <em>perceptually uniform</em> if there exists a constant $k > 0$ such that</p>
+$$\Delta E_{ij} = k \cdot |z_i - z_j| \quad \forall\, z_i, z_j \in \mathcal{Z}.$$
+<p>For qualitative encodings, the optimal palette maximizes the minimum pairwise distance: $\phi^* = \arg\max_{\phi} \min_{i \neq j} \Delta E_{ij}$, subject to $|\mathcal{C}| = |\mathcal{Z}|$ and legibility constraints (luminance bounds, color-deficiency accommodation).</p>
+<p><em>Remark.</em> Perceptual uniformity is a necessary but not sufficient condition for effective encoding. The human visual system exhibits non-isotropic discrimination thresholds in CIELAB — the just-noticeable difference (JND) varies with hue angle and luminance — so strict uniformity in CIELAB coordinates does not guarantee uniform discriminability across the visible gamut. This remains an active calibration problem in applied perception research (Szafir, 2018; Reda & Szafir, 2021).</p>
+<p><strong>Literature context.</strong> The foundational framework for visual variable theory originates with Bertin (1967), who classified color (hue, value, saturation) as a selective but non-ordered visual channel. Cleveland & McGill (1984) established the hierarchy of perceptual tasks, situating color below position and length in accuracy. Subsequent empirical work (Brewer, 1994; Harrower & Brewer, 2003) produced the ColorBrewer system — still widely used — though its design criteria predate modern crowdsourced perceptual experiments. More recent work has revisited these palettes through large-scale participant studies (Liu & Heer, 2018) and deep-learning-based colormap optimization (Gramazio et al., 2017). Open questions include: (1) how context effects (surrounding hues, plot density) modulate effective discrimination; (2) whether perceptual uniformity metrics generalize across display technologies and ambient lighting; and (3) how to encode <em>uncertainty</em> jointly with value using dual-channel hue–saturation mappings.</p>
+<p><strong>Suggested investigation.</strong> A tractable graduate project is a replication-and-extension of Liu & Heer (2018). Using a custom scatterplot stimulus set in which $(x_i, y_i)$ are sampled from a bivariate Gaussian and $z_i$ from a uniform grid on $[0,1]$, recruit participants (or use Amazon Mechanical Turk) to perform value-discrimination tasks across five colormaps: viridis, plasma, cividis, a custom perceptually-uniform palette, and a non-uniform legacy palette (e.g., rainbow/jet). Measure mean absolute error in reported $z$-value as a function of $\Delta z$. Fit a psychometric function $P(\text{correct}) = \sigma(\alpha \cdot \Delta E / \sigma_{\mathrm{noise}})$ to extract effective JND per colormap. Test the hypothesis that $\Delta E_{\mathrm{CIELAB}}$ predicts discrimination accuracy better than $\Delta E_{\mathrm{RGB}}$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: (1) state the colormap selection criteria formally using the perceptual-uniformity definition above; (2) report psychometric curves with 95% bootstrapped confidence intervals; (3) discuss whether the CIELAB uniformity assumption held empirically or required a correction term; (4) situate the findings against at least one existing empirical benchmark (Liu & Heer, or Szafir); and (5) propose one concrete revision to colormap design guidelines that the data would support or refute.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

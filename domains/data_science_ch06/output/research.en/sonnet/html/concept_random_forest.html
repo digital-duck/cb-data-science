@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Forest | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="random-forest">Random Forest</h2>
+<p><strong>Definition.</strong> A random forest is an ensemble of $M$ decision trees $\{h_m(\mathbf{x}; \Theta_m)\}_{m=1}^{M}$, where each $\Theta_m$ encodes independent randomness injected at two stages: (i) bootstrap resampling of the training set (bagging), and (ii) feature subsampling at each split node, drawing $k \ll p$ candidate features uniformly at random before selecting the locally optimal split. The ensemble prediction is the majority vote (classification) or arithmetic mean (regression):</p>
+$$\hat{f}(\mathbf{x}) = \frac{1}{M} \sum_{m=1}^{M} h_m(\mathbf{x};\Theta_m).$$
+<p>The canonical choice is $k = \lfloor \sqrt{p} \rfloor$ for classification and $k = \lfloor p/3 \rfloor$ for regression, though these are empirical defaults, not theoretical optima.</p>
+<p><strong>Bias–Variance Decomposition and the Strength–Correlation Trade-off.</strong> The population mean-squared error of the ensemble decomposes as</p>
+$$\mathrm{MSE}(\hat{f}) = \mathrm{bias}^2 + \frac{1 + (M-1)\bar{\rho}}{M}\bar{\sigma}^2,$$
+<p>where $\bar{\rho}$ is the average pairwise correlation between tree predictions and $\bar{\sigma}^2$ is the average per-tree variance. This is Breiman's (2001) fundamental identity. As $M \to \infty$ the variance term converges to $\bar{\rho}\,\bar{\sigma}^2$, so the irreducible variance floor is set entirely by inter-tree correlation. Feature subsampling reduces $\bar{\rho}$ at the cost of slightly increasing $\bar{\sigma}^2$ per tree (each tree sees a degraded feature set, raising individual tree bias). The practical algorithm navigates this trade-off without solving it analytically: the optimal $k$ is problem-dependent and unknown in general.</p>
+<p><strong>Generalization Bound.</strong> Breiman (2001) derived a margin-based bound: for any $\delta > 0$, with probability at least $1 - \delta$,</p>
+$$P_{XY}\!\left[\hat{f}(\mathbf{x}) \neq y\right] \leq P_{XY\Theta}\!\left[\mathrm{mr}(\mathbf{x},y) < 0\right] + O\!\left(\sqrt{\frac{\bar{\rho}\,s^2/\bar{\sigma}^2}{n}}\right),$$
+<p>where $\mathrm{mr}$ is the margin function and $s^2$ is the variance of the strength statistic. The bound is qualitatively informative but notoriously loose quantitatively, and tightening it remains open. More recent work (Wager & Walther 2015; Mentch & Hooker 2016) recasts individual trees as $U$-statistics, enabling asymptotically normal confidence intervals for forest predictions—an approach that connects random forests to classical nonparametric theory.</p>
+<p><strong>Literature Context.</strong> Breiman (2001, <em>Machine Learning</em> 45) is the founding reference; its theoretical analysis is partial and several claimed results were later clarified or corrected (e.g., Biau 2012, <em>JMLR</em>). Biau & Devroye (2010) establish $L^2$ consistency under mild regularity. Scornet, Biau & Vert (2015, <em>Ann. Statist.</em>) prove consistency of Breiman forests on additive models. The honest forest of Wager & Athey (2018) extends the framework to causal inference via heterogeneous treatment effects, with asymptotic normality guarantees. Open questions include: sharp minimax rates for forests on smooth function classes, optimal feature-subsample schedules, and theoretical justification for out-of-bag error as a generalization proxy.</p>
+<p><strong>Suggested Investigation.</strong> Fix a synthetic additive regression target $f^*(\mathbf{x}) = \sum_{j=1}^{5} \sin(x_j)$ in $p = 20$ dimensions. Train forests over a grid of $k \in \{1, 2, 5, 10, 20\}$ and $M \in \{10, 50, 200\}$; measure test MSE, $\hat{\bar{\rho}}$ (estimated from out-of-bag predictions), and per-tree variance. Verify empirically that the Breiman identity holds: compute both sides independently and compare. Then fit an honest causal forest (Wager & Athey) on a synthetic randomized experiment and examine whether the 95% confidence intervals achieve nominal coverage.</p>
+<p><strong>Report-Writing Note.</strong> A rigorous write-up should state the Breiman identity as a formal proposition and derive it from first principles, clearly separating approximation ($M$ finite) from asymptotic ($M \to \infty$) regimes. The empirical section must report $\hat{\bar{\rho}}$ alongside MSE—presenting MSE alone conflates the two components of the trade-off. Discuss whether the Scornet–Biau–Vert consistency conditions hold for your chosen $f^*$, and note any gap between the theoretical bound and observed test error.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

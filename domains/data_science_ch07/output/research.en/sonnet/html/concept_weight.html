@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weight | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="weight">Weight</h2>
+<p><strong>Definition.</strong> Let $\mathbf{w} = (w_1, \ldots, w_n)^\top$ with each $w_i > 0$. The <em>weight matrix</em> $W = \operatorname{diag}(\mathbf{w})$ induces a <strong>weighted inner product</strong> on $\mathbb{R}^n$:</p>
+$$\langle \mathbf{u}, \mathbf{v} \rangle_W := \mathbf{u}^\top W \mathbf{v} = \sum_{i=1}^n w_i \, u_i v_i,$$
+<p>with associated <em>weighted norm</em> $\|\mathbf{u}\|_W = \sqrt{\mathbf{u}^\top W \mathbf{u}}$. Because $W$ is symmetric positive definite, $(\mathbb{R}^n, \langle \cdot, \cdot \rangle_W)$ is a valid inner product space, and all Hilbert-space geometry — projection, orthogonality, Gram–Schmidt — carries over in this weighted metric. This single change of geometry is the primitive that underlies weighted least squares, iteratively reweighted algorithms, and kernel-weighted regression; the present section develops only the first of these.</p>
+<p><strong>Theorem (Gauss–Markov, weighted form).</strong> Consider the linear model $\mathbf{y} = A\mathbf{x} + \boldsymbol{\varepsilon}$, where $A \in \mathbb{R}^{n \times p}$, $\mathbb{E}[\boldsymbol{\varepsilon}] = \mathbf{0}$, and $\operatorname{Cov}(\boldsymbol{\varepsilon}) = \sigma^2 W^{-1}$ for a known positive-definite $W$. The <em>weighted least squares</em> (WLS) estimator,</p>
+$$\hat{\mathbf{x}}_{\mathrm{WLS}} = \arg\min_{\mathbf{x}} \|\mathbf{y} - A\mathbf{x}\|_W^2 = (A^\top W A)^{-1} A^\top W \mathbf{y},$$
+<p>is the Best Linear Unbiased Estimator (BLUE) of $\mathbf{x}$.</p>
+<p><em>Proof sketch.</em> Let $\tilde{\mathbf{x}} = L\mathbf{y}$ be any linear unbiased estimator, so $LA = I$. Write $L = (A^\top W A)^{-1} A^\top W + D$ with $DA = 0$. Then $\operatorname{Cov}(\tilde{\mathbf{x}}) = \sigma^2 L W^{-1} L^\top = \sigma^2 [(A^\top W A)^{-1} + DW^{-1}D^\top]$. Since $DW^{-1}D^\top \succeq 0$, the WLS covariance is minimal among all linear unbiased estimators. $\square$</p>
+<p>The key step to internalize is that the normal equations for $\|\mathbf{y} - A\mathbf{x}\|_W^2$ are identical in form to those for ordinary least squares once the ambient inner product is replaced by $\langle \cdot, \cdot \rangle_W$. OLS is the special case $W = I$.</p>
+<p><strong>Literature context.</strong> Aitken (1935) established the generalized Gauss–Markov theorem in this form. The central open problem is that $W$ is rarely known in practice: it must be estimated or modeled. White (1980) introduced heteroskedasticity-consistent (HC) covariance estimators that remain valid without specifying $W$ exactly. Goldberger (1962) formalized feasible generalized least squares (FGLS), in which a pilot OLS fit yields residuals that are used to estimate $W$, and the procedure is iterated. A foundational question that remains incompletely resolved is how much efficiency is lost at each FGLS iteration when the pilot estimate of $W$ is noisy, particularly in finite samples. Recent work connecting weighted projections to attention mechanisms in neural networks (Tsai et al., 2019) suggests that the geometry introduced here has implications well beyond classical statistics, though making that connection rigorous is an open research direction.</p>
+<p><strong>Suggested investigation.</strong> Generate a synthetic regression dataset with known heteroskedastic noise: $\varepsilon_i \sim \mathcal{N}(0, \sigma_i^2)$ where $\sigma_i = f(x_i)$ for some chosen function $f$. Fit the model using (1) OLS, (2) oracle WLS with true $W = \operatorname{diag}(1/\sigma_i^2)$, and (3) feasible GLS with $W$ estimated from OLS residuals. Compare the sampling distributions of estimator variance across 1,000 Monte Carlo trials. Derive analytically the efficiency loss of OLS relative to oracle WLS using $\operatorname{tr}(\operatorname{Cov}_{\mathrm{OLS}}) / \operatorname{tr}(\operatorname{Cov}_{\mathrm{WLS}})$ as a scalar summary. A natural extension is to vary the severity of heteroskedasticity and plot how this efficiency gap scales with the spread of the $\sigma_i$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish three things explicitly: the algebraic derivation of the WLS normal equations from the weighted inner product, making clear that the geometry is the primitive and WLS is its immediate consequence; a proof or citation of the BLUE property with the unbiasedness constraint stated precisely; and an empirical section that reports estimator variance — not merely point estimates — across simulation trials, with Monte Carlo standard errors stated. The identification of $W$ with the inverse noise covariance should be stated as a theorem, not an analogy, so that the scope and assumptions of the result are unambiguous.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

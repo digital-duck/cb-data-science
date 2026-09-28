@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Data | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="big-data">Big Data</h2>
+<p><strong>定义</strong>：大数据是指规模庞大、结构复杂、增长速度极快，以至于传统数据库和处理工具（如单机关系型数据库、Excel）无法在合理时间内存储、管理或分析的数据集合。业界常用"5V"来刻画其本质特征：Volume（体量，通常指 TB 至 PB 级别）、Velocity（速度，数据实时或近实时产生）、Variety（多样性，包含结构化表格、非结构化文本、图像、日志等）、Veracity（真实性，数据存在噪声与不确定性）、Value（价值，需从海量原始数据中提炼出有用信息）。判断一个数据集"是不是大数据"的关键不在于绝对字节数，而在于：单台机器的内存和计算能力是否足以在可接受时间内完成处理。</p>
+<p><strong>应用场景</strong>：以某电商平台为例，其每天产生的用户点击流日志约 50 TB，包含用户 ID、时间戳、商品 ID、页面停留时长等字段。若要计算"过去 30 天内每个商品类别的平均转化率"，传统做法是把所有数据读入内存后用一个 SQL 查询完成——但 50 TB × 30 天远超任何单机内存容量。工程团队采用的解决方案是 <strong>MapReduce 范式</strong>：将任务拆分为 Map 阶段（在数千台机器上并行读取本地数据分片，输出 <code>(商品类别, (点击, 转化)) </code> 键值对）和 Reduce 阶段（按类别聚合所有 Map 输出，计算最终转化率）。这种"分而治之"的思路使得处理时间从理论上单机需要的数周，缩短到数百台机器并行后的几十分钟。</p>
+<p><strong>解决问题的关键判断</strong>：面对一个新的数据分析任务，判断是否需要"大数据"方案，可以用一个简单的经验法则——若数据集大小超过可用内存的 10 倍以上，或查询延迟要求（如实时推荐）无法容忍全量扫描，就应考虑分布式存储（如 HDFS）与分布式计算框架（如 Spark、Hadoop）。反之，若数据集在数 GB 量级、可一次性载入 Pandas DataFrame 完成分析，则引入大数据基础设施反而增加不必要的运维复杂度与延迟开销。这种"先估算规模、再选工具"的思维方式，是解决实际数据问题的第一步。</p>
+<pre class="mermaid">flowchart LR
+    A[原始日志数据<br/>50 TB] --> B[数据分片<br/>分布到多台机器]
+    B --> C1[Map 节点 1]
+    B --> C2[Map 节点 2]
+    B --> C3[Map 节点 N]
+    C1 --> D[Shuffle 排序<br/>按键分组]
+    C2 --> D
+    C3 --> D
+    D --> E[Reduce 阶段<br/>聚合计算]
+    E --> F[最终结果<br/>类别转化率]</pre>
+<p><em>该图展示了 MapReduce 处理大规模数据的整体流程：数据先被拆分并行处理（Map），再按键归并聚合（Reduce），最终得到统计结果。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

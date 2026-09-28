@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sampling | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="sampling">Sampling</h2>
+<p>Sampling is the process of selecting a subset — a <strong>sample</strong> — from a larger group of interest, called the <strong>population</strong>, in order to draw conclusions about that population without examining every member of it. Sampling matters because measuring an entire population is often impossible (testing every unit off a production line would destroy the product) or impractical (surveying every voter in a country before an election). The central mathematical concern is not just <em>how</em> to pick the subset, but how to pick it so that conclusions drawn from it can be trusted to generalize.</p>
+<p>Three sampling designs recur constantly. <strong>Simple random sampling</strong> gives every member of the population an equal chance of selection, typically via a random number generator indexing a numbered list of the population. <strong>Stratified sampling</strong> first divides the population into homogeneous subgroups (strata) — say, by grade level or income bracket — then randomly samples within each stratum, guaranteeing representation across groups that a pure random draw might miss by chance. <strong>Cluster sampling</strong> divides the population into naturally occurring groups (clusters, such as classrooms or city blocks), randomly selects whole clusters, and samples everyone within them — useful when a full population list doesn't exist but a list of clusters does.</p>
+<p><strong>Worked example.</strong> A school district with 4,000 students wants to estimate the proportion who eat breakfast daily. Suppose the true (unknown) population proportion is $p = 0.55$. If a simple random sample of $n = 200$ students is drawn, the sample proportion $\hat{p}$ is a random variable with standard error $\text{SE}(\hat{p}) = \sqrt{\frac{p(1-p)}{n}} = \sqrt{\frac{0.55 \times 0.45}{200}} \approx 0.035$. This tells us that even with unbiased sampling, $\hat{p}$ will typically land within about $2 \times 0.035 \approx 7$ percentage points of 0.55 in roughly 95% of samples — quantifying the unavoidable <em>sampling error</em> introduced by measuring a subset rather than the whole.</p>
+<p><strong>Problem-solving application.</strong> If the district instead stratifies by grade (elementary, middle, high school) before sampling within each stratum, the standard error shrinks whenever breakfast habits differ systematically by grade — stratification removes between-group variance from the error term, tightening the estimate for the same sample size. Choosing a sampling design is therefore a direct trade-off between cost, feasibility, and the precision of the inference it permits.</p>
+<pre class="mermaid">flowchart LR
+    A[Population] --> B{Sampling method}
+    B -->|Random| C[Sample]
+    B -->|Stratified| C
+    B -->|Cluster| C
+    C -->|Statistical inference| A</pre>
+<p><em>A sample is drawn as a subset of the population via a random, stratified, or cluster method, and statistical inference projects findings from the sample back onto the population.</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

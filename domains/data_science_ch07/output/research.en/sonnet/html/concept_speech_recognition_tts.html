@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speech Recognition Tts | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="speech-recognition-tts">Speech Recognition Tts</h2>
+<p><strong>Definition.</strong> Let $\mathcal{X} = \mathbb{R}^{T \times F}$ denote the space of acoustic feature sequences of length $T$ with $F$ mel-filterbank coefficients per frame. Automatic Speech Recognition (ASR) seeks a mapping $\Phi_{\text{ASR}} : \mathcal{X} \to \Sigma^<em>$, where $\Sigma^</em>$ is the set of token sequences over a vocabulary $\Sigma$. Text-to-Speech synthesis (TTS) seeks the inverse mapping $\Phi_{\text{TTS}} : \Sigma^<em> \to \mathcal{X}$. Jointly, the composition $\Phi_{\text{TTS}} \circ \Phi_{\text{ASR}}$ defines a </em>voice transformation<em> or </em>speech resynthesis* operator; its fixed points, cycles, and information-theoretic fidelity bounds constitute the central open problems of end-to-end speech processing.</p>
+<p><strong>Theorem (Connectionist Temporal Classification lower bound).</strong> Let $\pi : \{1,\ldots,T\} \to \Sigma \cup \{\epsilon\}$ be a path over the extended alphabet including the blank token $\epsilon$, and let $\mathcal{B}(\pi)$ denote the label sequence obtained by collapsing repeated symbols and removing blanks. The CTC objective maximizes $\log p(\mathbf{y} \mid \mathbf{x}) = \log \sum_{\pi : \mathcal{B}(\pi)=\mathbf{y}} \prod_{t=1}^{T} p(\pi_t \mid \mathbf{x})$. By the data-processing inequality, for any deterministic decoder $d$,</p>
+$$
+H(\mathbf{Y} \mid \hat{\mathbf{Y}}) \leq H(\mathbf{Y} \mid \mathbf{X}),
+$$
+<p>so the irreducible acoustic ambiguity — homophones, co-articulation, prosodic neutralization — establishes a floor on word error rate that no architecture can breach without external linguistic priors.</p>
+<p><strong>Proof sketch.</strong> The mutual information $I(\mathbf{X}; \mathbf{Y}) = H(\mathbf{Y}) - H(\mathbf{Y} \mid \mathbf{X})$ is bounded by the channel capacity of the vocal tract viewed as a noisy channel. Since $H(\mathbf{Y} \mid \mathbf{X}) > 0$ for natural speech corpora (homophone pairs such as "bare"/"bear" contribute identically distributed acoustic realizations in context-free settings), $\Phi_{\text{ASR}}$ is necessarily lossy. The TTS inverse therefore cannot recover the original waveform in the $L^2$ sense without conditioning on speaker identity and prosodic annotations beyond the text transcript. $\square$</p>
+<p><strong>Literature context.</strong> The transformer-based ASR architecture of Whisper (Radford et al., 2022) achieves near-human word error rates on clean speech by training on $680{,}000$ hours of weakly supervised data, yet degrades measurably on accented or noisy speech — a distribution shift problem still unresolved for low-resource languages. On the TTS side, neural vocoders (HiFi-GAN, Voicebox, Matcha-TTS) demonstrate high perceptual naturalness on constrained domains but exhibit brittleness under out-of-distribution phoneme sequences and zero-shot speaker cloning remains an active challenge (Casanova et al., 2022; Le Paine et al., 2023). The compositionality of prosody — how intonation, rhythm, and stress interact with semantics — is not captured by current end-to-end models (Shen et al., 2023).</p>
+<p><strong>Suggested investigation.</strong> Implement a round-trip pipeline $\Phi_{\text{TTS}} \circ \Phi_{\text{ASR}}$ using Whisper (medium) and a publicly available TTS model (e.g., Coqui XTTS or Matcha-TTS). Measure round-trip Word Error Rate (rt-WER) and Mel Cepstral Distortion (MCD) as a function of speaker accent (VCTK corpus), noise SNR, and text register (formal vs. spontaneous). Fit a linear model $\text{rt-WER} \sim \beta_0 + \beta_1 \cdot \text{SNR} + \beta_2 \cdot \mathbb{1}[\text{accented}] + \epsilon$ and test whether $\beta_2$ is significantly nonzero under heteroskedasticity-robust standard errors.</p>
+<p><strong>Report-writing note.</strong> A satisfactory write-up should establish: (i) a clear definition of round-trip fidelity and its relationship to the information-theoretic bound derived above; (ii) a reproducible experimental protocol with exact model versions and corpus splits; (iii) error analysis distinguishing acoustic errors from language model interpolation errors; and (iv) a discussion of whether the observed failure modes are addressable by fine-tuning, data augmentation, or require architectural changes — grounding each claim in a specific citation.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

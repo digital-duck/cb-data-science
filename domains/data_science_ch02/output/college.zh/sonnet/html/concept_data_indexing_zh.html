@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Indexing | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-indexing">Data Indexing</h2>
+<p><strong>定义</strong></p>
+<p>数据索引（data indexing）是一种为数据库或存储系统建立辅助数据结构的技术，目的是在不必逐行扫描全部数据的前提下，快速定位到满足查询条件的记录。索引的核心思想类似于一本书末尾的索引页：与其从头到尾翻阅整本书寻找某个关键词，不如先查索引页，直接跳转到对应页码。最常见的索引结构是 <strong>B树（B-tree）</strong> 及其变体 <strong>B+树</strong>，它们把数据按键值（key）组织成一棵平衡的多叉搜索树，使得查找、插入、删除操作的时间复杂度均为 $O(\log_b n)$，其中 $n$ 是记录总数，$b$ 是树的分支因子（通常是几百甚至上千，因为每个磁盘页可以容纳大量键值）。相比之下，没有索引的全表扫描时间复杂度是 $O(n)$。对于等值查询（例如按用户 ID 查找），也常使用<strong>哈希索引（hash index）</strong>，其平均查找复杂度是 $O(1)$，但不支持范围查询。</p>
+<p><strong>复杂度对比与权衡</strong></p>
+<p>假设一张表有 $n = 10^7$ 行数据。全表扫描需要检查约 $10^7$ 次；而使用 $B$ 树索引（分支因子 $b=200$），查找复杂度约为 $\log_{200}(10^7) \approx 3$ 次磁盘访问——差异是数量级的。但索引并非免费：每次插入或更新记录时，索引结构也要同步维护，插入代价从 $O(1)$（无索引）上升到 $O(\log_b n)$（有索引），并且索引本身占用额外存储空间。因此索引设计的本质是一种<strong>空间与查询速度换插入/更新速度</strong>的权衡：读多写少的场景（如报表系统）适合建大量索引；写多读少的场景（如日志系统）应谨慎加索引。</p>
+<p><strong>问题求解应用</strong></p>
+<p>给定查询 <code>SELECT * FROM orders WHERE customer_id = 42 AND order_date &gt; '2026-01-01'</code>，如何选择索引策略？分析：<code>customer_id</code> 是等值条件，<code>order_date</code> 是范围条件。应建立<strong>复合索引 (customer_id, order_date)</strong>，让 B+树先按 <code>customer_id</code> 分组排序，再在组内按 <code>order_date</code> 有序排列，这样一次索引扫描即可同时满足两个条件，避免了对每个 <code>customer_id</code> 匹配结果再逐一比较日期的开销。这体现了索引设计的关键原则：<strong>索引列的顺序应把等值条件放在前，范围条件放在后</strong>，以最大化利用树的有序性。</p>
+<pre class="mermaid">flowchart LR
+    A["查询请求"] --> B{"是否存在可用索引?"}
+    B -- 是 --> C["索引查找 O(log n)"]
+    B -- 否 --> D["全表扫描 O(n)"]
+    C --> E["返回结果"]
+    D --> E["返回结果"]</pre>
+<p><em>该图对比了有索引与无索引两种路径下查询请求的处理方式及其时间复杂度差异。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

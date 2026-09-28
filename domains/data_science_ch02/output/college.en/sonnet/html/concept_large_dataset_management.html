@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Large Dataset Management | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="large-dataset-management">Large Dataset Management</h2>
+<p>Modern datasets routinely exceed the capacity of a single machine's memory or even its disk, forcing a shift from "load it all and compute" to a coordinated pipeline: <strong>compression</strong> shrinks data on disk and in transit, <strong>storage solutions</strong> (distributed file systems, object stores) hold it durably across many machines, <strong>indexing</strong> enables fast lookup without scanning everything, <strong>chunking</strong> breaks data into processable units, <strong>DBMS</strong> organize and query it, and <strong>cloud computing</strong> supplies elastic resources on demand. No single technique solves the scale problem alone — they compose.</p>
+<p>Consider a dataset of 50 TB of genomic sequencing reads. Stored raw, it would take days to transfer and cost a fortune to keep on fast disks. Applying compression (e.g., gzip or a domain-specific codec) might reduce it to 12 TB. Because no single server holds 12 TB affordably with redundancy, the data is partitioned into <strong>chunks</strong> — say, 128 MB blocks — and distributed across a cluster using a system like HDFS or Amazon S3, where each chunk is replicated three times for fault tolerance. To find all reads matching a genetic marker without scanning 12 TB, an <strong>index</strong> (a B-tree or inverted index mapping markers to chunk locations) narrows the search to a handful of chunks. A <strong>DBMS</strong> built on top (e.g., a NoSQL store or a query engine like Spark SQL) lets analysts express "find reads from chromosome 7 with mutation X" declaratively, and the underlying engine uses the index and chunk metadata to skip 99% of the data. Finally, <strong>cloud computing</strong> allows the lab to rent 200 compute nodes for the four hours needed to run this query, rather than owning that hardware permanently.</p>
+<p>The problem-solving skill here is matching technique to bottleneck. If the constraint is network bandwidth, prioritize compression. If it's query latency, prioritize indexing. If it's fault tolerance, prioritize replication and chunk placement strategy. If it's cost, prioritize cloud elasticity — scale compute up only during the query window, then release it. A common student mistake is treating these as interchangeable "big data tools" rather than diagnosing which specific constraint (storage cost, I/O throughput, query speed, availability) a given dataset is hitting, then choosing accordingly.</p>
+<pre class="mermaid">flowchart LR
+    A[Raw Dataset] --> B[Compression]
+    B --> C[Chunking]
+    C --> D[Distributed Storage]
+    D --> E[Indexing]
+    E --> F[DBMS Query Layer]
+    F --> G[Cloud Compute Resources]
+    G --> H[Query Result]</pre>
+<p><em>The pipeline transforming a raw large dataset into a queryable, scalable system: each stage addresses a distinct bottleneck (size, distribution, retrieval speed, and elastic compute).</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

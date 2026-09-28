@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internet Of Things | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="internet-of-things">Internet Of Things</h2>
+<p><strong>Definition.</strong> The Internet of Things (IoT) denotes a distributed cyber-physical system in which a large population of resource-constrained sensing and actuating devices communicate over shared wireless channels to accomplish collective inference or control tasks. Formally, model the system as a time-varying graph $G(t) = (V, E(t))$ where each node $v_i \in V$ carries state $s_i(t) \in \mathcal{S}$ (sensor reading, battery level, buffer occupancy) and each edge $(v_i, v_j) \in E(t)$ represents an active wireless link with instantaneous capacity $C_{ij}(t)$ governed by path loss, fading, and interference. The system objective is typically to compute some aggregate function $f(s_1, \ldots, s_n)$ — a sum, maximum, histogram, or learned model parameter — at a designated sink node or cloud endpoint, subject to per-node energy budget $B_i$ and end-to-end latency bound $\tau$.</p>
+<p><strong>Theorem (Gupta–Kumar, 2000).</strong> Consider $n$ nodes distributed uniformly and independently on a disk of unit area, each attempting to communicate at rate $W$ bits/second over a shared wireless medium. The total <em>transport capacity</em> — the aggregate bit-meters per second supportable by the network — satisfies</p>
+$$
+\mathcal{C}(n) = \Theta\!\left(W \sqrt{n \cdot \frac{1}{\log n}}\right) \text{ bit-meters/second.}
+$$
+<p>Consequently, the per-node throughput scales as $\lambda(n) = \Theta\!\bigl(W / \sqrt{n \log n}\bigr)$, vanishing as $n \to \infty$.</p>
+<p><em>Proof sketch.</em> The argument proceeds in two parts. (Achievability) Partition the disk into $\Theta(n / \log n)$ cells of area $\Theta(\log n / n)$; within each cell, nodes communicate over disjoint frequency sub-bands using a TDMA schedule, achieving $\Omega(W / \sqrt{n \log n})$ per node. (Converse) Any transmission from node $i$ to node $j$ at distance $d_{ij}$ consumes spatial bandwidth proportional to $d_{ij}^2$; summing over all simultaneous transmissions and bounding by the disk area gives the $O$ upper bound. $\square$</p>
+<p>This result is a foundational constraint: IoT scale is physically bounded. Hierarchical architectures (edge servers, fog computing) circumvent it not by defeating the bound but by reducing effective $d_{ij}$ through locality.</p>
+<p><strong>Literature context.</strong> The Gupta–Kumar result (IEEE Trans. Inf. Theory 46(2), 2000) spawned a large literature on capacity scaling under mobility (Grossglauser–Tse, 2001), cooperation (Özgür et al., 2007), and heterogeneous topologies. More recent lines address <em>semantic communication</em> — transmitting compressed sufficient statistics of $f$ rather than raw bits — where the relevant metric becomes task-specific distortion rather than bit rate. The <em>Age of Information</em> (AoI) framework (Kaul et al., 2012) formalizes freshness: defining $\Delta_i(t) = t - u_i(t)$ where $u_i(t)$ is the generation timestamp of the last received update from node $i$, researchers seek scheduling policies minimizing $\mathbb{E}[\Delta_i(t)]$ subject to channel constraints. Open problems remain in heterogeneous protocol stacks (LoRaWAN, Zigbee, NB-IoT coexisting), energy-harvesting dynamics modeled as Markov chains, and privacy-preserving aggregation under differential privacy budgets $\varepsilon$.</p>
+<p><strong>Suggested investigation.</strong> Generate a random geometric graph on $n \in \{50, 100, 500\}$ nodes in the unit square with connection radius $r(n) = \sqrt{\log n / (\pi n)}$ (the connectivity threshold) using NetworkX or a custom simulator. Implement a TDMA-based flooding protocol and empirically measure per-node throughput $\hat{\lambda}(n)$. Plot $\hat{\lambda}(n)\sqrt{n \log n}$ against $n$; the Gupta–Kumar bound predicts this quantity converges to a constant. Extend by adding an edge server at the centroid and comparing hierarchical vs. flat aggregation latency.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the precise operating regime (connectivity threshold, interference model assumed), (2) how closely empirical throughput tracks the $\Theta(W / \sqrt{n \log n})$ scaling, (3) what fraction of the gap is attributable to protocol overhead versus the information-theoretic bound, and (4) a quantified benefit of the hierarchical architecture in terms of AoI or latency reduction, with error bars over random graph realizations.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

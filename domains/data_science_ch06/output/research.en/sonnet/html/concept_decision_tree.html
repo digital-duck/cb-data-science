@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Tree | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="decision-tree">Decision Tree</h2>
+<p><strong>Definition.</strong> A <em>decision tree</em> is a recursive partitioning of the input space $\mathcal{X} \subseteq \mathbb{R}^d$ into axis-aligned rectangular regions, each assigned a constant prediction. Formally, a binary tree $T$ of depth $D$ defines a partition $\{R_1, \ldots, R_m\}$ of $\mathcal{X}$ such that the predictor takes the form</p>
+$$f_T(\mathbf{x}) = \sum_{j=1}^{m} c_j \,\mathbf{1}[\mathbf{x} \in R_j],$$
+<p>where $c_j \in \mathbb{R}$ (regression) or $c_j \in \{0,1\}^K$ (classification). Each internal node selects a coordinate $k \in [d]$ and a threshold $\tau$, routing left if $x_k \leq \tau$ and right otherwise. The tree structure and the split parameters $(k, \tau)$ at every node are jointly the object of learning.</p>
+<p><strong>The Greedy Splitting Criterion and Its Optimality Gap.</strong> The canonical training algorithm (CART; Breiman et al. 1984) greedily minimizes an impurity measure at each node. For regression, this is the weighted mean-squared error reduction:</p>
+$$\Delta_\text{MSE}(k,\tau) = \frac{1}{n}\sum_{i=1}^n (y_i - \bar{y})^2 \;-\; \frac{n_L}{n}\sigma^2_L(k,\tau) \;-\; \frac{n_R}{n}\sigma^2_R(k,\tau),$$
+<p>where $n_L, n_R$ are the counts in the left and right child and $\sigma^2_{L/R}$ their response variances. For classification the Gini impurity $G = \sum_k \hat{p}_k(1-\hat{p}_k)$ or information gain replaces the MSE term.</p>
+<p><strong>Theorem (CART approximation ratio, informal; Klusowski 2021).</strong> For a regression tree of depth $D$ learned on $n$ samples from a Lipschitz target $f^*$, the excess risk satisfies</p>
+$$\mathbb{E}[\|f_T - f^*\|^2] = O\!\left(n^{-\frac{2}{d+2}} \log n\right)$$
+<p>under standard regularity, matching minimax rates for piecewise-constant estimators up to logarithmic factors. This rate degrades exponentially with dimension $d$—the manifestation of the <em>curse of dimensionality</em> for decision trees—but the constant depends only weakly on the global Lipschitz constant.</p>
+<p><strong>What Is Known and What Remains Open.</strong> The CART greedy criterion is <em>not</em> globally optimal: finding the depth-$D$ tree minimizing training loss exactly is NP-hard (Hyafil & Rivest 1976). This gap has motivated a line of work on <em>optimal decision trees</em> (Bertsimas & Dunn 2017; Aglin et al. 2020, the GOSDT framework) that formulate tree learning as integer programming and prove tighter generalization bounds for the resulting trees. A current open question is whether the computational intractability can be circumvented under distributional assumptions (e.g., margin conditions, low intrinsic dimension). Separately, the <em>interpolation regime</em>—where fully-grown trees memorize training data—exhibits benign overfitting only under strong structural constraints, unlike neural networks or random forests, making single-tree generalization in the over-parameterized regime an active area.</p>
+<p><strong>Suggested Investigation.</strong> Replicate the Hyafil–Rivest hardness argument for depth-2 trees on a synthetic dataset, then compare CART against GOSDT on a UCI benchmark (e.g., <code>adult</code> or <code>recidivism</code>) at depth $D \in \{3, 4, 5\}$. Measure: (i) training loss gap between greedy and optimal solutions, (ii) test accuracy, (iii) tree size. Vary $n$ from $10^3$ to $10^5$ and record wall-clock time, since GOSDT's MIP formulation scales super-linearly.</p>
+<p><strong>Report-Writing Note.</strong> A write-up of this investigation should establish: (a) a precise statement of the hardness result and the depth at which it first applies; (b) the empirical optimality gap as a function of $n$ and $D$; (c) whether the accuracy difference between greedy and optimal trees is statistically significant at the chosen test sizes; and (d) a discussion of when the computational overhead of optimal methods is justified versus when CART suffices.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

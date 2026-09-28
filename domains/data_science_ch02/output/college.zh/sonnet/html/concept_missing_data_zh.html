@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missing Data | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="missing-data">Missing Data</h2>
+<p>现实世界的数据集几乎从不完美。<strong>缺失数据（missing data）</strong> 指数据集中本应存在却缺失的观测值，其成因包括采集错误、传感器故障、数据损坏，或调查对象拒绝作答（无响应）。处理缺失数据的第一步，也是最关键的一步，是判断缺失的<strong>机制</strong>，因为不同机制决定了不同处理策略是否会引入系统性偏差：</p>
+<li><strong>完全随机缺失（MCAR, Missing Completely At Random）</strong>：数据缺失与任何变量（观测到的或未观测到的）都无关，纯属偶然，例如实验室仪器随机掉线导致个别读数丢失。</li>
+<li><strong>随机缺失（MAR, Missing At Random）</strong>：缺失概率可以由其他已观测变量解释，例如男性比女性更少填写体重字段，但在同一性别内部缺失是随机的。</li>
+<li><strong>非随机缺失（MNAR, Missing Not At Random）</strong>：缺失概率与缺失值本身相关，例如高收入人群更倾向于不填写收入栏——缺失的原因正是那个未知的值。</li>
+<p><strong>实例演练</strong>：设想一份包含 1000 名患者的临床数据集，其中"血压"字段有 50 条记录缺失。若这些缺失只发生在数据录入系统崩溃的那一天（与患者状况无关），属于 MCAR，可以安全删除或插补；若缺失更多出现在老年患者中（可通过"年龄"这一已观测变量解释），属于 MAR；若血压极端异常的患者因不适而中途退出测量，则属于 MNAR——此时任何忽略缺失机制的插补都会低估真实的血压分布方差。</p>
+<p><strong>问题解决应用</strong>：面对缺失数据，分析者需按以下决策流程操作——首先检测缺失值的位置与比例，然后依据缺失机制与缺失比例选择策略：</p>
+<pre class="mermaid">flowchart TD
+    A[检测缺失值] --> B{缺失比例大 且 疑似MNAR？}
+    B -->|是| C[标记为独立类别<br/>保留缺失信息本身]
+    B -->|否| D{缺失比例很小<br/>且接近MCAR？}
+    D -->|是| E[直接删除该行]
+    D -->|否| F[用均值/中位数插补<br/>适用于MAR且缺失量适中]</pre>
+<p><em>该流程图展示了检测到缺失值后，如何依据缺失机制与缺失比例在三种策略——插补、删除、标记为独立类别——之间做出选择。</em></p>
+<p>正确诊断缺失机制远比套用某种插补公式重要：对 MNAR 数据盲目插补均值，会掩盖数据本身携带的信息，从而扭曲后续统计推断与模型预测的结论。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

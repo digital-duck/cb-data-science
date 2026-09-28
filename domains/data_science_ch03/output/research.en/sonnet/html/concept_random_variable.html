@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Variable | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="random-variable">Random Variable</h2>
+<h3 id="definition">Definition</h3>
+<p>Fix a probability space $(\Omega, \mathcal{F}, \mathbb{P})$ as established in the preceding section. A <strong>random variable</strong> is a measurable function $X: \Omega \to \mathbb{R}$, meaning that for every Borel set $B \in \mathcal{B}(\mathbb{R})$, the preimage $X^{-1}(B) = \{\omega \in \Omega : X(\omega) \in B\}$ belongs to $\mathcal{F}$. This single measurability requirement is the one structural addition that the present section introduces; everything that follows — distributions, CDFs, expectations — is derived from it.</p>
+<p>The essential consequence of measurability is that $X$ transfers probability from $(\Omega, \mathcal{F}, \mathbb{P})$ to the real line via the <strong>pushforward measure</strong> $\mu_X(B) := \mathbb{P}(X^{-1}(B))$. Once this transfer is established, the underlying sample space recedes: all statistical inference operates on $\mu_X$, the distribution of $X$, without further reference to $\Omega$.</p>
+<h3 id="theorem-and-proof-sketch-existence-of-the-distribution-function">Theorem and Proof Sketch: Existence of the Distribution Function</h3>
+<p><strong>Theorem.</strong> Every random variable $X$ induces a unique cumulative distribution function $F_X : \mathbb{R} \to [0,1]$ defined by $F_X(x) = \mathbb{P}(X \leq x)$, satisfying: (i) $F_X$ is non-decreasing, (ii) right-continuous, (iii) $\lim_{x \to -\infty} F_X(x) = 0$ and $\lim_{x \to +\infty} F_X(x) = 1$.</p>
+<p><em>Proof sketch.</em> Monotonicity follows from the monotonicity of $\mathbb{P}$ on nested events: $x \leq x'$ implies $\{X \leq x\} \subseteq \{X \leq x'\}$. Right-continuity uses continuity of $\mathbb{P}$ from above: $\{X \leq x + 1/n\} \downarrow \{X \leq x\}$ implies $F_X(x + 1/n) \to F_X(x)$. The boundary limits follow from $\{X \leq x\} \uparrow \Omega$ and $\downarrow \emptyset$ as $x \to \pm\infty$. The converse — that any function satisfying (i)–(iii) corresponds to a unique Borel measure on $\mathbb{R}$ — is the Lebesgue–Stieltjes theorem, which requires Carathéodory's extension theorem and is non-trivial. $\square$</p>
+<h3 id="literature-context">Literature Context</h3>
+<p>The measure-theoretic formulation originates with Kolmogorov's 1933 <em>Grundbegriffe der Wahrscheinlichkeitsrechnung</em> and remains the foundational reference. Standard graduate treatments appear in Billingsley's <em>Probability and Measure</em> and Durrett's <em>Probability: Theory and Examples</em>. While the definition is settled, several surrounding questions remain active: the characterization of distributions under model misspecification (Huber's robust statistics), the behavior of empirical distributions as random elements in function spaces (Donsker's theorem, empirical process theory), and the measure-theoretic foundations of causality, where the sample space must be enriched with a causal graph (Pearl, 2009; Peters, Janzing & Schölkopf, 2017). Connections to noncommutative probability — where random variables become operators on Hilbert spaces — open into free probability and quantum information theory.</p>
+<h3 id="suggested-investigation">Suggested Investigation</h3>
+<p>A productive short project: empirically verify the Glivenko–Cantelli theorem. Given $X_1, \ldots, X_n \overset{\text{iid}}{\sim} F$, the empirical CDF $\hat{F}_n(x) = n^{-1}\sum_{i=1}^n \mathbf{1}[X_i \leq x]$ satisfies $\sup_x |\hat{F}_n(x) - F(x)| \to 0$ almost surely. Simulate this convergence for several choices of $F$ (Gaussian, Cauchy, discrete), measure the sup-norm as a function of $n$, and compare the empirical rate against the Kolmogorov–Smirnov theoretical bound $O(n^{-1/2})$. Note the pathological behavior when $F$ is heavy-tailed: the sup-norm convergence rate is the same in theory, but finite-sample behavior deteriorates markedly, and understanding why is itself an instructive exercise.</p>
+<h3 id="report-writing-note">Report-Writing Note</h3>
+<p>A write-up of this investigation should establish: (1) a precise statement of the measurability requirement and why it cannot be dropped, illustrated with a concrete non-measurable function if the measure-theoretic background permits; (2) a self-contained proof of the CDF characterization theorem; (3) numerical evidence for Glivenko–Cantelli with explicit convergence plots and sup-norm versus $n$ on a log–log scale; (4) a discussion of what breaks when the i.i.d. assumption is violated, referencing at least one non-i.i.d. generalization such as convergence for ergodic sequences.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

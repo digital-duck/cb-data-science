@@ -1,0 +1,193 @@
+domain: data_science_ch2
+sources:
+  data_collection:
+    label: Data Collection
+    sections:
+    - id: ch02_s2_1
+      title: 2.1 Overview of Data Collection Methods
+  observational_data:
+    label: Observational Data
+    sections:
+    - id: ch02_s2_1
+      title: 2.1 Overview of Data Collection Methods
+  transactional_data:
+    label: Transactional Data
+    sections:
+    - id: ch02_s2_1
+      title: 2.1 Overview of Data Collection Methods
+  experiment:
+    label: Experimental Data Collection
+    sections:
+    - id: ch02_s2_1
+      title: 2.1 Overview of Data Collection Methods
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  survey:
+    label: Survey
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  survey_design:
+    label: Survey Design
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  open_vs_closed_questions:
+    label: Open-Ended vs. Closed-Ended Questions
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  bias_in_surveys:
+    label: Bias in Survey Questions
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  sampling:
+    label: Sampling
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  sampling_techniques:
+    label: Sampling Techniques
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  sampling_error:
+    label: Sampling Error
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  sampling_bias:
+    label: Sampling Bias
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  measurement_error:
+    label: Measurement Error
+    sections:
+    - id: ch02_s2_2
+      title: 2.2 Survey Design and Implementation
+  web_scraping:
+    label: Web Scraping
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  api:
+    label: Application Programming Interface (API)
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  social_media_data_collection:
+    label: Social Media Data Collection
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  regular_expressions:
+    label: Regular Expressions (Regex)
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  string_manipulation:
+    label: String Splitting and Slicing
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  parsing_and_extraction:
+    label: Parsing and Extracting Data
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+  data_processing:
+    label: Data Processing
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_storage:
+    label: Data Storage
+    sections:
+    - id: ch02_s2_3
+      title: 2.3 Web Scraping and Social Media Data Collection
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  missing_data:
+    label: Missing Data
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  outliers:
+    label: Outliers
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_cleaning_preprocessing:
+    label: Data Cleaning and Preprocessing
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_normalization:
+    label: Data Normalization
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_transformation:
+    label: Data Transformation
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_validation:
+    label: Data Validation
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  data_aggregation:
+    label: Data Aggregation
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  noisy_data:
+    label: Noisy Data
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  text_preprocessing:
+    label: Text Preprocessing
+    sections:
+    - id: ch02_s2_4
+      title: 2.4 Data Cleaning and Preprocessing
+  big_data:
+    label: Big Data (Large Datasets)
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  data_compression:
+    label: Data Compression
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  data_indexing:
+    label: Data Indexing
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  data_chunking:
+    label: Data Chunking
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  dbms:
+    label: Database Management Systems (DBMS)
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  cloud_computing:
+    label: Cloud Computing
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets
+  large_dataset_management:
+    label: Large Dataset Management
+    sections:
+    - id: ch02_s2_5
+      title: 2.5 Handling Large Datasets

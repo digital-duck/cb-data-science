@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Distribution | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="f-distribution">F Distribution</h2>
+<p><strong>Definition.</strong> Let $U \sim \chi^2(d_1)$ and $V \sim \chi^2(d_2)$ be independent chi-squared random variables with $d_1$ and $d_2$ degrees of freedom, respectively. The random variable</p>
+$$F = \frac{U/d_1}{V/d_2}$$
+<p>is said to follow an <strong>F distribution</strong> with parameters $d_1$ and $d_2$, written $F \sim F(d_1, d_2)$. Its probability density function on $(0, \infty)$ is</p>
+$$f(x; d_1, d_2) = \frac{1}{B(d_1/2,\, d_2/2)} \left(\frac{d_1}{d_2}\right)^{d_1/2} \frac{x^{d_1/2 - 1}}{\left(1 + \frac{d_1}{d_2}x\right)^{(d_1+d_2)/2}},$$
+<p>where $B(\cdot,\cdot)$ is the beta function. The mean exists for $d_2 > 2$ and equals $d_2/(d_2-2)$; the variance exists for $d_2 > 4$.</p>
+<p><strong>Theorem (Density derivation via ratio transformation).</strong> If $U$ and $V$ are independent with $U \sim \chi^2(d_1)$ and $V \sim \chi^2(d_2)$, then $F = (U/d_1)/(V/d_2)$ has the density above.</p>
+<p><em>Proof sketch.</em> Write the joint density of $(U, V)$ as a product of gamma densities with shape parameters $d_1/2$ and $d_2/2$. Apply the change of variables $F = (U/d_1)/(V/d_2)$, $W = V$, with Jacobian $\partial(U,V)/\partial(F,W) = d_1 W / d_2$. Integrate out $W$ using the identity $\int_0^\infty w^{a-1} e^{-w(1 + d_1 F/d_2)/2}\,dw = 2^a \Gamma(a)(1 + d_1 F/d_2)^{-a}$ for $a = (d_1+d_2)/2$. The remaining constant assembles into $B(d_1/2, d_2/2)^{-1}$ via the standard beta–gamma relation $B(a,b) = \Gamma(a)\Gamma(b)/\Gamma(a+b)$. $\square$</p>
+<p>A related identity of practical importance: $F(d_1, d_2) \stackrel{d}{=} 1/F(d_2, d_1)$, which implies $F_{1-\alpha}(d_1, d_2) = 1/F_\alpha(d_2, d_1)$, reducing the number of tabled critical values required.</p>
+<p><strong>Literature context.</strong> The F distribution was introduced by R.A. Fisher (1924) and named in his honor by Snedecor (1934); Lehmann and Romano's <em>Testing Statistical Hypotheses</em> (3rd ed., 2005) provides a rigorous treatment of the optimality of F-tests under normality. What remains less settled is the behavior under model misspecification: the classical ANOVA F-test is known to be robust to mild non-normality (Box, 1953), yet the precise breakdown point under heavy tails or heteroscedasticity remains an active area—see Wilcox (2012, <em>Introduction to Robust Estimation and Hypothesis Testing</em>) for a practical account and Romano & Wolf (2005, <em>JASA</em>) for permutation-based corrections that recalibrate the test without assuming $F(d_1, d_2)$ null distributions.</p>
+<p><strong>Suggested investigation.</strong> A productive graduate project is a simulation study of F-test size and power under departure from normality. Generate samples from $t_\nu$, $\text{Laplace}$, and skewed distributions; apply the standard two-sample variance-ratio test and one-way ANOVA F-test; record empirical Type I error rates against nominal $\alpha \in \{0.01, 0.05, 0.10\}$ across a grid of sample sizes $n \in \{10, 30, 100\}$. Compare against Bartlett's test and Levene's test as competitors. A natural extension is to implement Welch's correction and verify that the approximate $F(d_1', d_2')$ distribution with non-integer degrees of freedom—derived via the Welch–Satterthwaite equation—recovers nominal size where the classical test fails.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) a precise statement of the null and its operating assumptions, (ii) the derivation linking the ratio of sample variances to $F(n_1-1, n_2-1)$ under normality, (iii) simulation methodology with seeds and code, (iv) a table of empirical rejection rates for each distribution–$n$ combination, and (v) a conclusion quantifying the practical cost of non-normality and recommending a robust alternative under specified conditions. Theoretical error bounds via Berry–Esseen would strengthen the argument.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

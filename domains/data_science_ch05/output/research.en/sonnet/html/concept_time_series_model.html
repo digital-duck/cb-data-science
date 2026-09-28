@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Series Model | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="time-series-model">Time Series Model</h2>
+<p><strong>Definition.</strong> A <em>time series model</em> is a family of probability distributions over sequences $(X_t)_{t \in \mathcal{T}}$, where $\mathcal{T} \subseteq \mathbb{Z}$ is an ordered index set and each $X_t$ takes values in a measurable space $(\mathcal{X}, \mathcal{F})$. The model specifies the joint law $\mathbb{P}(X_{t_1}, \ldots, X_{t_k})$ for all finite subcollections, subject to Kolmogorov consistency. The central modeling choice is how to factor this joint law: the most tractable assumption is <em>stationarity</em> — the law is invariant under time shifts, $\mathbb{P}(X_{t_1+h}, \ldots, X_{t_k+h}) = \mathbb{P}(X_{t_1}, \ldots, X_{t_k})$ for all $h$ — and <em>ergodicity</em>, which ensures time averages converge to ensemble averages almost surely.</p>
+<p><strong>Core structural result.</strong> The Wold decomposition theorem provides a canonical representation for any zero-mean, covariance-stationary process $(X_t)$ with $\mathbb{E}[X_t^2] < \infty$:</p>
+$$X_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j} + \eta_t,$$
+<p>where $(\varepsilon_t)$ is white noise with $\mathrm{Var}(\varepsilon_t) = \sigma^2$, the coefficients satisfy $\sum_{j=0}^{\infty} \psi_j^2 < \infty$ with $\psi_0 = 1$, and $\eta_t$ is a deterministic component perfectly predictable from its own past. The proof projects $X_t$ onto the closed linear span of its past, identifies the innovation $\varepsilon_t = X_t - \hat{X}_t$ as the residual of the best linear predictor, and iterates. The decomposition is unique up to the deterministic part. It motivates $\mathrm{ARMA}(p,q)$ models as rational approximations to the infinite MA representation: the transfer function $\Psi(z) = \sum_{j=0}^\infty \psi_j z^j$ is replaced by a ratio of polynomials $\Theta(z)/\Phi(z)$, with roots of $\Phi$ strictly outside the unit disk for stationarity and roots of $\Theta$ outside for invertibility.</p>
+<p><strong>Literature context and open questions.</strong> Classical theory — Box–Jenkins identification, Yule–Walker estimation, Ljung–Box diagnostics — is well consolidated (Brockwell & Davis, <em>Time Series: Theory and Methods</em>, 2nd ed.). The frontier that most directly strains the Wold framework is <em>long-memory</em>: fractionally integrated $\mathrm{ARFIMA}(p,d,q)$ processes with $d \in (0, 1/2)$ exhibit hyperbolic autocovariance decay not captured by any finite-order ARMA approximation, yet arise empirically in finance and climate data (Beran, 1994). The spectral density near the origin satisfies $f(\lambda) \sim C|\lambda|^{1-2d}$ as $\lambda \to 0$, and while this form is known, minimax-optimal estimation of the memory parameter $d$ — and its interaction with short-memory components — remains an active problem.</p>
+<p><strong>Suggested investigation.</strong> A tractable graduate project is an empirical fit of $\mathrm{ARMA}(p,q)$ to a dataset where long-memory is plausible — e.g., monthly industrial production or daily temperature anomalies. The student should: (1) select order by AIC/BIC and inspect residual autocorrelation via the Ljung–Box statistic $Q(h) = T(T+2)\sum_{k=1}^h \hat{\rho}_k^2/(T-k)$; (2) estimate the spectral density nonparametrically via a smoothed periodogram and compare to the fitted parametric $f(\lambda;\hat{\theta})$, looking specifically for divergence near $\lambda = 0$ that would signal long-memory misspecification; (3) assess whether the ARMA residuals are consistent with the white-noise innovation assumption demanded by Wold, or whether systematic structure remains.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state the stationarity and invertibility conditions verified for the fitted model, report the asymptotic distribution of parameter estimates under the chosen estimator (MLE or Yule–Walker), and quantify forecast uncertainty via prediction intervals rather than point forecasts alone. If the spectral comparison suggests long-memory, the write-up should identify this as a model violation and discuss what extension — not merely a refit — would be required to address it.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

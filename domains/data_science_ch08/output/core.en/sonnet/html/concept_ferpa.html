@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferpa | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="ferpa">Ferpa</h2>
+<h3 id="definition">Definition</h3>
+<p>The <strong>Family Educational Rights and Privacy Act</strong> (FERPA), enacted by the United States Congress in 1974 (20 U.S.C. § 1232g), is a federal statute that governs the privacy of <em>education records</em> held by institutions receiving federal funding. An <strong>education record</strong> is defined as any record, file, document, or other material that (i) contains information directly identifying a student and (ii) is maintained by an educational agency or institution, or by a party acting on its behalf. FERPA confers two primary rights upon eligible students (those 18 years of age or older, or enrolled in postsecondary education): the right to <strong>inspect and review</strong> their own education records within 45 days of a formal request, and the right to <strong>request amendment</strong> of records believed to be inaccurate or misleading. Disclosure of personally identifiable information (PII) from education records to third parties is prohibited without the student's written consent, subject to enumerated exceptions—most notably the <em>school officials</em> exception (legitimate educational interest), the <em>health or safety emergency</em> exception, and the <em>directory information</em> exception, the last of which permits disclosure of non-sensitive data such as name, major, and enrollment status provided the institution has given adequate public notice and the student has not opted out.</p>
+<h3 id="worked-example">Worked Example</h3>
+<p>A university registrar receives a request from a parent seeking the grade report of their 20-year-old child enrolled full-time. Because the student is over 18 and enrolled postsecondary, FERPA rights belong solely to the student. The registrar must decline unless (a) the student has submitted a signed FERPA release form authorizing parental access, or (b) the institution can demonstrate the student is a dependent for federal tax purposes under 26 U.S.C. § 152. Absent either condition, releasing the transcript constitutes a FERPA violation that can jeopardize the institution's federal funding.</p>
+<h3 id="key-principle">Key Principle</h3>
+<p><strong>FERPA Consent Requirement.</strong> Let $R$ be an education record and $T$ a third party external to the institution. Disclosure $D(R, T)$ is lawful if and only if</p>
+$$D(R, T) \;\Longleftrightarrow\; \text{Consent}(S) \;\lor\; \exists\, e \in \mathcal{E} : e \text{ applies},$$
+<p>where $S$ denotes the eligible student and $\mathcal{E}$ is the finite set of statutory exceptions enumerated under 34 C.F.R. § 99.31.</p>
+<h3 id="lab-cell">Lab Cell</h3>
+<pre><code>from sympy import FiniteSet, Piecewise, symbols, Eq, simplify
+
+# Model the FERPA disclosure decision symbolically
+consent, exception = symbols('consent exception', boolean=True)
+
+# Lawful disclosure iff consent OR a valid exception applies
+disclosure_lawful = consent | exception
+
+cases = [
+    (consent, exception, disclosure_lawful),
+    (True,  False, True),
+    (False, True,  True),
+    (False, False, False),
+]
+
+print(f"{'Consent':&lt;10} {'Exception':&lt;12} {'Lawful?'}")
+print("-" * 35)
+for c, e, result in cases:
+    print(f"{str(c):&lt;10} {str(e):&lt;12} {result}")</code></pre>
+<p>Running this cell enumerates every combination of consent and exception status, confirming that a disclosure is compliant precisely when at least one enabling condition holds—mirroring the logical structure of 34 C.F.R. § 99.31.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

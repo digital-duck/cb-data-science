@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Preparation | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-preparation">Data Preparation</h2>
+<p><strong>Definition.</strong> Let $\mathcal{X} \subseteq \mathbb{R}^d$ be the feature space and $\mathcal{Y}$ the label space. A <em>data preparation pipeline</em> is a measurable map $T : \mathcal{D}_{\text{raw}} \to \mathcal{D}_{\text{clean}}$, where $\mathcal{D}_{\text{raw}}$ is a multiset of partially-observed, possibly corrupted tuples drawn from an unknown source distribution $P_{\text{src}}$, and $\mathcal{D}_{\text{clean}}$ is a dataset suitable for downstream learning. The pipeline $T$ decomposes into a composition of operators — imputation $\phi$, normalization $\nu$, encoding $\epsilon$, and selection $\sigma$ — each of which introduces its own inductive bias into the learning problem. Formally, $T = \sigma \circ \epsilon \circ \nu \circ \phi$, though in practice the operators may be interleaved or conditioned on each other.</p>
+<p><strong>Theorem (Bias Propagation).</strong> Let $\hat{P}$ be the empirical distribution of $\mathcal{D}_{\text{clean}} = T(\mathcal{D}_{\text{raw}})$. If $T$ is not surjective onto the support of $P_{\text{src}}$, then any empirical risk minimizer $\hat{f}$ trained on $\mathcal{D}_{\text{clean}}$ satisfies</p>
+$$\mathbb{E}_{P_{\text{src}}}[\ell(\hat{f}(X), Y)] \geq \mathbb{E}_{\hat{P}}[\ell(\hat{f}(X), Y)] + \delta(T, P_{\text{src}}),$$
+<p>where $\delta(T, P_{\text{src}}) \geq 0$ is a preparation-induced distributional gap that vanishes only if $\hat{P} \ll P_{\text{src}}$ and $T$ preserves the sufficient statistics of $P_{\text{src}}$ for predicting $Y$.</p>
+<p><em>Proof sketch.</em> By the data processing inequality (Cover & Thomas, 2006, §2.8), any deterministic map $T$ cannot increase mutual information: $I(X; Y) \geq I(T(X); Y)$. The gap $\delta$ captures the information destroyed by $T$, and positive $\delta$ means the Bayes error on the cleaned distribution is strictly lower than on the source distribution — the model has been trained on a problem that is artificially easier or structurally different from deployment. $\square$</p>
+<p><strong>Literature context.</strong> The formal study of data preparation as a first-class modeling decision, rather than a preprocessing afterthought, is relatively recent. Sculley et al. (2015) empirically documented <em>hidden technical debt</em> arising from undocumented pipeline choices in large-scale ML systems. Breck et al. (2017) proposed data validation schemas to formalize distribution expectations. On the theoretical side, Goel et al. (2020) analyzed the interaction between imputation strategy and downstream generalization under missing-at-random (MAR) versus missing-not-at-random (MNAR) assumptions, showing that mean imputation is consistent under MAR but introduces systematic bias under MNAR. The <em>AutoML</em> and <em>AutoFE</em> literature (Feurer et al., 2015; Kanter & Veeramachaneni, 2015) frames operator selection as a hyperparameter search problem, but largely sidesteps the question of what $\delta$ is incurred by automated choices. Key open questions include: (1) when is $\delta$ estimable without access to $P_{\text{src}}$? (2) can a preparation pipeline be jointly optimized end-to-end with the downstream model under a unified loss?</p>
+<p><strong>Suggested investigation.</strong> Take the UCI Adult or Credit-G dataset, artificially inject missingness under both MAR and MNAR mechanisms at rates $r \in \{0.05, 0.15, 0.30\}$, and apply four imputation strategies (mean, median, k-NN, iterative/MICE). For each combination, train a fixed classifier (e.g., logistic regression) and measure (a) in-sample AUC, (b) AUC on held-out data drawn from the original distribution, and (c) calibration error. Estimate $\delta$ empirically as the gap between (a) and (b). Plot $\delta$ as a function of $r$ and missingness mechanism for each imputation strategy. Extend the experiment to include a normalization ablation: compare min-max scaling against standardization and assess their interaction with imputation on the bias gap.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should precisely state the missingness mechanism assumed, provide the full pipeline specification $T$ as pseudocode, report both in-distribution and out-of-distribution metrics separately, and quantify $\delta$ with confidence intervals via bootstrap. The report should argue — not merely observe — whether the observed gaps are explained by the information-theoretic bound above, and if not, propose a hypothesis for the discrepancy.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

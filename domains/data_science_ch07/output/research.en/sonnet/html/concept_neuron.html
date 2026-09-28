@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuron | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="neuron">Neuron</h2>
+<p><strong>Definition.</strong> A <em>neuron</em> (or <em>unit</em>) in a neural network is a parameterized scalar function $f : \mathbb{R}^n \to \mathbb{R}$ of the form</p>
+$$f(\mathbf{x}) = \sigma\!\left(\mathbf{w}^\top \mathbf{x} + b\right), \quad \mathbf{w} \in \mathbb{R}^n,\ b \in \mathbb{R},$$
+<p>where $\sigma : \mathbb{R} \to \mathbb{R}$ is a fixed nonlinearity (activation function) and the pair $(\mathbf{w}, b)$ constitutes the learnable parameters. The one additional primitive introduced here is the <em>layer</em>: a vector-valued composition of $m$ neurons, $\mathbf{F}(\mathbf{x}) = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b})$, with $\mathbf{W} \in \mathbb{R}^{m \times n}$. Depth, expressivity hierarchies, and the tradeoffs that arise from stacking layers are deferred to subsequent sections.</p>
+<p><strong>Theorem (Cybenko 1989; Hornik 1991).</strong> <em>Let $\sigma$ be any continuous sigmoidal function. Then finite sums of the form $\sum_{k=1}^N c_k \sigma(\mathbf{w}_k^\top \mathbf{x} + b_k)$ are dense in $C(K)$ for any compact $K \subset \mathbb{R}^n$.</em></p>
+<p>The proof proceeds by a Hahn–Banach separation argument: suppose some bounded linear functional on $C(K)$ annihilates all such sums. By the Riesz representation theorem, this functional corresponds to a signed measure $\mu$ on $K$. One then shows that sigmoidal activations are <em>discriminatory</em> — a signed measure that annihilates $\sigma(\mathbf{w}^\top \mathbf{x} + b)$ for every $(\mathbf{w}, b)$ must be the zero measure — so the span is dense in $C(K)$. The result extends to ReLU activations ($\sigma(t) = \max(0,t)$) via different arguments (Leshno et al. 1993), which require the activation to be non-polynomial almost everywhere rather than sigmoidal.</p>
+<p><strong>What is known and what remains open.</strong> Universal approximation establishes <em>existence</em> of parameters achieving arbitrary accuracy for a single hidden layer of sufficient width, but says nothing about <em>learnability</em> — whether gradient-based optimization finds those parameters — or about the rate at which the approximation error decreases with $m$. For Sobolev and Hölder function classes, quantitative rates are available; see the survey by DeVore et al. (2021) for a systematic treatment. A subtler open question concerns the role of the individual neuron as an atomic unit: in the overparameterized regime, neurons collectively behave as a continuous field, and it is unclear how much of a network's representational capacity is attributable to individual units versus emergent interaction structure. The question of which activation functions $\sigma$ maximize approximation efficiency for a given parameter budget remains incompletely answered.</p>
+<p><strong>Suggested investigation.</strong> Replicate the approximation rate for a single hidden layer of $m$ ReLU neurons applied to $f(x) = \sin(2\pi k x)$ on $[0,1]$, varying $m \in \{4, 8, 16, 32, 64\}$ and frequency $k \in \{2, 4, 8\}$. For each configuration, train to convergence with gradient descent and record the $L^2$ approximation error. The discriminatory-function argument predicts that for any fixed $k$, error should decrease with $m$; the interesting empirical question is the <em>rate</em>: does it match the theoretical $O(m^{-2/n})$ rate expected for Sobolev functions, and how does this rate degrade as $k$ increases? A natural secondary measurement is the distribution of learned weight norms $\|\mathbf{w}_k\|$, which reveals whether neurons specialize to different frequency components or collapse to near-identical copies.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should specify the function class being approximated and the norm used to measure error, give precise network architectures and optimization details (optimizer, learning rate schedule, initialization distribution), and report error as a function of $m$ for each value of $k$ in a controlled table. If the empirical rate differs from the theoretical prediction, the write-up should diagnose whether the gap is attributable to optimization failure (the loss did not converge) or a genuine approximation-theoretic effect. Both outcomes are scientifically informative and should be reported with equal care.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

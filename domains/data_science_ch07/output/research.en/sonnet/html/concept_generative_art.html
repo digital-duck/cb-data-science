@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generative Art | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="generative-art">Generative Art</h2>
+<p><strong>Definition.</strong> A <em>generative art system</em> is a triple $\mathcal{G} = (\mathcal{Z}, f_\theta, \mathcal{X})$ where $\mathcal{Z}$ is a latent probability space equipped with measure $\mu_Z$, $f_\theta : \mathcal{Z} \to \mathcal{X}$ is a parametric map (the <em>generator</em>), and $\mathcal{X}$ is a perceptual output space (images, audio, text, or mixed media). The induced distribution over outputs is the pushforward $\mu_X = (f_\theta)_* \mu_Z$. The creative act is the design of $f_\theta$, the choice of $\mu_Z$, and the curation of outputs from $\mathcal{X}$.</p>
+<p>This framing is broad enough to encompass rule-based systems (cellular automata, L-systems), stochastic differential equation renderers, and modern deep generative models, yet precise enough to support quantitative analysis.</p>
+<p><strong>A central tension: novelty versus coherence.</strong> Let $p^<em>$ denote the empirical distribution of a target corpus (e.g., a body of paintings). A generator trained by minimising $D_\mathrm{KL}(p^</em> \| \mu_X)$ (maximum likelihood) tends toward mode-covering at the cost of blurring; one minimising $D_\mathrm{KL}(\mu_X \| p^<em>)$ (reverse KL / mode-seeking) produces sharp but low-diversity outputs. Generative Adversarial Networks (GANs) implicitly minimise a Jensen–Shannon divergence under the original formulation of Goodfellow et al. (2014), while diffusion models (Ho et al., 2020; Song et al., 2021) target the score $\nabla_x \log p^</em>(x)$ via denoising score matching:</p>
+$$\mathcal{L}_\mathrm{DSM}(\theta) = \mathbb{E}_{t, x_0, \epsilon}\!\left[\left\| \epsilon - \epsilon_\theta\!\left(\sqrt{\bar\alpha_t}\, x_0 + \sqrt{1 - \bar\alpha_t}\,\epsilon,\, t\right) \right\|^2\right].$$
+<p>The Fréchet Inception Distance (FID; Heusel et al., 2017) operationalises perceptual quality as the Wasserstein-2 distance between Gaussian fits to feature embeddings, but its relationship to human aesthetic judgment remains an open empirical question.</p>
+<p><strong>What is known and what is open.</strong> The expressivity of deep generators is partially characterised: universal approximation results for flow-based models (Kobyzev et al., 2020) and for diffusion models in the limit of continuous time (Song et al., 2021) establish theoretical coverage of $p^<em>$, yet the sample complexity required to learn aesthetically "interesting" distributions is poorly understood. Worse, there is no agreed mathematical definition of </em>aesthetic novelty*: proposals based on Kolmogorov complexity (Schmidhuber's formal theory of creativity, 2010) are uncomputable in general, and information-theoretic surrogates (e.g., $\mathcal{H}(\mu_X) - I(\mathcal{Z}; \mathcal{X})$) have not been validated against human preference studies at scale.</p>
+<p><strong>Suggested investigation.</strong> A tractable project is to compare three generator families — a GAN, a latent diffusion model, and a neural cellular automaton — trained on the same curated dataset (e.g., WikiArt paintings in a single style). Measure (i) FID and IS as automatic proxies, (ii) a simple human-preference A/B test (n ≥ 50 raters), and (iii) latent-space coverage via intrinsic dimensionality estimation (Facco et al., 2017). The central hypothesis is that higher coverage of the latent manifold does not monotonically increase human aesthetic preference, and that the relationship is style-dependent.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: the precise distributional objective each model optimises and its theoretical limitations; the experimental protocol for the human study including inter-rater agreement (Krippendorff's $\alpha$); quantitative results for all three metrics per model; and a discussion of the gap between automatic metrics and human preference. The report should situate findings relative to at least one formal creativity criterion (Schmidhuber or Boden's taxonomy) and propose one modification to the training objective that the results suggest.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

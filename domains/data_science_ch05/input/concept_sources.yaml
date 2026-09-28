@@ -1,0 +1,238 @@
+domain: data_science_ch5
+sources:
+  sequence:
+    label: Sequence
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  time_series:
+    label: Time Series
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  time_series_analysis:
+    label: Time Series Analysis
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  time_series_model:
+    label: Time Series Model
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  error:
+    label: Error
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  forecasting:
+    label: Forecasting
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  naive_forecasting:
+    label: Naïve (Flat) Forecasting Method
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  linear_regression_forecasting:
+    label: Linear Regression Forecasting
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  volatility:
+    label: Volatility
+    sections:
+    - id: ch05_s5_1
+      title: 5.1 Introduction to Time Series Analysis
+  trend:
+    label: Trend
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  cyclic_component:
+    label: Cyclic Component
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  seasonal_component:
+    label: Seasonal Component (Seasonality)
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  noise:
+    label: Noise (Random Error)
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  trend_cycle_component:
+    label: Trend-Cycle Component
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  additive_decomposition:
+    label: Additive Decomposition
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  multiplicative_decomposition:
+    label: Multiplicative Decomposition
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  trend_curve:
+    label: Trend Curve (Trendline)
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  level:
+    label: Level
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  period:
+    label: Period
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  residuals:
+    label: Residuals
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  white_noise:
+    label: White Noise
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+  window:
+    label: Window
+    sections:
+    - id: ch05_s5_2
+      title: 5.2 Components of Time Series Analysis
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  detrending:
+    label: Detrending
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  simple_moving_average:
+    label: Simple Moving Average (SMA)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  weighted_moving_average:
+    label: Weighted Moving Average (WMA)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  exponential_moving_average:
+    label: Exponential Moving Average (EMA)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  differencing:
+    label: Differencing
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  order_of_sequence:
+    label: Order (Degree) of a Sequence
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  seasonal_trend_decomposition_loess:
+    label: Seasonal-Trend Decomposition using LOESS (STL)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  autocorrelation:
+    label: Autocorrelation
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  lag:
+    label: Lag
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  autocorrelation_function:
+    label: Autocorrelation Function (ACF)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  seasonally_adjusted_data:
+    label: Seasonally Adjusted Data
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  stationary:
+    label: Stationary Time Series
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  augmented_dickey_fuller_test:
+    label: Augmented Dickey-Fuller (ADF) Test
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  autoregressive_model:
+    label: Autoregressive (AR) Model
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  integrative_component:
+    label: Integrative (I) Component
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  moving_average_model:
+    label: Moving Average (MA) Model
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  arima:
+    label: Autoregressive Integrated Moving Average (ARIMA)
+    sections:
+    - id: ch05_s5_3
+      title: 5.3 Time Series Forecasting Methods
+  measures_of_error:
+    label: Measures of Error (Measures of Fit)
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  mean_absolute_error:
+    label: Mean Absolute Error (MAE)
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  root_mean_squared_error:
+    label: Root Mean Squared Error (RMSE)
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  mean_absolute_percentage_error:
+    label: Mean Absolute Percentage Error (MAPE)
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  symmetric_mean_absolute_percentage_error:
+    label: Symmetric Mean Absolute Percentage Error (sMAPE)
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  prediction_interval:
+    label: Prediction Interval
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods
+  overfitting:
+    label: Overfitting
+    sections:
+    - id: ch05_s5_4
+      title: 5.4 Forecast Evaluation Methods

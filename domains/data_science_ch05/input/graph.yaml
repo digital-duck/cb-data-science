@@ -1,0 +1,279 @@
+domain: time_series_analysis
+primitives:
+  sequence:
+    defines: An ordered list of numbers, measurements, or other data, with individual values called terms.
+    tier: 0
+  error:
+    defines: The extent to which predictions differ from actual observations.
+    tier: 0
+  volatility:
+    defines: The degree to which data points show significant fluctuations from the mean, typically due
+      to factors that are difficult to analyze or predict.
+    tier: 0
+  trend:
+    defines: The long-term direction of time series data in the absence of any other variation.
+    tier: 0
+  cyclic_component:
+    defines: Large variations in the data that recur over longer time periods than seasonal fluctuations
+      but without a fixed frequency.
+    tier: 0
+  seasonal_component:
+    defines: Variation in the data that occurs at fixed time periods, such as every year in the same months
+      or every week on the same days.
+    tier: 0
+  noise:
+    defines: Random, unpredictable variations in a time series that cannot be attributed to trend, cyclic,
+      or seasonal components.
+    tier: 0
+  window:
+    defines: A fixed number of consecutive terms of a time series used for computing statistics such as
+      moving averages.
+    tier: 0
+  lag:
+    defines: The number of time steps by which a time series is shifted when computing autocorrelation.
+    tier: 0
+  overfitting:
+    defines: A situation in which a model fits known data very closely but performs poorly at predicting
+      future values.
+    tier: 0
+concepts:
+  time_series:
+    defines: A set of numerical measurements of the same variable collected and organized according to
+      regular time intervals.
+    composed_of:
+    - sequence
+    tier: 1
+  order_of_sequence:
+    defines: The number of terms or lags used in a model to describe a time series, or the exponent of
+      the highest-order term in a polynomial formula that models the sequence.
+    composed_of:
+    - sequence
+    tier: 1
+  trend_cycle_component:
+    defines: A component of a time series that combines the trend and cyclic components, since cyclic
+      variation cannot be predicted the way seasonality can.
+    composed_of:
+    - trend
+    - cyclic_component
+    tier: 1
+  measures_of_error:
+    defines: Metrics used to assess how well a model's predictions align with observed data.
+    composed_of:
+    - error
+    tier: 1
+  time_series_analysis:
+    defines: The examination of data points collected at specific time intervals to identify trends, patterns,
+      and seasonal variations for informed predictions and decisions.
+    composed_of:
+    - time_series
+    tier: 2
+  time_series_model:
+    defines: A function, algorithm, or method for finding, approximating, or predicting the values of
+      a given time series.
+    composed_of:
+    - time_series
+    tier: 2
+  additive_decomposition:
+    defines: Decomposition of a time series into the sum of its trend, seasonal, and error components.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - error
+    tier: 2
+  multiplicative_decomposition:
+    defines: Decomposition of a time series into the product of its trend, seasonal, and error components.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - error
+    tier: 2
+  trend_curve:
+    defines: A line or curve modeling the trend of a time series, representing something like a mean value
+      for the series over a given time frame.
+    composed_of:
+    - time_series
+    - trend
+    tier: 2
+  period:
+    defines: The smallest time interval over which a seasonal variation pattern repeats.
+    composed_of:
+    - time_series
+    - seasonal_component
+    tier: 2
+  white_noise:
+    defines: A time series with constant zero mean, constant variance, and no correlation between values
+      at different points in the series.
+    composed_of:
+    - time_series
+    - noise
+    tier: 2
+  detrending:
+    defines: The process of separating the trend component from a time series, either by isolating and
+      removing it or by smoothing to leave only seasonal and error components.
+    composed_of:
+    - time_series
+    - trend
+    - window
+    tier: 2
+  simple_moving_average:
+    defines: The average (arithmetic mean) of a fixed number of consecutive data points in a time series,
+      used to smooth short-term variation and isolate trend.
+    composed_of:
+    - time_series
+    - window
+    tier: 2
+  differencing:
+    defines: The process of finding a new series consisting of differences of consecutive terms of a time
+      series, used to remove trend.
+    composed_of:
+    - time_series
+    - trend
+    tier: 2
+  autocorrelation:
+    defines: A measure of correlation between a time series and a shifted copy of itself.
+    composed_of:
+    - time_series
+    - lag
+    tier: 2
+  seasonally_adjusted_data:
+    defines: A time series obtained by subtracting the estimated seasonal component from the original
+      data, closely related to the underlying trend-cycle curve.
+    composed_of:
+    - time_series
+    - seasonal_component
+    tier: 2
+  stationary:
+    defines: A time series in which the variance is relatively constant over time, no overall trend exists,
+      and no seasonal patterns exist.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - volatility
+    tier: 2
+  autoregressive_model:
+    defines: A model that predicts the next value of a time series as a weighted sum of a fixed number
+      of its own previous values.
+    composed_of:
+    - time_series
+    - lag
+    tier: 2
+  moving_average_model:
+    defines: A model component that predicts the next value of a time series using past forecast errors
+      rather than past values directly.
+    composed_of:
+    - time_series
+    - error
+    tier: 2
+  mean_absolute_error:
+    defines: A scale-dependent measure of the average magnitude of forecast errors.
+    composed_of:
+    - measures_of_error
+    tier: 2
+  root_mean_squared_error:
+    defines: A scale-dependent measure of error based on the standard deviation of errors, penalizing
+      larger errors more heavily than MAE.
+    composed_of:
+    - measures_of_error
+    tier: 2
+  mean_absolute_percentage_error:
+    defines: A scale-independent measure of the average relative error between predicted and actual values,
+      expressed as a percentage.
+    composed_of:
+    - measures_of_error
+    tier: 2
+  forecasting:
+    defines: The process of making predictions or extrapolations about future values of a time series.
+    composed_of:
+    - time_series_model
+    - error
+    tier: 3
+  level:
+    defines: A constant estimate of the trend equal to the mean of all the time series data, used when
+      there is no significant long-term rise or fall.
+    composed_of:
+    - trend_curve
+    tier: 3
+  weighted_moving_average:
+    defines: A moving average in which previous terms of the series are given different weights according
+      to some formula or rule.
+    composed_of:
+    - simple_moving_average
+    tier: 3
+  autocorrelation_function:
+    defines: A function measuring the autocorrelation of a time series at each lag, used to identify periodicity
+      such as seasonal components.
+    composed_of:
+    - autocorrelation
+    - lag
+    tier: 3
+  integrative_component:
+    defines: The component of the ARIMA model representing the differencing operation used to transform
+      a nonstationary series into a stationary one.
+    composed_of:
+    - differencing
+    tier: 3
+  residuals:
+    defines: The differences between a given time series and its model, providing a measure of error and
+      an estimate of the noise component.
+    composed_of:
+    - time_series_model
+    - error
+    tier: 3
+  symmetric_mean_absolute_percentage_error:
+    defines: A scale-independent measure of relative error similar to MAPE but scaled relative to both
+      actual and predicted values.
+    composed_of:
+    - mean_absolute_percentage_error
+    tier: 3
+  exponential_moving_average:
+    defines: A weighted moving average in which weights decay exponentially, giving more recent data points
+      greater influence.
+    composed_of:
+    - weighted_moving_average
+    tier: 4
+  prediction_interval:
+    defines: A range of values that a forecasted variable could take with a specified level of probability.
+    composed_of:
+    - forecasting
+    - error
+    tier: 4
+applications:
+  seasonal_trend_decomposition_loess:
+    defines: A method that decomposes a time series into trend-cycle, seasonal, and noise components using
+      local polynomial regression.
+    needs:
+    - trend_cycle_component
+    - seasonal_component
+    - noise
+    - time_series
+    tier: 2
+  augmented_dickey_fuller_test:
+    defines: A statistical test that produces a p-value to assess whether a time series is stationary.
+    needs:
+    - stationary
+    tier: 3
+  naive_forecasting:
+    defines: A forecasting method that uses the most recent value of a time series as the best guess for
+      the next value.
+    needs:
+    - time_series
+    - forecasting
+    tier: 4
+  linear_regression_forecasting:
+    defines: A forecasting method that fits time series data to a linear regression model and uses it
+      to predict future values.
+    needs:
+    - time_series_model
+    - forecasting
+    tier: 4
+  arima:
+    defines: A forecasting model combining autoregressive, integrative (differencing), and moving average
+      components to capture trend and seasonality.
+    needs:
+    - autoregressive_model
+    - integrative_component
+    - moving_average_model
+    tier: 4

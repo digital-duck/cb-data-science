@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explainable Ai | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="explainable-ai">Explainable Ai</h2>
+<p><strong>Definition.</strong> Let $f : \mathcal{X} \to \mathcal{Y}$ be a trained model and $x_0 \in \mathcal{X}$ a query point. An <em>explanation</em> of $f$ at $x_0$ is a function $g : \mathcal{X} \to \mathcal{Y}$ drawn from an interpretable class $\mathcal{G}$ (e.g., sparse linear models, decision stumps) together with a locality measure $\pi_{x_0} : \mathcal{X} \to \mathbb{R}_{\geq 0}$ such that $g$ minimises the fidelity-complexity trade-off</p>
+$$\xi(f, g, \pi_{x_0}) = \underbrace{\mathbb{E}_{z \sim \pi_{x_0}}\bigl[\ell(f(z), g(z))\bigr]}_{\text{local fidelity}} + \Omega(g),$$
+<p>where $\ell$ is a task loss and $\Omega : \mathcal{G} \to \mathbb{R}_{\geq 0}$ penalises complexity. This formulation subsumes LIME (Ribeiro et al., 2016) and connects to the broader problem of <em>post-hoc local approximation</em>.</p>
+<p><strong>Theorem (LIME consistency; informal).</strong> If $f$ is Lipschitz continuous on $\mathcal{X}$ with constant $L$, $\pi_{x_0}$ is an isotropic Gaussian kernel with bandwidth $h$, and $\mathcal{G}$ is the class of $k$-sparse linear models, then as $n \to \infty$ the LIME estimator $\hat{g}_n$ converges in probability to the minimiser of $\xi$ at rate $O(n^{-1/2})$, independently of $\dim(\mathcal{X})$, provided $k$ is fixed.</p>
+<p><em>Proof sketch.</em> The empirical risk $\hat{\xi}_n$ is an average of i.i.d. bounded terms (bounded because $\ell$ is bounded on a compact neighbourhood of $x_0$ and $\pi_{x_0}$ has light tails). By Hoeffding's inequality the deviation $|\hat{\xi}_n - \xi|$ is $O(n^{-1/2})$ uniformly over $\mathcal{G}$ (finite VC dimension for $k$-sparse linear models). The Lipschitz assumption on $f$ ensures $\xi$ has a unique minimiser; a standard $M$-estimation argument gives parameter consistency. $\square$</p>
+<p><strong>Literature context.</strong> The fidelity–interpretability decomposition above is contested. Lundberg and Lee (2017) showed that Shapley values — derived from cooperative game theory — are the <em>unique</em> attribution satisfying efficiency, symmetry, dummy, and additivity axioms; this result is rigorous but computationally exponential in the number of features $p$, motivating the KernelSHAP approximation ($O(p^2)$). A separate thread concerns <em>global</em> explanations: concept activation vectors (Kim et al., 2018) probe intermediate representations for human-defined concepts, but their reliability degrades under distribution shift (Ghassemi et al., 2021). Open questions include: (i) whether any local explanation can be faithful when $f$ is discontinuous (e.g., near adversarial examples); (ii) the interplay between explanation stability and data privacy (membership inference can be mounted through repeated explanation queries); (iii) formal guarantees for transformer attention as explanation.</p>
+<p><strong>Suggested investigation.</strong> Choose a tabular dataset (UCI Adult or COMPAS recidivism) and a fixed black-box $f$ (gradient-boosted trees, $\geq 100$ estimators). Implement LIME and KernelSHAP from scratch — avoid wrapper libraries. For each test point $x_0$, compute the $\ell_2$ <em>stability radius</em>: the minimum perturbation $\delta$ such that the top-$k$ attributed features change. Plot stability radius against prediction confidence and local Lipschitz estimate. Test whether Shapley axiom violations appear under correlated features by constructing a synthetic dataset with known redundancy structure.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should: state the approximation class $\mathcal{G}$ and bandwidth $h$ precisely; report both in-distribution fidelity and stability radius with confidence intervals; include an ablation varying $n$ (number of neighbourhood samples) to empirically verify the $O(n^{-1/2})$ convergence; and discuss whether the explanations are faithful to $f$ or only to its local linearisation — a distinction that matters for any downstream decision reliance on the explanation.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

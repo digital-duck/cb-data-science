@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natural Language Processing | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="natural-language-processing">Natural Language Processing</h2>
+<p><strong>Definition.</strong> Natural language processing (NLP) is the subfield of artificial intelligence concerned with computational models of human language — its syntax, semantics, pragmatics, and discourse structure. Formally, let $\Sigma^<em>$ denote the Kleene closure of a finite vocabulary $\Sigma$. A language model is a probability distribution $P_\theta : \Sigma^</em> \to [0,1]$ satisfying $\sum_{w \in \Sigma^*} P_\theta(w) = 1$, parameterized by $\theta \in \mathbb{R}^d$. Modern NLP is largely the study of how to define, learn, and exploit such distributions at scale, and what structures emerge from doing so.</p>
+<p><strong>Core result: the self-attention mechanism as a sequence transducer.</strong> The Transformer architecture (Vaswani et al., 2017) defines a sequence-to-sequence map via multi-head scaled dot-product attention. Given query, key, and value matrices $Q, K, V \in \mathbb{R}^{n \times d_k}$, the attention output is</p>
+$$\operatorname{Attn}(Q,K,V) = \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.$$
+<p>Stacking $h$ such heads with learned projections $W_i^Q, W_i^K, W_i^V \in \mathbb{R}^{d \times d_k}$ and composing with position-wise feedforward layers yields the full encoder block. A foundational result (Yun et al., 2020) shows that Transformers are universal approximators of continuous sequence-to-sequence functions on compact domains — a universality theorem analogous to those for MLPs, but operating over permutation-variant inputs. The proof constructs an explicit depth-width trade-off: approximation error $\epsilon$ is achievable with $O(\epsilon^{-1/p})$ heads given $L^p$-norm targets.</p>
+<p><strong>Literature context and open questions.</strong> The scaling hypothesis — that loss $\mathcal{L}$ obeys a power law $\mathcal{L}(N) \approx \alpha N^{-\beta}$ in parameter count $N$ (Kaplan et al., 2020; Hoffmann et al., 2022) — has driven architectural choices and compute budgets. However, the precise functional form, the dependence on data distribution, and whether emergent capabilities (Wei et al., 2022) are genuine phase transitions or smooth threshold effects remain contested. Interpretability remains largely open: it is unknown whether polysemanticity of individual neurons (Elhage et al., 2022) is an artifact of superposition or reflects something fundamental about high-dimensional representation. Similarly, the relationship between perplexity and downstream task performance lacks a tight theoretical characterization.</p>
+<p><strong>Suggested investigation.</strong> A tractable graduate project is to replicate the scaling law fitting pipeline on a controlled corpus (e.g., a domain-specific subset of The Pile). Specifically: train a family of GPT-style autoregressive models spanning at least two decades in parameter count $N \in \{10^6, 10^7, 10^8\}$ and two decades in token budget $D$; fit the Chinchilla loss surface $\mathcal{L}(N,D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$ via nonlinear least squares; and test whether the optimal compute-matched pair $N^* \propto C^{0.5}$ (Hoffmann et al.) holds under domain shift. The experiment isolates whether scaling exponents are universal or corpus-dependent — a question with direct implications for how practitioners should allocate compute for specialized models.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should clearly state the training corpus statistics (token count, domain, deduplication strategy), the optimizer and learning rate schedule used across runs (to exclude confounds), the fitting procedure and confidence intervals on $\alpha, \beta$, and a comparison of the empirically optimal allocation against the Chinchilla prediction. It should conclude with a statement about generalizability: whether the fitted surface would recommend a different architecture or data mix than the standard recommendation, and what further ablation would be needed to confirm that conclusion.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

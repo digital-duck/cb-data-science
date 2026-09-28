@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missing Data | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="missing-data">Missing Data</h2>
+<p>Real-world datasets are almost never complete. <strong>Missing data</strong> refers to values absent from a dataset due to collection errors, sensor failure, data corruption, or nonresponse (e.g., a survey participant skipping a question). How you handle missingness can silently distort every downstream statistic or model, so the first step is always diagnosis, not repair.</p>
+<p>Statisticians classify missingness into three mechanisms. Data is <strong>Missing Completely at Random (MCAR)</strong> if the probability of a value being missing is unrelated to any observed or unobserved variable — like a lab technician randomly dropping test tubes. It is <strong>Missing at Random (MAR)</strong> if the missingness depends on <em>other observed</em> variables — for example, older survey respondents are less likely to report income, but conditional on age, the missingness is random. It is <strong>Missing Not at Random (MNAR)</strong> if the missingness depends on the missing value itself — such as people with very high incomes being less likely to disclose them. This taxonomy matters because it determines whether a fix will introduce bias: imputing under an MCAR or MAR assumption is defensible, but imputing MNAR data can systematically distort the true distribution.</p>
+<p><strong>Worked example</strong>: Suppose a clinical dataset of 1,000 patients has blood pressure missing for 50 records. If missingness correlates with age (older patients skip the measurement more often, but age is recorded), this is MAR. A reasonable fix is to impute blood pressure using a regression on age and other observed covariates, rather than a single global mean, which would ignore the age-dependent pattern and bias estimates for older patients.</p>
+<p><strong>Problem-solving application</strong>: Given a new dataset, first quantify missingness per column (percentage missing), then test whether missingness correlates with other observed features (e.g., via group comparisons or a logistic regression predicting "is missing"). Use this evidence to choose a strategy: mean/median imputation for MCAR features with low missing rates, model-based imputation for MAR, and explicit "missing" flag categories or domain-specific handling for suspected MNAR, since no imputation can fully recover information that is missing precisely because of its own value.</p>
+<pre class="mermaid">flowchart TD
+    A[Detect missing values] --> B{Missingness mechanism?}
+    B -->|MCAR / low rate| C[Impute with mean or median]
+    B -->|Small fraction, no strong pattern| D[Drop the row]
+    B -->|MNAR or informative gap| E[Flag as its own category]</pre>
+<p><em>Decision flow for choosing a missing-data strategy based on the underlying mechanism.</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

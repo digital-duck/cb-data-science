@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margin Of Error | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="margin-of-error">Margin Of Error</h2>
+<p><strong>Definition.</strong> Let $\hat{\theta}$ be an estimator of an unknown parameter $\theta \in \Theta$, constructed from $n$ independent and identically distributed observations $X_1, \ldots, X_n \sim P_\theta$. The <em>margin of error</em> at confidence level $1 - \alpha$ is the half-width $\varepsilon$ of a confidence interval such that</p>
+$$P_\theta\!\left(|\hat{\theta} - \theta| \leq \varepsilon\right) \geq 1 - \alpha, \quad \forall\, \theta \in \Theta.$$
+<p>For the canonical case of estimating a population proportion $p$ via the sample proportion $\hat{p} = \bar{X}$, the Central Limit Theorem gives</p>
+$$\hat{p} \approx \mathcal{N}\!\left(p,\, \frac{p(1-p)}{n}\right),$$
+<p>yielding the textbook margin of error</p>
+$$\varepsilon = z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}},$$
+<p>where $z_{\alpha/2} = \Phi^{-1}(1 - \alpha/2)$ is the standard normal quantile. Setting $\hat{p} = 0.5$ (the maximum-variance worst case) gives the survey-design formula $\varepsilon = z_{\alpha/2}/(2\sqrt{n})$, leading to the well-known $n \approx 1{,}068$ for $\varepsilon = 0.03$, $\alpha = 0.05$.</p>
+<p><strong>Theorem (Clopper–Pearson exactness).</strong> The Wald interval above is an <em>asymptotic</em> interval; its actual coverage can fall below $1 - \alpha$ for finite $n$ or extreme $p$. The Clopper–Pearson interval is <em>exact</em> — it guarantees $P(\theta \in \text{CI}) \geq 1 - \alpha$ for every $n$ — but is conservative (wider than necessary). Blyth and Still (1983) showed that no symmetric interval can be simultaneously exact and shortest-in-expectation for all $p$.</p>
+<p><strong>Literature context.</strong> The apparent simplicity of the margin of error conceals an active research landscape. Brown, Cai, and DasGupta (2001, <em>Statistical Science</em>) provided a comprehensive comparison of seven intervals for binomial proportions, demonstrating that the Wilson score interval achieves near-nominal coverage with shorter expected width than Clopper–Pearson. In complex survey settings — stratified sampling, cluster sampling, nonresponse weighting — the design effect $D_{\text{eff}} = \text{Var}_{\text{complex}} / \text{Var}_{\text{SRS}}$ inflates the naive margin of error; ignoring it is a frequent source of error in published polling analysis (Lohr, <em>Sampling: Design and Analysis</em>, 2nd ed.). Open questions remain in adaptive and sequential designs: how to report a margin of error when the sample size is itself a stopping-rule-dependent random variable (see Jennison and Turnbull, <em>Group Sequential Methods</em>, 2000).</p>
+<p><strong>Suggested investigation.</strong> Implement a simulation study in Python or R comparing Wald, Wilson, Agresti–Coull, and Clopper–Pearson intervals across a grid of $(n, p) \in \{10, 50, 200, 1{,}000\} \times \{0.01, 0.05, 0.5\}$. For each configuration, draw $10{,}000$ Monte Carlo samples and record empirical coverage and mean interval width. Examine where Wald coverage dips most severely below $1 - \alpha$. As an extension, introduce a two-stage adaptive design: after $n_1$ observations, stop early if $\hat{p}$ is extreme ($< 0.02$ or $> 0.98$), otherwise continue to $n_2$. Assess whether naively applying the Wald formula at the final sample size maintains nominal coverage.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a concise statement of the coverage guarantee each interval claims and the conditions under which the guarantee holds; (2) annotated simulation plots of coverage versus $p$ for each $n$; (3) a table of mean widths alongside empirical coverage, so the coverage–width trade-off is visible; and (4) a brief analysis of the adaptive-design scenario with a clear statement of where the standard margin-of-error formula breaks down and what correction (if any) restores nominal coverage.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

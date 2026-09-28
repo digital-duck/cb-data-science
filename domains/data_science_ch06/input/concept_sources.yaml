@@ -1,0 +1,217 @@
+domain: data_science_ch6
+sources:
+  machine_learning_model:
+    label: Machine Learning Model
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  labeled_unlabeled_data:
+    label: Labeled and Unlabeled Data
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  training_testing_set:
+    label: Training and Testing Sets
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  supervised_learning:
+    label: Supervised Learning
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  unsupervised_learning:
+    label: Unsupervised Learning
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  accuracy_measures:
+    label: Measures of Accuracy (Accuracy, Precision, Recall, F1)
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  regression_error_measures:
+    label: Regression Error Measures (MAE, MAPE, MSE, RMSE)
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  overfitting:
+    label: Overfitting
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  underfitting:
+    label: Underfitting
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  bias_variance_tradeoff:
+    label: Bias-Variance Trade-off
+    sections:
+    - id: ch06_s6_1
+      title: 6.1 What Is Machine Learning?
+  cluster:
+    label: Cluster
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  binary_multiclass_classification:
+    label: Binary and Multiclass Classification
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  sigmoid_function:
+    label: Sigmoid Function
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  logit_function:
+    label: Logit Function
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  odds:
+    label: Odds
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  logistic_regression:
+    label: Logistic Regression
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  maximum_likelihood:
+    label: Maximum Likelihood
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  k_means_clustering:
+    label: k-Means Clustering
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  centroid:
+    label: Centroid
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  silhouette_score:
+    label: Silhouette Score
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  dbscan:
+    label: DBScan
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  confusion_matrix:
+    label: Confusion Matrix
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  true_false_positive_negative:
+    label: True/False Positives and Negatives
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  bootstrapping:
+    label: Bootstrapping
+    sections:
+    - id: ch06_s6_3
+      title: 6.3 Machine Learning in Regression Analysis
+  multiple_linear_regression:
+    label: Multiple Linear Regression
+    sections:
+    - id: ch06_s6_3
+      title: 6.3 Machine Learning in Regression Analysis
+  multicollinearity:
+    label: Multicollinearity
+    sections:
+    - id: ch06_s6_3
+      title: 6.3 Machine Learning in Regression Analysis
+  multiple_logistic_regression:
+    label: Multiple Logistic Regression
+    sections:
+    - id: ch06_s6_3
+      title: 6.3 Machine Learning in Regression Analysis
+  information_entropy:
+    label: Information and Entropy
+    sections:
+    - id: ch06_s6_4
+      title: 6.4 Decision Trees
+  decision_tree:
+    label: Decision Tree
+    sections:
+    - id: ch06_s6_4
+      title: 6.4 Decision Trees
+  information_gain:
+    label: Information Gain
+    sections:
+    - id: ch06_s6_4
+      title: 6.4 Decision Trees
+  decision_tree_pruning:
+    label: Decision Tree Pruning
+    sections:
+    - id: ch06_s6_4
+      title: 6.4 Decision Trees
+  random_forest:
+    label: Random Forest
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  bootstrap_aggregating:
+    label: Bootstrap Aggregating (Bagging)
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  one_hot_encoding:
+    label: One-Hot Encoding
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  bayes_theorem:
+    label: Bayes' Theorem
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  naive_bayes_classifier:
+    label: Naïve Bayes Classifier
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  gaussian_naive_bayes:
+    label: Gaussian Naïve Bayes
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  big_data:
+    label: Big Data
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  data_mining:
+    label: Data Mining
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  heart_disease_classification:
+    label: Heart Disease Diagnosis Classification
+    sections:
+    - id: ch06_s6_2
+      title: 6.2 Classification Using Machine Learning
+  facial_recognition:
+    label: Facial Recognition
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  spam_filtering:
+    label: Spam Filtering
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques
+  temperature_prediction:
+    label: Temperature Prediction with Random Forests
+    sections:
+    - id: ch06_s6_5
+      title: 6.5 Other Machine Learning Techniques

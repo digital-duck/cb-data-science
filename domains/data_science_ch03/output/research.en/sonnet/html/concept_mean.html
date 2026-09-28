@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mean | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="mean">Mean</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mu)$ be a measure space and $f : \Omega \to \mathbb{R}$ an integrable function. The <em>mean</em> (or <em>expected value</em> when $\mu$ is a probability measure) of $f$ with respect to $\mu$ is</p>
+$$\mathbb{E}_\mu[f] = \int_\Omega f(\omega)\, d\mu(\omega),$$
+<p>provided the integral exists. For a finite population $\{x_1, \dots, x_n\} \subset \mathbb{R}$, this specializes to the arithmetic mean $\bar{x} = n^{-1}\sum_{i=1}^n x_i$, which corresponds to integration against the empirical measure $\hat{\mu}_n = n^{-1}\sum_{i=1}^n \delta_{x_i}$. The empirical mean is therefore not a separate object but a special case of the abstract integral, a perspective that keeps the theory uniform across discrete and continuous settings.</p>
+<p><strong>Theorem (Strong Law of Large Numbers).</strong> Let $X_1, X_2, \dots$ be i.i.d. random variables with $\mathbb{E}[|X_1|] < \infty$ and $\mu = \mathbb{E}[X_1]$. Then the sample mean $\bar{X}_n = n^{-1}\sum_{i=1}^n X_i$ satisfies</p>
+$$\bar{X}_n \xrightarrow{a.s.} \mu \quad \text{as } n \to \infty.$$
+<p><strong>Proof sketch.</strong> The strong law follows from Kolmogorov's maximal inequality applied to a truncated sequence, together with the Borel–Cantelli lemma to handle the truncation error. Concretely, one writes $X_i = X_i \mathbf{1}_{|X_i| \leq i} + X_i \mathbf{1}_{|X_i| > i}$; the tail pieces contribute negligibly almost surely under the finite-mean hypothesis, while the truncated pieces satisfy the variance conditions needed for the maximal inequality. The weak law ($\bar{X}_n \xrightarrow{p} \mu$) requires only $\mathbb{E}[|X_1|] < \infty$ and follows from Chebyshev's inequality when $\operatorname{Var}(X_1) < \infty$: $P(|\bar{X}_n - \mu| > \epsilon) \leq \sigma^2/(n\epsilon^2) \to 0$. Notably, Feller's extension shows that finite mean is the minimal condition for the weak law — it fails precisely when $n \cdot P(|X_1| > n) \not\to 0$. $\square$</p>
+<p><strong>Literature context.</strong> The arithmetic mean's optimality as a location estimator under squared-error loss is classical (Gauss–Markov, 1821/1900). Its sensitivity to heavy tails is a well-documented limitation; the precise rate at which $\bar{X}_n$ converges under moment constraints of order $p \in (1, 2]$ is given by Marcinkiewicz–Zygmund: $n^{1/p - 1}\sum_{i=1}^n (X_i - \mu) \xrightarrow{a.s.} 0$. In high dimensions the sample mean's concentration degrades unless the underlying distribution has sub-Gaussian tails, a gap that has driven recent work on robust mean estimation (Lugosi and Mendelson, 2019, <em>Ann. Stat.</em>). What remains open is the exact dependence structure under which LLN-type guarantees survive: for mixing processes the convergence rate is known to be slower than the i.i.d. rate in ways that depend delicately on the mixing coefficients, and sharp constants are not settled in full generality.</p>
+<p><strong>Suggested investigation.</strong> Study the finite-sample concentration of $\bar{X}_n$ as a function of tail heaviness. Draw $n$ samples from a Pareto distribution with shape $\alpha \in (1, 3)$, so that the mean exists for all $\alpha > 1$ but the variance is infinite for $\alpha \leq 2$. Track the empirical mean squared error $\mathbb{E}[(\bar{X}_n - \mu)^2]$ as a function of $n$ for several values of $\alpha$, and compare the observed rate to the Marcinkiewicz–Zygmund prediction of $O(n^{2/p - 2})$ with $p = \alpha \wedge 2$. A natural extension is to verify empirically that the convergence rate changes character at $\alpha = 2$, the boundary between finite and infinite variance.</p>
+<p><strong>Report note.</strong> A write-up of this investigation should state the Marcinkiewicz–Zygmund rate theorem explicitly, plot the empirical MSE curves on a log–log scale, and measure the slope to extract the empirical exponent for each $\alpha$. The report should then compare these empirical exponents to the theoretical prediction and discuss any discrepancy — in particular whether finite-sample bias near the phase transition at $\alpha = 2$ accounts for the gap, and over what range of $n$ the asymptotic rate becomes a reliable guide.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>
