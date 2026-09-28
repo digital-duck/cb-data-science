@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Large Dataset Management | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="large-dataset-management">Large Dataset Management</h2>
+<p><strong>定义</strong>：大数据集管理是指综合运用压缩、存储方案、索引、分块（chunking）、数据库管理系统（DBMS）与云计算等技术，解决数据规模超出单机内存或磁盘处理能力时所面临的存取、传输与计算难题。其核心矛盾是：数据量的增长速度远超单机硬件性能提升的速度，因此必须通过系统性的工程组合而非单一技术来应对——压缩降低存储与传输成本，分块使超大文件可被分批加载，索引加快查询定位，DBMS 提供结构化管理与并发控制，云计算则提供弹性可扩展的存储与算力。</p>
+<p><strong>实例演示</strong>：假设某气象研究机构需要处理十年间全球逐小时气温记录，原始 CSV 文件大小达 2TB，远超普通工作站内存（如 32GB）。直接用 pandas 读取会导致内存溢出。解决方案分四步：首先用 Parquet 格式替代 CSV 进行列式压缩存储，体积可缩小到原来的 1/5；其次按年份和地理区域对数据分块（chunking），每块控制在几百 MB 以内；再次在数据库中为时间戳和地理坐标建立索引，使查询"2020 年 7 月北美地区气温"无需扫描全部数据；最后将处理后的数据托管在云对象存储（如 S3）中，配合云端弹性计算资源按需并行处理。这样，原本无法在单机完成的任务被拆解为可管理、可并行、成本可控的流程。</p>
+<p><strong>应用与问题解决</strong>：在实际项目中，选择技术组合需要权衡查询模式与成本。若查询以"读取整行记录"为主，行式存储更合适；若以"聚合某几列"为主，列式压缩（如 Parquet、ORC）效率更高。分块大小的选择也需权衡：块太小会增加元数据开销和调度次数，块太大则失去并行处理的优势，工程实践中常取 64MB–256MB 作为经验区间。索引虽加快查询，但会增加写入开销与存储占用，因此需要在读多写少的场景中优先使用。云计算的引入进一步将"存储成本"与"计算成本"解耦，使团队可以按需扩缩容，而非一次性采购昂贵硬件。</p>
+<pre class="mermaid">flowchart LR
+    A[原始海量数据] --> B[压缩]
+    B --> C[分块]
+    C --> D[索引]
+    D --> E[数据库管理系统]
+    E --> F[云存储与云计算]
+    F --> G[高效查询与分析]</pre>
+<p><em>该图展示大数据集从原始形态到可高效查询分析所需经历的技术处理链条。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

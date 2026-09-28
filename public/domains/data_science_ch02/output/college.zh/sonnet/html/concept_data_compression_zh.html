@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Compression | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-compression">Data Compression</h2>
+<p>数据压缩是指在保留信息完整性（无损）或可接受失真范围内（有损）的前提下，减少数据表示所需比特数的技术。无损压缩要求解压后与原始数据逐位一致，适用于文本、程序代码；有损压缩允许丢弃人眼或人耳不敏感的部分信息，换取更高压缩比，常用于图像（JPEG）、音频（MP3）。二者的共同数学基础是信息论：一个符号出现概率为 $p_i$ 时，其携带的信息量为 $-\log_2 p_i$ 比特，信源的平均信息量（熵）为</p>
+$$H = -\sum_i p_i \log_2 p_i$$
+<p>熵给出了无损压缩下平均码长的理论下界。</p>
+<p><strong>Huffman 编码的构造</strong>：Huffman 编码是一种前缀码（prefix-free code，即没有一个码字是另一个码字的前缀），可保证唯一可译且平均码长逼近熵下界。算法：将各符号按频率作为叶节点放入优先队列，每次取出频率最小的两个节点合并为新节点（频率相加），重复直至只剩一个根节点；沿树从根到叶，左右分支分别记为 0/1，即得各符号码字。</p>
+<p><strong>示例</strong>：字符串 "AAABBC" 中 A 频率 3，B 频率 2，C 频率 1。合并 B、C（频率 3）得节点 X，再合并 A、X（频率 6）得根节点。对应码字：A=0，B=10，C=11。原始按定长编码需 $6 \times 2 = 12$ 比特（每字符 2 位），Huffman 编码仅需 $3(1)+2(2)+1(2)=9$ 比特，压缩比约为 75%。</p>
+<pre class="mermaid">graph TD
+    Root["根节点 频率6"] --> A["A 频率3, 码字=0"]
+    Root --> X["节点X 频率3"]
+    X --> B["B 频率2, 码字=10"]
+    X --> C["C 频率1, 码字=11"]</pre>
+<p><em>Huffman 树构造示意：频率越低的符号离根越远，码字越长。</em></p>
+<p><strong>问题求解应用</strong>：给定一批文件大小分布，可先估算熵 $H$，判断理论压缩极限；再实际运行 Huffman 编码统计实现压缩比，比较是否接近该极限。若差距较大，说明符号间存在未利用的相关性（如相邻字符依赖），此时应考虑更高阶模型（如算术编码或 LZ77 系列）以逼近熵界，这是评估任何无损压缩算法效率的标准做法。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dbms | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="dbms">Dbms</h2>
+<p><strong>数据库管理系统</strong>（Database Management System，DBMS）是用于组织、存储、检索和维护大规模结构化数据的软件系统。它在应用程序与底层数据存储之间提供了一层抽象：应用程序无需直接操作磁盘上的文件格式，而是通过统一的接口（通常是 SQL）来定义数据结构、插入和查询数据，并保证多个用户或程序同时访问数据时的正确性。DBMS 的核心职责可以归纳为四点：数据定义（定义表结构与约束）、数据操纵（增删改查）、事务管理（保证一组操作要么全部成功要么全部失败，即"原子性"）、以及并发控制（防止多个用户同时写入同一数据时产生冲突）。</p>
+<p>以一个学生成绩管理系统为例。若不使用 DBMS，程序员可能会把成绩数据存成一个纯文本文件，每次查询"某学生某学期的所有成绩"都要遍历整个文件，效率低且容易因格式错误导致数据损坏。使用关系型 DBMS（如 PostgreSQL 或 MySQL）后，我们先定义表结构：</p>
+<pre><code>CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE grades (
+    student_id INT REFERENCES students(id),
+    course VARCHAR(50),
+    score INT
+);</code></pre>
+<p><code>REFERENCES</code> 建立了<strong>外键约束</strong>，确保 <code>grades</code> 表中的 <code>student_id</code> 必须对应 <code>students</code> 表中真实存在的学生，这就是关系数据库的<strong>参照完整性</strong>。查询某学生所有课程成绩只需一条 SQL 语句：</p>
+<pre><code>SELECT course, score FROM grades WHERE student_id = 1;</code></pre>
+<p>DBMS 内部的<strong>查询优化器</strong>会自动选择索引扫描而非全表扫描，把查询时间从 $O(n)$ 降到接近 $O(\log n)$（借助 B+ 树索引）。</p>
+<p>在实际问题求解中，DBMS 还要处理并发场景：如果教务系统和学生系统同时修改同一条成绩记录，DBMS 通过<strong>事务</strong>（transaction）配合锁机制或多版本并发控制（MVCC），保证遵循 ACID 特性——原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability）——从而避免出现"脏读"或数据丢失。理解这四个特性，是设计任何依赖数据库的可靠系统（如银行转账、订单处理）的基础。</p>
+<pre class="mermaid">flowchart LR
+    A[应用程序] --> B[DBMS 接口 / SQL]
+    B --> C[查询优化器]
+    C --> D[存储引擎]
+    D --> E[(磁盘上的数据文件)]
+    B --> F[事务管理器]
+    F --> D</pre>
+<p><em>该图展示应用程序通过 DBMS 的 SQL 接口发出请求，经查询优化器和事务管理器协调后，由存储引擎读写磁盘数据。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -540,6 +540,12 @@
         "file": "output/research.en/sonnet/html/book_large_dataset_management.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "large_dataset_management",
+        "file": "output/college.zh/sonnet/html/book_large_dataset_management_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -572,6 +578,13 @@
         "language": "en"
       },
       {
+        "name": "big_data",
+        "label": "Big Data",
+        "file": "output/college.zh/sonnet/html/concept_big_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "cloud_computing",
         "label": "Cloud Computing",
         "file": "output/research.en/sonnet/html/concept_cloud_computing.html",
@@ -598,6 +611,13 @@
         "file": "output/college.en/sonnet/html/concept_cloud_computing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "cloud_computing",
+        "label": "Cloud Computing",
+        "file": "output/college.zh/sonnet/html/concept_cloud_computing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "data_chunking",
@@ -628,6 +648,13 @@
         "language": "en"
       },
       {
+        "name": "data_chunking",
+        "label": "Data Chunking",
+        "file": "output/college.zh/sonnet/html/concept_data_chunking_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_compression",
         "label": "Data Compression",
         "file": "output/research.en/sonnet/html/concept_data_compression.html",
@@ -654,6 +681,13 @@
         "file": "output/college.en/sonnet/html/concept_data_compression.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "data_compression",
+        "label": "Data Compression",
+        "file": "output/college.zh/sonnet/html/concept_data_compression_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "data_indexing",
@@ -684,6 +718,13 @@
         "language": "en"
       },
       {
+        "name": "data_indexing",
+        "label": "Data Indexing",
+        "file": "output/college.zh/sonnet/html/concept_data_indexing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_processing",
         "label": "Data Processing",
         "file": "output/research.en/sonnet/html/concept_data_processing.html",
@@ -710,6 +751,13 @@
         "file": "output/college.en/sonnet/html/concept_data_processing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "data_processing",
+        "label": "Data Processing",
+        "file": "output/college.zh/sonnet/html/concept_data_processing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "data_storage",
@@ -740,6 +788,13 @@
         "language": "en"
       },
       {
+        "name": "data_storage",
+        "label": "Data Storage",
+        "file": "output/college.zh/sonnet/html/concept_data_storage_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "dbms",
         "label": "Dbms",
         "file": "output/research.en/sonnet/html/concept_dbms.html",
@@ -766,6 +821,13 @@
         "file": "output/college.en/sonnet/html/concept_dbms.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "dbms",
+        "label": "Dbms",
+        "file": "output/college.zh/sonnet/html/concept_dbms_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "large_dataset_management",
@@ -796,11 +858,25 @@
         "language": "en"
       },
       {
+        "name": "large_dataset_management",
+        "label": "Large Dataset Management",
+        "file": "output/college.zh/sonnet/html/concept_large_dataset_management_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "missing_data",
         "label": "Missing Data",
         "file": "output/college.en/sonnet/html/concept_missing_data.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "missing_data",
+        "label": "Missing Data",
+        "file": "output/college.zh/sonnet/html/concept_missing_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "parsing_and_extraction",
@@ -831,6 +907,13 @@
         "language": "en"
       },
       {
+        "name": "parsing_and_extraction",
+        "label": "Parsing And Extraction",
+        "file": "output/college.zh/sonnet/html/concept_parsing_and_extraction_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "regular_expressions",
         "label": "Regular Expressions",
         "file": "output/research.en/sonnet/html/concept_regular_expressions.html",
@@ -859,11 +942,25 @@
         "language": "en"
       },
       {
+        "name": "regular_expressions",
+        "label": "Regular Expressions",
+        "file": "output/college.zh/sonnet/html/concept_regular_expressions_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "sampling",
         "label": "Sampling",
         "file": "output/college.en/sonnet/html/concept_sampling.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "sampling",
+        "label": "Sampling",
+        "file": "output/college.zh/sonnet/html/concept_sampling_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "string_manipulation",
@@ -892,6 +989,13 @@
         "file": "output/college.en/sonnet/html/concept_string_manipulation.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "string_manipulation",
+        "label": "String Manipulation",
+        "file": "output/college.zh/sonnet/html/concept_string_manipulation_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college",
