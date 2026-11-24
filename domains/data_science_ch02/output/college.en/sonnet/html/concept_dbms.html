@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dbms | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="dbms">Dbms</h2>
+<p>A database management system (DBMS) is software that sits between raw data files and the applications that need them, providing controlled, efficient, and concurrent access to structured data. Rather than letting programs read and write flat files directly — which invites duplication, corruption, and inconsistent updates — a DBMS enforces a schema, manages transactions, and answers queries expressed in a declarative language such as SQL. The relational model, the dominant paradigm since the 1970s, organizes data into tables (relations) of rows (tuples) and columns (attributes), with keys establishing both identity and relationships between tables.</p>
+<p><strong>Worked example.</strong> Consider a university tracking students and enrollments. A naive design might store a student's course list as a comma-separated text field: <code>"CS101, MATH201, PHYS150"</code>. This violates <em>first normal form</em>, which requires every attribute to hold a single, atomic value. The relational fix splits the data into two tables: <code>Students(student_id, name)</code> and <code>Enrollments(student_id, course_id, grade)</code>, linked by the shared key <code>student_id</code>. Now a query like "list all students enrolled in CS101" is a simple join:</p>
+<pre><code>SELECT s.name
+FROM Students s
+JOIN Enrollments e ON s.student_id = e.student_id
+WHERE e.course_id = 'CS101';</code></pre>
+<p>This structure also prevents <em>update anomalies</em>: changing a student's name requires editing exactly one row, not searching through scattered text fields.</p>
+<p><strong>Problem-solving application.</strong> The deeper discipline here is normalization — a sequence of design rules (1NF, 2NF, 3NF, and beyond) that eliminate redundancy by ensuring every non-key attribute depends on "the key, the whole key, and nothing but the key." A common exercise: given a table <code>Orders(order_id, customer_name, customer_address, product, price)</code>, notice that <code>customer_address</code> depends only on <code>customer_name</code>, not on the full key. This is a 2NF violation, and the fix is to extract a separate <code>Customers</code> table. Beyond schema design, DBMSs guarantee <strong>ACID</strong> properties for transactions — Atomicity, Consistency, Isolation, Durability — which is why a bank transfer either fully completes or fully fails, never leaving money in limbo. Choosing between a relational DBMS and a NoSQL alternative (document, key-value, or graph stores) is itself a problem-solving decision, driven by whether the data is highly structured and relationship-heavy (favoring relational) or schema-flexible and horizontally scalable (favoring NoSQL).</p>
+<pre class="mermaid">erDiagram
+    STUDENTS ||--o{ ENROLLMENTS : has
+    COURSES ||--o{ ENROLLMENTS : includes
+    STUDENTS {
+        int student_id
+        string name
+    }
+    ENROLLMENTS {
+        int student_id
+        int course_id
+        string grade
+    }
+    COURSES {
+        int course_id
+        string title
+    }</pre>
+<p><em>Entity-relationship diagram showing how normalization separates students, courses, and enrollments into linked tables to avoid redundancy.</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

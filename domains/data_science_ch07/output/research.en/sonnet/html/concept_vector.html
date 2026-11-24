@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vector | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="vector">Vector</h2>
+<p><strong>Definition.</strong> Let $\mathbb{F}$ be a field. A <em>vector space</em> over $\mathbb{F}$ is a set $V$ equipped with operations $+: V \times V \to V$ and $\cdot: \mathbb{F} \times V \to V$ satisfying the eight vector-space axioms (associativity, commutativity, identity, inverses under $+$; compatibility, distributivity over both arguments, and unit identity for $\cdot$). An element $\mathbf{v} \in V$ is called a <em>vector</em>. The definition is deliberately silent about dimension, basis, or geometric interpretation — a function space $C([0,1])$ and a finite tuple $\mathbf{v} \in \mathbb{R}^n$ are equally vectors under this umbrella.</p>
+<p>The naive view of a vector as "an arrow with magnitude and direction" is a theorem, not a definition. Concretely, $\mathbb{R}^n$ admits an inner product $\langle \mathbf{u}, \mathbf{v} \rangle = \mathbf{u}^\top \mathbf{v}$, which induces the Euclidean norm $\|\mathbf{v}\| = \sqrt{\langle \mathbf{v}, \mathbf{v} \rangle}$ and the notion of angle $\cos\theta = \langle \mathbf{u}, \mathbf{v} \rangle / (\|\mathbf{u}\|\,\|\mathbf{v}\|)$. These structures are <em>additional data</em>, not part of the base definition.</p>
+<p><strong>Theorem (Cauchy–Schwarz).</strong> <em>For any inner product space $(V, \langle \cdot, \cdot \rangle)$ over $\mathbb{R}$ or $\mathbb{C}$,</em></p>
+$$|\langle \mathbf{u}, \mathbf{v} \rangle|^2 \leq \langle \mathbf{u}, \mathbf{u} \rangle \cdot \langle \mathbf{v}, \mathbf{v} \rangle,$$
+<p><em>with equality iff $\mathbf{u}$ and $\mathbf{v}$ are linearly dependent.</em></p>
+<p><em>Proof.</em> For any $t \in \mathbb{R}$, the non-negativity of the norm gives</p>
+$$0 \leq \|\mathbf{u} - t\mathbf{v}\|^2 = \langle \mathbf{u},\mathbf{u}\rangle - 2t\langle \mathbf{u},\mathbf{v}\rangle + t^2\langle\mathbf{v},\mathbf{v}\rangle.$$
+<p>Treating the right side as a quadratic in $t$ and minimizing at $t^<em> = \langle\mathbf{u},\mathbf{v}\rangle / \langle\mathbf{v},\mathbf{v}\rangle$ (assuming $\mathbf{v} \neq \mathbf{0}$) yields $\langle\mathbf{u},\mathbf{u}\rangle\langle\mathbf{v},\mathbf{v}\rangle \geq \langle\mathbf{u},\mathbf{v}\rangle^2$. The equality condition follows from $t^</em>\mathbf{v} = \mathbf{u}$. $\square$</p>
+<p>The proof is purely algebraic and holds in <em>any</em> inner product space — Hilbert spaces, Sobolev spaces, reproducing kernel Hilbert spaces (RKHS) — making Cauchy–Schwarz one of the most portable results in analysis.</p>
+<p><strong>Literature context.</strong> Axiomatic vector spaces trace to Peano (1888) and were consolidated by Banach and Hilbert in the early twentieth century; the standard graduate reference remains Halmos's <em>Finite-Dimensional Vector Spaces</em> (1958) alongside Rudin's <em>Functional Analysis</em> for the infinite-dimensional case. Open research territory concerns vector representations in the machine-learning context: word embeddings (Mikolov et al., 2013; Pennington et al., 2014) empirically satisfy near-linear algebraic relations ($\text{king} - \text{man} + \text{woman} \approx \text{queen}$), but why the geometry of natural-language semantics is approximately Euclidean — and when it fails — remains incompletely understood. Recent work on hyperbolic embeddings (Nickel & Kiela, 2017) and vector spaces over non-Archimedean fields (Khrennikov, 2004) suggests the choice of field and metric is itself a modeling decision with empirical consequences.</p>
+<p><strong>Suggested investigation.</strong> Choose a small, structured domain (e.g., kinship terms, color names, or elementary arithmetic facts) and embed its concepts as vectors via two methods: (i) co-occurrence–based (GloVe-style), and (ii) frozen LLM hidden-state extraction. Compute pairwise cosine similarities and compare them against a hand-labeled semantic distance matrix. Assess whether Cauchy–Schwarz saturation (near-parallel vectors) corresponds to semantic synonymy, and whether near-orthogonality corresponds to semantic independence. A secondary question: do the embeddings satisfy the triangle inequality, and if not, which pairs violate it and why?</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state which vector space axioms are verifiable for the chosen embedding (additive closure is typically <em>not</em> guaranteed for discrete token embeddings), report the Pearson and Spearman correlation between geometric similarity and human-labeled similarity, and explicitly discuss whether the Euclidean inner product is the appropriate similarity measure or whether a learned metric (e.g., Mahalanobis) would better recover the labeled structure. Null results — cases where geometry fails to match semantics — are as publication-worthy as positive correlations.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

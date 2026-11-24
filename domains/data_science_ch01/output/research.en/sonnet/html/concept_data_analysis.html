@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analysis | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-analysis">Data Analysis</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P)$ be a probability space and let $\mathbf{X} = (X_1, \ldots, X_n)$ be a sequence of random variables with values in a measurable space $(\mathcal{X}, \mathcal{B})$. <em>Data analysis</em> is, formally, the study of functionals $T : \mathcal{X}^n \to \Theta$ — estimators, test statistics, predictors, or exploratory summaries — together with their sampling distributions, asymptotic behavior, and decision-theoretic optimality properties. The objects of primary interest are the bias–variance decomposition of squared-error risk, the convergence of empirical measures to the population measure, and the sensitivity of conclusions to model misspecification. Crucially, none of these properties are fully settled in the high-dimensional, dependent-data, or distribution-shift regimes that now dominate applied work.</p>
+<p><strong>Theorem (Uniform Law of Large Numbers / Glivenko–Cantelli).</strong> Let $F_n(x) = n^{-1}\sum_{i=1}^n \mathbf{1}[X_i \leq x]$ denote the empirical distribution function of an i.i.d. sample from $F$. Then</p>
+$$\sup_{x \in \mathbb{R}} |F_n(x) - F(x)| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> Fix $\varepsilon > 0$ and choose a finite $\varepsilon$-net $\{x_1, \ldots, x_k\}$ in the sense that every interval $(-\infty, x]$ is approximated to within $\varepsilon$ in $F$-measure. By the strong law, $F_n(x_j) \to F(x_j)$ almost surely for each $j$; monotonicity of $F_n$ and $F$ then propagates pointwise convergence to uniform convergence. The Dvoretzky–Kiefer–Wolfowitz (DKW) inequality sharpens this to a finite-sample exponential bound: $P(\sup_x |F_n(x) - F(x)| > \varepsilon) \leq 2e^{-2n\varepsilon^2}$. $\square$</p>
+<p>The DKW bound is sharp up to the constant 2 (Massart, 1990), and its generalization to VC classes — the fundamental theorem of statistical learning — underpins PAC learning theory. The analogous result for dependent sequences requires mixing conditions; for $\phi$-mixing processes the bound degrades by a factor related to the mixing coefficients, an area of active research under the rubric of <em>non-stationary statistical learning</em> (Kuznetsov and Mohri, 2017).</p>
+<p><strong>What is known and what remains open.</strong> Classical multivariate analysis (PCA, regression, MANOVA) assumes $n \gg p$. The high-dimensional regime $p/n \to \gamma \in (0, \infty)$ is now well-characterized by random matrix theory: the Marchenko–Pastur law describes the empirical spectral distribution of $\mathbf{X}^\top \mathbf{X}/n$, and the BBP transition (Baik, Ben Arous, Péché, 2005) locates the phase transition for detectability of low-rank signal. Open questions include finite-sample rates for spiked covariance estimation under heavy tails, optimal multiple-testing correction under arbitrary dependence, and causal identifiability from observational data under unmeasured confounding.</p>
+<p><strong>Suggested investigation.</strong> Take a real tabular dataset (e.g., UCI repository, $n \approx 500$–$2000$, $p \approx 20$–$100$). First, compute the empirical spectral distribution of $\hat{\Sigma} = n^{-1}\mathbf{X}^\top \mathbf{X}$ and overlay the Marchenko–Pastur law for the measured $\gamma = p/n$. Identify which eigenvalues lie outside the bulk — candidate signal directions. Second, apply the DKW-based bootstrap to construct distribution-free confidence bands for the marginal CDFs; compare coverage against a Gaussian-assumption confidence band. Third, introduce a mild distribution shift by sub-sampling a covariate-stratified split and measure how rapidly the dominant principal components rotate.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) whether the observed bulk spectrum is consistent with the null (all-noise) Marchenko–Pastur prediction, and what $p$-value a Tracy–Widom test assigns to the largest eigenvalue; (ii) empirical coverage of bootstrap confidence bands at the nominal $95\%$ level across 500 simulation replicates; (iii) a quantitative measure (e.g., principal angle between subspaces) of how the leading eigenspace shifts across distribution splits, with a discussion of whether the shift exceeds what sampling variability alone predicts. These three results together constitute a minimal reproducible audit of a dataset prior to any modeling step.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

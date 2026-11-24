@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three D Visualization | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="three-d-visualization">Three D Visualization</h2>
+<p><strong>Definition.</strong> Three-dimensional visualization is the discipline of constructing faithful, perceptually interpretable representations of geometric objects, scalar/vector fields, or abstract data embedded in $\mathbb{R}^3$ (or a curved three-manifold) onto a two-dimensional display surface. Formally, a visualization pipeline is a composition of maps:</p>
+$$V = R \circ P \circ T : \mathcal{X} \longrightarrow \mathbb{R}^2,$$
+<p>where $\mathcal{X}$ is the data domain (a subset of $\mathbb{R}^3$ or a discrete mesh), $T$ is a rigid or affine world-to-camera transformation, $P$ is a projection (orthographic or perspective), and $R$ is a rasterization or ray-casting operator that resolves occlusion and lighting. The mathematical content of each stage is non-trivial, and the composition $V$ is neither injective (occlusion destroys information) nor continuous at silhouette edges, which is why visualization remains an active research area rather than an engineering checklist.</p>
+<p><strong>Projection geometry.</strong> The perspective projection from camera coordinates $(x, y, z)$ to image coordinates is the rational map:</p>
+$$\pi(x, y, z) = \left(\frac{f x}{z},\, \frac{f y}{z}\right),$$
+<p>with focal length $f > 0$ and the convention $z > 0$. In homogeneous coordinates this is a linear map represented by the $3\times 4$ camera matrix $\mathbf{P} = \mathbf{K}[\mathbf{R}\mid\mathbf{t}]$, where $\mathbf{K}$ is the intrinsic matrix, $\mathbf{R} \in SO(3)$, and $\mathbf{t} \in \mathbb{R}^3$. Orthographic projection corresponds to $f \to \infty$ with rescaled coordinates and eliminates foreshortening; the choice between them affects depth perception in a measurable, user-study-quantifiable way (Ware, 2004).</p>
+<p><strong>Theorem (Radon, 1917; Natterer, 2001 — X-ray transform).</strong> Let $f \in C_c^\infty(\mathbb{R}^3)$. The X-ray transform $\mathcal{X}f(\ell) = \int_\ell f\, ds$ over lines $\ell \subset \mathbb{R}^3$ uniquely determines $f$, and the inversion formula is:</p>
+$$f(\mathbf{x}) = -\frac{1}{8\pi^2} \int_{S^2} \frac{\partial^2}{\partial s^2}\left[\int_{\xi \cdot \mathbf{y} = s} f(\mathbf{y})\, d\mathbf{y}\right]_{s = \xi \cdot \mathbf{x}} d\xi.$$
+<p>This theorem underpins both volume rendering (where $f$ is an opacity or emission density) and computed tomography reconstruction. The practical consequence for visualization is that a single 2D projection discards the remaining two degrees of freedom; interactive rotation (varying $\mathbf{R}$) provides the observer with an equivalent of integrating over $S^2$, recovering full structural understanding in a perceptual sense — though the information-theoretic equivalence is not strict and depends on the observer's prior.</p>
+<p><strong>Literature context.</strong> Classical references (Foley et al., <em>Computer Graphics: Principles and Practice</em>; Shirley & Morley, <em>Realistic Ray Tracing</em>) establish the rendering pipeline, while Ware's <em>Information Visualization</em> (2004, 2020) connects the geometry to cognitive science. Current open questions include: (1) optimal view selection — given $f$, which rotation $\mathbf{R}^*$ maximizes feature salience under a perceptual metric? (2) interactive visualization of implicitly defined surfaces (signed-distance functions, neural radiance fields); (3) uncertainty visualization — rendering a probability distribution over $\mathbb{R}^3$ rather than a point estimate. The NeRF literature (Mildenhall et al., 2020) re-opened the view-synthesis problem by parameterizing $f$ with a neural network, blurring the line between visualization and reconstruction.</p>
+<p><strong>Suggested investigation.</strong> Implement a minimal ray-marcher for a signed-distance field $\phi: \mathbb{R}^3 \to \mathbb{R}$ (e.g., a gyroid surface defined by $\phi(\mathbf{x}) = \sin x_1 \cos x_2 + \sin x_2 \cos x_3 + \sin x_3 \cos x_1$). Vary the camera orbit uniformly over $SO(3)$ and compute, for each view, the projected silhouette length and the fraction of surface area visible. Fit the visibility fraction $\eta(\mathbf{R})$ as a function of orbit angles; determine empirically whether a single "best view" exists or whether the distribution is multimodal. Compare orthographic versus perspective modes at several focal lengths and report the effect on perceived curvature of the saddle regions.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should clearly state the SDF definition and the ray-marching step-size criterion used for convergence; derive or cite the sphere-tracing bound $\Delta t \leq \phi(\mathbf{x}(t)) / \|\nabla\phi\|_\infty$; present visibility-fraction curves with error bars over multiple orbit discretizations; and discuss what the multimodality (or lack thereof) implies about interactive versus static presentation of the surface. The write-up should situate the result relative to the view-entropy literature (Vázquez et al., 2001) and identify one extension — such as applying the same analysis to a data-driven implicit surface learned from a point cloud.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

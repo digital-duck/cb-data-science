@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentiles | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="百分位数">百分位数</h2>
+<p><strong>定义。</strong> 将一组数据从小到大排序后,第 $p$ 百分位数(记作 $P_p$)是这样一个值:大约有 $p\%$ 的数据点小于或等于它。例如,若某次考试成绩为第 90 百分位数,意味着约 90% 的考生成绩不高于该分数。注意:百分位数描述的是<strong>相对位置</strong>,而不是得分的百分比。中位数就是第 50 百分位数,四分位数 $Q_1,Q_3$ 分别是第 25、75 百分位数。</p>
+<p><strong>计算方法(线性插值法)。</strong> 设数据已排序为 $x_1\le x_2\le\cdots\le x_n$。计算位置</p>
+$$
+k=\frac{p}{100}\,(n-1)+1 .
+$$
+<p>令 $i=\lfloor k\rfloor$,$f=k-i$,则</p>
+$$
+P_p = x_i + f\,(x_{i+1}-x_i).
+$$
+<p>若 $k$ 恰为整数,则直接取 $x_k$。(不同软件和教材的约定略有差异,例如 NumPy 默认采用上述公式,结果可能与手算有微小出入,但思想一致。)</p>
+<p><strong>例题。</strong> 已知 10 名学生的测验成绩(已排序):</p>
+$$
+52,\ 58,\ 61,\ 67,\ 70,\ 74,\ 79,\ 85,\ 90,\ 96 .
+$$
+<p>求第 75 百分位数。</p>
+<p>这里 $n=10$,$p=75$,所以</p>
+$$
+k=0.75\times 9+1=7.75,\quad i=7,\quad f=0.75 .
+$$
+<p>因此</p>
+$$
+P_{75}=x_7+0.75\,(x_8-x_7)=79+0.75\times(85-79)=83.5 .
+$$
+<p>即约四分之三的学生成绩不高于 83.5 分。</p>
+<p><strong>问题求解应用。</strong></p>
+<p><em>(1) 反向求百分位排名。</em> 某学生得 74 分,在上述数据中有 6 个成绩不高于 74(52, 58, 61, 67, 70, 74),所以其百分位排名约为</p>
+$$
+\frac{6}{10}\times 100\% = 60\% .
+$$
+<p>也就是说,该学生超过或持平了约 60% 的同学。</p>
+<p><em>(2) 识别异常值。</em> 先求 $Q_1=P_{25}$ 与 $Q_3=P_{75}$,令四分位距 $\mathrm{IQR}=Q_3-Q_1$。对本数据,$k_{25}=0.25\times9+1=3.25$,故 $Q_1=61+0.25\times(67-61)=62.5$,而 $Q_3=83.5$,所以 $\mathrm{IQR}=21$。常用判别准则是:小于 $Q_1-1.5\,\mathrm{IQR}$ 或大于 $Q_3+1.5\,\mathrm{IQR}$ 的数据视为潜在异常值。此处界限为 $62.5-31.5=31$ 与 $83.5+31.5=115$,所有成绩都在范围内,没有异常值。</p>
+<p><em>(3) 代码验证。</em></p>
+<pre><code>import numpy as np
+scores = [52,58,61,67,70,74,79,85,90,96]
+print(np.percentile(scores, [25, 75]))  # [62.5  83.5]</code></pre>
+<p><strong>要点。</strong> 百分位数对极端值不敏感,因此常用于描述收入、身高体重、标准化考试成绩等偏态分布的数据。使用时务必说明所采用的计算约定,并牢记:第 $p$ 百分位数是一个<strong>数据值</strong>,而百分位排名是一个<strong>比例</strong>,二者互为反问。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

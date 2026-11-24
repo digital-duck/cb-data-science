@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervised Learning | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="supervised-learning">Supervised Learning</h2>
+<p><strong>Definition.</strong> Let $\mathcal{X}$ be an input space and $\mathcal{Y}$ a label space. Supervised learning concerns the problem of finding a function $f : \mathcal{X} \to \mathcal{Y}$ from a finite sample $S = \{(x_i, y_i)\}_{i=1}^n$ drawn i.i.d. from an unknown joint distribution $\mathcal{D}$ over $\mathcal{X} \times \mathcal{Y}$. A learner selects $\hat{f}$ from a hypothesis class $\mathcal{H}$ by minimizing the empirical risk $\hat{\mathcal{R}}(f) = \frac{1}{n}\sum_{i=1}^n \ell(f(x_i), y_i)$ for a loss $\ell$, with the goal that the true (population) risk $\mathcal{R}(f) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(f(x),y)]$ is also small. The gap $\mathcal{R}(\hat{f}) - \inf_{f \in \mathcal{H}}\mathcal{R}(f)$ is the <em>estimation error</em>; the gap $\inf_{f \in \mathcal{H}}\mathcal{R}(f) - \inf_{f}\mathcal{R}(f)$ is the <em>approximation error</em>. The fundamental tension between these two quantities — the bias–variance tradeoff — is what makes supervised learning non-trivial.</p>
+<p><strong>Theorem (Uniform Convergence / Finite-Class Bound).</strong> Suppose $|\mathcal{H}| < \infty$ and $\ell(\cdot,\cdot) \in [0,1]$. Then for any $\delta > 0$, with probability at least $1-\delta$ over the draw of $S$,</p>
+$$\sup_{f \in \mathcal{H}} |\mathcal{R}(f) - \hat{\mathcal{R}}(f)| \leq \sqrt{\frac{\ln|\mathcal{H}| + \ln(2/\delta)}{2n}}.$$
+<p><em>Proof sketch.</em> Fix $f$; Hoeffding's inequality gives $\Pr[|\mathcal{R}(f) - \hat{\mathcal{R}}(f)| > \epsilon] \leq 2e^{-2n\epsilon^2}$. A union bound over $|\mathcal{H}|$ hypotheses and solving for $\epsilon$ yield the stated bound. $\square$</p>
+<p>This finite-class result generalizes to infinite $\mathcal{H}$ via the VC dimension $d_{\mathrm{VC}}(\mathcal{H})$, giving sample complexity $n = O\!\left(\frac{d_{\mathrm{VC}} + \log(1/\delta)}{\epsilon^2}\right)$ (Vapnik and Chervonenkis 1971; Blumer et al. 1989). Rademacher complexity provides tighter, data-dependent bounds (Bartlett and Mendelson 2002).</p>
+<p><strong>Literature context.</strong> Classical PAC learning theory (Valiant 1984) establishes what is learnable in polynomial time and sample; the No-Free-Lunch theorem (Wolpert 1996) establishes that without inductive bias, no learner dominates. Modern deep learning breaks many classical predictions: overparameterized networks generalize despite zero training loss, a phenomenon explained only partially by implicit regularization (Zhang et al. 2017; Belkin et al. 2019) and the <em>double descent</em> curve. Open questions include: (1) a tight characterization of the effective hypothesis class learned by gradient descent on neural networks; (2) the role of data distribution geometry in generalization; (3) extending uniform-convergence bounds to the interpolating regime without vacuousness.</p>
+<p><strong>Suggested investigation.</strong> Replicate the double-descent experiment of Belkin et al. (2019) on a tabular dataset using polynomial feature expansion or random Fourier features. Fix a training set of size $n$ and sweep model complexity (number of features $p$ from $p \ll n$ to $p \gg n$). Record training error, test error, and the norm of the minimum-norm interpolant. Plot the resulting risk curve and identify the classical peak and the second descent. Then compute VC-dimension-based generalization bounds at each $p$ and verify that they become vacuous ($> 1$) well before interpolation; this concretely demonstrates the gap between classical theory and empirical behavior. As an extension, apply early stopping and compare the risk profile to the explicit regularization (ridge regression) baseline.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state precisely which risk decomposition is being studied and define all quantities; (ii) give a self-contained proof of the bound used as a baseline; (iii) report the experiment with exact hyperparameters, dataset statistics, and confidence intervals over multiple random seeds; (iv) discuss whether the observations are consistent with any of the proposed theoretical explanations (implicit bias, benign overfitting); and (v) identify one specific open question the experiment does not resolve and propose a follow-up design.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

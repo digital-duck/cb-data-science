@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natural Language Processing | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="自然语言处理">自然语言处理</h2>
+<p><strong>定义。</strong> 自然语言处理(Natural Language Processing,NLP)是人工智能的一个分支,研究如何让计算机识别(理解)书面或口头语言,并生成新的语言内容。它包含两大类任务:<strong>理解</strong>(分类、实体识别、翻译、问答)与<strong>生成</strong>(摘要、对话、写作)。</p>
+<p><strong>核心思想:把语言变成可计算的对象。</strong> 计算机只能处理数字,所以第一步是<strong>分词</strong>(tokenization),第二步是把每个词元映射为向量(词嵌入)。语义相近的词,向量方向也相近,常用余弦相似度衡量:</p>
+$$\cos\theta=\frac{\mathbf{u}\cdot\mathbf{v}}{\|\mathbf{u}\|\,\|\mathbf{v}\|}$$
+<p>现代语言模型的目标是预测下一个词元。给定前文 $w_1,\dots,w_{t-1}$,模型估计条件概率,整句的概率则是各项的连乘:</p>
+$$P(w_1,\dots,w_n)=\prod_{t=1}^{n}P(w_t\mid w_1,\dots,w_{t-1})$$
+<p>生成文本,就是不断从这个分布中取词(取概率最大者,或按概率采样)。</p>
+<p><strong>例题 1:词向量相似度。</strong> 设二维嵌入 $\mathbf{u}_{\text{猫}}=(2,1)$,$\mathbf{u}_{\text{狗}}=(3,1)$,$\mathbf{u}_{\text{税}}=(-1,3)$。判断哪个词与"猫"更相近。</p>
+<li>猫与狗:点积 $=6+1=7$,模长 $\sqrt5\cdot\sqrt{10}=\sqrt{50}\approx7.07$,所以 $\cos\theta\approx0.99$。</li>
+<li>猫与税:点积 $=-2+3=1$,模长 $\sqrt5\cdot\sqrt{10}\approx7.07$,所以 $\cos\theta\approx0.14$。</li>
+<p>"狗"远比"税"更接近"猫",这与我们的语义直觉一致。</p>
+<p><strong>例题 2:用二元模型计算句子概率。</strong> 简化假设:每个词只依赖前一个词(二元模型)。已知语料统计:$P(\text{我})=0.2$,$P(\text{爱}\mid\text{我})=0.3$,$P(\text{学习}\mid\text{爱})=0.4$。求"我 爱 学习"的概率:</p>
+$$P=0.2\times0.3\times0.4=0.024$$
+<p>若另一句"我 学习 爱"中 $P(\text{学习}\mid\text{我})=0.05$,$P(\text{爱}\mid\text{学习})=0.01$,则概率为 $0.2\times0.05\times0.01=0.0001$。模型因此偏好更通顺的语序,这就是它"生成"通顺语言的依据。</p>
+<p><strong>问题求解应用。</strong> 设要用 NLP 构建一个评论情感分类器,可按以下步骤:</p>
+<li><strong>预处理:</strong> 分词,去除噪声。</li>
+<li><strong>表示:</strong> 将每条评论转换为向量(词嵌入平均或 Transformer 编码)。</li>
+<li><strong>建模:</strong> 用带标签数据训练分类器,输出 $P(\text{正面}\mid\text{评论})$。</li>
+<li><strong>评估:</strong> 在测试集上计算准确率、精确率和召回率。若正面评论占 90%,"全部预测为正面"也有 90% 准确率,所以此时必须同时看召回率与 F1。</li>
+<p><strong>常见误区。</strong> 模型输出流畅,不等于内容正确。语言模型优化的是"概率高",而不是"事实真";因此应用于关键场景时,需要检索验证与人工审核。</p>
+<p><strong>小结。</strong> NLP 的主线是:文本 $\rightarrow$ 数字表示 $\rightarrow$ 概率模型 $\rightarrow$ 理解或生成。掌握向量相似度与条件概率连乘,就掌握了其数学骨架。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

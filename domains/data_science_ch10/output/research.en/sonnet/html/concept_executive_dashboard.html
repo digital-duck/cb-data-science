@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Dashboard | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="executive-dashboard">Executive Dashboard</h2>
+<p><strong>Definition.</strong> Let $\mathcal{S} = \mathbb{R}^d$ denote the <em>organizational state space</em>, where each coordinate represents a time-indexed operational signal (revenue, latency, headcount, defect rate, etc.) observed over a horizon $T$. An <em>executive dashboard</em> is a measurable map</p>
+$$
+\phi: \mathcal{S} \times \mathcal{T} \to \mathcal{D}
+$$
+<p>where $\mathcal{D}$ is a low-dimensional <em>display space</em> (typically $|\mathcal{D}| \ll d$) and $\mathcal{T}$ is a time domain. The map $\phi$ is constructed to preserve decision-relevant structure while discarding operational detail. The central research question is not visual design but <em>epistemic compression</em>: under what conditions does $\phi$ induce a <em>sufficient reduction</em> of $\mathcal{S}$ for the executive's decision problem?</p>
+<p><strong>Theorem (Sufficiency of Dashboard Reduction).</strong> Let $\theta \in \Theta$ be a latent organizational parameter (strategy effectiveness, systemic risk, etc.) and let $X_{1:d}$ be observable signals with joint density $p(X_{1:d} \mid \theta)$. A statistic $T(X_{1:d}) = \phi(X_{1:d})$ is <em>sufficient</em> for $\theta$ if and only if the conditional distribution $p(X_{1:d} \mid T, \theta) = p(X_{1:d} \mid T)$ — that is, no residual information about $\theta$ remains in the raw signals once $T$ is known. By the Fisher–Neyman factorization theorem, this holds iff</p>
+$$
+p(x_{1:d} \mid \theta) = h(x_{1:d}) \cdot g(T(x_{1:d}), \theta)
+$$
+<p>for some non-negative functions $h, g$. The <em>information loss</em> of dashboard $\phi$ is then quantifiable as the mutual information gap $I(\theta; X_{1:d}) - I(\theta; \phi(X_{1:d})) \geq 0$, with equality characterizing a lossless (sufficient) dashboard.</p>
+<p><strong>Literature context.</strong> The sufficiency framing connects classical statistics (Fisher 1922; Lehmann & Scheffé 1950) to modern organizational theory. Galbraith's <em>information processing view of organizations</em> (1974) anticipated this formally: organizations are understood as bounded-information systems whose hierarchical aggregation must match the uncertainty of the task environment. More recent work in <em>management control systems</em> (Merchant & Van der Stede) and <em>balanced scorecard theory</em> (Kaplan & Norton 1996) offers normative aggregation heuristics but rarely derives optimality conditions. The algorithmic side intersects with sufficient dimensionality reduction (Cook 1998; Li 1991 via sliced inverse regression), principal component analysis under structured covariance, and causally-grounded aggregation (Peters, Mooij, Schölkopf 2017). An open question of practical importance: <em>when organizational signals exhibit non-stationary or heavy-tailed behavior, standard PCA-based aggregation systematically under-represents tail risk — is there a minimax-optimal dashboard under distributional shift?</em></p>
+<p><strong>Suggested investigation.</strong> Select a publicly available organizational dataset (e.g., a multi-KPI time-series from the M-competitions, or SEC filings with quarterly operational metrics). Fix a proxy for $\theta$ (e.g., next-quarter earnings surprise as a latent organizational health signal). Fit a sufficient reduction $T$ using sliced inverse regression alongside a baseline PCA dashboard, and measure $I(\theta; T_{\text{SIR}}) - I(\theta; T_{\text{PCA}})$ using a $k$-nearest-neighbor mutual information estimator (Kraskov et al. 2004). Additionally, perturb the signal distribution (covariate shift) and record how dashboard sufficiency degrades. This constitutes a controlled ablation on the information-theoretic quality of competing aggregation strategies.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a precise formalization of the decision problem and what $\theta$ represents, (2) the factorization check or MI estimate demonstrating sufficiency or its failure for each method, (3) the empirical degradation curve under distributional shift, and (4) a discussion of whether the sufficiency gap is practically significant relative to the executive's stated decision horizon — connecting the mathematical result back to organizational consequences.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

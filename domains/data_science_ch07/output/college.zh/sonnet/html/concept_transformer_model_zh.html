@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformer Model | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="transformer-模型">Transformer 模型</h2>
+<p><strong>定义。</strong> Transformer 是一种完全基于<strong>自注意力(self-attention)</strong>机制的神经网络架构。它不依赖循环或卷积,而是让序列中任意两个位置直接交互,因此能够高效捕获长程依赖。</p>
+<p>设输入序列的嵌入矩阵为 $X \in \mathbb{R}^{n \times d_{\text{model}}}$,其中 $n$ 为序列长度。通过可学习的矩阵 $W^Q, W^K \in \mathbb{R}^{d_{\text{model}} \times d_k}$ 与 $W^V \in \mathbb{R}^{d_{\text{model}} \times d_v}$,得到查询、键、值:</p>
+$$Q = XW^Q,\quad K = XW^K,\quad V = XW^V.$$
+<p><strong>缩放点积注意力</strong>定义为</p>
+$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.$$
+<p>除以 $\sqrt{d_k}$ 的原因:若 $q,k$ 的各分量独立、均值为 0、方差为 1,则 $q\cdot k$ 的方差为 $d_k$。不缩放时,点积数值过大会使 softmax 进入饱和区,梯度趋近于零。</p>
+<p><strong>多头注意力</strong>并行运行 $h$ 组不同的投影,再拼接:</p>
+$$\text{MultiHead}(X) = \text{Concat}(\text{head}_1,\dots,\text{head}_h)\,W^O.$$
+<p>每个编码器层由"多头自注意力 + 前馈网络(FFN)"组成,二者外加残差连接与层归一化。由于自注意力本身对位置不敏感,还需加入<strong>位置编码</strong>,例如</p>
+$$PE_{(pos,2i)}=\sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right),\quad PE_{(pos,2i+1)}=\cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).$$
+<p><strong>worked example。</strong> 取 $n=2$、$d_k=2$,</p>
+$$Q=\begin{pmatrix}1&0\\0&1\end{pmatrix},\quad K=\begin{pmatrix}1&0\\1&1\end{pmatrix},\quad V=\begin{pmatrix}1&2\\3&4\end{pmatrix}.$$
+<li>计算 $QK^\top=\begin{pmatrix}1&1\\0&1\end{pmatrix}$,除以 $\sqrt{2}\approx1.414$ 得 $\begin{pmatrix}0.707&0.707\\0&0.707\end{pmatrix}$。</li>
+<li>逐行 softmax:第一行为 $(0.5,\,0.5)$;第二行为 $\left(\tfrac{1}{1+e^{0.707}},\tfrac{e^{0.707}}{1+e^{0.707}}\right)\approx(0.33,\,0.67)$。</li>
+<li>与 $V$ 相乘:第一行输出 $0.5(1,2)+0.5(3,4)=(2,3)$;第二行输出 $0.33(1,2)+0.67(3,4)\approx(2.34,\,3.34)$。</li>
+<p>第二个位置更关注第二个词(权重 0.67),输出因此更接近 $V$ 的第二行。</p>
+<p><strong>问题求解应用。</strong> 估算计算成本:自注意力需计算 $n\times n$ 的得分矩阵,时间复杂度为 $O(n^2 d)$,而循环网络为 $O(n d^2)$,但后者需 $O(n)$ 个顺序步骤。自注意力任意两个位置间的路径长度为 $O(1)$,循环网络则为 $O(n)$。</p>
+<p><em>练习:</em> 若 $n=4096$、$d=512$,比较一层自注意力与一层 RNN 的乘加次数。 解:自注意力约 $n^2 d = 4096^2\times512\approx8.6\times10^9$;RNN 约 $nd^2=4096\times512^2\approx1.07\times10^9$。可见当 $n>d$ 时,注意力更昂贵,这正是长上下文模型要研究稀疏注意力、FlashAttention 等改进的原因。但注意力可完全并行,在 GPU 上的实际速度往往更快。</p>
+<pre class="mermaid">flowchart TD
+    A[输入嵌入] --> B[加位置编码]
+    B --> C[多头自注意力]
+    C --> D[残差连接与层归一化]
+    D --> E[前馈网络]
+    E --> F[残差连接与层归一化]
+    F --> G[堆叠 N 层后输出]</pre>
+<p><em>图:Transformer 编码器层的数据流:位置编码、自注意力与前馈网络依次处理,并在每个子层后使用残差连接与归一化。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

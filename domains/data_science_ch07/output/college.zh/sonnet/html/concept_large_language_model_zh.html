@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Large Language Model | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="大语言模型">大语言模型</h2>
+<h3 id="定义">定义</h3>
+<p><strong>大语言模型</strong>(Large Language Model,LLM)是一种在海量文本上训练的神经网络,其核心任务是<strong>预测下一个词元(token)</strong>。文本被切分为词元序列 $x_1, x_2, \dots, x_T$,模型学习条件概率分布:</p>
+$$
+P(x_1,\dots,x_T)=\prod_{t=1}^{T} P_\theta(x_t \mid x_1,\dots,x_{t-1})
+$$
+<p>其中 $\theta$ 是模型参数(现代模型通常有数十亿到数万亿个)。训练目标是最小化交叉熵损失:</p>
+$$
+\mathcal{L}(\theta)=-\frac{1}{T}\sum_{t=1}^{T}\log P_\theta(x_t \mid x_{<t})
+$$
+<p>主流架构是 <strong>Transformer</strong>,其核心是自注意力机制:</p>
+$$
+\text{Attention}(Q,K,V)=\text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+$$
+<p>它让每个词元根据相关程度"关注"上下文中的其他词元。生成文本时,模型反复采样下一个词元并追加到输入末尾(自回归生成)。</p>
+<h3 id="例题">例题</h3>
+<p>设词表只有 4 个词元,模型对上下文"今天天气"给出 logits(未归一化分数)$z=(2.0,\,1.0,\,0.5,\,-1.0)$,分别对应"很好""不错""糟糕""苹果"。求各词元的概率。</p>
+<p>用 softmax:$P_i = e^{z_i}/\sum_j e^{z_j}$。</p>
+<li>$e^{2.0}\approx 7.39,\ e^{1.0}\approx 2.72,\ e^{0.5}\approx 1.65,\ e^{-1.0}\approx 0.37$</li>
+<li>总和 $\approx 12.13$</li>
+<p>所以 $P\approx(0.609,\,0.224,\,0.136,\,0.030)$。贪心解码选"很好"。若真实下一词是"不错",则该步损失为 $-\ln 0.224\approx 1.50$。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>温度参数</strong>控制随机性:将 logits 除以温度 $\tau$ 再做 softmax。</p>
+<p><strong>问题:</strong> 取 $\tau=0.5$,重新计算上例概率,并说明变化。</p>
+<p>logits 变为 $(4.0,\,2.0,\,1.0,\,-2.0)$:</p>
+<li>$e^{4}\approx 54.60,\ e^{2}\approx 7.39,\ e^{1}\approx 2.72,\ e^{-2}\approx 0.14$,总和 $\approx 64.85$</li>
+<li>$P\approx(0.842,\,0.114,\,0.042,\,0.002)$</li>
+<p>最高概率词元从 0.609 升到 0.842,分布更"尖锐",输出更确定;$\tau$ 越大分布越平坦,输出越多样,也更易出错。这正是实际调用 ChatGPT 类模型时,"需要事实准确则调低温度,需要创意则调高温度"的数学依据。</p>
+<p><strong>另一个常见问题:</strong> 为何模型会"一本正经地胡说"(幻觉)?因为训练目标只是让文本<strong>概率高</strong>,而不是让内容<strong>为真</strong>。当训练数据中缺少相关信息时,模型仍会输出概率最高的流畅续写。因此,对事实性任务应结合检索或外部验证。</p>
+<pre class="mermaid">flowchart LR
+A[输入文本] --> B[分词为词元]
+B --> C[词嵌入加位置编码]
+C --> D[多层自注意力与前馈网络]
+D --> E[输出 logits]
+E --> F[softmax 得到概率]
+F --> G[采样下一个词元]
+G --> H[追加到输入]
+H --> B</pre>
+<p><em>图:大语言模型的自回归生成流程。每生成一个词元,就将其追加到输入中,重复循环直到结束。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

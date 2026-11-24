@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artificial Intelligence | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="artificial-intelligence">Artificial Intelligence</h2>
+<p><strong>Definition.</strong> Artificial intelligence (AI) denotes the study and construction of computational agents whose behavior optimizes some performance criterion over an environment, formally captured by the tuple $\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, T, R, \gamma \rangle$ — a Markov Decision Process where $T : \mathcal{S} \times \mathcal{A} \to \Delta(\mathcal{S})$ is the transition kernel, $R : \mathcal{S} \times \mathcal{A} \to \mathbb{R}$ the reward signal, and $\gamma \in [0,1)$ the discount factor. An agent policy $\pi : \mathcal{S} \to \Delta(\mathcal{A})$ is optimal if it maximizes the expected discounted return $V^\pi(s) = \mathbb{E}_\pi\!\left[\sum_{t=0}^\infty \gamma^t R(s_t, a_t)\mid s_0 = s\right]$. This formalism, rooted in Bellman (1957) and formalized through the RL literature (Sutton & Barto, 2018), is deliberately agnostic to the computational substrate — it encompasses symbolic planners, neural networks, and hybrid systems equally.</p>
+<p><strong>Theorem (Bellman Optimality).</strong> There exists a unique fixed point $V^<em> \in \mathcal{B}(\mathcal{S})$ of the Bellman operator $(\mathcal{T}V)(s) = \max_{a}\!\left[R(s,a) + \gamma \sum_{s'} T(s'|s,a)\,V(s')\right]$, and $V^</em> = V^{\pi^<em>}$ for the greedy policy $\pi^</em>(s) = \arg\max_a [R(s,a) + \gamma \mathbb{E}_{s'}V^*(s')]$.</p>
+<p><em>Proof sketch.</em> $\mathcal{T}$ is a $\gamma$-contraction on the Banach space $(C_b(\mathcal{S}), \|\cdot\|_\infty)$ under the sup norm; the Banach fixed-point theorem guarantees existence, uniqueness, and convergence of value iteration $V_{k+1} = \mathcal{T}V_k$ at rate $\gamma^k$. $\square$</p>
+<p><strong>Literature context.</strong> The MDP framework crystallizes a century-long project — from Turing's (1950) imitation game to McCarthy's 1956 Dartmouth proposal — into a tractable mathematical object. Contemporary AI has bifurcated: <em>learning-based</em> approaches approximate $\pi^<em>$ from data (deep RL, large language models), while </em>symbolic<em> approaches exploit the structure of $\mathcal{S}$ (SAT solvers, knowledge graphs). The central unresolved tension is </em>sample efficiency vs. generalization*: empirical scaling laws (Kaplan et al., 2020; Hoffmann et al., 2022) suggest that language model performance obeys $L(N,D) \sim N^{-\alpha} + D^{-\beta}$ with $\alpha \approx \beta \approx 0.07$, yet theoretical understanding of why over-parameterized networks generalize remains incomplete (Bartlett et al., 2021; Belkin, 2021). Whether the MDP is the right unit of analysis for agents that reason over language and knowledge graphs — rather than numeric state spaces — is itself an open question.</p>
+<p><strong>Suggested investigation.</strong> Replicate the tabular value-iteration convergence result on a small gridworld, then replace the tabular representation with a neural approximator and observe the failure modes (oscillation, overestimation bias). Formally, investigate how the contraction property degrades when $\mathcal{T}$ is approximated by $\hat{\mathcal{T}}_\theta$: derive the error bound $\|V^* - V^\pi_\theta\|_\infty \leq \frac{\epsilon}{1-\gamma}$ and identify the conditions under which $\epsilon$ remains bounded during gradient descent. Extend the investigation to a language-model agent acting on a text environment (e.g., AlfWorld), and measure how the scaling law exponent shifts with context length.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state the MDP formulation precisely, naming every tuple element; (ii) prove or cite the contraction argument; (iii) report the empirical convergence curve alongside the theoretical $\gamma^k$ envelope; (iv) characterize the approximation error as a function of network width and training steps; and (v) position the findings relative to at least one contemporary benchmark, explaining what the gap between theory and observation implies for future work.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

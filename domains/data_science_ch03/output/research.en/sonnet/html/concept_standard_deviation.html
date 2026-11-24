@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standard Deviation | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="standard-deviation">Standard Deviation</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and $X: \Omega \to \mathbb{R}$ a random variable with $X \in L^2(\mathbb{P})$. The <em>standard deviation</em> of $X$ is defined as</p>
+$$\sigma(X) := \sqrt{\mathbb{E}[(X - \mu)^2]}, \quad \mu := \mathbb{E}[X],$$
+<p>provided $\mathbb{E}[X^2] < \infty$. Equivalently, $\sigma(X) = \sqrt{\mathrm{Var}(X)}$, where $\mathrm{Var}(X) = \mathbb{E}[X^2] - \mu^2$. For a finite sample $\{x_1, \ldots, x_n\}$, the <em>sample standard deviation</em> is</p>
+$$s = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2},$$
+<p>where the divisor $n-1$ (Bessel's correction) yields an unbiased estimator of $\sigma^2$.</p>
+<p><strong>Theorem (Chebyshev's Inequality).</strong> For any $X \in L^2(\mathbb{P})$ with mean $\mu$ and standard deviation $\sigma > 0$, and for any $k > 0$,</p>
+$$\mathbb{P}(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}.$$
+<p><em>Proof.</em> By Markov's inequality applied to the non-negative random variable $(X - \mu)^2$:</p>
+$$\mathbb{P}((X-\mu)^2 \geq k^2 \sigma^2) \leq \frac{\mathbb{E}[(X-\mu)^2]}{k^2 \sigma^2} = \frac{\sigma^2}{k^2 \sigma^2} = \frac{1}{k^2}. \qquad \square$$
+<p>This bound is distribution-free and tight: equality is achieved by a two-point distribution placing mass $1/(2k^2)$ at each of $\mu \pm k\sigma$ and mass $1 - 1/k^2$ at $\mu$. The tightness exposes a fundamental limitation — Chebyshev bounds are sharp only for adversarial distributions, and for structured families (sub-Gaussian, log-concave) considerably sharper tail estimates are attainable via Chernoff or concentration-of-measure arguments.</p>
+<p><strong>Literature context.</strong> Standard deviation emerges as the natural dispersion measure within the $L^2$ geometry of Hilbert spaces; it is the residual norm of the orthogonal projection of $X$ onto the constant subspace, a perspective developed in the functional-analytic treatments of Loève (1977) and formalized in the reproducing-kernel setting by Berlinet and Thomas-Agnan (2004). The interplay between $\sigma$ and tail behavior is central to high-dimensional probability: Vershynin (2018) systematically replaces $\sigma$ with sub-Gaussian and sub-exponential parameters when the $L^2$ assumption does not adequately capture the tail structure. An active research frontier concerns <em>robust estimation</em> of $\sigma$: when observations are corrupted or heavy-tailed, the sample standard deviation can be arbitrarily poor, motivating median-of-means estimators (Lugosi and Mendelson, 2019) and influence-function-based M-estimators that achieve near-optimal mean-squared error under minimal moment conditions.</p>
+<p><strong>Suggested investigation.</strong> Choose three distributions — $\mathcal{N}(0,1)$, Student's $t_3$ (finite variance, heavy tail), and Pareto with shape $\alpha = 2.5$ (finite variance near the boundary). For sample sizes $n \in \{50, 200, 1000\}$, estimate $\sigma$ using (i) the sample standard deviation $s$, (ii) the median absolute deviation scaled to $\sigma$ (i.e., $\hat{\sigma}_{\mathrm{MAD}} = \mathrm{median}|X_i - \tilde{x}|/0.6745$), and (iii) a trimmed standard deviation with 10% trimming. Repeat each configuration $10^4$ times and compare bias, variance, and mean squared error of the three estimators. Plot the empirical coverage of Chebyshev's bound against the theoretical $1/k^2$ curve for $k \in [1,4]$, and identify for which distribution and sample size the bound is most nearly tight.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should clearly state the estimand ($\sigma^2$ of the data-generating distribution), report Monte Carlo standard errors on all MSE estimates, and provide a formal power analysis justifying the chosen $10^4$ replications. The central claim — that robustness gains of MAD over $s$ depend strongly on tail index — must be supported by a confidence-interval table, not merely a visual. Discussion should situate the findings within the Lugosi–Mendelson framework, identify the sample size at which asymptotic normality of $s$ appears to dominate distributional effects, and propose one extension (e.g., dependent data or streaming estimation) as future work.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

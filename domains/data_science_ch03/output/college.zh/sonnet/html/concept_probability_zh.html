@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="概率">概率</h2>
+<p><strong>定义。</strong> 概率是一个介于 $0$ 和 $1$ 之间的数,用来衡量某个事件发生的可能性。$P(A)=0$ 表示事件 $A$ 不可能发生,$P(A)=1$ 表示 $A$ 必然发生。</p>
+<p>在<strong>等可能</strong>的样本空间 $S$ 中(例如均匀的骰子、洗匀的扑克牌),事件 $A$ 的概率为</p>
+$$P(A)=\frac{n(A)}{n(S)},$$
+<p>其中 $n(A)$ 是 $A$ 包含的结果数,$n(S)$ 是全部可能的结果数。更一般地,概率满足三条基本规则:</p>
+<li>对任意事件,$0\le P(A)\le 1$;</li>
+<li>$P(S)=1$;</li>
+<li>若 $A$、$B$ 互斥,则 $P(A\cup B)=P(A)+P(B)$。</li>
+<p>由此可推出<strong>补事件公式</strong>:$P(A^c)=1-P(A)$;以及一般的加法公式:$P(A\cup B)=P(A)+P(B)-P(A\cap B)$。</p>
+<p>概率也可以从<strong>频率</strong>的角度理解:重复试验次数 $N$ 很大时,事件发生的频率 $\dfrac{N_A}{N}$ 会趋近于 $P(A)$(大数定律)。</p>
+<p><strong>例题。</strong> 同时掷两枚均匀的骰子,求点数之和为 $7$ 的概率。</p>
+<p>样本空间共有 $6\times 6=36$ 个等可能结果。和为 $7$ 的结果有 $(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)$,共 $6$ 个。因此</p>
+$$P(\text{和为 }7)=\frac{6}{36}=\frac{1}{6}.$$
+<p><strong>问题求解应用。</strong> 某班有 $30$ 名学生,问:至少有两人生日相同的概率是多少?(忽略闰年,假设生日等可能。)</p>
+<p>直接计算"至少两人相同"较复杂,于是改用补事件:先求"所有人生日都不同"的概率。</p>
+$$P(\text{全不同})=\frac{365}{365}\cdot\frac{364}{365}\cdot\frac{363}{365}\cdots\frac{336}{365}\approx 0.294.$$
+<p>所以</p>
+$$P(\text{至少两人相同})=1-0.294\approx 0.706.$$
+<p>约有 $70\%$ 的可能,这一结果往往出乎直觉。</p>
+<p><strong>解题策略小结:</strong></p>
+<li>先明确样本空间,并检查结果是否真的等可能;</li>
+<li>若直接计算困难,考虑用补事件 $1-P(A^c)$;</li>
+<li>判断事件是否互斥,再决定使用哪种加法公式;</li>
+<li>最后检验答案是否落在 $[0,1]$ 内——这是最简单也最有效的自查方法。</li>
+<pre class="mermaid">flowchart LR
+    A[确定样本空间] --> B[列出事件的结果]
+    B --> C{直接计算容易吗?}
+    C -->|是| D[用 n_A 除以 n_S]
+    C -->|否| E[用补事件 1 减 P]
+    D --> F[检验结果在 0 到 1 之间]
+    E --> F</pre>
+<p><em>图:求解概率问题的基本流程,从确定样本空间到检验结果的合理性。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

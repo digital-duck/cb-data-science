@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bias | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="bias">Bias</h2>
+<p><strong>Definition.</strong> Let $\hat{\theta}_n$ be an estimator of a parameter $\theta \in \Theta$ based on $n$ i.i.d. observations $X_1, \ldots, X_n \sim P_\theta$. The <em>bias</em> of $\hat{\theta}_n$ is</p>
+$$
+\mathrm{Bias}(\hat{\theta}_n) = \mathbb{E}_{P_\theta}[\hat{\theta}_n] - \theta,
+$$
+<p>where the expectation is taken under the true data-generating measure $P_\theta$. An estimator with $\mathrm{Bias}(\hat{\theta}_n) = 0$ for all $\theta \in \Theta$ is called <em>unbiased</em>; one for which $\mathrm{Bias}(\hat{\theta}_n) \to 0$ as $n \to \infty$ is called <em>asymptotically unbiased</em>. The mean squared error decomposes as</p>
+$$
+\mathrm{MSE}(\hat{\theta}_n) = \mathrm{Var}(\hat{\theta}_n) + \mathrm{Bias}(\hat{\theta}_n)^2,
+$$
+<p>a decomposition that immediately frames bias not as an isolated defect but as one term in a fundamental trade-off.</p>
+<p><strong>Theorem (Cramér–Rao lower bound for biased estimators).</strong> Suppose $P_\theta$ satisfies standard regularity conditions (Fisher information $I(\theta)$ finite and positive, interchange of differentiation and integration). Let $b(\theta) = \mathrm{Bias}(\hat{\theta}_n)$. Then</p>
+$$
+\mathrm{Var}(\hat{\theta}_n) \geq \frac{(1 + b'(\theta))^2}{n\, I(\theta)}.
+$$
+<p><em>Proof sketch.</em> Apply the Cauchy–Schwarz inequality to $\mathrm{Cov}(\hat{\theta}_n,\, \partial_\theta \log p(X;\theta))$, noting that $\mathbb{E}[\partial_\theta \log p] = 0$ and $\mathbb{E}[\hat{\theta}_n \cdot \partial_\theta \log p] = 1 + b'(\theta)$ by differentiation under the integral sign. $\square$</p>
+<p>The bound reveals that a <em>carefully chosen</em> bias — one with $|b'(\theta)| < 0$ — can shrink the lower bound on variance, permitting a biased estimator to achieve smaller MSE than any unbiased competitor. The James–Stein estimator (1961) makes this precise: for estimating a mean vector $\mu \in \mathbb{R}^p$ with $p \geq 3$ under squared-error loss, the shrinkage estimator $\hat{\mu}_{\mathrm{JS}} = (1 - (p-2)/\|\bar{X}\|^2)\bar{X}$ dominates the MLE uniformly, despite being biased toward the origin.</p>
+<p><strong>Literature context.</strong> Stein's inadmissibility result overturned the century-old presumption that unbiasedness was a design virtue rather than an incidental property. It spawned the Stein phenomenon literature and, more recently, motivated regularization in high-dimensional statistics: ridge regression introduces bias $-(X^\top X + \lambda I)^{-1}\lambda\beta$ to reduce variance when $p/n$ is large (Hoerl and Kennard, 1970). Contemporary open questions include the optimal bias schedule in neural network training (implicit regularization via SGD; Gunasekar et al., 2017) and the formal characterization of <em>algorithmic bias</em> — systematic deviation arising from training data distributions rather than estimator design — a setting where the parameter space $\Theta$ itself may be ill-defined.</p>
+<p><strong>Suggested investigation.</strong> Replicate the bias–variance trade-off empirically on synthetic Gaussian data ($p = 50$, $n = 100$): compare the MLE, ridge, and James–Stein estimators over a grid of signal strengths $\|\mu\|$. Measure MSE by Monte Carlo averaging over $10^4$ trials. Identify the crossover $\|\mu\|^<em>$ at which shrinkage loses its MSE advantage. Then derive $\|\mu\|^</em>$ analytically from the Cramér–Rao bound and compare to your simulation.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should state the estimand and loss function precisely, reproduce the Cramér–Rao derivation for the biased case, report Monte Carlo standard errors alongside MSE estimates, and locate the analytic $\|\mu\|^*$ relative to the empirical crossover. Discussion should address whether the qualitative finding extends to non-Gaussian families and what it implies for the default choice of regularization strength in practice.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

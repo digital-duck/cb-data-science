@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Data | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="big-data">Big Data</h2>
+<p><strong>Definition.</strong> A dataset is colloquially called <em>big data</em> when its volume, velocity, or variety (the "three Vs" of Laney 2001) causes conventional in-memory, single-machine algorithms to fail in finite time or memory. More precisely, let $n$ denote the number of observations and $d$ the ambient dimension. Classical statistical learning theory — rooted in VC-dimension bounds and Hoeffding-type concentration — assumes $n$ and $d$ are fixed constants relative to available RAM. The big-data regime instead studies the limit $n, d \to \infty$ jointly, often with $d/n \to \gamma \in (0, \infty)$, or $n$ so large that a single pass over the data is the only feasible operation.</p>
+<p><strong>A Central Theorem: Streaming Lower Bounds.</strong> Much of the theoretical backbone of big-data computation comes from <em>communication complexity</em> and <em>sketching theory</em>. A foundational result is the following.</p>
+<p><strong>Theorem (Alon–Matias–Szegedy, 1999).</strong> Any randomized streaming algorithm that computes the $\ell_2$ frequency moment $F_2 = \sum_i f_i^2$ of a stream of $n$ elements drawn from universe $[m]$ with constant success probability requires $\Omega(\min(n, m))$ bits of space in the worst case.</p>
+<p><em>Proof sketch.</em> Reduce from the two-party communication problem INDEX: Alice holds $x \in \{0,1\}^m$, Bob holds index $j$, and they must compute $x_j$ with $O(1)$ rounds. Any streaming algorithm for $F_2$ can be converted to a protocol for INDEX by having Alice simulate the stream for her elements and send the memory state; Bob reads off the answer. Since INDEX requires $\Omega(m)$ bits of communication (Shannon lower bound on information), the space lower bound follows. $\square$</p>
+<p>This result established that <em>exact</em> computation of basic statistics is information-theoretically expensive, forcing the field toward $\varepsilon$-approximation algorithms: the celebrated <strong>Count-Min Sketch</strong>, <strong>AMS Sketch</strong>, and <strong>Johnson–Lindenstrauss random projections</strong> all achieve $\tilde{O}(\varepsilon^{-2})$ space at the cost of a $(1 \pm \varepsilon)$ multiplicative error.</p>
+<p><strong>Literature Context.</strong> The AMS paper launched a program that now encompasses sublinear algorithms, compressed sensing (Candès–Romberg–Tao 2006; Donoho 2006), and the random-matrix theory of high-dimensional statistics (Marchenko–Pastur law; Bai–Silverstein 2010). Open questions remain sharp: optimal space-time tradeoffs for graph streaming (Assadi 2022), tight bounds for distributed statistical estimation under communication constraints (Han–Özgür–Weissman 2018), and whether stochastic gradient descent on non-convex losses provably converges in the $n \gg d$ streaming regime without multiple passes.</p>
+<p><strong>Suggested Investigation.</strong> Implement the AMS $F_2$ estimator and the Count-Min Sketch from scratch on a publicly available log or text corpus (e.g., Wikipedia page-view streams or the KDD Cup click-log). Measure empirical error as a function of the space parameter $w$ (number of hash buckets) and the number of independent hash functions $d$, comparing against the theoretical $\delta$-failure bound $\delta = e^{-d}$ and $\varepsilon$-error bound $\varepsilon = \sqrt{e/w}$. Then stress-test by injecting heavy-hitter skew (Zipf-distributed frequencies) and characterize the breakdown point. As an extension, benchmark against the mergeable summary framework of Agarwal et al. (2013), which supports parallel and distributed aggregation — directly relevant to MapReduce and Spark pipelines.</p>
+<p><strong>Report-Writing Note.</strong> A write-up of this investigation should: (1) state the space lower bound formally and identify which step in the proof is tight; (2) present empirical error curves with confidence intervals alongside the theoretical envelope; (3) discuss the gap between worst-case guarantees and average-case behavior on real corpora; and (4) position the findings relative to at least one system-level result — e.g., whether the theoretical constants translate to measurable latency differences at the scale of $10^8$ stream elements.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

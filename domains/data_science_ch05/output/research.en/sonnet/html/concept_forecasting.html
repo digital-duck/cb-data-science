@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forecasting | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="forecasting">Forecasting</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space and let $\{Y_t\}_{t \in \mathbb{Z}}$ be a real-valued stochastic process adapted to a filtration $\{\mathcal{F}_t\}$. A <em>forecast</em> of $Y_{t+h}$ at horizon $h \geq 1$, given information up to time $t$, is a measurable function $\hat{Y}_{t+h|t} = f(Y_t, Y_{t-1}, \ldots)$. The <em>optimal point forecast</em> under squared-error loss is the conditional expectation $\mathbb{E}[Y_{t+h} \mid \mathcal{F}_t]$; this is the single primitive introduced here. The choice of loss function is not incidental — it determines what "optimal" means structurally — but squared-error is the canonical starting point because it admits a clean algebraic bound via the Wold decomposition.</p>
+<p><strong>Theorem (Wold Decomposition).</strong> Every covariance-stationary process $\{Y_t\}$ with no deterministic component admits the unique representation</p>
+$$Y_t = \sum_{j=0}^{\infty} \psi_j \varepsilon_{t-j} + \eta_t,$$
+<p>where $\{\varepsilon_t\} \sim \mathrm{WN}(0, \sigma^2)$, $\sum_j \psi_j^2 < \infty$, $\psi_0 = 1$, and $\eta_t$ is linearly deterministic. The <em>h</em>-step-ahead forecast error under this representation satisfies</p>
+$$Y_{t+h} - \hat{Y}_{t+h|t} = \sum_{j=0}^{h-1} \psi_j \varepsilon_{t+h-j},$$
+<p>so the irreducible forecast variance at horizon $h$ is $\sigma^2 \sum_{j=0}^{h-1} \psi_j^2$, which is non-decreasing in $h$. This is a structural lower bound; no estimator can do better in the linear class regardless of sample size.</p>
+<p><strong>Literature context.</strong> Classical parametric forecasting — ARIMA, exponential smoothing, VAR — operates by estimating $\{\psi_j\}$ from finite samples and relies on correct model specification. Box and Jenkins (1970) systematized this. The subsequent literature has two major threads. First, <em>model uncertainty</em>: Bayesian model averaging (Hoeting et al., 1999) and forecast combination (Timmermann, 2006) aggregate over a model space rather than commit to one; the surprising empirical finding is that equal-weight averaging often beats sophisticated selection. Second, <em>nonlinear and nonstationary extensions</em>: Clements and Hendry (1999) show that structural breaks dominate in practice, motivating differencing, intercept corrections, and robust methods. More recently, transformer-based sequence models (Nie et al., 2023; Zeng et al., 2023) challenge the parametric paradigm, though whether attention mechanisms genuinely capture temporal dependencies or merely interpolate within training distributions remains actively contested.</p>
+<p>An open research question sits at this boundary: under what regularity conditions does a data-driven (e.g., neural) forecaster achieve the Wold lower bound, and at what sample-size cost relative to a correctly specified parametric model? Formal results here are sparse.</p>
+<p><strong>Suggested investigation.</strong> Construct a simulation study with a known DGP — say, an $\mathrm{AR}(2)$ with a structural break at time $T^*$. Fit three competing forecasters: OLS-estimated AR, a rolling-window AR, and a simple LSTM. Track the multi-step mean squared forecast error (MSFE) as a function of $h$ and break magnitude $\delta$. Derive the theoretical MSFE for each under the break, and compare with simulation. This replicates the spirit of Clements and Hendry (1999, Chapter 4) at small scale and isolates where model rigidity hurts.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (i) the theoretical MSFE expressions for each method pre- and post-break as closed-form functions of $\delta$ and $h$; (ii) Monte Carlo coverage of those expressions; (iii) a calibration table comparing MSFE at $h = 1, 4, 8$; and (iv) a clear statement of which assumptions were required to derive each bound and which were violated in the break scenario. Claims about neural forecaster performance require held-out test sets with no look-ahead contamination — this is a common failure mode worth flagging explicitly.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

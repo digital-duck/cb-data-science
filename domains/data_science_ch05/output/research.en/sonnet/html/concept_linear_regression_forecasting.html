@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Regression Forecasting | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="linear-regression-forecasting">Linear Regression Forecasting</h2>
+<p><strong>Definition.</strong> Let $\{(x_t, y_t)\}_{t=1}^{T}$ be a time-ordered sequence of covariate-response pairs, where $x_t \in \mathbb{R}^p$ and $y_t \in \mathbb{R}$. The linear regression forecasting model posits</p>
+$$y_t = x_t^\top \beta + \varepsilon_t, \quad \varepsilon_t \overset{\text{iid}}{\sim} (0, \sigma^2),$$
+<p>where $\beta \in \mathbb{R}^p$ is the unknown coefficient vector. Given the design matrix $X \in \mathbb{R}^{T \times p}$ and response vector $y \in \mathbb{R}^T$, the ordinary least-squares (OLS) estimator is $\hat{\beta} = (X^\top X)^{-1} X^\top y$, and the $h$-step-ahead point forecast at origin $T$ is $\hat{y}_{T+h} = x_{T+h}^\top \hat{\beta}$.</p>
+<p><strong>Theorem (Gauss–Markov).</strong> Under the assumptions of linearity, strict exogeneity $\mathbb{E}[\varepsilon \mid X] = 0$, homoskedasticity $\mathrm{Var}(\varepsilon \mid X) = \sigma^2 I$, and full rank $\mathrm{rank}(X) = p$, the OLS estimator $\hat{\beta}$ is the best linear unbiased estimator (BLUE) of $\beta$: for any linear unbiased estimator $\tilde{\beta}$,</p>
+$$\mathrm{Var}(\tilde{\beta} \mid X) - \mathrm{Var}(\hat{\beta} \mid X) \succeq 0.$$
+<p><strong>Proof sketch.</strong> Write $\tilde{\beta} = Cy$ for some matrix $C$ with $CX = I$. Then $\mathrm{Var}(\tilde{\beta}) = \sigma^2 CC^\top$. Set $D = C - (X^\top X)^{-1} X^\top$; orthogonality $DX = 0$ gives $CC^\top = (X^\top X)^{-1} + DD^\top$, so $\mathrm{Var}(\tilde{\beta}) - \mathrm{Var}(\hat{\beta}) = \sigma^2 DD^\top \succeq 0$. $\square$</p>
+<p><strong>Literature context.</strong> The Gauss–Markov theorem is foundational (Aitken 1935; Greene 2012), but its assumptions are violated routinely in forecasting contexts: serial correlation invalidates efficiency, unit-root regressors introduce super-consistency and the risk of spurious regression (Granger & Newbold 1974; Phillips 1986), and forecast combination often outperforms individually optimized models (Timmermann 2006). A common first response to Gauss–Markov failure in high-dimensional settings is Ridge regression (Hoerl & Kennard 1970; Tibshirani 1996; De Mol, Giannone & Reichlin 2008), which replaces the OLS objective with</p>
+$$\hat{\beta}_\lambda = \argmin_\beta \|y - X\beta\|^2 + \lambda\|\beta\|^2 = (X^\top X + \lambda I)^{-1} X^\top y.$$
+<p>The bias-variance trade-off introduced by $\lambda > 0$ is explicit: $\mathrm{Bias}(\hat{\beta}_\lambda) = -\lambda(X^\top X + \lambda I)^{-1}\beta$ grows with $\lambda$, while $\mathrm{Var}(\hat{\beta}_\lambda)$ shrinks. Whether this exchange reduces mean-squared forecast error (MSFE) depends on the signal-to-noise ratio and the eigenspectrum of $X^\top X$, making it an empirically open question for any given panel and horizon.</p>
+<p><strong>Suggested investigation.</strong> Select a publicly available macroeconomic panel (e.g., FRED-MD, 128 monthly series, McCracken & Ng 2016). Fix a target series (e.g., industrial production growth). (1) Fit OLS and Ridge forecasters using an expanding window from 1960 to 2000 with $h \in \{1, 3, 12\}$ months, selecting $\lambda$ by time-series cross-validation within the expanding window to avoid leakage. (2) Compute out-of-sample MSFE relative to an AR(1) benchmark. (3) Test forecast encompassing via the Clark–West statistic to assess whether Ridge genuinely adds predictive content beyond OLS. (4) Plot the Ridge path — MSFE against $\lambda$ — and note at which effective degrees of freedom the minimum occurs, connecting this empirically to the eigenvalue distribution of $X^\top X$.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should (i) state all Gauss–Markov assumptions explicitly and test them (Durbin–Watson for serial correlation, White test for heteroskedasticity), establishing where and why OLS fails before motivating Ridge; (ii) document the precise walk-forward protocol to preclude look-ahead bias, including that $\lambda$ is re-selected at each expanding-window origin; (iii) report point forecasts alongside calibrated prediction intervals derived from $\hat{\sigma}^2$ and covariate uncertainty at the forecast origin; and (iv) use the Diebold–Mariano test with Newey–West standard errors when $h > 1$, since multi-step forecast errors carry MA structure that invalidates unadjusted test statistics.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

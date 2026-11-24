@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activation Function | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="activation-function">Activation Function</h2>
+<p><strong>Definition.</strong> Let $f : \mathbb{R}^{d_{\text{in}}} \to \mathbb{R}^{d_{\text{out}}}$ be a layer of a feedforward neural network parameterized by weight matrix $W \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}$ and bias $b \in \mathbb{R}^{d_{\text{out}}}$. An <em>activation function</em> is a (typically nonlinear) map $\sigma : \mathbb{R} \to \mathbb{R}$ applied elementwise, so that the layer computes $x \mapsto \sigma(Wx + b)$. Without $\sigma$, arbitrary depth collapses to a single affine map; the activation breaks this degeneracy. Classical choices include the sigmoid $\sigma(z) = (1 + e^{-z})^{-1}$, hyperbolic tangent $\tanh$, and the rectified linear unit $\text{ReLU}(z) = \max(0, z)$. A prominent modern alternative is the Gaussian Error Linear Unit, $\text{GELU}(z) = z\,\Phi(z)$, where $\Phi$ denotes the standard normal CDF; unlike ReLU it is smooth and stochastically interpretable as a gate that drops units proportionally to how small they are relative to the input distribution (Hendrycks & Gimpel 2016).</p>
+<p><strong>Theorem (Cybenko 1989; Hornik, Stinchcombe, White 1989).</strong> Let $\sigma$ be any continuous, bounded, and non-constant function. Then finite sums of the form $\sum_{k=1}^{N} c_k \,\sigma(w_k^\top x + b_k)$ are dense in $C([0,1]^d)$ with respect to the uniform norm.</p>
+<p><em>Proof sketch.</em> The argument proceeds by contradiction via the Hahn–Banach theorem. Suppose the closure of the function class is a proper subspace $S \subsetneq C([0,1]^d)$. By Hahn–Banach there exists a nonzero bounded linear functional $\mu$ (representable by a signed Borel measure) annihilating $S$. One then shows that $\int \sigma(w^\top x + b)\,d\mu(x) = 0$ for all $w, b$ forces $\mu = 0$, a contradiction, using the fact that the Fourier transform of $\mu$ must vanish on a dense set when $\sigma$ is non-polynomial. Full technical details require the Riesz representation theorem and a careful application of the Stone–Weierstrass theorem; see Cybenko (1989) and the corrected version in Hornik (1991). $\square$</p>
+<p><strong>Literature context.</strong> Universal approximation is an <em>existence</em> result: it guarantees a network exists but says nothing about the width-depth tradeoff, the optimization landscape, or whether gradient methods find such a network. The depth-separation literature (Eldan & Shamir 2016; Telgarsky 2016) shows that depth-$2$ networks require exponentially more neurons than depth-$3$ to represent certain functions, motivating deep architectures. The choice of $\sigma$ is not neutral: ReLU induces piecewise-linear activations with countable breakpoints and enables sparse gradient flow, but suffers dying-neuron pathology when pre-activations remain negative throughout training. GELU introduces smooth, input-dependent gating and empirically outperforms ReLU at transformer scale (Hendrycks & Gimpel 2016). Open questions remain: (1) Can the optimal activation be <em>learned</em> jointly with weights — e.g., via KAN-style basis functions (Liu et al. 2024) — without destabilizing optimization? (2) What is the right inductive bias for $\sigma$ in physics-informed networks where the target has known periodicity or positivity constraints?</p>
+<p><strong>Suggested investigation.</strong> Fix a target function $g(x) = \sin(5x) + x^2$ on $[-1,1]$. Train shallow ($L=1$) and deep ($L=4$) networks with identical parameter counts under ReLU and GELU, recording mean-squared error and gradient norm at convergence across five random seeds. Plot the piecewise structure of the fitted ReLU network against the smooth GELU fit to make the approximation-theoretic distinction concrete. Vary width $N \in \{8, 16, 32, 64\}$ to trace empirical scaling curves for each activation and depth combination.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (a) empirical width-scaling curves for each $\sigma$ and depth; (b) a comparison of test error against the approximation-theoretic bound implied by the Jackson-type theorem for the target smoothness class; (c) a discussion of whether observed differences in convergence speed are attributable to curvature of the loss landscape (gradient flow analysis) or to the intrinsic function class (approximation theory). Null results — cases where both activations perform identically — are as informative as positive findings and should be reported with the same rigor.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

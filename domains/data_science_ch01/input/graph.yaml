@@ -1,0 +1,220 @@
+domain: intro_to_data_science_ch1
+primitives:
+  data:
+    defines: Anything that can be analyzed to compile some high-level insight, such as an observation
+      or piece of evidence.
+    tier: 0
+  item:
+    defines: A unique data entity in a dataset, also referred to as an entry or instance.
+    tier: 0
+  attribute:
+    defines: A characteristic or feature that defines an item in a dataset, also known as a feature or
+      variable.
+    tier: 0
+  spreadsheet_program:
+    defines: A software application with electronic worksheets of rows and columns where data can be entered,
+      manipulated, and calculated.
+    tier: 0
+  programming_language:
+    defines: A formal language consisting of instructions used to communicate with a computer to perform
+      tasks like data manipulation and computation.
+    tier: 0
+concepts:
+  information:
+    defines: High-level insights compiled from analyzing data.
+    composed_of:
+    - data
+    tier: 1
+  data_collection:
+    defines: The systematic process of gathering information on variables of interest.
+    composed_of:
+    - data
+    tier: 1
+  quantitative_data:
+    defines: Data that deals with quantities and amounts, measured and expressed using numbers.
+    composed_of:
+    - data
+    tier: 1
+  qualitative_data:
+    defines: Non-numerical data describing subjective attributes or characteristics.
+    composed_of:
+    - data
+    tier: 1
+  dataset:
+    defines: A collection of observations or data entities organized for analysis and interpretation.
+    composed_of:
+    - item
+    - attribute
+    tier: 1
+  python:
+    defines: A general-purpose, open-source programming language with extensive libraries, commonly used
+      for data analysis.
+    composed_of:
+    - programming_language
+    tier: 1
+  r_language:
+    defines: An open-source programming language specifically designed for statistical computing and graphics.
+    composed_of:
+    - programming_language
+    tier: 1
+  data_science:
+    defines: A field of study that investigates how to collect, manage, and analyze data of all types
+      to retrieve meaningful information.
+    composed_of:
+    - data
+    - information
+    tier: 2
+  data_management:
+    defines: The process of storing and handling data, evolving from local storage to cloud-based systems.
+    composed_of:
+    - data_collection
+    tier: 2
+  data_preparation:
+    defines: The step that converts collected data into an optimal form for analysis, also called data
+      processing.
+    composed_of:
+    - data_collection
+    tier: 2
+  numeric_data:
+    defines: Data represented in numbers that indicate measurable quantities, possibly followed by unit
+      symbols.
+    composed_of:
+    - quantitative_data
+    tier: 2
+  categorical_data:
+    defines: Data represented as words, symbols, or numbers chosen from a finite set of values.
+    composed_of:
+    - qualitative_data
+    tier: 2
+  structured_data:
+    defines: A dataset whose individual items share the same defined structure, such as a table with rows
+      and columns.
+    composed_of:
+    - dataset
+    tier: 2
+  unstructured_data:
+    defines: A dataset that lacks a predefined or organized data model, such as text, images, or videos.
+    composed_of:
+    - dataset
+    tier: 2
+  jupyter_notebook:
+    defines: A web-based document/environment that allows users to run Python programs interactively with
+      code, text, and visualizations.
+    composed_of:
+    - python
+    tier: 2
+  pandas_library:
+    defines: A Python library specialized for data manipulation and analysis.
+    composed_of:
+    - python
+    tier: 2
+  matplotlib_library:
+    defines: A Python library specialized for data visualization, used to draw plots such as scatterplots.
+    composed_of:
+    - python
+    tier: 2
+  data_analysis:
+    defines: The process of examining and interpreting prepared data to uncover patterns and insights.
+    composed_of:
+    - data_preparation
+    tier: 3
+  data_warehousing:
+    defines: Storing and managing large volumes of data from various sources in a central location.
+    composed_of:
+    - data_management
+    tier: 3
+  continuous_data:
+    defines: Numeric data whose values can be any number, chosen from an infinite set.
+    composed_of:
+    - numeric_data
+    tier: 3
+  discrete_data:
+    defines: Numeric data that follows a specific precision, making the set of possible values finite.
+    composed_of:
+    - numeric_data
+    tier: 3
+  nominal_data:
+    defines: Categorical data whose set of possible values does not include any ordering notion.
+    composed_of:
+    - categorical_data
+    tier: 3
+  ordinal_data:
+    defines: Categorical data whose set of possible values includes an ordering notion.
+    composed_of:
+    - categorical_data
+    tier: 3
+  csv_format:
+    defines: A dataset format in which each item takes up a single line with values separated by commas.
+    composed_of:
+    - structured_data
+    tier: 3
+  xml_format:
+    defines: A dataset format that lists items using paired angle-bracket tags, well-suited for hierarchical
+      data.
+    composed_of:
+    - structured_data
+    tier: 3
+  json_format:
+    defines: A dataset format that follows JavaScript's object syntax, using key-value pairs.
+    composed_of:
+    - structured_data
+    tier: 3
+  google_colab:
+    defines: A free, cloud-based Google application used for editing and running Jupyter Notebook files.
+    composed_of:
+    - jupyter_notebook
+    tier: 3
+  dataframe:
+    defines: A Pandas data type used to store multi-column tabular data.
+    composed_of:
+    - pandas_library
+    tier: 3
+  data_reporting:
+    defines: The presentation of data in a way that best conveys the information learned from data analysis.
+    composed_of:
+    - data_analysis
+    tier: 4
+  data_visualization:
+    defines: A graphical way of presenting and reporting data using charts, graphs, and maps.
+    composed_of:
+    - data_reporting
+    tier: 5
+  data_science_cycle:
+    defines: The process data science tasks follow, consisting of problem definition, data collection,
+      preparation, analysis, and reporting.
+    composed_of:
+    - data_collection
+    - data_preparation
+    - data_analysis
+    - data_reporting
+    tier: 5
+applications:
+  internet_of_things:
+    defines: The network of multiple objects interacting with each other through the internet, driven
+      by data collected across devices.
+    needs:
+    - data_collection
+    tier: 2
+  predictive_analytics:
+    defines: Statistical techniques, algorithms, and machine learning that analyze historical data to
+      make predictions about future events.
+    needs:
+    - data_analysis
+    tier: 4
+  business_analytics:
+    defines: The investigation of business-related data to launch new products and maximize revenue/profit.
+    needs:
+    - data_analysis
+    - data_science
+    tier: 4
+  recommendation_system:
+    defines: A system that makes data-driven, personalized suggestions for users, such as those used by
+      streaming services.
+    needs:
+    - predictive_analytics
+    tier: 5
+  sports_analytics:
+    defines: The use of data and business analytics techniques, such as sabermetrics, in sports team management.
+    needs:
+    - business_analytics
+    tier: 5

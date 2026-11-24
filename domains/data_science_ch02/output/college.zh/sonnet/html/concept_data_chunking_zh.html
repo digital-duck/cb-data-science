@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Chunking | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-chunking-数据分块">Data Chunking（数据分块）</h2>
+<p><strong>定义</strong></p>
+<p>数据分块（Data Chunking）是指将大规模数据集切分成若干较小、可独立处理的片段（chunk）的技术。当数据量超出内存容量、网络传输限制或单次计算能力时，直接整体加载或处理往往不可行；分块使得系统可以逐块读取、逐块计算、逐块存储，从而将原本受限于硬件资源的任务变为可扩展、可并行、可容错的流程。分块大小的选择本质上是一种权衡：块太大会重现"内存不足"的问题；块太小则会因频繁的读写、网络往返或函数调用开销而降低整体吞吐率。</p>
+<p><strong>实例演示</strong></p>
+<p>设想处理一份 50GB 的用户日志文件，而运行环境只有 8GB 可用内存。若尝试用 <code>read()</code> 一次性读入整个文件，程序会因内存溢出而崩溃。分块方案则是按固定字节数或按行数迭代读取：</p>
+<pre><code>CHUNK_SIZE = 100_000  # 每块行数
+
+def process_in_chunks(filepath):
+    with open(filepath) as f:
+        chunk = []
+        for line in f:
+            chunk.append(line)
+            if len(chunk) == CHUNK_SIZE:
+                analyze(chunk)   # 处理一个块
+                chunk = []       # 释放内存,开始下一块
+        if chunk:
+            analyze(chunk)       # 处理剩余数据</code></pre>
+<p>每次循环只在内存中保留一个块的数据，处理完立即释放，内存占用被稳定控制在可预测范围内，而不随文件总大小增长。</p>
+<p><strong>问题解决中的应用</strong></p>
+<p>在实际数据工程中，分块策略需要结合具体约束来设计。例如，在向大语言模型（LLM）提交长文档做摘要时，若文档超过模型的上下文窗口限制（如 8000 token），必须先分块，再对每块结果做二次汇总（即"map-reduce"式处理）。此时分块边界的选择很关键：简单按字符数切分可能把一个完整句子甚至一个语义单元硬生生截断，导致上下文丢失；更好的做法是按段落或语义边界分块，并在相邻块之间保留少量重叠（overlap），以保证跨块的上下文连续性。</p>
+<p>在分布式系统中（如 MapReduce、Spark），分块还决定了并行度：每个块可分配给不同的计算节点独立处理，最终再合并结果。这时分块大小需要与集群的节点数、网络带宽、任务调度开销共同权衡，才能使整体处理时间最小化。可以说，选择合适的分块粒度，是在"内存/带宽约束"与"处理效率"之间寻找最优平衡点的核心工程决策。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

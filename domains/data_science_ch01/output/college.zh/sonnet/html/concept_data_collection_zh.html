@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Collection | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据收集">数据收集</h2>
+<p><strong>定义。</strong> 数据收集(data collection)是针对研究问题,按照预先设计的方案,系统地获取关于目标变量的观测值的过程。"系统"意味着三点:明确要测量什么(变量及其单位)、明确从谁或什么中获取(总体与抽样方式)、明确怎样获取(测量工具与记录规则)。数据质量决定了后续一切分析的上限:再复杂的模型也无法修复有偏的数据。</p>
+<p>常见的收集方式有四类:</p>
+<li><strong>实验</strong>:研究者主动控制自变量,如随机分配处理组与对照组。</li>
+<li><strong>观察性研究</strong>:不干预,只记录,如天气站记录。</li>
+<li><strong>调查</strong>:通过问卷或访谈获取回答。</li>
+<li><strong>二次数据</strong>:使用他人已收集的数据库或日志。</li>
+<p><strong>核心要求。</strong> 样本应能代表总体。简单随机抽样中,每个个体被抽中的概率相同。对样本均值 $\bar{x}$,标准误为</p>
+$$
+SE = \frac{s}{\sqrt{n}},
+$$
+<p>其中 $s$ 为样本标准差,$n$ 为样本量。样本量增大可以减小随机误差,但<strong>不能</strong>消除系统性偏差(如抽样偏差、测量偏差)。</p>
+<p><strong>例题。</strong> 某校想估计 2000 名学生每天的平均睡眠时间。</p>
+<p><em>方案 A</em>:在图书馆门口调查 50 名学生。<em>方案 B</em>:用学号随机抽取 50 名学生。</p>
+<p>方案 A 会过度抽到熬夜学习的学生,属于抽样偏差。选方案 B,得到样本均值 $\bar{x}=7.2$ 小时,标准差 $s=1.0$ 小时,则</p>
+$$
+SE=\frac{1.0}{\sqrt{50}}\approx 0.14 \text{ 小时}.
+$$
+<p>近似 95% 置信区间为</p>
+$$
+7.2 \pm 2\times 0.14 = (6.92,\ 7.48)\ \text{小时}.
+$$
+<p><strong>问题求解应用。</strong> 若希望把误差范围(2 倍标准误)缩小到 $\pm 0.1$ 小时,需要</p>
+$$
+2\cdot\frac{s}{\sqrt{n}} \le 0.1 \;\Rightarrow\; n \ge \left(\frac{2\times 1.0}{0.1}\right)^2 = 400.
+$$
+<p>因此需要约 400 名学生。注意:精度提高到原来的 1.4 倍(0.14 到 0.1),样本量却增加到原来的 8 倍,这体现了边际收益递减。</p>
+<p>收集数据前的检查清单:</p>
+<li>研究问题是否明确,变量是否可测量?</li>
+<li>总体是谁?抽样框是否完整?</li>
+<li>是否用随机化来避免选择偏差?</li>
+<li>测量工具是否可靠(重复测量结果一致)且有效(测的确是目标变量)?</li>
+<li>是否考虑了缺失值与无应答,并记录了收集过程以便复现?</li>
+<pre class="mermaid">flowchart LR
+A[明确研究问题] --> B[定义变量与总体]
+B --> C[设计抽样方案]
+C --> D[选择测量工具]
+D --> E[实施收集]
+E --> F[清洗与检查]
+F --> G[进入分析]
+F --> C</pre>
+<p><em>图:数据收集的基本流程。检查发现问题时,需要回到抽样设计环节修正。</em></p>
+<p><strong>小结。</strong> 好的数据收集先于分析:先定义问题,再用随机化控制偏差,最后用样本量控制随机误差。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch1: What Are Data and Data Science? (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

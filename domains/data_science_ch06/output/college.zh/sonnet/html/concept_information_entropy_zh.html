@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Entropy | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="信息熵">信息熵</h2>
+<p><strong>定义。</strong> 一个概率为 $p$ 的事件发生时,所携带的<strong>信息量</strong>(自信息,即“意外程度”)定义为</p>
+$$I(x) = -\log_2 p(x)\quad(\text{单位:比特})$$
+<p>事件越罕见,信息量越大;必然事件($p=1$)的信息量为 $0$。对离散随机变量 $X$,其<strong>信息熵</strong>是信息量的期望,衡量分布的平均不确定性:</p>
+$$H(X) = \sum_{x} p(x)\,I(x) = -\sum_{x} p(x)\log_2 p(x)$$
+<p>约定 $0\log_2 0 = 0$。信息熵满足 $0 \le H(X) \le \log_2 n$,其中 $n$ 为取值个数:分布越集中熵越小,分布越均匀熵越大,均匀分布时取到最大值 $\log_2 n$。</p>
+<p><strong>例题:公平硬币与偏心硬币。</strong></p>
+<p>(1) 公平硬币:$p(\text{正})=p(\text{反})=\tfrac12$,</p>
+$$H = -\tfrac12\log_2\tfrac12-\tfrac12\log_2\tfrac12 = 1\text{ 比特}.$$
+<p>(2) 偏心硬币:$p(\text{正})=0.9$,$p(\text{反})=0.1$。</p>
+<li>正面的信息量:$-\log_2 0.9\approx 0.152$ 比特</li>
+<li>反面的信息量:$-\log_2 0.1\approx 3.322$ 比特</li>
+$$H = 0.9\times0.152+0.1\times3.322\approx 0.469\text{ 比特}.$$
+<p>偏心硬币的结果更容易预测,所以平均信息量更少。反面虽然很“意外”,但它很少出现,对平均值贡献有限。</p>
+<p><strong>应用:二十个问题与最优编码。</strong> 熵给出了描述结果所需的平均最少比特数。设一个信源产生四个符号 A、B、C、D,概率分别为 $\tfrac12,\tfrac14,\tfrac18,\tfrac18$。</p>
+<p>先算熵:</p>
+$$H=\tfrac12\cdot1+\tfrac14\cdot2+\tfrac18\cdot3+\tfrac18\cdot3=1.75\text{ 比特}.$$
+<p>如果用等长编码,每个符号需要 $2$ 比特。改用变长编码 A=<code>0</code>,B=<code>10</code>,C=<code>110</code>,D=<code>111</code>,让常见符号用短码,平均码长为</p>
+$$\tfrac12\cdot1+\tfrac14\cdot2+\tfrac18\cdot3+\tfrac18\cdot3=1.75\text{ 比特},$$
+<p>恰好等于熵。这是因为每个概率都是 $2^{-k}$ 的形式,码长正好等于信息量 $-\log_2 p$。香农信源编码定理指出:任何无损压缩的平均码长都不可能低于 $H(X)$,熵就是压缩的理论极限。</p>
+<p>同样的思路也适用于“猜数游戏”:从 $n$ 个等可能的选项中猜出答案,至少需要 $\log_2 n$ 个是非问题。例如从 $1$ 到 $1000$ 中猜一个数,需要 $\lceil\log_2 1000\rceil = 10$ 个问题。</p>
+<p><strong>小结。</strong> 信息量刻画单个事件的“意外程度”,熵是它在整个分布上的平均。熵越大,不确定性越高,压缩空间越小。机器学习中的交叉熵损失、决策树的信息增益,都建立在这一概念之上。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

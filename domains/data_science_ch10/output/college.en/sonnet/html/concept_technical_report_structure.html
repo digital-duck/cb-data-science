@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Report Structure | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="technical-report-structure">Technical Report Structure</h2>
+<p>A data science technical report communicates not just results, but the reasoning that produced them — enough detail that another analyst could reproduce your work, audit your assumptions, or extend your analysis. Unlike a slide deck optimized for a five-minute pitch, a technical report is a permanent record, and its structure is designed to serve two very different readers at once: an executive who wants the bottom line in thirty seconds, and a technical reviewer who wants to check your methodology.</p>
+<p>A standard structure has six components. The <strong>title page</strong> identifies the project, author(s), date, and stakeholders. The <strong>executive summary</strong> (150–250 words) states the business question, the key finding, and the recommendation — written so a non-technical reader never needs to open the rest of the document. The <strong>methodology</strong> section documents data sources, cleaning steps, feature engineering choices, and the model or statistical test used, including justification for why that method fits the problem. <strong>Data exploration and analysis</strong> presents summary statistics, distributions, and visualizations that reveal patterns or anomalies before modeling begins. <strong>Results and discussion</strong> reports the outcome — metrics, coefficients, confidence intervals — and interprets what they mean in context, including limitations and threats to validity. The <strong>conclusion</strong> ties findings back to the original question and states actionable next steps.</p>
+<p>Consider a report on customer churn. The executive summary might read: "Customers who contact support more than twice in 30 days are 3.4 times more likely to churn (95% confidence interval: 2.1–5.0); we recommend proactive outreach after the second contact." The confidence interval is the one new idea worth pausing on: instead of reporting a single number as if it were exact, it gives a plausible range for the true effect, so the reader knows how much uncertainty the estimate carries. The methodology section then unpacks how that number was produced — a logistic regression fit on 18 months of account data, with support-contact frequency included as a predictor after checking that it was meaningfully associated with churn in the raw data.</p>
+<p>The practical skill being tested is audience-layered writing: can you state a claim with quantitative precision at the top, then justify it with full rigor underneath, without either layer needing the other to be understood? When drafting your own report, write the executive summary <em>last</em> — after the analysis is done, you'll state the finding more crisply, and you'll avoid the common failure mode of promising conclusions in the summary that the methodology section doesn't actually support.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch10: Reporting Results (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+domain: data_science_ch4
+sources:
+  point_estimate:
+    label: Point Estimate
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  sampling_distribution:
+    label: Sampling Distribution
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  central_limit_theorem:
+    label: Central Limit Theorem
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  confidence_interval:
+    label: Confidence Interval
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  margin_of_error:
+    label: Margin of Error
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  critical_value:
+    label: Critical Value
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  t_distribution:
+    label: t-Distribution
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  confidence_interval_mean_known_sd:
+    label: Confidence Interval for the Mean (Known Population SD)
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  confidence_interval_mean_unknown_sd:
+    label: Confidence Interval for the Mean (Unknown Population SD)
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  confidence_interval_proportion:
+    label: Confidence Interval for a Proportion
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  sample_size_determination:
+    label: Sample Size Determination
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  bootstrapping:
+    label: Bootstrapping
+    sections:
+    - id: ch04_s4_1
+      title: 4.1 Statistical Inference and Confidence Intervals
+  null_hypothesis:
+    label: Null Hypothesis
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  alternative_hypothesis:
+    label: Alternative Hypothesis
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  hypothesis_testing:
+    label: Hypothesis Testing
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  level_of_significance:
+    label: Level of Significance
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  test_statistic:
+    label: Test Statistic
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  p_value:
+    label: p-Value
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  type_i_type_ii_errors:
+    label: Type I and Type II Errors
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  one_sample_hypothesis_test_mean:
+    label: One-Sample Hypothesis Test for the Mean
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  one_sample_hypothesis_test_proportion:
+    label: One-Sample Hypothesis Test for a Proportion
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  independent_vs_dependent_samples:
+    label: Independent vs. Dependent Samples
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  two_sample_hypothesis_test_means:
+    label: Two-Sample Hypothesis Test for Means
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  matched_pairs_hypothesis_test:
+    label: Matched Pairs Hypothesis Test
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  two_sample_hypothesis_test_proportions:
+    label: Two-Sample Hypothesis Test for Proportions
+    sections:
+    - id: ch04_s4_2
+      title: 4.2 Hypothesis Testing
+  scatterplot:
+    label: Scatterplot
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  correlation_coefficient:
+    label: Correlation Coefficient (r)
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  correlation_significance_test:
+    label: Test for Significance of Correlation
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  linear_regression:
+    label: Linear Regression
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  least_squares_method:
+    label: Least Squares Method
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  residual:
+    label: Residual
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  regression_slope_intercept_interpretation:
+    label: Interpreting Slope and Intercept
+    sections:
+    - id: ch04_s4_3
+      title: 4.3 Correlation and Linear Regression Analysis
+  anova:
+    label: Analysis of Variance (ANOVA)
+    sections:
+    - id: ch04_s4_4
+      title: 4.4 Analysis of Variance (ANOVA)
+  f_distribution:
+    label: F-Distribution
+    sections:
+    - id: ch04_s4_4
+      title: 4.4 Analysis of Variance (ANOVA)
+  one_way_anova_procedure:
+    label: One-Way ANOVA Procedure
+    sections:
+    - id: ch04_s4_4
+      title: 4.4 Analysis of Variance (ANOVA)
+  python_statistical_computing:
+    label: Python for Statistical Computing
+    sections: []

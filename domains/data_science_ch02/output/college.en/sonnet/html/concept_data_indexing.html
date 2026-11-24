@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Indexing | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-indexing">Data Indexing</h2>
+<p>A database index is an auxiliary data structure that maps values of one or more columns to the physical location of the corresponding rows, so that the database engine can locate matching records without scanning every row in a table. Without an index, a query like "find the customer with <code>id = 4821</code>" requires a full table scan — an $O(n)$ operation where $n$ is the number of rows. With an index built on a balanced search structure, the same lookup drops to $O(\log n)$. This distinction is not cosmetic: for a table with $10^8$ rows, it is the difference between comparing roughly 100 million rows versus about 27.</p>
+<p>Most production databases (PostgreSQL, MySQL, Oracle) implement indexes using a <strong>B-tree</strong> (or its variant, the B+tree), a self-balancing tree where each node holds multiple keys and pointers, and all leaves sit at the same depth. A B-tree of order $m$ guarantees that every internal node has between $\lceil m/2 \rceil$ and $m$ children, which bounds the tree's height at $O(\log_m n)$ — crucially, this base-$m$ logarithm (rather than base-2, as in a binary tree) means the tree stays shallow even for huge tables, minimizing the number of slow disk reads needed per lookup. For exact-match lookups on non-range queries (e.g., hash-map-style key retrieval), some engines instead use a <strong>hash index</strong>, giving expected $O(1)$ lookup but no support for range queries like <code>WHERE age BETWEEN 20 AND 30</code>, since a hash function destroys ordering.</p>
+<p>Consider a table <code>orders(order_id, customer_id, order_date, total)</code> with 50 million rows. A query filtering <code>WHERE customer_id = 4821</code> without an index forces a sequential scan of all 50 million rows. Creating <code>CREATE INDEX idx_customer ON orders(customer_id)</code> builds a B+tree keyed on <code>customer_id</code>; the query planner then traverses roughly $\log_{100}(50{,}000{,}000) \approx 4$ node accesses to locate matching rows.</p>
+<p>The tradeoff is write cost: every <code>INSERT</code> or <code>UPDATE</code> must also update the index, at $O(\log n)$ per index — so tables with many indexes suffer slower writes. The practical design problem is therefore not "index everything" but choosing indexes that match the actual query workload: index columns used in <code>WHERE</code>, <code>JOIN</code>, and <code>ORDER BY</code> clauses, and consider composite indexes when queries filter on multiple columns together, since a composite index's column order determines which query patterns it can serve efficiently.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

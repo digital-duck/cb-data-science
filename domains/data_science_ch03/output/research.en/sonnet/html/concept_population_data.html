@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Population Data | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="population-data">Population Data</h2>
+<p><strong>Definition.</strong> Assume familiarity with probability spaces and real-valued random variables. The single new primitive introduced here is the <em>population distribution</em>: given a random variable $X : \Omega \to \mathcal{X}$ on a probability space $(\Omega, \mathcal{F}, P)$, the population distribution is the pushforward measure</p>
+$$\mu = P \circ X^{-1}, \qquad \mu(B) = P(X^{-1}(B)) \quad \forall\, B \in \mathcal{B},$$
+<p>which encodes the complete probabilistic structure of $X$ over the reference population. <em>Population data</em> is the notional totality $\{x_\omega : \omega \in \Omega\}$ drawn from $\mu$; in practice only a finite sample $\mathbf{x}_n = (x_1, \ldots, x_n) \overset{\text{iid}}{\sim} \mu$ is available. Statistical inference is the problem of recovering properties of $\mu$ from $\mathbf{x}_n$—a well-posed goal only once $\mu$ is identified as the estimand of interest, rather than an artifact of the data-collection process.</p>
+<p><strong>Theorem (Glivenko–Cantelli).</strong> Let $F$ denote the CDF of $\mu$ on $\mathbb{R}$ and $\hat{F}_n(t) = n^{-1}\sum_{i=1}^n \mathbf{1}[x_i \le t]$ the empirical CDF. Then</p>
+$$\sup_{t \in \mathbb{R}} \left| \hat{F}_n(t) - F(t) \right| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> Pointwise almost-sure convergence $\hat{F}_n(t) \to F(t)$ follows from the strong law of large numbers at each fixed $t$. Monotonicity of both $\hat{F}_n$ and $F$ permits a countable dense-grid argument that upgrades pointwise to uniform convergence; Varadarajan (1958) extends the argument to pushforward measures on Polish spaces via the portmanteau theorem. $\square$</p>
+<p>The quantitative counterpart is the Dvoretzky–Kiefer–Wolfowitz inequality,</p>
+$$P\!\left(\sup_t |\hat{F}_n(t) - F(t)| > \epsilon\right) \le 2e^{-2n\epsilon^2},$$
+<p>which is dimension-free on $\mathbb{R}$ but deteriorates in higher dimensions, previewing the curse of dimensionality without requiring any further primitives beyond $\mu$ and the empirical CDF.</p>
+<p><strong>Literature context and open problems.</strong> Different traditions operationalize $\mu$ in incompatible ways. Survey sampling (Cochran, 1977) treats the population as a finite enumerable set and locates randomness in the sampling design rather than in $\mu$ itself. Nonparametric statistics treats $\mu$ as an element of an infinite-dimensional function space, with estimation rates controlled by smoothness assumptions on $F$ (Tsybakov, 2009). In modern machine learning the central difficulty is that the training sample and the deployment population may have different distributions—<em>covariate shift</em> and <em>distribution shift</em> (Quiñonero-Candela et al., 2009; Koh et al., 2021)—so $\mu$ is not even well-defined without specifying which population. The deepest open problem is <em>population-level causal inference</em>: interventional distributions $P(Y \mid do(X = x))$ are properties of $\mu$ yet are not identifiable from $\hat{F}_n$ alone without structural assumptions (Pearl, 2009), meaning Glivenko–Cantelli convergence to $\mu$ is necessary but not sufficient for causal conclusions.</p>
+<p><strong>Suggested investigation.</strong> Fix a known $\mu$ (e.g., a two-component Gaussian mixture) and, for $n \in \{50, 200, 1000, 5000\}$, compute $\sup_t |\hat{F}_n(t) - F(t)|$ empirically over many replicates. Plot the 95th-percentile deviation against the DKW upper bound and examine how tightly the inequality is achieved. As a second phase, redraw the test set from a shifted mixture and measure how a downstream estimator trained on the original sample degrades; test whether reweighting by estimated density ratios restores population-level accuracy.</p>
+<p><strong>Report-writing note.</strong> A write-up should open by identifying $\mu$ precisely—including the target population and the mapping $X$—before any estimator is introduced. Distinguish clearly between statements about $\mu$ (population-level estimands) and statements about the sampling distribution of statistics under repeated draws. Report confidence intervals derived from the DKW bound alongside point estimates, state the regularity conditions on $\mu$ required for each bound to hold, and close with a diagnosis of whether the dominant error in the investigation is attributable to finite-sample approximation of $\mu$ or to model misspecification.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

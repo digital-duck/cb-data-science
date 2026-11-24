@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Univariate Data | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="单变量数据">单变量数据</h2>
+<p><strong>定义。</strong> 单变量数据(univariate data)是对<em>单一特征</em>或属性进行观测所得到的数据集合,记作 $x_1, x_2, \dots, x_n$。这里每个 $x_i$ 是第 $i$ 个个体在同一个变量上的取值,例如一组学生的身高、一批灯泡的寿命,或每天的降雨量。因为只涉及一个变量,所以不讨论变量之间的关系(那是双变量数据研究的内容)。</p>
+<p>单变量数据按类型分为两类:</p>
+<li><strong>分类数据</strong>:取值是类别,如血型、专业。</li>
+<li><strong>数值数据</strong>:取值是数量,如体重、成绩。数值数据又分离散型(可数)和连续型(可在区间内任意取值)。</li>
+<p>描述单变量数据通常关注三个方面:<strong>中心位置</strong>、<strong>离散程度</strong>和<strong>分布形状</strong>。</p>
+<p>常用统计量如下:</p>
+$$\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2,\qquad s=\sqrt{s^2}$$
+<p>其中 $\bar{x}$ 是样本均值,$s$ 是样本标准差。中位数是排序后位于正中的值,它对极端值不敏感。</p>
+<p><strong>例题。</strong> 某班 7 名学生的一次测验成绩为:</p>
+$$62,\ 70,\ 71,\ 75,\ 78,\ 80,\ 98$$
+<p>求均值、中位数和标准差,并判断数据是否有异常。</p>
+<li>均值:$\bar{x}=\dfrac{62+70+71+75+78+80+98}{7}=\dfrac{534}{7}\approx 76.3$。</li>
+<li>中位数:排序后第 4 个值,为 $75$。</li>
+<li>离差平方和:$(62-76.3)^2+(70-76.3)^2+(71-76.3)^2+(75-76.3)^2+(78-76.3)^2+(80-76.3)^2+(98-76.3)^2\approx 204.5+39.7+28.1+1.7+2.9+13.7+470.9=761.5$。</li>
+<li>方差:$s^2=\dfrac{761.5}{6}\approx 126.9$,所以 $s\approx 11.3$。</li>
+<p>均值(76.3)略高于中位数(75),说明分布可能右偏,这是由最高分 98 拉高的。</p>
+<p><strong>问题求解应用。</strong> 用 $1.5\times\text{IQR}$ 规则检验 98 是否为离群值:</p>
+<li>下半部分 $\{62,70,71\}$ 的中位数为 $Q_1=70$。</li>
+<li>上半部分 $\{78,80,98\}$ 的中位数为 $Q_3=80$。</li>
+<li>$\text{IQR}=Q_3-Q_1=10$,上围栏为 $Q_3+1.5\times 10=95$。</li>
+<p>由于 $98>95$,它被判定为离群值。</p>
+<p>据此可以决定怎样概括这组数据。若 98 是录入错误,应当修正;若它是真实的高分,则报告中位数 $75$ 比均值更能代表"典型"成绩。有离群值时,中位数和 IQR 比均值和标准差更稳健。</p>
+<p><strong>小结。</strong> 处理单变量数据的一般步骤是:先判断变量类型,再作图(直方图、箱线图)观察形状,最后选择合适的统计量。分布大致对称时用均值和标准差,偏斜或含离群值时用中位数和 IQR。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch9: Visualizing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

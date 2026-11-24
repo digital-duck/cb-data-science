@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Data | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="sample-data">Sample Data</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P)$ be a probability space and $X : \Omega \to \mathcal{X}$ a measurable random variable with distribution $\mu = P \circ X^{-1}$ on $(\mathcal{X}, \mathcal{B}(\mathcal{X}))$. A <em>sample</em> of size $n$ is a finite sequence $(x_1, \ldots, x_n)$ of realized values drawn i.i.d. from $\mu$; the corresponding collection is the <em>sample data</em>. The canonical summary of a univariate sample is the <em>empirical cumulative distribution function</em></p>
+$$\hat{F}_n(t) = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[x_i \le t],$$
+<p>which is itself a random object—a step function that concentrates unit mass $1/n$ at each observation. The central question animating the theory of sample data is how faithfully $\hat{F}_n$ approximates the true CDF $F$ as a function on $\mathbb{R}$, and at what rate.</p>
+<p><strong>Theorem (Glivenko–Cantelli).</strong> Let $\mu$ be any probability measure on $(\mathbb{R}, \mathcal{B}(\mathbb{R}))$ with CDF $F$, and let $\hat{F}_n$ be the empirical CDF of an i.i.d. sample of size $n$. Then</p>
+$$\sup_{t \in \mathbb{R}} \left|\hat{F}_n(t) - F(t)\right| \xrightarrow{a.s.} 0 \quad \text{as } n \to \infty.$$
+<p><em>Proof sketch.</em> The Strong Law of Large Numbers gives $\hat{F}_n(t) \to F(t)$ a.s. pointwise at each fixed $t$. Uniform convergence then follows from the joint monotonicity of $\hat{F}_n$ and $F$: for any $\varepsilon > 0$, choose a finite $\varepsilon$-net $\{t_j\}$ of continuity points of $F$ partitioning $\mathbb{R}$; pointwise a.s. convergence at each $t_j$ together with the sandwiching property of monotone functions yields uniform control over all of $\mathbb{R}$ (Billingsley 1995, §20). $\square$</p>
+<p>The rate of uniform convergence is made precise by the Dvoretzky–Kiefer–Wolfowitz inequality: for any $\varepsilon > 0$,</p>
+$$P\!\left(\sup_t |\hat{F}_n(t) - F(t)| > \varepsilon\right) \le 2e^{-2n\varepsilon^2},$$
+<p>with the constant $2$ shown to be tight by Massart (1990). Inverting this bound yields a simultaneous $1-\alpha$ confidence band around $\hat{F}_n$ of half-width $\varepsilon^* = \sqrt{\log(2/\alpha)/(2n)}$—a distribution-free guarantee, valid for any continuous $F$, that is the basis for nonparametric goodness-of-fit tests and finite-sample bounds in learning theory (Devroye et al. 1996).</p>
+<p><strong>Literature context.</strong> The classical theory is essentially complete for the univariate i.i.d. setting. Open questions arise in three directions. First, the <em>multivariate</em> empirical CDF $\hat{F}_n(\mathbf{t}) = n^{-1}\sum_i \mathbf{1}[x_i \preceq \mathbf{t}]$ satisfies a Glivenko–Cantelli analogue, but the DKW rate degrades with dimension $d$ and the sharp constant is unknown beyond $d=1$ (Kiefer and Wolfowitz 1958; Blum 1955). Second, for <em>dependent</em> samples—Markov chains, mixing processes—uniform convergence still holds under appropriate mixing conditions, but the effective sample size and tail constants depend on the mixing rate in ways that remain an active topic (Mohri and Rostamizadeh 2010). Third, connections to <em>VC theory</em> and <em>Rademacher complexity</em> generalize the DKW phenomenon to arbitrary function classes, where the analog of $2e^{-2n\varepsilon^2}$ involves the VC dimension or covering number of the class (Vapnik 1998).</p>
+<p><strong>Suggested investigation.</strong> Fix a distribution $F$ (e.g., standard normal, or a bimodal mixture) and simulate the DKW confidence band as a function of $n \in \{50, 200, 500, 2000\}$. For each $n$: (a) generate $B = 1000$ independent samples of size $n$, compute $\sup_t |\hat{F}_n(t) - F(t)|$ for each, and verify empirically that the exceedance probability at $\varepsilon^<em>$ stays below $\alpha = 0.05$; (b) overlay the theoretical band on the empirical CDFs and visualize the shrinkage; (c) test whether the $O(n^{-1/2})$ half-width prediction holds by fitting $\varepsilon^</em> \sim C \cdot n^{-\beta}$ and checking whether $\hat{\beta} \approx 0.5$. As a contrast, repeat with samples drawn from a first-order autoregressive process $x_i = \rho x_{i-1} + \varepsilon_i$ at several values of $\rho$; observe how the empirical coverage degrades when the i.i.d. assumption is violated.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should precisely define the supremum norm used, state the DKW inequality and its tightness result, report the observed coverage probabilities with Monte Carlo standard errors, and compare the estimated convergence exponent $\hat{\beta}$ to the theoretical $1/2$. Any gap under dependent sampling should be diagnosed against the known mixing-time correction for AR processes, and the write-up should articulate whether the discrepancy constitutes a finite-sample artifact, a violation of the theoretical assumptions, or evidence of a tighter bound for specific distribution families.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

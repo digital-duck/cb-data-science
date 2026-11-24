@@ -1,0 +1,2520 @@
+# Book-level super-graph — AUTO-GENERATED, do not edit by hand.
+# Run:  python scripts/build_super_graph.py
+#
+# Merges all chapter graphs; each node carries source_domain (canonical
+# definition) and optionally also_in (other chapters that reuse it).
+# Cross-domain primitives (concepts in an earlier chapter re-declared as
+# primitives in a later one) appear here with their full composed_of chain.
+# This file is never used for SPL generation — it exists for validation
+# and future book-level graph visualisation.
+domain: data_science
+chapters:
+- data_science_ch01
+- data_science_ch02
+- data_science_ch03
+- data_science_ch04
+- data_science_ch05
+- data_science_ch06
+- data_science_ch07
+- data_science_ch08
+- data_science_ch09
+- data_science_ch10
+primitives:
+  data:
+    defines: Anything that can be analyzed to compile some high-level insight, such
+      as an observation or piece of evidence.
+    tier: 0
+    source_domain: data_science_ch01
+  item:
+    defines: A unique data entity in a dataset, also referred to as an entry or instance.
+    tier: 0
+    source_domain: data_science_ch01
+  attribute:
+    defines: A characteristic or feature that defines an item in a dataset, also known
+      as a feature or variable.
+    tier: 0
+    source_domain: data_science_ch01
+  spreadsheet_program:
+    defines: A software application with electronic worksheets of rows and columns
+      where data can be entered, manipulated, and calculated.
+    tier: 0
+    source_domain: data_science_ch01
+  programming_language:
+    defines: A formal language consisting of instructions used to communicate with
+      a computer to perform tasks like data manipulation and computation.
+    tier: 0
+    source_domain: data_science_ch01
+  observational_data:
+    defines: Data collected by systematically observing and recording behavior without
+      active researcher participation.
+    tier: 0
+    source_domain: data_science_ch02
+  transactional_data:
+    defines: Information related to transactions or interactions between individuals,
+      businesses, or systems, used more in quantitative research.
+    tier: 0
+    source_domain: data_science_ch02
+  experiment:
+    defines: Collecting data through a controlled, well-designed experimental scheme
+      with defined variables, control specimens, and procedures.
+    tier: 0
+    source_domain: data_science_ch02
+  survey:
+    defines: A questionnaire-based method of collecting information from a sample
+      of individuals to represent a population.
+    tier: 0
+    source_domain: data_science_ch02
+  sampling:
+    defines: The process of selecting a subset of a larger population to represent
+      and analyze information about that population.
+    tier: 0
+    source_domain: data_science_ch02
+  web_scraping:
+    defines: A method of collecting data from websites by extracting information from
+      HTML code using automated tools.
+    tier: 0
+    source_domain: data_science_ch02
+  api:
+    defines: A set of protocols, tools, and definitions that allow different software
+      systems to communicate and access data or services.
+    tier: 0
+    source_domain: data_science_ch02
+  regular_expressions:
+    defines: A sequence of characters defining a search pattern, used for matching
+      and manipulating text strings.
+    tier: 0
+    source_domain: data_science_ch02
+  string_manipulation:
+    defines: Techniques for dividing a text string into substrings (splitting) or
+      extracting a portion by index range (slicing).
+    tier: 0
+    source_domain: data_science_ch02
+  missing_data:
+    defines: Data points or values absent from a dataset, occurring due to collection
+      errors, corruption, or nonresponse, classified as MCAR, MAR, or MNAR.
+    tier: 0
+    source_domain: data_science_ch02
+  outliers:
+    defines: Data points that differ significantly from other data points in a dataset,
+      potentially skewing analysis.
+    tier: 0
+    source_domain: data_science_ch02
+    also_in:
+    - data_science_ch03
+  big_data:
+    defines: Extremely large and complex sets of data that traditional data processing
+      methods and tools are unable to handle efficiently.
+    tier: 0
+    source_domain: data_science_ch02
+    also_in:
+    - data_science_ch06
+  descriptive_statistics:
+    defines: The organization, summarization, and graphical display of data.
+    tier: 0
+    source_domain: data_science_ch03
+  population_data:
+    defines: Data representing all the outcomes or measurements that are of interest.
+    tier: 0
+    source_domain: data_science_ch03
+  sample_data:
+    defines: Data representing outcomes or measurements collected from a subset of
+      the population of interest.
+    tier: 0
+    source_domain: data_science_ch03
+  frequency_distribution:
+    defines: A method of organizing and summarizing a dataset that gives the frequency
+      with which each value occurs.
+    tier: 0
+    source_domain: data_science_ch03
+  probability:
+    defines: A numerical measure between 0 and 1 that assesses the likelihood of occurrence
+      of an event.
+    tier: 0
+    source_domain: data_science_ch03
+  sample_space:
+    defines: The set of all possible outcomes in a probability experiment.
+    tier: 0
+    source_domain: data_science_ch03
+  event:
+    defines: A subset of the sample space.
+    tier: 0
+    source_domain: data_science_ch03
+  random_variable:
+    defines: A variable that assigns a single numerical value to a specific outcome
+      from an experiment.
+    tier: 0
+    source_domain: data_science_ch03
+  point_estimate:
+    defines: A single value, such as a sample mean or sample proportion, used to estimate
+      an unknown population parameter.
+    tier: 0
+    source_domain: data_science_ch04
+  sampling_distribution:
+    defines: A probability distribution of a sample statistic based on all possible
+      random samples of a given size from a population.
+    tier: 0
+    source_domain: data_science_ch04
+  critical_value:
+    defines: The z-score or t-score that cuts off the area under a distribution curve
+      corresponding to a specified confidence level, used in margin-of-error calculations.
+    tier: 0
+    source_domain: data_science_ch04
+  t_distribution:
+    defines: A bell-shaped, symmetric distribution with thicker tails than the normal
+      distribution, used when the population standard deviation is unknown.
+    tier: 0
+    source_domain: data_science_ch04
+  null_hypothesis:
+    defines: A statement of no effect or no change in the population, asserting a
+      population parameter equals a specific value.
+    tier: 0
+    source_domain: data_science_ch04
+  alternative_hypothesis:
+    defines: The complementary statement to the null hypothesis, asserting the population
+      parameter differs from the null-hypothesized value.
+    tier: 0
+    source_domain: data_science_ch04
+  level_of_significance:
+    defines: The maximum allowed probability of making a Type I error, used as the
+      threshold for rejecting the null hypothesis.
+    tier: 0
+    source_domain: data_science_ch04
+  type_i_type_ii_errors:
+    defines: 'The two possible errors in hypothesis testing: rejecting a true null
+      hypothesis (Type I) or failing to reject a false null hypothesis (Type II).'
+    tier: 0
+    source_domain: data_science_ch04
+  independent_vs_dependent_samples:
+    defines: A distinction between samples with no inherent pairing (independent)
+      and samples that can be matched or paired across two groups (dependent/matched
+      pairs).
+    tier: 0
+    source_domain: data_science_ch04
+  scatterplot:
+    defines: A graphical display of paired (x, y) data points used to visually assess
+      the relationship between two variables.
+    tier: 0
+    source_domain: data_science_ch04
+  f_distribution:
+    defines: A right-skewed probability distribution used as the basis for ANOVA hypothesis
+      testing, characterized by numerator and denominator degrees of freedom.
+    tier: 0
+    source_domain: data_science_ch04
+  sequence:
+    defines: An ordered list of numbers, measurements, or other data, with individual
+      values called terms.
+    tier: 0
+    source_domain: data_science_ch05
+  error:
+    defines: The extent to which predictions differ from actual observations.
+    tier: 0
+    source_domain: data_science_ch05
+  volatility:
+    defines: The degree to which data points show significant fluctuations from the
+      mean, typically due to factors that are difficult to analyze or predict.
+    tier: 0
+    source_domain: data_science_ch05
+  trend:
+    defines: The long-term direction of time series data in the absence of any other
+      variation.
+    tier: 0
+    source_domain: data_science_ch05
+  cyclic_component:
+    defines: Large variations in the data that recur over longer time periods than
+      seasonal fluctuations but without a fixed frequency.
+    tier: 0
+    source_domain: data_science_ch05
+  seasonal_component:
+    defines: Variation in the data that occurs at fixed time periods, such as every
+      year in the same months or every week on the same days.
+    tier: 0
+    source_domain: data_science_ch05
+  noise:
+    defines: Random, unpredictable variations in a time series that cannot be attributed
+      to trend, cyclic, or seasonal components.
+    tier: 0
+    source_domain: data_science_ch05
+  window:
+    defines: A fixed number of consecutive terms of a time series used for computing
+      statistics such as moving averages.
+    tier: 0
+    source_domain: data_science_ch05
+  lag:
+    defines: The number of time steps by which a time series is shifted when computing
+      autocorrelation.
+    tier: 0
+    source_domain: data_science_ch05
+  machine_learning_model:
+    defines: A mathematical and computational model that finds a relationship between
+      input and output variables of a dataset by adjusting internal parameters to
+      meet a level of accuracy.
+    tier: 0
+    source_domain: data_science_ch06
+  labeled_unlabeled_data:
+    defines: Labeled data has specific labels, categories, or classes associated with
+      each data point; unlabeled data does not.
+    tier: 0
+    source_domain: data_science_ch06
+  training_testing_set:
+    defines: The training set is the portion of data used for initial learning, and
+      the testing set is used afterward to determine whether the model is accurate
+      enough.
+    tier: 0
+    source_domain: data_science_ch06
+  cluster:
+    defines: A collection of data points that are closer to one another than to other
+      data points, according to some definition of closeness.
+    tier: 0
+    source_domain: data_science_ch06
+  binary_multiclass_classification:
+    defines: Classification problems that sort data into either two categories (binary/binomial)
+      or more than two categories (multiclass/multinomial).
+    tier: 0
+    source_domain: data_science_ch06
+  sigmoid_function:
+    defines: A function that maps any real-valued number to a value between 0 and
+      1, characterized by an S-shaped graph, used to model probabilities.
+    tier: 0
+    source_domain: data_science_ch06
+  odds:
+    defines: The ratio of the probability of an event occurring to the probability
+      of it not occurring.
+    tier: 0
+    source_domain: data_science_ch06
+  centroid:
+    defines: The geometric center (arithmetic mean) of a set of data points.
+    tier: 0
+    source_domain: data_science_ch06
+  information_entropy:
+    defines: Information measures the surprise or uncertainty of an event based on
+      its probability; entropy measures the average amount of information across a
+      probability distribution.
+    tier: 0
+    source_domain: data_science_ch06
+  one_hot_encoding:
+    defines: A method of converting categorical data into numerical vectors, where
+      each category is represented by a vector with a single 1 and all other entries
+      0.
+    tier: 0
+    source_domain: data_science_ch06
+  artificial_intelligence:
+    defines: A branch of computer science that aims to create intelligent systems
+      capable of simulating humanlike cognitive abilities, including learning, reasoning,
+      perception, and decision-making.
+    tier: 0
+    source_domain: data_science_ch07
+  neuron:
+    defines: An individual decision-making unit of a neural network that takes some
+      number of inputs and produces an output.
+    tier: 0
+    source_domain: data_science_ch07
+  weight:
+    defines: A value multiplied to the incoming signal, determining the strength of
+      a connection.
+    tier: 0
+    source_domain: data_science_ch07
+  bias:
+    defines: A value added to the weighted signal, making the neuron more or less
+      likely to activate.
+    tier: 0
+    source_domain: data_science_ch07
+    also_in:
+    - data_science_ch08
+  vector:
+    defines: An ordered list of numbers used to represent the inputs or weights of
+      a neuron collectively.
+    tier: 0
+    source_domain: data_science_ch07
+  ethics_in_data_science:
+    defines: The responsible collection, analysis, use, and dissemination of data.
+    tier: 0
+    source_domain: data_science_ch08
+  autonomy:
+    defines: The ideal that individuals maintain control over the decisions regarding
+      the collection and use of their data.
+    tier: 0
+    source_domain: data_science_ch08
+  transparency:
+    defines: Being open and honest about how data is collected, stored, and used.
+    tier: 0
+    source_domain: data_science_ch08
+  data_breach:
+    defines: The act of data being stolen by a malicious third party.
+    tier: 0
+    source_domain: data_science_ch08
+  data_privacy:
+    defines: The assurance that individual data is collected, processed, and stored
+      securely with respect for individuals' rights and preferences.
+    tier: 0
+    source_domain: data_science_ch08
+  personally_identifiable_information:
+    defines: Information that directly and unambiguously identifies an individual.
+    tier: 0
+    source_domain: data_science_ch08
+  encryption:
+    defines: The process of converting sensitive or confidential data into a code
+      to protect it from unauthorized access or interception.
+    tier: 0
+    source_domain: data_science_ch08
+  intellectual_property:
+    defines: Original artistic works, trademarks and trade secrets, patents, and other
+      creative output that is legally protected from unauthorized use.
+    tier: 0
+    source_domain: data_science_ch08
+  digital_divide:
+    defines: The gap between those who have access to digital technologies and those
+      who do not.
+    tier: 0
+    source_domain: data_science_ch08
+  univariate_data:
+    defines: Observations or measurements recorded for a single characteristic or
+      attribute.
+    tier: 0
+    source_domain: data_science_ch09
+  bivariate_data:
+    defines: Paired data in which each value of one variable is paired with a value
+      of a second variable.
+    tier: 0
+    source_domain: data_science_ch09
+  bin:
+    defines: An interval or range into which data points are grouped, often used to
+      create histograms.
+    tier: 0
+    source_domain: data_science_ch09
+  geospatial_data:
+    defines: Data that describes geographic location, shape, size, and other attributes
+      relative to a location on Earth's surface.
+    tier: 0
+    source_domain: data_science_ch09
+  audience:
+    defines: The person or group that will be reading a technical report, classified
+      into experts, technicians, executives, and nonspecialists with distinct communication
+      needs.
+    tier: 0
+    source_domain: data_science_ch10
+  technical_report_structure:
+    defines: A structured format for a data science report including title page, executive
+      summary, methodology, data exploration and analysis, results and discussion,
+      and conclusion.
+    tier: 0
+    source_domain: data_science_ch10
+  version_control_system:
+    defines: A software tool such as Git or SVN that helps keep track of changes to
+      files, code, or digital content over time to support reproducibility and collaboration.
+    tier: 0
+    source_domain: data_science_ch10
+  alt_text:
+    defines: Brief descriptions of images that accompany or are embedded within image
+      data to aid readers who cannot view graphics.
+    tier: 0
+    source_domain: data_science_ch10
+  assumption:
+    defines: A statement thought to be true without being verified or proven, forming
+      a foundational hypothesis that guides the analytical approach and model selection.
+    tier: 0
+    source_domain: data_science_ch10
+  constraint:
+    defines: A limitation or restriction imposed on a project or its solution, distinct
+      from an assumption in that it is a known limit rather than an unverified belief.
+    tier: 0
+    source_domain: data_science_ch10
+  measures_of_fit:
+    defines: Metrics such as R-squared or accuracy that assess how well a model's
+      predictions align with actual observed data.
+    tier: 0
+    source_domain: data_science_ch10
+concepts:
+  information:
+    defines: High-level insights compiled from analyzing data.
+    composed_of:
+    - data
+    tier: 1
+    source_domain: data_science_ch01
+  data_collection:
+    defines: The systematic process of gathering information on variables of interest.
+    composed_of:
+    - data
+    tier: 1
+    source_domain: data_science_ch01
+    also_in:
+    - data_science_ch02
+  quantitative_data:
+    defines: Data that deals with quantities and amounts, measured and expressed using
+      numbers.
+    composed_of:
+    - data
+    tier: 1
+    source_domain: data_science_ch01
+  qualitative_data:
+    defines: Non-numerical data describing subjective attributes or characteristics.
+    composed_of:
+    - data
+    tier: 1
+    source_domain: data_science_ch01
+  dataset:
+    defines: A collection of observations or data entities organized for analysis
+      and interpretation.
+    composed_of:
+    - item
+    - attribute
+    tier: 1
+    source_domain: data_science_ch01
+  python:
+    defines: A general-purpose, open-source programming language with extensive libraries,
+      commonly used for data analysis.
+    composed_of:
+    - programming_language
+    tier: 1
+    source_domain: data_science_ch01
+  r_language:
+    defines: An open-source programming language specifically designed for statistical
+      computing and graphics.
+    composed_of:
+    - programming_language
+    tier: 1
+    source_domain: data_science_ch01
+  data_science:
+    defines: A field of study that investigates how to collect, manage, and analyze
+      data of all types to retrieve meaningful information.
+    composed_of:
+    - data
+    - information
+    tier: 2
+    source_domain: data_science_ch01
+  data_management:
+    defines: The process of storing and handling data, evolving from local storage
+      to cloud-based systems.
+    composed_of:
+    - data_collection
+    tier: 2
+    source_domain: data_science_ch01
+  data_preparation:
+    defines: The step that converts collected data into an optimal form for analysis,
+      also called data processing.
+    composed_of:
+    - data_collection
+    tier: 2
+    source_domain: data_science_ch01
+  numeric_data:
+    defines: Data represented in numbers that indicate measurable quantities, possibly
+      followed by unit symbols.
+    composed_of:
+    - quantitative_data
+    tier: 2
+    source_domain: data_science_ch01
+  categorical_data:
+    defines: Data represented as words, symbols, or numbers chosen from a finite set
+      of values.
+    composed_of:
+    - qualitative_data
+    tier: 2
+    source_domain: data_science_ch01
+  structured_data:
+    defines: A dataset whose individual items share the same defined structure, such
+      as a table with rows and columns.
+    composed_of:
+    - dataset
+    tier: 2
+    source_domain: data_science_ch01
+  unstructured_data:
+    defines: A dataset that lacks a predefined or organized data model, such as text,
+      images, or videos.
+    composed_of:
+    - dataset
+    tier: 2
+    source_domain: data_science_ch01
+  jupyter_notebook:
+    defines: A web-based document/environment that allows users to run Python programs
+      interactively with code, text, and visualizations.
+    composed_of:
+    - python
+    tier: 2
+    source_domain: data_science_ch01
+  pandas_library:
+    defines: A Python library specialized for data manipulation and analysis.
+    composed_of:
+    - python
+    tier: 2
+    source_domain: data_science_ch01
+  matplotlib_library:
+    defines: A Python library specialized for data visualization, used to draw plots
+      such as scatterplots.
+    composed_of:
+    - python
+    tier: 2
+    source_domain: data_science_ch01
+  data_analysis:
+    defines: The process of examining and interpreting prepared data to uncover patterns
+      and insights.
+    composed_of:
+    - data_preparation
+    tier: 3
+    source_domain: data_science_ch01
+  data_warehousing:
+    defines: Storing and managing large volumes of data from various sources in a
+      central location.
+    composed_of:
+    - data_management
+    tier: 3
+    source_domain: data_science_ch01
+  continuous_data:
+    defines: Numeric data whose values can be any number, chosen from an infinite
+      set.
+    composed_of:
+    - numeric_data
+    tier: 3
+    source_domain: data_science_ch01
+  discrete_data:
+    defines: Numeric data that follows a specific precision, making the set of possible
+      values finite.
+    composed_of:
+    - numeric_data
+    tier: 3
+    source_domain: data_science_ch01
+  nominal_data:
+    defines: Categorical data whose set of possible values does not include any ordering
+      notion.
+    composed_of:
+    - categorical_data
+    tier: 3
+    source_domain: data_science_ch01
+  ordinal_data:
+    defines: Categorical data whose set of possible values includes an ordering notion.
+    composed_of:
+    - categorical_data
+    tier: 3
+    source_domain: data_science_ch01
+  csv_format:
+    defines: A dataset format in which each item takes up a single line with values
+      separated by commas.
+    composed_of:
+    - structured_data
+    tier: 3
+    source_domain: data_science_ch01
+  xml_format:
+    defines: A dataset format that lists items using paired angle-bracket tags, well-suited
+      for hierarchical data.
+    composed_of:
+    - structured_data
+    tier: 3
+    source_domain: data_science_ch01
+  json_format:
+    defines: A dataset format that follows JavaScript's object syntax, using key-value
+      pairs.
+    composed_of:
+    - structured_data
+    tier: 3
+    source_domain: data_science_ch01
+  google_colab:
+    defines: A free, cloud-based Google application used for editing and running Jupyter
+      Notebook files.
+    composed_of:
+    - jupyter_notebook
+    tier: 3
+    source_domain: data_science_ch01
+  dataframe:
+    defines: A Pandas data type used to store multi-column tabular data.
+    composed_of:
+    - pandas_library
+    tier: 3
+    source_domain: data_science_ch01
+  data_reporting:
+    defines: The presentation of data in a way that best conveys the information learned
+      from data analysis.
+    composed_of:
+    - data_analysis
+    tier: 4
+    source_domain: data_science_ch01
+  data_visualization:
+    defines: A graphical way of presenting and reporting data using charts, graphs,
+      and maps.
+    composed_of:
+    - data_reporting
+    tier: 5
+    source_domain: data_science_ch01
+  data_science_cycle:
+    defines: The process data science tasks follow, consisting of problem definition,
+      data collection, preparation, analysis, and reporting.
+    composed_of:
+    - data_collection
+    - data_preparation
+    - data_analysis
+    - data_reporting
+    tier: 5
+    source_domain: data_science_ch01
+  survey_design:
+    defines: The process of structuring survey questions, ordering, and question type
+      mix to gather reliable data while minimizing bias.
+    composed_of:
+    - survey
+    tier: 1
+    source_domain: data_science_ch02
+  open_vs_closed_questions:
+    defines: Distinction between questions allowing free-form responses (open-ended)
+      versus predetermined answer choices (closed-ended).
+    composed_of:
+    - survey_design
+    tier: 2
+    source_domain: data_science_ch02
+  bias_in_surveys:
+    defines: Systematic distortion in survey results caused by leading or assumption-laden
+      question wording or unrepresentative sampling.
+    composed_of:
+    - survey
+    - survey_design
+    tier: 2
+    source_domain: data_science_ch02
+  sampling_techniques:
+    defines: Various methods (simple random, stratified, cluster, convenience, systematic,
+      purposive, snowball, quota, volunteer) for selecting a representative subset
+      from a population.
+    composed_of:
+    - sampling
+    tier: 1
+    source_domain: data_science_ch02
+  sampling_error:
+    defines: The difference between results obtained from a sample and the true value
+      of the population parameter it represents.
+    composed_of:
+    - sampling
+    - sampling_techniques
+    tier: 2
+    source_domain: data_science_ch02
+  sampling_bias:
+    defines: A distortion that occurs when a sample is not representative of the population
+      it intends to generalize to, leading to skewed conclusions.
+    composed_of:
+    - sampling
+    - sampling_techniques
+    tier: 2
+    source_domain: data_science_ch02
+  measurement_error:
+    defines: Inaccuracies or discrepancies that arise during collection, recording,
+      or analysis of data due to human, environmental, or systematic factors.
+    composed_of:
+    - data_collection
+    - experiment
+    tier: 1
+    source_domain: data_science_ch02
+  social_media_data_collection:
+    defines: Gathering information from platforms like Twitter and Instagram using
+      APIs, social listening, surveys, network analysis, or media analysis.
+    composed_of:
+    - api
+    - web_scraping
+    - survey
+    tier: 1
+    source_domain: data_science_ch02
+  parsing_and_extraction:
+    defines: Analyzing a dataset or string to retrieve specific pieces of information
+      using techniques like splitting, slicing, and regex.
+    composed_of:
+    - regular_expressions
+    - string_manipulation
+    tier: 1
+    source_domain: data_science_ch02
+  data_processing:
+    defines: Managing raw data by cleaning it and transforming it into a structured,
+      usable format.
+    composed_of:
+    - parsing_and_extraction
+    tier: 2
+    source_domain: data_science_ch02
+  data_storage:
+    defines: Saving processed data (e.g., as CSV via DataFrames) in a suitable format
+      for future use and analysis.
+    composed_of:
+    - data_processing
+    tier: 3
+    source_domain: data_science_ch02
+  data_cleaning_preprocessing:
+    defines: The technique of organizing and converting raw data into usable structures
+      by handling missing values, duplicates, and errors.
+    composed_of:
+    - missing_data
+    - outliers
+    tier: 1
+    source_domain: data_science_ch02
+  data_normalization:
+    defines: Applying rules (normal forms) and scaling formulas to organize data,
+      remove redundancy, and rescale values typically between 0 and 1.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+    source_domain: data_science_ch02
+  data_transformation:
+    defines: Modifying data (e.g., via log, square root, or exponential operations)
+      to make it more suitable for planned analysis.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+    source_domain: data_science_ch02
+  data_validation:
+    defines: The process of ensuring data accuracy and quality by checking it against
+      defined rules and standards.
+    composed_of:
+    - data_cleaning_preprocessing
+    tier: 2
+    source_domain: data_science_ch02
+    also_in:
+    - data_science_ch08
+  data_aggregation:
+    defines: The process of gathering and merging information from multiple sources
+      into a single dataset for insights and conclusions.
+    composed_of:
+    - data_collection
+    - data_processing
+    tier: 3
+    source_domain: data_science_ch02
+  noisy_data:
+    defines: Data containing errors, outliers, or irrelevant information that conceals
+      true patterns and relationships in a dataset.
+    composed_of:
+    - outliers
+    - missing_data
+    tier: 1
+    source_domain: data_science_ch02
+  text_preprocessing:
+    defines: Preparing raw text data for natural language processing through techniques
+      like tokenization, lowercasing, stopword removal, and lemmatization.
+    composed_of:
+    - string_manipulation
+    - regular_expressions
+    tier: 1
+    source_domain: data_science_ch02
+  data_compression:
+    defines: A method of reducing file size while retaining essential information,
+      classified as lossy or lossless (e.g., Huffman coding).
+    composed_of:
+    - big_data
+    tier: 1
+    source_domain: data_science_ch02
+  data_indexing:
+    defines: Organizing and storing data in a database or storage system to allow
+      efficient and fast retrieval of specific data.
+    composed_of:
+    - big_data
+    tier: 1
+    source_domain: data_science_ch02
+  data_chunking:
+    defines: Breaking down large datasets into smaller, manageable chunks to make
+      them easier to manage, process, analyze, and store.
+    composed_of:
+    - big_data
+    tier: 1
+    source_domain: data_science_ch02
+  dbms:
+    defines: Software tools used for organizing, storing, retrieving, and managing
+      large volumes of structured data.
+    composed_of:
+    - data_storage
+    - big_data
+    tier: 4
+    source_domain: data_science_ch02
+  mean:
+    defines: The arithmetic average of a dataset, calculated by summing the values
+      and dividing by the number of items.
+    composed_of:
+    - population_data
+    - sample_data
+    tier: 1
+    source_domain: data_science_ch03
+  median:
+    defines: The middle value of an ordered dataset, used as a measure of central
+      tendency less affected by outliers.
+    composed_of:
+    - sample_data
+    tier: 1
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  mode:
+    defines: The data value that occurs with the greatest frequency in a dataset.
+    composed_of:
+    - frequency_distribution
+    tier: 1
+    source_domain: data_science_ch03
+  trimmed_mean:
+    defines: A mean calculated after removing a percentage of data values from the
+      lower and upper ends of a sorted dataset to reduce the effect of outliers.
+    composed_of:
+    - mean
+    - outliers
+    tier: 2
+    source_domain: data_science_ch03
+  central_tendency:
+    defines: The statistical measure that represents the center of a dataset, encompassing
+      mean, median, and mode.
+    composed_of:
+    - mean
+    - median
+    - mode
+    tier: 2
+    source_domain: data_science_ch03
+  range:
+    defines: A measure of dispersion calculated by subtracting the minimum value from
+      the maximum value of a dataset.
+    composed_of:
+    - sample_data
+    tier: 1
+    source_domain: data_science_ch03
+  variance:
+    defines: A measure of the spread of data values based on the squared deviations
+      of observations from the mean.
+    composed_of:
+    - mean
+    tier: 2
+    source_domain: data_science_ch03
+  standard_deviation:
+    defines: A measure of the spread of a dataset, in the same units as the data,
+      calculated as the square root of the variance.
+    composed_of:
+    - variance
+    tier: 3
+    source_domain: data_science_ch03
+  coefficient_of_variation:
+    defines: A measure of relative variation calculated as the standard deviation
+      expressed as a percentage of the mean.
+    composed_of:
+    - standard_deviation
+    - mean
+    tier: 4
+    source_domain: data_science_ch03
+  percentiles:
+    defines: Values that divide an ordered dataset into hundredths, indicating the
+      percentage of data points falling below a given value.
+    composed_of:
+    - sample_data
+    tier: 1
+    source_domain: data_science_ch03
+  quartiles:
+    defines: Values that divide an ordered dataset into four equal parts, with the
+      second quartile equal to the median.
+    composed_of:
+    - percentiles
+    - median
+    tier: 2
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  interquartile_range:
+    defines: The difference between the third quartile and first quartile, indicating
+      the spread of the middle 50% of the data.
+    composed_of:
+    - quartiles
+    tier: 3
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  z_score:
+    defines: A measure of position calculated by subtracting the mean from a data
+      value and dividing by the standard deviation, representing the number of standard
+      deviations from the mean.
+    composed_of:
+    - mean
+    - standard_deviation
+    tier: 4
+    source_domain: data_science_ch03
+  relative_frequency_probability:
+    defines: A method of determining the likelihood of an event based on the observed
+      frequency of its occurrence in collected data.
+    composed_of:
+    - probability
+    - sample_data
+    tier: 1
+    source_domain: data_science_ch03
+  theoretical_probability:
+    defines: A method of calculating probability based on equally likely outcomes
+      known ahead of time, without collecting data.
+    composed_of:
+    - probability
+    - sample_space
+    tier: 1
+    source_domain: data_science_ch03
+  complement_of_an_event:
+    defines: The set of all outcomes in the sample space that are not included in
+      a given event, with probability equal to 1 minus the event's probability.
+    composed_of:
+    - probability
+    - event
+    tier: 1
+    source_domain: data_science_ch03
+  independent_dependent_events:
+    defines: A classification of events based on whether the occurrence of one event
+      affects the probability of occurrence of another.
+    composed_of:
+    - probability
+    - event
+    tier: 1
+    source_domain: data_science_ch03
+  conditional_probability:
+    defines: The probability of an event occurring given that another event has already
+      occurred.
+    composed_of:
+    - probability
+    - event
+    - independent_dependent_events
+    tier: 2
+    source_domain: data_science_ch03
+  probability_of_at_least_one:
+    defines: The probability that one or more occurrences of an event happen, calculated
+      as the complement of no occurrences.
+    composed_of:
+    - complement_of_an_event
+    - independent_dependent_events
+    tier: 2
+    source_domain: data_science_ch03
+  bayes_theorem:
+    defines: A statistical technique that revises a probability estimate using new
+      information or evidence, expressed via conditional probabilities.
+    composed_of:
+    - conditional_probability
+    tier: 3
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch06
+  discrete_random_variable:
+    defines: A random variable that can take on only a finite or countable number
+      of values, typically resulting from a count.
+    composed_of:
+    - random_variable
+    tier: 1
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  continuous_random_variable:
+    defines: A random variable that can take on any value within an interval, typically
+      resulting from a measurement.
+    composed_of:
+    - random_variable
+    tier: 1
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  probability_distribution:
+    defines: A mathematical function that assigns probabilities to the various outcomes
+      of a random variable.
+    composed_of:
+    - random_variable
+    - probability
+    tier: 1
+    source_domain: data_science_ch03
+  binomial_distribution:
+    defines: A discrete probability distribution modeling the number of successes
+      in a fixed number of independent trials, each with the same probability of success.
+    composed_of:
+    - discrete_random_variable
+    - probability_distribution
+    - independent_dependent_events
+    tier: 2
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  poisson_distribution:
+    defines: A discrete probability distribution used to calculate the probability
+      of a certain number of occurrences of an event within a specific interval.
+    composed_of:
+    - discrete_random_variable
+    - probability_distribution
+    tier: 2
+    source_domain: data_science_ch03
+    also_in:
+    - data_science_ch09
+  probability_density_function:
+    defines: A function used to describe the probability distribution of a continuous
+      random variable, where area under the curve represents probability.
+    composed_of:
+    - continuous_random_variable
+    - probability_distribution
+    tier: 2
+    source_domain: data_science_ch03
+  normal_distribution:
+    defines: A symmetric, bell-shaped continuous probability distribution characterized
+      by its mean and standard deviation.
+    composed_of:
+    - probability_density_function
+    - mean
+    - standard_deviation
+    tier: 4
+    source_domain: data_science_ch03
+  standard_normal_distribution:
+    defines: A normal distribution with a mean of 0 and a standard deviation of 1,
+      used to standardize other normal distributions via z-scores.
+    composed_of:
+    - normal_distribution
+    - z_score
+    tier: 5
+    source_domain: data_science_ch03
+  empirical_rule:
+    defines: A rule stating the approximate percentages of data values falling within
+      one, two, and three standard deviations of the mean for a normal distribution.
+    composed_of:
+    - normal_distribution
+    - standard_deviation
+    tier: 5
+    source_domain: data_science_ch03
+  central_limit_theorem:
+    defines: The theorem describing how the sampling distribution of sample means
+      approximates a normal distribution as sample size grows or when the population
+      is normal.
+    composed_of:
+    - sampling_distribution
+    tier: 1
+    source_domain: data_science_ch04
+  margin_of_error:
+    defines: The maximum expected distance between the point estimate and the true
+      population parameter, used to construct a confidence interval.
+    composed_of:
+    - critical_value
+    tier: 1
+    source_domain: data_science_ch04
+  test_statistic:
+    defines: A standardized numerical value, such as a z-score or t-score, calculated
+      from sample data to assess evidence against the null hypothesis.
+    composed_of:
+    - point_estimate
+    - null_hypothesis
+    tier: 1
+    source_domain: data_science_ch04
+  correlation_coefficient:
+    defines: A numeric measure, ranging from -1 to 1, of the strength and direction
+      of the linear relationship between two variables.
+    composed_of:
+    - scatterplot
+    tier: 1
+    source_domain: data_science_ch04
+    also_in:
+    - data_science_ch09
+  confidence_interval:
+    defines: A range, centered on a point estimate, within which a population parameter
+      is likely to fall at a stated confidence level.
+    composed_of:
+    - point_estimate
+    - margin_of_error
+    tier: 2
+    source_domain: data_science_ch04
+  sample_size_determination:
+    defines: Methods for calculating the minimum sample size needed to achieve a desired
+      margin of error when estimating a mean or proportion.
+    composed_of:
+    - margin_of_error
+    - critical_value
+    tier: 2
+    source_domain: data_science_ch04
+  hypothesis_testing:
+    defines: A statistical method for using sample data to test claims about population
+      parameters by comparing a test statistic and p-value against a significance
+      level.
+    composed_of:
+    - null_hypothesis
+    - alternative_hypothesis
+    - test_statistic
+    - level_of_significance
+    tier: 2
+    source_domain: data_science_ch04
+  p_value:
+    defines: The probability of obtaining a sample statistic as extreme as, or more
+      extreme than, the observed value, assuming the null hypothesis is true.
+    composed_of:
+    - test_statistic
+    - null_hypothesis
+    tier: 2
+    source_domain: data_science_ch04
+  linear_regression:
+    defines: A method for modeling the relationship between an independent and dependent
+      variable using a best-fit straight line equation.
+    composed_of:
+    - scatterplot
+    - correlation_coefficient
+    tier: 2
+    source_domain: data_science_ch04
+  confidence_interval_mean_known_sd:
+    defines: A confidence interval for a population mean calculated using the normal
+      distribution when the population standard deviation is known.
+    composed_of:
+    - confidence_interval
+    - central_limit_theorem
+    tier: 3
+    source_domain: data_science_ch04
+  confidence_interval_mean_unknown_sd:
+    defines: A confidence interval for a population mean calculated using the t-distribution
+      and sample standard deviation when the population standard deviation is unknown.
+    composed_of:
+    - confidence_interval
+    - t_distribution
+    tier: 3
+    source_domain: data_science_ch04
+  confidence_interval_proportion:
+    defines: A confidence interval for a population proportion based on the normal
+      approximation to the binomial distribution.
+    composed_of:
+    - confidence_interval
+    - central_limit_theorem
+    tier: 3
+    source_domain: data_science_ch04
+  bootstrapping:
+    defines: A nonparametric method for constructing a confidence interval by repeatedly
+      resampling with replacement from the observed data.
+    composed_of:
+    - point_estimate
+    - confidence_interval
+    tier: 3
+    source_domain: data_science_ch04
+    also_in:
+    - data_science_ch06
+  one_sample_hypothesis_test_mean:
+    defines: A hypothesis test procedure for a population mean using the normal or
+      t-distribution depending on whether the population standard deviation is known.
+    composed_of:
+    - hypothesis_testing
+    - t_distribution
+    - p_value
+    tier: 3
+    source_domain: data_science_ch04
+  one_sample_hypothesis_test_proportion:
+    defines: A hypothesis test procedure for a population proportion using the normal
+      approximation to the binomial distribution.
+    composed_of:
+    - hypothesis_testing
+    - p_value
+    tier: 3
+    source_domain: data_science_ch04
+  two_sample_hypothesis_test_means:
+    defines: A hypothesis test comparing the means of two independent samples using
+      the t-distribution when population standard deviations are unknown.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    - t_distribution
+    tier: 3
+    source_domain: data_science_ch04
+  matched_pairs_hypothesis_test:
+    defines: A hypothesis test for dependent (paired) samples based on the mean and
+      standard deviation of the differences between paired observations.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    - t_distribution
+    tier: 3
+    source_domain: data_science_ch04
+  two_sample_hypothesis_test_proportions:
+    defines: A hypothesis test comparing the proportions of two independent samples
+      using a weighted estimate and the normal distribution.
+    composed_of:
+    - hypothesis_testing
+    - independent_vs_dependent_samples
+    tier: 3
+    source_domain: data_science_ch04
+  correlation_significance_test:
+    defines: A hypothesis test used to determine whether a sample correlation coefficient
+      indicates a statistically significant linear relationship in the population.
+    composed_of:
+    - correlation_coefficient
+    - hypothesis_testing
+    tier: 3
+    source_domain: data_science_ch04
+  least_squares_method:
+    defines: A mathematical technique that determines the best-fit regression line
+      by minimizing the sum of squared residuals.
+    composed_of:
+    - linear_regression
+    tier: 3
+    source_domain: data_science_ch04
+  residual:
+    defines: The difference between an observed y-value and the value predicted by
+      the regression equation.
+    composed_of:
+    - linear_regression
+    tier: 3
+    source_domain: data_science_ch04
+  regression_slope_intercept_interpretation:
+    defines: The practice of interpreting the regression slope as the average change
+      in y per unit increase in x, and the intercept as the expected y-value when
+      x equals zero.
+    composed_of:
+    - linear_regression
+    tier: 3
+    source_domain: data_science_ch04
+  anova:
+    defines: A statistical method for comparing three or more population means to
+      determine if at least one differs from the others.
+    composed_of:
+    - f_distribution
+    - hypothesis_testing
+    tier: 3
+    source_domain: data_science_ch04
+  one_way_anova_procedure:
+    defines: The step-by-step calculation of sum of squares between/within, mean squares,
+      and the F test statistic to test equality of three or more means.
+    composed_of:
+    - anova
+    tier: 4
+    source_domain: data_science_ch04
+  time_series:
+    defines: A set of numerical measurements of the same variable collected and organized
+      according to regular time intervals.
+    composed_of:
+    - sequence
+    tier: 1
+    source_domain: data_science_ch05
+  order_of_sequence:
+    defines: The number of terms or lags used in a model to describe a time series,
+      or the exponent of the highest-order term in a polynomial formula that models
+      the sequence.
+    composed_of:
+    - sequence
+    tier: 1
+    source_domain: data_science_ch05
+  trend_cycle_component:
+    defines: A component of a time series that combines the trend and cyclic components,
+      since cyclic variation cannot be predicted the way seasonality can.
+    composed_of:
+    - trend
+    - cyclic_component
+    tier: 1
+    source_domain: data_science_ch05
+  measures_of_error:
+    defines: Metrics used to assess how well a model's predictions align with observed
+      data.
+    composed_of:
+    - error
+    tier: 1
+    source_domain: data_science_ch05
+  time_series_analysis:
+    defines: The examination of data points collected at specific time intervals to
+      identify trends, patterns, and seasonal variations for informed predictions
+      and decisions.
+    composed_of:
+    - time_series
+    tier: 2
+    source_domain: data_science_ch05
+  time_series_model:
+    defines: A function, algorithm, or method for finding, approximating, or predicting
+      the values of a given time series.
+    composed_of:
+    - time_series
+    tier: 2
+    source_domain: data_science_ch05
+  additive_decomposition:
+    defines: Decomposition of a time series into the sum of its trend, seasonal, and
+      error components.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - error
+    tier: 2
+    source_domain: data_science_ch05
+  multiplicative_decomposition:
+    defines: Decomposition of a time series into the product of its trend, seasonal,
+      and error components.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - error
+    tier: 2
+    source_domain: data_science_ch05
+  trend_curve:
+    defines: A line or curve modeling the trend of a time series, representing something
+      like a mean value for the series over a given time frame.
+    composed_of:
+    - time_series
+    - trend
+    tier: 2
+    source_domain: data_science_ch05
+  period:
+    defines: The smallest time interval over which a seasonal variation pattern repeats.
+    composed_of:
+    - time_series
+    - seasonal_component
+    tier: 2
+    source_domain: data_science_ch05
+  white_noise:
+    defines: A time series with constant zero mean, constant variance, and no correlation
+      between values at different points in the series.
+    composed_of:
+    - time_series
+    - noise
+    tier: 2
+    source_domain: data_science_ch05
+  detrending:
+    defines: The process of separating the trend component from a time series, either
+      by isolating and removing it or by smoothing to leave only seasonal and error
+      components.
+    composed_of:
+    - time_series
+    - trend
+    - window
+    tier: 2
+    source_domain: data_science_ch05
+  simple_moving_average:
+    defines: The average (arithmetic mean) of a fixed number of consecutive data points
+      in a time series, used to smooth short-term variation and isolate trend.
+    composed_of:
+    - time_series
+    - window
+    tier: 2
+    source_domain: data_science_ch05
+  differencing:
+    defines: The process of finding a new series consisting of differences of consecutive
+      terms of a time series, used to remove trend.
+    composed_of:
+    - time_series
+    - trend
+    tier: 2
+    source_domain: data_science_ch05
+  autocorrelation:
+    defines: A measure of correlation between a time series and a shifted copy of
+      itself.
+    composed_of:
+    - time_series
+    - lag
+    tier: 2
+    source_domain: data_science_ch05
+  seasonally_adjusted_data:
+    defines: A time series obtained by subtracting the estimated seasonal component
+      from the original data, closely related to the underlying trend-cycle curve.
+    composed_of:
+    - time_series
+    - seasonal_component
+    tier: 2
+    source_domain: data_science_ch05
+  stationary:
+    defines: A time series in which the variance is relatively constant over time,
+      no overall trend exists, and no seasonal patterns exist.
+    composed_of:
+    - time_series
+    - trend
+    - seasonal_component
+    - volatility
+    tier: 2
+    source_domain: data_science_ch05
+  autoregressive_model:
+    defines: A model that predicts the next value of a time series as a weighted sum
+      of a fixed number of its own previous values.
+    composed_of:
+    - time_series
+    - lag
+    tier: 2
+    source_domain: data_science_ch05
+  moving_average_model:
+    defines: A model component that predicts the next value of a time series using
+      past forecast errors rather than past values directly.
+    composed_of:
+    - time_series
+    - error
+    tier: 2
+    source_domain: data_science_ch05
+  mean_absolute_error:
+    defines: A scale-dependent measure of the average magnitude of forecast errors.
+    composed_of:
+    - measures_of_error
+    tier: 2
+    source_domain: data_science_ch05
+  root_mean_squared_error:
+    defines: A scale-dependent measure of error based on the standard deviation of
+      errors, penalizing larger errors more heavily than MAE.
+    composed_of:
+    - measures_of_error
+    tier: 2
+    source_domain: data_science_ch05
+  mean_absolute_percentage_error:
+    defines: A scale-independent measure of the average relative error between predicted
+      and actual values, expressed as a percentage.
+    composed_of:
+    - measures_of_error
+    tier: 2
+    source_domain: data_science_ch05
+  forecasting:
+    defines: The process of making predictions or extrapolations about future values
+      of a time series.
+    composed_of:
+    - time_series_model
+    - error
+    tier: 3
+    source_domain: data_science_ch05
+  level:
+    defines: A constant estimate of the trend equal to the mean of all the time series
+      data, used when there is no significant long-term rise or fall.
+    composed_of:
+    - trend_curve
+    tier: 3
+    source_domain: data_science_ch05
+  weighted_moving_average:
+    defines: A moving average in which previous terms of the series are given different
+      weights according to some formula or rule.
+    composed_of:
+    - simple_moving_average
+    tier: 3
+    source_domain: data_science_ch05
+  autocorrelation_function:
+    defines: A function measuring the autocorrelation of a time series at each lag,
+      used to identify periodicity such as seasonal components.
+    composed_of:
+    - autocorrelation
+    - lag
+    tier: 3
+    source_domain: data_science_ch05
+  integrative_component:
+    defines: The component of the ARIMA model representing the differencing operation
+      used to transform a nonstationary series into a stationary one.
+    composed_of:
+    - differencing
+    tier: 3
+    source_domain: data_science_ch05
+  residuals:
+    defines: The differences between a given time series and its model, providing
+      a measure of error and an estimate of the noise component.
+    composed_of:
+    - time_series_model
+    - error
+    tier: 3
+    source_domain: data_science_ch05
+  symmetric_mean_absolute_percentage_error:
+    defines: A scale-independent measure of relative error similar to MAPE but scaled
+      relative to both actual and predicted values.
+    composed_of:
+    - mean_absolute_percentage_error
+    tier: 3
+    source_domain: data_science_ch05
+  exponential_moving_average:
+    defines: A weighted moving average in which weights decay exponentially, giving
+      more recent data points greater influence.
+    composed_of:
+    - weighted_moving_average
+    tier: 4
+    source_domain: data_science_ch05
+  prediction_interval:
+    defines: A range of values that a forecasted variable could take with a specified
+      level of probability.
+    composed_of:
+    - forecasting
+    - error
+    tier: 4
+    source_domain: data_science_ch05
+  supervised_learning:
+    defines: Machine learning that uses labeled data in training and testing, adjusting
+      parameters based on correctness compared to known labels.
+    composed_of:
+    - machine_learning_model
+    - labeled_unlabeled_data
+    - training_testing_set
+    tier: 1
+    source_domain: data_science_ch06
+  unsupervised_learning:
+    defines: Machine learning that trains on unlabeled data to discover inherent structure
+      such as clusters or patterns.
+    composed_of:
+    - machine_learning_model
+    - labeled_unlabeled_data
+    tier: 1
+    source_domain: data_science_ch06
+  regression_error_measures:
+    defines: Measures of error between predicted and actual numerical values used
+      to evaluate regression models, including MAE, MAPE, MSE, and RMSE.
+    composed_of:
+    - training_testing_set
+    tier: 1
+    source_domain: data_science_ch06
+    also_in:
+    - data_science_ch10
+  overfitting:
+    defines: A modeling issue where the model fits the training data too closely,
+      becoming too specific and performing worse on new data (high variance).
+    composed_of:
+    - training_testing_set
+    tier: 1
+    source_domain: data_science_ch06
+    also_in:
+    - data_science_ch05
+    - data_science_ch10
+  underfitting:
+    defines: A modeling issue where the model is not robust enough to capture essential
+      features of the data (high bias).
+    composed_of:
+    - training_testing_set
+    tier: 1
+    source_domain: data_science_ch06
+  bias_variance_tradeoff:
+    defines: The observation that a model with low variance tends to have high bias,
+      and a model with low bias tends to have high variance.
+    composed_of:
+    - overfitting
+    - underfitting
+    tier: 2
+    source_domain: data_science_ch06
+  logit_function:
+    defines: The inverse function of the sigmoid, equal to the logarithm of the odds
+      of an event, used to linearize the sigmoid for regression.
+    composed_of:
+    - sigmoid_function
+    - odds
+    tier: 1
+    source_domain: data_science_ch06
+  logistic_regression:
+    defines: A prediction model that fits a sigmoid function to labeled data to perform
+      binary classification based on log-odds.
+    composed_of:
+    - sigmoid_function
+    - binary_multiclass_classification
+    - supervised_learning
+    tier: 2
+    source_domain: data_science_ch06
+  maximum_likelihood:
+    defines: A method for finding the logistic regression parameters that produce
+      the highest likelihood score, computed as the product of predicted probabilities
+      matching known labels.
+    composed_of:
+    - logistic_regression
+    tier: 3
+    source_domain: data_science_ch06
+  k_means_clustering:
+    defines: An unsupervised clustering algorithm that iteratively assigns data points
+      to the nearest of k centroids and recomputes centroids until they stabilize.
+    composed_of:
+    - cluster
+    - centroid
+    - unsupervised_learning
+    tier: 2
+    source_domain: data_science_ch06
+  silhouette_score:
+    defines: A measure of how well-separated clusters are, ranging from -1 to 1, based
+      on comparing intra-cluster and nearest-cluster distances.
+    composed_of:
+    - cluster
+    - centroid
+    tier: 1
+    source_domain: data_science_ch06
+  dbscan:
+    defines: A density-based clustering algorithm that groups core points within a
+      given distance and minimum neighbor count into clusters, marking unreachable
+      points as noise.
+    composed_of:
+    - cluster
+    - unsupervised_learning
+    tier: 2
+    source_domain: data_science_ch06
+  confusion_matrix:
+    defines: A table indicating how data was classified correctly or incorrectly by
+      a model, with entry (i,j) giving the count of label i classified as label j.
+    composed_of:
+    - binary_multiclass_classification
+    tier: 1
+    source_domain: data_science_ch06
+    also_in:
+    - data_science_ch10
+  true_false_positive_negative:
+    defines: The four possible outcomes of a binary classification test—true positive,
+      true negative, false positive, and false negative—used to characterize test
+      errors.
+    composed_of:
+    - confusion_matrix
+    - binary_multiclass_classification
+    tier: 2
+    source_domain: data_science_ch06
+  accuracy_measures:
+    defines: Metrics such as accuracy, precision, recall, and F1 score used to evaluate
+      the fitness of a classification model.
+    composed_of:
+    - true_false_positive_negative
+    tier: 3
+    source_domain: data_science_ch06
+  multiple_linear_regression:
+    defines: A regression model that predicts an output variable using more than one
+      input (predictor) variable, of the form y = a + b1X1 + ... + bnXn.
+    composed_of:
+    - regression_error_measures
+    tier: 2
+    source_domain: data_science_ch06
+  multicollinearity:
+    defines: A condition in which two or more input variables of a regression model
+      are highly correlated with one another.
+    composed_of:
+    - multiple_linear_regression
+    tier: 3
+    source_domain: data_science_ch06
+  multiple_logistic_regression:
+    defines: An extension of logistic regression that estimates the probability of
+      a binary outcome using two or more input variables.
+    composed_of:
+    - logistic_regression
+    tier: 3
+    source_domain: data_science_ch06
+  decision_tree:
+    defines: An algorithm that builds a hierarchical structure where each internal
+      node represents a decision based on a data feature and each leaf node represents
+      a final label or prediction.
+    composed_of:
+    - information_entropy
+    - supervised_learning
+    tier: 2
+    source_domain: data_science_ch06
+  information_gain:
+    defines: The reduction in entropy achieved by splitting a parent node into child
+      nodes, used to choose the best feature to split on when building a decision
+      tree.
+    composed_of:
+    - information_entropy
+    - decision_tree
+    tier: 3
+    source_domain: data_science_ch06
+  decision_tree_pruning:
+    defines: The process of reducing the size of a decision tree by removing branches
+      that split the data too finely, in order to reduce overfitting.
+    composed_of:
+    - decision_tree
+    - overfitting
+    tier: 3
+    source_domain: data_science_ch06
+  bootstrap_aggregating:
+    defines: A technique of resampling from the same dataset multiple times to build
+      multiple models that are combined into an overall model, such as a random forest.
+    composed_of:
+    - bootstrapping
+    - decision_tree
+    tier: 3
+    source_domain: data_science_ch06
+  random_forest:
+    defines: A classification algorithm that combines multiple decision trees (weak
+      learners), each trained on a bootstrapped sample and random subset of features,
+      using majority vote for prediction.
+    composed_of:
+    - decision_tree
+    - bootstrap_aggregating
+    tier: 4
+    source_domain: data_science_ch06
+  naive_bayes_classifier:
+    defines: A classification algorithm based on Bayes' Theorem that assumes independence
+      of features to predict the class or label of new data from prior probabilities.
+    composed_of:
+    - bayes_theorem
+    - binary_multiclass_classification
+    tier: 1
+    source_domain: data_science_ch06
+  gaussian_naive_bayes:
+    defines: A variant of naïve Bayes classification designed for continuous features
+      assumed to follow a normal (Gaussian) distribution.
+    composed_of:
+    - naive_bayes_classifier
+    tier: 2
+    source_domain: data_science_ch06
+  activation_function:
+    defines: A non-decreasing function that determines whether a neuron activates
+      and how strongly, given the combined weighted and biased input.
+    composed_of:
+    - neuron
+    - weight
+    - bias
+    tier: 1
+    source_domain: data_science_ch07
+  layers:
+    defines: Groups of neurons that receive the same inputs from previous groups and
+      forward signals to the next group, comprising the input layer, hidden layers,
+      and output layer of a network.
+    composed_of:
+    - neuron
+    tier: 1
+    source_domain: data_science_ch07
+  neural_network:
+    defines: A structure made up of interconnected neurons, organized into input,
+      hidden, and output layers, that takes input and produces classification output.
+    composed_of:
+    - neuron
+    - layers
+    - activation_function
+    tier: 2
+    source_domain: data_science_ch07
+  perceptron:
+    defines: A single-layer neural network using the step function as activation function,
+      designed for binary classification tasks, trained via the perceptron learning
+      rule.
+    composed_of:
+    - neuron
+    - activation_function
+    - weight
+    - bias
+    tier: 2
+    source_domain: data_science_ch07
+  depth:
+    defines: The number of hidden layers a neural network contains, a defining characteristic
+      of deep learning models.
+    composed_of:
+    - layers
+    tier: 2
+    source_domain: data_science_ch07
+  multilayer_perceptron:
+    defines: The basic paradigm for neural networks having multiple hidden layers,
+      developed to extend single-layer perceptrons.
+    composed_of:
+    - perceptron
+    - layers
+    - neural_network
+    tier: 3
+    source_domain: data_science_ch07
+  loss_function:
+    defines: A mathematical function that measures the error between a neural network's
+      predicted output and the actual target values.
+    composed_of:
+    - neural_network
+    tier: 3
+    source_domain: data_science_ch07
+  gradient_descent:
+    defines: A method for locating minimum values of a multivariable function, such
+      as a loss function, by taking small steps in the direction of greatest decrease.
+    composed_of:
+    - loss_function
+    tier: 4
+    source_domain: data_science_ch07
+  recurrent_neural_network:
+    defines: A neural network that incorporates feedback loops, allowing it to process
+      sequential data of varying length by remembering prior inputs.
+    composed_of:
+    - neural_network
+    - multilayer_perceptron
+    tier: 4
+    source_domain: data_science_ch07
+  deep_learning:
+    defines: The training and implementation of neural networks with many hidden layers
+      to learn hierarchical, structured representations of data.
+    composed_of:
+    - multilayer_perceptron
+    - depth
+    tier: 4
+    source_domain: data_science_ch07
+  backpropagation:
+    defines: An algorithm used to train neural networks by determining how errors
+      depend on changes in weights and biases, propagating backward from the output
+      layer through the network.
+    composed_of:
+    - gradient_descent
+    - loss_function
+    - multilayer_perceptron
+    tier: 5
+    source_domain: data_science_ch07
+  vanishing_exploding_gradient:
+    defines: Training failures in RNNs caused by connecting weights becoming compounded
+      to very large (exploding) or very small (vanishing) values, destabilizing gradient
+      descent.
+    composed_of:
+    - recurrent_neural_network
+    - gradient_descent
+    tier: 5
+    source_domain: data_science_ch07
+  convolutional_neural_network:
+    defines: A class of neural network models developed to process structured, grid-like
+      data such as images, using the mathematical operation of convolution.
+    composed_of:
+    - deep_learning
+    - neural_network
+    tier: 5
+    source_domain: data_science_ch07
+  natural_language_processing:
+    defines: An area of AI concerned with recognizing written or spoken language and
+      generating new language content.
+    composed_of:
+    - artificial_intelligence
+    - deep_learning
+    tier: 5
+    source_domain: data_science_ch07
+  epoch:
+    defines: A single complete training cycle of a neural network over the training
+      data, during which weights and biases are adjusted based on the loss function.
+    composed_of:
+    - backpropagation
+    tier: 6
+    source_domain: data_science_ch07
+  lstm:
+    defines: A type of RNN incorporating memory cells that overcome the vanishing/exploding
+      gradient problem to capture long-term dependencies.
+    composed_of:
+    - recurrent_neural_network
+    - vanishing_exploding_gradient
+    tier: 6
+    source_domain: data_science_ch07
+  feature_map:
+    defines: The output of convolutional layers in a CNN, representing learned features
+      of the input data across spatial dimensions.
+    composed_of:
+    - convolutional_neural_network
+    tier: 6
+    source_domain: data_science_ch07
+  word_embedding:
+    defines: The translation of words into vector representations in high-dimensional
+      space in a way that preserves semantic relationships among words.
+    composed_of:
+    - vector
+    - natural_language_processing
+    tier: 6
+    source_domain: data_science_ch07
+  pooling_layer:
+    defines: A CNN layer that down-samples feature maps, reducing spatial dimensions
+      while retaining important information.
+    composed_of:
+    - convolutional_neural_network
+    - feature_map
+    tier: 7
+    source_domain: data_science_ch07
+  transformer_model:
+    defines: A neural network architecture using a self-attention mechanism to capture
+      long-range and large-scale dependencies in input data.
+    composed_of:
+    - deep_learning
+    - word_embedding
+    - natural_language_processing
+    tier: 7
+    source_domain: data_science_ch07
+  ai_hallucination:
+    defines: A generated response from an AI model, especially an LLM, that has no
+      basis in reality yet appears plausible.
+    composed_of:
+    - large_language_model
+    tier: 9
+    source_domain: data_science_ch07
+  responsible_ai:
+    defines: The ethical and socially conscious development and deployment of AI technologies,
+      aimed at ensuring fairness, transparency, and accountability.
+    composed_of:
+    - artificial_intelligence
+    - ai_hallucination
+    tier: 10
+    source_domain: data_science_ch07
+  informed_consent:
+    defines: The process of obtaining permission from a research subject indicating
+      that they understand the scope of collecting data, including risks, benefits,
+      and consequences.
+    composed_of:
+    - autonomy
+    - transparency
+    tier: 1
+    source_domain: data_science_ch08
+  regulatory_compliance:
+    defines: Understanding and adhering to the state, federal, and industry regulations
+      that apply to a data gathering project.
+    composed_of:
+    - data_privacy
+    - ethics_in_data_science
+    tier: 1
+    source_domain: data_science_ch08
+  regulatory_compliance_officer:
+    defines: A trained individual responsible for confirming that a company or organization
+      follows the laws, regulations, and policies that rule its functions.
+    composed_of:
+    - regulatory_compliance
+    tier: 2
+    source_domain: data_science_ch08
+  data_sovereignty:
+    defines: Laws that require data collected from a country's citizens to be stored
+      and processed within its borders.
+    composed_of:
+    - regulatory_compliance
+    tier: 2
+    source_domain: data_science_ch08
+  data_retention:
+    defines: How long personal data may be stored, as governed by laws and regulations.
+    composed_of:
+    - data_privacy
+    - regulatory_compliance
+    tier: 2
+    source_domain: data_science_ch08
+  data_security:
+    defines: Steps taken to protect digital information from unauthorized access,
+      disclosure, alteration, or destruction.
+    composed_of:
+    - data_privacy
+    - data_breach
+    - encryption
+    tier: 1
+    source_domain: data_science_ch08
+  confidentiality:
+    defines: The safeguarding of privacy and security of data by controlling access
+      to it.
+    composed_of:
+    - data_security
+    - data_privacy
+    tier: 2
+    source_domain: data_science_ch08
+  anonymization:
+    defines: The act of removing personal identifying information from datasets to
+      make sensitive information usable for analysis without the risk of exposing
+      personal information.
+    composed_of:
+    - personally_identifiable_information
+    - data_privacy
+    tier: 1
+    source_domain: data_science_ch08
+  anonymous_data:
+    defines: Data that has been stripped of personally identifiable information so
+      that it cannot be linked back to any individual.
+    composed_of:
+    - anonymization
+    tier: 2
+    source_domain: data_science_ch08
+  pseudonymization:
+    defines: The act of replacing sensitive information in a dataset with artificial
+      identifiers or codes while still maintaining its usefulness for analysis.
+    composed_of:
+    - personally_identifiable_information
+    - anonymization
+    tier: 2
+    source_domain: data_science_ch08
+  hashing:
+    defines: The process of transforming data into a fixed-length value or string
+      using a hash function, producing a unique but irreversible output for each input.
+    composed_of:
+    - pseudonymization
+    - encryption
+    tier: 3
+    source_domain: data_science_ch08
+  k_anonymization:
+    defines: The principle of ensuring that each record within a dataset is indistinguishable
+      from at least k-1 other records with respect to a specified set of identifying
+      attributes.
+    composed_of:
+    - anonymization
+    tier: 2
+    source_domain: data_science_ch08
+  data_sharing:
+    defines: The process of allowing access to or transferring data from one entity
+      to another.
+    composed_of:
+    - data_privacy
+    - transparency
+    - data_security
+    tier: 2
+    source_domain: data_science_ch08
+  data_governance_protocols:
+    defines: A set of rules, policies, and procedures that enable precise control
+      over data access while ensuring that it is safeguarded.
+    composed_of:
+    - data_security
+    - regulatory_compliance
+    - data_sharing
+    tier: 3
+    source_domain: data_science_ch08
+  fairness:
+    defines: The absence of bias in the models and algorithms used to process data.
+    composed_of:
+    - bias
+    tier: 1
+    source_domain: data_science_ch08
+  outlier_detection:
+    defines: The identification of observations that are significantly different from
+      the rest of the data.
+    composed_of:
+    - data_validation
+    tier: 2
+    source_domain: data_science_ch08
+  cross_validation:
+    defines: A process that compares model results across different subsets of the
+      data by repeatedly splitting it into training and testing sets to evaluate performance
+      and detect overfitting.
+    composed_of:
+    - data_validation
+    tier: 2
+    source_domain: data_science_ch08
+    also_in:
+    - data_science_ch10
+  accurate_representation:
+    defines: Presenting data in a way that authentically reflects the underlying information
+      without misrepresentation or manipulation.
+    composed_of:
+    - ethics_in_data_science
+    tier: 1
+    source_domain: data_science_ch08
+  data_source_attribution:
+    defines: The practice of clearly identifying and acknowledging the sources employed
+      in the visualizations and reporting of data.
+    composed_of:
+    - accurate_representation
+    - transparency
+    tier: 2
+    source_domain: data_science_ch08
+  universal_design_principles:
+    defines: A set of guidelines aimed at creating products, environments, and systems
+      that are accessible and usable by all people regardless of age, ability, or
+      disability.
+    composed_of:
+    - digital_divide
+    tier: 1
+    source_domain: data_science_ch08
+  accessibility_and_inclusivity:
+    defines: The ethical responsibility to ensure that presented data is usable and
+      understandable by all individuals regardless of capabilities, background, or
+      experience.
+    composed_of:
+    - universal_design_principles
+    - digital_divide
+    tier: 2
+    source_domain: data_science_ch08
+  five_number_summary:
+    defines: A summary of a dataset consisting of the minimum, first quartile, median,
+      third quartile, and maximum.
+    composed_of:
+    - quartiles
+    - median
+    tier: 1
+    source_domain: data_science_ch09
+  boxplot:
+    defines: A graph that displays a dataset's five-number summary to show distribution,
+      variability, symmetry, skewness, and outliers.
+    composed_of:
+    - five_number_summary
+    tier: 2
+    source_domain: data_science_ch09
+  histogram:
+    defines: A graphical display of continuous data showing bin intervals on the horizontal
+      axis and frequency or relative frequency on the vertical axis.
+    composed_of:
+    - univariate_data
+    - bin
+    tier: 1
+    source_domain: data_science_ch09
+  time_series_graph:
+    defines: A graph plotting a variable's values over regular time increments, with
+      points typically connected by straight lines, to identify trends and patterns
+      over time.
+    composed_of:
+    - univariate_data
+    tier: 1
+    source_domain: data_science_ch09
+  normal_distribution_graph:
+    defines: A plot of the bell-shaped probability density function for a continuous
+      random variable, shaped by its mean and standard deviation.
+    composed_of:
+    - continuous_random_variable
+    tier: 1
+    source_domain: data_science_ch09
+  spatial_heatmap:
+    defines: A visualization that uses coloring and shading to represent the density
+      or intensity of geospatial data points within a geographic area.
+    composed_of:
+    - geospatial_data
+    tier: 1
+    source_domain: data_science_ch09
+  grid_heatmap:
+    defines: A two-dimensional colored grid where each cell's color encodes a combined
+      characteristic of two variables on the x- and y-axes.
+    composed_of:
+    - bivariate_data
+    tier: 1
+    source_domain: data_science_ch09
+  scatterplot_color_encoding:
+    defines: A scatterplot enhanced by mapping point color to the value of a third
+      variable, revealing multivariate relationships.
+    composed_of:
+    - bivariate_data
+    tier: 1
+    source_domain: data_science_ch09
+  layered_approach:
+    defines: A writing strategy in which a report is organized into sections or appendices
+      that provide different levels of detail and complexity for different audiences.
+    composed_of:
+    - audience
+    - technical_report_structure
+    tier: 1
+    source_domain: data_science_ch10
+  data_visualization_choice:
+    defines: The practice of selecting the most fitting visual aid (graph or table)
+      for the data type, audience, and reporting goal.
+    composed_of:
+    - audience
+    tier: 1
+    source_domain: data_science_ch10
+  implicit_bias:
+    defines: Systemic errors introduced in data collection, analysis, or interpretation,
+      often via unvalidated assumptions, that can disproportionately affect certain
+      groups.
+    composed_of:
+    - assumption
+    tier: 1
+    source_domain: data_science_ch10
+  r_squared:
+    defines: A measure of fit for regression models that indicates the proportion
+      of variance in the dependent variable predictable from the independent variables.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+    source_domain: data_science_ch10
+  validation:
+    defines: The evaluation of multiple predictive models and/or hyperparameter tuning
+      by testing model performance on data set aside from training.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+    source_domain: data_science_ch10
+  classification_accuracy_metrics:
+    defines: A family of measures of fit for classification tasks, including accuracy,
+      precision, recall, and F1-score.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+    source_domain: data_science_ch10
+  aic_bic:
+    defines: The Akaike and Bayesian Information Criteria, model selection measures
+      that balance goodness of fit against model complexity.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+    source_domain: data_science_ch10
+  sensitivity_analysis:
+    defines: A technique used to determine how different sources of uncertainty in
+      a model's inputs affect its output.
+    composed_of:
+    - assumption
+    - constraint
+    tier: 1
+    source_domain: data_science_ch10
+  documenting_strengths_weaknesses:
+    defines: The practice of clearly and honestly reporting a model's strengths and
+      weaknesses, supported by data, in a standalone section of the report.
+    composed_of:
+    - measures_of_fit
+    - assumption
+    - constraint
+    tier: 1
+    source_domain: data_science_ch10
+  executive_summary:
+    defines: A concise, standalone document that encapsulates the essence of a data
+      science report, presenting the problem, methods, key findings, and actionable
+      recommendations.
+    composed_of:
+    - technical_report_structure
+    - audience
+    tier: 1
+    source_domain: data_science_ch10
+  bootstrap_method:
+    defines: A statistical technique that estimates model performance by repeatedly
+      resampling the dataset with replacement to create multiple bootstrap samples
+      for training and evaluation.
+    composed_of:
+    - validation
+    tier: 2
+    source_domain: data_science_ch10
+  monte_carlo_simulation:
+    defines: A sensitivity analysis method using random sampling and statistical modeling
+      to estimate the probability of different outcomes under uncertainty.
+    composed_of:
+    - sensitivity_analysis
+    tier: 2
+    source_domain: data_science_ch10
+  peer_feedback:
+    defines: Constructive input from colleagues that identifies potential weaknesses,
+      biases, or improvements in a data science report and strengthens its credibility.
+    composed_of:
+    - documenting_strengths_weaknesses
+    tier: 2
+    source_domain: data_science_ch10
+  actionable_advice:
+    defines: Specific, practical recommendations in an executive summary guiding how
+      report findings can be used to inform decisions.
+    composed_of:
+    - executive_summary
+    tier: 2
+    source_domain: data_science_ch10
+  k_fold_cross_validation:
+    defines: A cross-validation strategy that divides the dataset into k equally sized
+      folds, training on k-1 folds and testing on the remaining fold, repeated k times.
+    composed_of:
+    - cross_validation
+    tier: 3
+    source_domain: data_science_ch10
+  leave_one_out_cross_validation:
+    defines: A special case of k-fold cross-validation where k equals the number of
+      data points, so each fold contains a single observation used once as the validation
+      set.
+    composed_of:
+    - k_fold_cross_validation
+    tier: 4
+    source_domain: data_science_ch10
+applications:
+  internet_of_things:
+    defines: The network of multiple objects interacting with each other through the
+      internet, driven by data collected across devices.
+    needs:
+    - data_collection
+    tier: 2
+    source_domain: data_science_ch01
+  predictive_analytics:
+    defines: Statistical techniques, algorithms, and machine learning that analyze
+      historical data to make predictions about future events.
+    needs:
+    - data_analysis
+    tier: 4
+    source_domain: data_science_ch01
+  business_analytics:
+    defines: The investigation of business-related data to launch new products and
+      maximize revenue/profit.
+    needs:
+    - data_analysis
+    - data_science
+    tier: 4
+    source_domain: data_science_ch01
+  recommendation_system:
+    defines: A system that makes data-driven, personalized suggestions for users,
+      such as those used by streaming services.
+    needs:
+    - predictive_analytics
+    tier: 5
+    source_domain: data_science_ch01
+  sports_analytics:
+    defines: The use of data and business analytics techniques, such as sabermetrics,
+      in sports team management.
+    needs:
+    - business_analytics
+    tier: 5
+    source_domain: data_science_ch01
+  cloud_computing:
+    defines: The delivery of computing services such as storage, processing power,
+      and software applications over the internet.
+    needs:
+    - big_data
+    tier: 1
+    source_domain: data_science_ch02
+  large_dataset_management:
+    defines: The combined use of compression, storage solutions, indexing, chunking,
+      DBMS, and cloud computing to handle big data challenges.
+    needs:
+    - data_compression
+    - data_storage
+    - data_indexing
+    - data_chunking
+    - dbms
+    - cloud_computing
+    tier: 5
+    source_domain: data_science_ch02
+  python_data_analysis:
+    defines: The use of Python libraries such as pandas and scipy.stats to compute
+      descriptive statistics and probability distribution values.
+    needs:
+    - mean
+    - standard_deviation
+    - quartiles
+    - probability_distribution
+    tier: 4
+    source_domain: data_science_ch03
+  python_statistical_computing:
+    defines: The use of Python libraries such as SciPy to compute confidence intervals,
+      hypothesis tests, correlation, regression, and ANOVA results.
+    needs:
+    - confidence_interval
+    - hypothesis_testing
+    - correlation_coefficient
+    - linear_regression
+    - anova
+    tier: 4
+    source_domain: data_science_ch04
+  seasonal_trend_decomposition_loess:
+    defines: A method that decomposes a time series into trend-cycle, seasonal, and
+      noise components using local polynomial regression.
+    needs:
+    - trend_cycle_component
+    - seasonal_component
+    - noise
+    - time_series
+    tier: 2
+    source_domain: data_science_ch05
+  augmented_dickey_fuller_test:
+    defines: A statistical test that produces a p-value to assess whether a time series
+      is stationary.
+    needs:
+    - stationary
+    tier: 3
+    source_domain: data_science_ch05
+  naive_forecasting:
+    defines: A forecasting method that uses the most recent value of a time series
+      as the best guess for the next value.
+    needs:
+    - time_series
+    - forecasting
+    tier: 4
+    source_domain: data_science_ch05
+  linear_regression_forecasting:
+    defines: A forecasting method that fits time series data to a linear regression
+      model and uses it to predict future values.
+    needs:
+    - time_series_model
+    - forecasting
+    tier: 4
+    source_domain: data_science_ch05
+  arima:
+    defines: A forecasting model combining autoregressive, integrative (differencing),
+      and moving average components to capture trend and seasonality.
+    needs:
+    - autoregressive_model
+    - integrative_component
+    - moving_average_model
+    tier: 4
+    source_domain: data_science_ch05
+  data_mining:
+    defines: The process of discovering patterns, trends, and insights from large
+      datasets using techniques from machine learning, statistics, and database systems.
+    needs:
+    - big_data
+    - machine_learning_model
+    tier: 1
+    source_domain: data_science_ch06
+  heart_disease_classification:
+    defines: An application of classification algorithms (e.g., logistic regression,
+      decision trees) to diagnose heart disease from patient features such as blood
+      pressure and cholesterol.
+    needs:
+    - logistic_regression
+    - decision_tree
+    tier: 3
+    source_domain: data_science_ch06
+  facial_recognition:
+    defines: An application of machine learning, often using random forests, that
+      categorizes or labels images of faces based on individual identities.
+    needs:
+    - random_forest
+    tier: 5
+    source_domain: data_science_ch06
+  spam_filtering:
+    defines: An application of multinomial naïve Bayes classification used to identify
+      and remove unwanted or malicious email messages at scale.
+    needs:
+    - naive_bayes_classifier
+    tier: 2
+    source_domain: data_science_ch06
+  temperature_prediction:
+    defines: An application of random forest regression to predict daily temperatures
+      from features such as prior-day temperature and forecasts.
+    needs:
+    - random_forest
+    tier: 5
+    source_domain: data_science_ch06
+  semantic_segmentation:
+    defines: A computer vision task, typically performed using CNNs, that assigns
+      a semantic label to each pixel of an image to partition it into meaningful regions.
+    needs:
+    - convolutional_neural_network
+    - feature_map
+    - pooling_layer
+    tier: 8
+    source_domain: data_science_ch07
+  large_language_model:
+    defines: A powerful NLP model, such as ChatGPT, designed to understand and generate
+      humanlike text based on massive amounts of training data.
+    needs:
+    - transformer_model
+    - natural_language_processing
+    - word_embedding
+    tier: 8
+    source_domain: data_science_ch07
+  generative_art:
+    defines: The use of AI tools to enhance or create new artistic and graphic works,
+      such as visual art, music, and video.
+    needs:
+    - deep_learning
+    - artificial_intelligence
+    tier: 5
+    source_domain: data_science_ch07
+  speech_recognition_tts:
+    defines: NLP applications that convert spoken language into text and text into
+      spoken language, respectively.
+    needs:
+    - natural_language_processing
+    - deep_learning
+    tier: 6
+    source_domain: data_science_ch07
+  deepfake:
+    defines: A product of an AI system that appears realistic but is created with
+      malicious intent to mislead people.
+    needs:
+    - deep_learning
+    - generative_art
+    tier: 6
+    source_domain: data_science_ch07
+  cookies:
+    defines: Small data files deposited on users' hard disks from websites they visit
+      to track browsing history and tailor advertisements.
+    needs:
+    - data_privacy
+    - personally_identifiable_information
+    tier: 1
+    source_domain: data_science_ch08
+  explainable_ai:
+    defines: A set of processes, methodologies, and techniques designed to make complex
+      AI models more understandable and interpretable to humans.
+    needs:
+    - fairness
+    - bias
+    tier: 2
+    source_domain: data_science_ch08
+  hipaa:
+    defines: U.S. legislation requiring the safeguarding of sensitive information
+      related to patient health.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - personally_identifiable_information
+    tier: 2
+    source_domain: data_science_ch08
+  ferpa:
+    defines: Legislation providing protections for student educational records and
+      defining certain rights for parents regarding their children's records.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - personally_identifiable_information
+    tier: 2
+    source_domain: data_science_ch08
+  gdpr_ccpa:
+    defines: Major data protection regulations that demand organizations collect,
+      process, and accumulate confidential data securely and transparently.
+    needs:
+    - regulatory_compliance
+    - data_privacy
+    - transparency
+    tier: 2
+    source_domain: data_science_ch08
+  pareto_chart:
+    defines: A bar graph combined with a cumulative-percentage line chart that displays
+      categorical data in descending order of frequency to identify major contributors
+      to a problem.
+    needs:
+    - univariate_data
+    tier: 1
+    source_domain: data_science_ch09
+  choropleth_graph:
+    defines: A map overlaid with a heatmap where geographic boundaries are shaded
+      according to density or another measurement to reveal spatial patterns.
+    needs:
+    - geospatial_data
+    - spatial_heatmap
+    tier: 2
+    source_domain: data_science_ch09
+  gis_mapping:
+    defines: A tool for visualizing, analyzing, and interpreting spatial data using
+      geographic data sources such as maps and satellite images.
+    needs:
+    - geospatial_data
+    - spatial_heatmap
+    - choropleth_graph
+    tier: 3
+    source_domain: data_science_ch09
+  correlation_heatmap:
+    defines: A color-coded visualization of a correlation matrix that highlights which
+      variable pairs have stronger or weaker correlations.
+    needs:
+    - correlation_coefficient
+    - grid_heatmap
+    tier: 2
+    source_domain: data_science_ch09
+  three_d_visualization:
+    defines: A graph or display that plots information along three dimensions (x,
+      y, and z axes) to reveal spatial relationships, clustering, and patterns.
+    needs:
+    - bivariate_data
+    - scatterplot_color_encoding
+    tier: 2
+    source_domain: data_science_ch09
+  executive_dashboard:
+    defines: A visual representation tool providing a quick, real-time overview of
+      an organization's key performance indicators (KPIs) for senior management.
+    needs:
+    - audience
+    - data_visualization_choice
+    tier: 2
+    source_domain: data_science_ch10

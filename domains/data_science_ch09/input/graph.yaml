@@ -1,0 +1,137 @@
+domain: statistics_ch9_data_visualization
+primitives:
+  univariate_data:
+    defines: Observations or measurements recorded for a single characteristic or attribute.
+    tier: 0
+  bivariate_data:
+    defines: Paired data in which each value of one variable is paired with a value of a second variable.
+    tier: 0
+  quartiles:
+    defines: Numbers that divide an ordered dataset into quarters, with the second quartile equal to the
+      median.
+    tier: 0
+  median:
+    defines: The middle value in an ordered dataset.
+    tier: 0
+  bin:
+    defines: An interval or range into which data points are grouped, often used to create histograms.
+    tier: 0
+  discrete_random_variable:
+    defines: A random variable that can take on only a finite or countably infinite number of values.
+    tier: 0
+  continuous_random_variable:
+    defines: A random variable that can take on an infinite number of values within a range.
+    tier: 0
+  geospatial_data:
+    defines: Data that describes geographic location, shape, size, and other attributes relative to a
+      location on Earth's surface.
+    tier: 0
+  correlation_coefficient:
+    defines: A numeric measure between -1 and 1 indicating the strength and direction of the linear relationship
+      between two variables.
+    tier: 0
+concepts:
+  five_number_summary:
+    defines: A summary of a dataset consisting of the minimum, first quartile, median, third quartile,
+      and maximum.
+    composed_of:
+    - quartiles
+    - median
+    tier: 1
+  interquartile_range:
+    defines: A measure of spread equal to the third quartile minus the first quartile, representing the
+      middle 50% of the data.
+    composed_of:
+    - quartiles
+    tier: 1
+  boxplot:
+    defines: A graph that displays a dataset's five-number summary to show distribution, variability,
+      symmetry, skewness, and outliers.
+    composed_of:
+    - five_number_summary
+    tier: 2
+  histogram:
+    defines: A graphical display of continuous data showing bin intervals on the horizontal axis and frequency
+      or relative frequency on the vertical axis.
+    composed_of:
+    - univariate_data
+    - bin
+    tier: 1
+  time_series_graph:
+    defines: A graph plotting a variable's values over regular time increments, with points typically
+      connected by straight lines, to identify trends and patterns over time.
+    composed_of:
+    - univariate_data
+    tier: 1
+  binomial_distribution:
+    defines: A bar chart of probabilities for a discrete random variable counting successes across a fixed
+      number of independent trials with constant success probability.
+    composed_of:
+    - discrete_random_variable
+    tier: 1
+  poisson_distribution:
+    defines: A bar chart of probabilities for a discrete random variable counting occurrences of an event
+      within a fixed interval.
+    composed_of:
+    - discrete_random_variable
+    tier: 1
+  normal_distribution_graph:
+    defines: A plot of the bell-shaped probability density function for a continuous random variable,
+      shaped by its mean and standard deviation.
+    composed_of:
+    - continuous_random_variable
+    tier: 1
+  spatial_heatmap:
+    defines: A visualization that uses coloring and shading to represent the density or intensity of geospatial
+      data points within a geographic area.
+    composed_of:
+    - geospatial_data
+    tier: 1
+  grid_heatmap:
+    defines: A two-dimensional colored grid where each cell's color encodes a combined characteristic
+      of two variables on the x- and y-axes.
+    composed_of:
+    - bivariate_data
+    tier: 1
+  scatterplot_color_encoding:
+    defines: A scatterplot enhanced by mapping point color to the value of a third variable, revealing
+      multivariate relationships.
+    composed_of:
+    - bivariate_data
+    tier: 1
+applications:
+  pareto_chart:
+    defines: A bar graph combined with a cumulative-percentage line chart that displays categorical data
+      in descending order of frequency to identify major contributors to a problem.
+    needs:
+    - univariate_data
+    tier: 1
+  choropleth_graph:
+    defines: A map overlaid with a heatmap where geographic boundaries are shaded according to density
+      or another measurement to reveal spatial patterns.
+    needs:
+    - geospatial_data
+    - spatial_heatmap
+    tier: 2
+  gis_mapping:
+    defines: A tool for visualizing, analyzing, and interpreting spatial data using geographic data sources
+      such as maps and satellite images.
+    needs:
+    - geospatial_data
+    - spatial_heatmap
+    - choropleth_graph
+    tier: 3
+  correlation_heatmap:
+    defines: A color-coded visualization of a correlation matrix that highlights which variable pairs
+      have stronger or weaker correlations.
+    needs:
+    - correlation_coefficient
+    - grid_heatmap
+    tier: 2
+  three_d_visualization:
+    defines: A graph or display that plots information along three dimensions (x, y, and z axes) to reveal
+      spatial relationships, clustering, and patterns.
+    needs:
+    - bivariate_data
+    - scatterplot_color_encoding
+    tier: 2

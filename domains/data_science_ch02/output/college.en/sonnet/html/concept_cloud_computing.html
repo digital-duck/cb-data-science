@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="cloud-computing">Cloud Computing</h2>
+<p>Cloud computing is a model for delivering computing resources — servers, storage, databases, networking, and software — over the internet, where users pay for access rather than owning and maintaining the underlying hardware. Instead of a company buying and racking its own servers, it rents capacity from a provider such as Amazon Web Services, Microsoft Azure, or Google Cloud, and that capacity can be scaled up or down within minutes. This shift matters because it converts a large upfront capital expense (buying machines) into a smaller, ongoing operating expense (paying for usage), and it lets small teams access computing power that would otherwise require a data center.</p>
+<p>Cloud services are typically organized into three layers. Infrastructure as a Service (IaaS) rents raw computing building blocks — virtual machines, storage volumes, networks — and the customer manages the operating system and applications on top. Platform as a Service (PaaS) goes further, providing a managed environment (like a database or a runtime for deploying code) so developers don't have to configure servers at all. Software as a Service (SaaS) delivers a complete application over the internet, such as Gmail or Salesforce, where the user only interacts with the finished product.</p>
+<p>Consider a startup building a photo-sharing app. On launch day, traffic is light, so the app runs on a single small virtual server (IaaS) costing a few dollars a day. When the app goes viral and traffic spikes 100-fold overnight, the cloud provider's auto-scaling feature detects rising CPU load and automatically launches additional server instances behind a load balancer, then removes them once traffic subsides. A company that had bought physical servers sized for viral-level traffic would have wasted money every ordinary day; a company that under-provisioned would have crashed during the spike. Elastic, pay-per-use scaling solves both problems simultaneously.</p>
+<p>In problem-solving terms, evaluating a cloud architecture means analyzing trade-offs: latency (how close is the server to the user?), cost (reserved capacity vs. on-demand pricing), and reliability (what happens if one server, or one entire data center, fails?). A well-designed cloud system distributes data across multiple physical locations and uses redundancy so that no single point of failure takes the whole service down — a discipline directly relevant to designing any large-scale, internet-facing system.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personally Identifiable Information | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="个人身份信息">个人身份信息</h2>
+<p><strong>定义。</strong> 个人身份信息(Personally Identifiable Information,PII)是指能够直接且明确地识别某一特定个人的信息。典型例子包括:姓名全称、身份证号、护照号、社会保障号、指纹与人脸等生物特征、家庭住址、手机号码和电子邮箱。判断标准很简单:仅凭这条信息,不借助其他数据,能否锁定"这是谁"?如果能,它就是直接标识符。</p>
+<p>与之相对的是<strong>准标识符</strong>,例如年龄、邮编、性别、职业。它们单独使用时不能确定个人,但组合起来可能做到。这一区别是后面应用部分的关键。</p>
+<p><strong>一个具体场景。</strong> 下面是某诊所数据表中的一条记录:</p>
+<p>| 姓名 | 身份证号 | 年龄 | 邮编 | 诊断 | |---|---|---|---|---| | 李明 | 110101199003071234 | 34 | 100080 | 高血压 |</p>
+<li>"李明"和"身份证号"是直接标识符。身份证号在全国唯一,所以它是最强的 PII。</li>
+<li>"年龄"和"邮编"是准标识符。</li>
+<li>"诊断"是敏感信息,但它本身不指向任何人。</li>
+<p><strong>问题求解:发布数据前如何去标识化?</strong></p>
+<p>第一步,删除全部直接标识符(姓名、身份证号)。</p>
+<p>第二步,检查准标识符的组合风险。设某邮编区内 34 岁的居民只有 1 人,那么即使没有姓名,任何人只要知道"住在 100080、34 岁"就能定位到这条记录。这叫<strong>重识别攻击</strong>。</p>
+<p>第三步,泛化处理:把年龄改为区间"30–39",把邮编改为前三位"100\<em>\</em>\*"。这样同一组合下至少有 $k$ 人,称为 <strong>$k$-匿名</strong>。若要求 $k=5$,则每种(年龄段,邮编前缀)组合至少出现 5 次,攻击者最多只能把目标缩小到 5 条记录中,命中概率不超过</p>
+$$P_{\text{重识别}} \le \frac{1}{k} = \frac{1}{5} = 20\%.$$
+<p><strong>代码示例(检查最小组大小):</strong></p>
+<pre><code>import pandas as pd
+
+df = pd.read_csv("clinic.csv")
+df = df.drop(columns=["姓名", "身份证号"])          # 删除直接标识符
+df["年龄段"] = (df["年龄"] // 10 * 10).astype(str) + "s"
+df["邮编前缀"] = df["邮编"].astype(str).str[:3]
+
+k = df.groupby(["年龄段", "邮编前缀"]).size().min()
+print("当前 k =", k)    # 若 k &lt; 5,继续泛化或剔除小组</code></pre>
+<p><strong>要点总结。</strong></p>
+<li>直接标识符(PII)一经删除,不等于数据已匿名,准标识符的组合同样会泄露身份。</li>
+<li>实践中先识别直接标识符,再用 $k$ 值量化残余的重识别风险。</li>
+<li>处理 PII 时应遵循数据最小化原则:不需要的字段就不收集。同时应遵守适用的法规,例如中国的《个人信息保护法》和欧盟的 GDPR。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

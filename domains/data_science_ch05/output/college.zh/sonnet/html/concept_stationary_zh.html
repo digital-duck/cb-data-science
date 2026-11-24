@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stationary | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="平稳性-stationary">平稳性(Stationary)</h2>
+<p><strong>定义。</strong> 若一个时间序列 $\{X_t\}$ 的统计性质不随时间推移而改变,则称其为<strong>平稳</strong>序列。本节采用实用的"弱平稳"(二阶平稳)定义,需同时满足三个条件:</p>
+<li>均值恒定:$E[X_t]=\mu$,不随 $t$ 变化(无整体趋势);</li>
+<li>方差恒定:$\mathrm{Var}(X_t)=\sigma^2<\infty$;</li>
+<li>自协方差只依赖时间间隔(滞后)$h$,而与具体时刻无关:</li>
+$$\gamma(h)=\mathrm{Cov}(X_t,\,X_{t+h}).$$
+<p>直观地说,平稳序列围绕一条水平线波动,波动幅度大致不变,也没有周期性的季节模式。若存在趋势或季节性,均值就会随 $t$ 变化,序列便不平稳。</p>
+<p><strong>例题。</strong> 判断下面两个序列是否平稳,其中 $\varepsilon_t$ 是均值为 0、方差为 $\sigma^2$ 的独立同分布白噪声:</p>
+<li>(a) $X_t=5+\varepsilon_t$</li>
+<li>(b) $Y_t=2t+\varepsilon_t$</li>
+<p>对 (a):$E[X_t]=5$,$\mathrm{Var}(X_t)=\sigma^2$,且当 $h\neq0$ 时 $\gamma(h)=0$。三个条件都成立,所以 $X_t$ 平稳。</p>
+<p>对 (b):$E[Y_t]=2t$,它随时间线性增长,违反条件 1,所以 $Y_t$ <strong>不平稳</strong>。</p>
+<p><strong>问题求解应用。</strong> 平稳性之所以重要,是因为 ARMA 等经典预测模型都以它为前提。实际建模的步骤如下:</p>
+<li><strong>画图观察</strong>:看序列是否有明显趋势、季节波动,或方差随时间变大。</li>
+<li><strong>检验</strong>:用 ADF(增广 Dickey–Fuller)检验,原假设为"存在单位根(不平稳)"。若 $p<0.05$,则拒绝原假设,可认为序列平稳。</li>
+<li><strong>变换</strong>:若不平稳,则做差分或取对数。</li>
+<p>对 (b) 做一阶差分:</p>
+$$\Delta Y_t=Y_t-Y_{t-1}=2+\varepsilon_t-\varepsilon_{t-1}.$$
+<p>此时均值恒为 2,方差为 $2\sigma^2$,自协方差只依赖滞后 $h$,差分后的序列是平稳的。</p>
+<p>代码示例:</p>
+<pre><code>from statsmodels.tsa.stattools import adfuller
+import numpy as np
+
+t = np.arange(200)
+y = 2 * t + np.random.randn(200)
+
+print(adfuller(y)[1])            # p 值较大 → 不平稳
+print(adfuller(np.diff(y))[1])   # p 值接近 0 → 差分后平稳</code></pre>
+<p><strong>小结。</strong> 平稳序列的均值、方差和自协方差结构都不随时间改变。遇到趋势用差分,遇到方差增长用取对数,遇到季节性用季节差分。先把序列变为平稳,再建模和预测。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

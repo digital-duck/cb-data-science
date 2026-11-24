@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sampling | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="sampling-抽样">Sampling（抽样）</h2>
+<p><strong>定义</strong>：抽样是从更大的总体（population）中选取一个子集（样本，sample）来代表并分析该总体信息的过程。由于普查（对总体中每个个体逐一测量）往往成本过高、耗时过长，甚至在物理上不可行（例如检测每一颗生产出的灯泡的寿命就会毁掉全部产品），统计推断（statistical inference）依赖于从样本计算出的统计量（statistic）去估计总体参数（parameter）。常见的抽样方法包括：简单随机抽样（simple random sampling，每个个体被抽中的概率相等）、分层抽样（stratified sampling，先按某特征将总体分成若干层，再在每层内随机抽样，以保证各子群体都被充分代表）、以及整群抽样（cluster sampling，先随机抽取若干"群"，再对群内个体全部调查，常用于地理上分散的总体）。抽样方法的选择直接决定了样本是否具有代表性，进而决定推断结论是否可靠。</p>
+<p><strong>核心概念——抽样分布</strong>：如果我们从总体中反复抽取容量为 $n$ 的样本，并每次计算样本均值 $\bar{x}$，这些 $\bar{x}$ 的分布称为均值的抽样分布（sampling distribution of the mean）。根据中心极限定理（Central Limit Theorem），当 $n$ 足够大时，无论总体分布形态如何，$\bar{x}$ 近似服从正态分布：</p>
+$$
+\bar{x} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+$$
+<p>其中 $\mu$ 为总体均值，$\sigma$ 为总体标准差。样本均值的标准差（标准误，standard error）为 $\dfrac{\sigma}{\sqrt{n}}$，它随样本量 $n$ 增大而减小——这正是"样本越大、估计越精确"的数学根据。</p>
+<p><strong>应用实例</strong>：某高校想估计全体学生的平均每日睡眠时长。若总体标准差 $\sigma = 1.2$ 小时，随机抽取 $n = 36$ 名学生，则标准误为 $\dfrac{1.2}{\sqrt{36}} = 0.2$ 小时。若样本均值为 $\bar{x} = 6.8$ 小时，可构造 95% 置信区间：</p>
+$$
+\bar{x} \pm 1.96 \times \text{SE} = 6.8 \pm 0.392 \approx (6.41,\ 7.19)\ \text{小时}
+$$
+<p>这说明我们有 95% 的信心认为全校学生的真实平均睡眠时长落在该区间内——这正是从"部分"推断"整体"的统计推断核心逻辑。</p>
+<pre class="mermaid">flowchart LR
+    A[总体 Population] --> B{抽样方法}
+    B -->|简单随机抽样| C[样本 Sample]
+    B -->|分层抽样| C
+    B -->|整群抽样| C
+    C -->|统计推断| A</pre>
+<p><em>该图展示抽样的基本流程：从总体出发，经由不同抽样方法选出样本（样本是总体的子集），再通过统计推断将结论反推回总体。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

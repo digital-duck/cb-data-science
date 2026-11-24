@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability Distribution | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="probability-distribution">Probability Distribution</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space. A <em>probability distribution</em> (or <em>law</em>) of a random variable $X : \Omega \to (\mathcal{X}, \mathcal{B})$ is the pushforward measure $\mu_X = \mathbb{P} \circ X^{-1}$, defined on the Borel $\sigma$-algebra $\mathcal{B}(\mathcal{X})$ by $\mu_X(B) = \mathbb{P}(X^{-1}(B))$ for all $B \in \mathcal{B}$. When $\mathcal{X} = \mathbb{R}$, the <em>cumulative distribution function</em> (CDF) $F_X(x) = \mu_X((-\infty, x])$ fully characterizes $\mu_X$ via the Carathéodory extension theorem. If $\mu_X \ll \lambda$ (Lebesgue measure), the Radon–Nikodym theorem guarantees the existence of a density $p_X = d\mu_X / d\lambda$.</p>
+<p>This clean measure-theoretic picture, however, conceals active foundational tension: many practically relevant distributions (Dirac masses, singular continuous distributions, fractal measures) do not admit densities. The Cantor distribution — continuous yet supported on a set of Lebesgue measure zero — is a canonical counterexample that students should construct explicitly.</p>
+<p><strong>Theorem (Lévy's Continuity Theorem).</strong> A sequence of probability measures $\{\mu_n\}$ on $\mathbb{R}^d$ converges weakly to $\mu$ if and only if the corresponding characteristic functions $\hat{\mu}_n(\xi) = \mathbb{E}[e^{i \langle \xi, X_n \rangle}]$ converge pointwise to a function $\hat{\mu}(\xi)$ that is continuous at the origin.</p>
+<p><em>Proof sketch.</em> The forward direction is immediate from the definition of weak convergence and the boundedness of $e^{i\langle \xi, \cdot \rangle}$. The reverse direction — the hard part — uses Prokhorov's tightness criterion: pointwise convergence of characteristic functions to a continuous limit implies tightness of $\{\mu_n\}$, and every subsequential weak limit has characteristic function $\hat{\mu}$, forcing uniqueness. See Billingsley (1995, §26) or Kallenberg (2021, Ch. 5) for the complete argument. $\square$</p>
+<p><strong>Literature context.</strong> The modern framework descends from Kolmogorov's 1933 <em>Grundbegriffe</em>, but active research questions proliferate. Optimal transport theory (Villani 2008; Peyré & Cuturi 2019) reinterprets distributions as elements of the Wasserstein metric space, giving geometry to what classical statistics treats as an abstract set. Distributional robustness — asking which downstream conclusions are stable under perturbations of $\mu_X$ within a ball $\mathcal{B}_\epsilon(\mu_0)$ in some probability metric — is a live theme connecting statistics, optimization, and machine learning (Kuhn et al. 2019, <em>JMLR</em>). The choice of metric (total variation, KL divergence, Wasserstein) is not merely aesthetic; it determines which adversarial perturbations are considered feasible and which guarantees survive.</p>
+<p><strong>Suggested investigation.</strong> Construct the Cantor distribution $\mu_C$ numerically via its CDF (the Cantor function / Devil's staircase), then approximate it with a sequence of discrete measures $\mu_n$ supported on $2^n$ atoms. Compute the $W_1$ (Wasserstein-1) and $W_2$ distances $W_p(\mu_n, \mu_C)$ as $n$ increases and compare the convergence rates. As an extension, verify Lévy's theorem empirically by computing $|\hat{\mu}_n(\xi) - \hat{\mu}_C(\xi)|$ across a grid of $\xi$ values and checking that uniform convergence on compact sets aligns with the $W_p$ rates. This bridges abstract measure theory with numerical analysis in a single coherent experiment.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the formal definition of $\mu_C$ and why it is singular continuous; (2) a proof that $W_p(\mu_n, \mu_C) \to 0$ for $p \geq 1$, with an explicit rate; (3) empirical plots comparing characteristic-function convergence with Wasserstein convergence; and (4) a brief discussion of what the choice of probability metric implies for downstream robustness claims — the gap between total-variation and Wasserstein topology being a concrete, citable example of a non-trivial research subtlety.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

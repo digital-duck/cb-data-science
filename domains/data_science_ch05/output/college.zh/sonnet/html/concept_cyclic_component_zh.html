@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyclic Component | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="周期成分">周期成分</h2>
+<h3 id="定义">定义</h3>
+<p><strong>周期成分</strong>(cyclic component,记作 $C_t$)是时间序列中持续时间长于一个季节、且没有固定频率的大幅波动。典型例子是经济的繁荣与衰退:它们可能持续 2 年,也可能持续 10 年,因此无法提前精确预测。</p>
+<p>它与相近概念的区别如下:</p>
+<p>| 成分 | 周期长度 | 是否固定 | |---|---|---| | 季节成分 $S_t$ | 一年以内(如 12 个月) | 固定 | | 周期成分 $C_t$ | 通常多年 | <strong>不固定</strong> | | 趋势成分 $T_t$ | 长期单向变化 | 无周期 |</p>
+<p>在经典乘法分解模型中:</p>
+$$Y_t = T_t \times S_t \times C_t \times I_t,$$
+<p>其中 $I_t$ 为不规则(随机)成分。</p>
+<h3 id="例题-提取周期成分">例题:提取周期成分</h3>
+<p>某地区年度房屋销量(单位:千套)的趋势值 $T_t$ 与实际值 $Y_t$ 如下(年度数据无季节成分,取 $S_t=1$):</p>
+<p>| 年份 | $Y_t$ | $T_t$ | |---|---|---| | 1 | 90 | 100 | | 2 | 104 | 104 | | 3 | 117 | 108 | | 4 | 118 | 112 | | 5 | 105 | 116 | | 6 | 96 | 120 |</p>
+<p><strong>步骤 1:</strong> 用 $Y_t/T_t$ 得到"周期—不规则相对值":</p>
+$$\frac{90}{100}=0.90,\ \frac{104}{104}=1.00,\ \frac{117}{108}\approx1.08,\ \frac{118}{112}\approx1.05,\ \frac{105}{116}\approx0.91,\ \frac{96}{120}=0.80.$$
+<p><strong>步骤 2:</strong> 用 3 年移动平均削弱不规则成分 $I_t$,例如第 3 年:</p>
+$$C_3 \approx \frac{1.00+1.08+1.05}{3}\approx 1.04.$$
+<p>同理 $C_2\approx1.00$,$C_4\approx1.01$,$C_5\approx0.92$。</p>
+<p><strong>解读:</strong> $C_t>1$ 表示高于趋势(扩张期),$C_t<1$ 表示低于趋势(收缩期)。数据显示销量在第 3—4 年达到峰值,之后进入收缩。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 判断某序列的起伏是季节成分还是周期成分。</p>
+<li><strong>检查周期长度:</strong> 若峰值间隔稳定(如每 12 个月),属于季节成分;若间隔在 3 到 9 年之间变化,则属于周期成分。</li>
+<li><strong>检查可预测性:</strong> 周期成分无固定频率,故不能像季节指数那样直接套用。预测时常借助领先指标(如利率、消费者信心指数)或回归模型,并给出较宽的预测区间。</li>
+<li><strong>去除趋势后分析:</strong> 先估计 $T_t$,再计算 $Y_t/T_t$ 并平滑,避免把长期增长误判为周期上升。</li>
+<pre><code>import pandas as pd
+y = pd.Series([90,104,117,118,105,96])
+t = pd.Series([100,104,108,112,116,120])
+ratio = y / t                                  # 周期-不规则相对值
+cyc = ratio.rolling(3, center=True).mean()     # 3 年移动平均得到 C_t
+print(cyc.round(2).tolist())</code></pre>
+<p><strong>常见误区:</strong> 数据只有 2—3 个周期时,很难区分真正的周期和随机漂移。因此应结合经济背景判断,而不是只凭曲线形状下结论。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

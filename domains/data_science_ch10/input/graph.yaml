@@ -1,0 +1,164 @@
+domain: data_science_ch10
+primitives:
+  audience:
+    defines: The person or group that will be reading a technical report, classified into experts, technicians,
+      executives, and nonspecialists with distinct communication needs.
+    tier: 0
+  technical_report_structure:
+    defines: A structured format for a data science report including title page, executive summary, methodology,
+      data exploration and analysis, results and discussion, and conclusion.
+    tier: 0
+  version_control_system:
+    defines: A software tool such as Git or SVN that helps keep track of changes to files, code, or digital
+      content over time to support reproducibility and collaboration.
+    tier: 0
+  alt_text:
+    defines: Brief descriptions of images that accompany or are embedded within image data to aid readers
+      who cannot view graphics.
+    tier: 0
+  assumption:
+    defines: A statement thought to be true without being verified or proven, forming a foundational hypothesis
+      that guides the analytical approach and model selection.
+    tier: 0
+  constraint:
+    defines: A limitation or restriction imposed on a project or its solution, distinct from an assumption
+      in that it is a known limit rather than an unverified belief.
+    tier: 0
+  measures_of_fit:
+    defines: Metrics such as R-squared or accuracy that assess how well a model's predictions align with
+      actual observed data.
+    tier: 0
+concepts:
+  layered_approach:
+    defines: A writing strategy in which a report is organized into sections or appendices that provide
+      different levels of detail and complexity for different audiences.
+    composed_of:
+    - audience
+    - technical_report_structure
+    tier: 1
+  data_visualization_choice:
+    defines: The practice of selecting the most fitting visual aid (graph or table) for the data type,
+      audience, and reporting goal.
+    composed_of:
+    - audience
+    tier: 1
+  implicit_bias:
+    defines: Systemic errors introduced in data collection, analysis, or interpretation, often via unvalidated
+      assumptions, that can disproportionately affect certain groups.
+    composed_of:
+    - assumption
+    tier: 1
+  r_squared:
+    defines: A measure of fit for regression models that indicates the proportion of variance in the dependent
+      variable predictable from the independent variables.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  overfitting:
+    defines: A modeling problem, revealed by a large gap between training and testing accuracy, in which
+      a model fits noise in the training data rather than generalizable patterns.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  validation:
+    defines: The evaluation of multiple predictive models and/or hyperparameter tuning by testing model
+      performance on data set aside from training.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  classification_accuracy_metrics:
+    defines: A family of measures of fit for classification tasks, including accuracy, precision, recall,
+      and F1-score.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  regression_error_measures:
+    defines: Metrics such as MAE, MSE, MAPE, RMSE, and MPE used to evaluate the accuracy of predictions
+      in regression models.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  aic_bic:
+    defines: The Akaike and Bayesian Information Criteria, model selection measures that balance goodness
+      of fit against model complexity.
+    composed_of:
+    - measures_of_fit
+    tier: 1
+  sensitivity_analysis:
+    defines: A technique used to determine how different sources of uncertainty in a model's inputs affect
+      its output.
+    composed_of:
+    - assumption
+    - constraint
+    tier: 1
+  documenting_strengths_weaknesses:
+    defines: The practice of clearly and honestly reporting a model's strengths and weaknesses, supported
+      by data, in a standalone section of the report.
+    composed_of:
+    - measures_of_fit
+    - assumption
+    - constraint
+    tier: 1
+  executive_summary:
+    defines: A concise, standalone document that encapsulates the essence of a data science report, presenting
+      the problem, methods, key findings, and actionable recommendations.
+    composed_of:
+    - technical_report_structure
+    - audience
+    tier: 1
+  cross_validation:
+    defines: A validation method that divides the training set into multiple subsets and iteratively trains
+      and evaluates the model on different combinations of these subsets.
+    composed_of:
+    - validation
+    tier: 2
+  bootstrap_method:
+    defines: A statistical technique that estimates model performance by repeatedly resampling the dataset
+      with replacement to create multiple bootstrap samples for training and evaluation.
+    composed_of:
+    - validation
+    tier: 2
+  confusion_matrix:
+    defines: A table detailing a classification model's predictions as true positives, false positives,
+      true negatives, and false negatives to explain the nature of its errors.
+    composed_of:
+    - classification_accuracy_metrics
+    tier: 2
+  monte_carlo_simulation:
+    defines: A sensitivity analysis method using random sampling and statistical modeling to estimate
+      the probability of different outcomes under uncertainty.
+    composed_of:
+    - sensitivity_analysis
+    tier: 2
+  peer_feedback:
+    defines: Constructive input from colleagues that identifies potential weaknesses, biases, or improvements
+      in a data science report and strengthens its credibility.
+    composed_of:
+    - documenting_strengths_weaknesses
+    tier: 2
+  actionable_advice:
+    defines: Specific, practical recommendations in an executive summary guiding how report findings can
+      be used to inform decisions.
+    composed_of:
+    - executive_summary
+    tier: 2
+  k_fold_cross_validation:
+    defines: A cross-validation strategy that divides the dataset into k equally sized folds, training
+      on k-1 folds and testing on the remaining fold, repeated k times.
+    composed_of:
+    - cross_validation
+    tier: 3
+  leave_one_out_cross_validation:
+    defines: A special case of k-fold cross-validation where k equals the number of data points, so each
+      fold contains a single observation used once as the validation set.
+    composed_of:
+    - k_fold_cross_validation
+    tier: 4
+applications:
+  executive_dashboard:
+    defines: A visual representation tool providing a quick, real-time overview of an organization's key
+      performance indicators (KPIs) for senior management.
+    needs:
+    - audience
+    - data_visualization_choice
+    tier: 2

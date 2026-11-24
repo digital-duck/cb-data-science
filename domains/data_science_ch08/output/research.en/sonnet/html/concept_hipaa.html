@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hipaa | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="hipaa">Hipaa</h2>
+<p><strong>Definition.</strong> The Health Insurance Portability and Accountability Act (HIPAA, 1996) establishes the legal and administrative framework governing the use and disclosure of <em>Protected Health Information</em> (PHI) by <em>covered entities</em> (health plans, clearinghouses, providers) and their <em>business associates</em>. PHI is defined as any individually identifiable health information transmitted or maintained in any medium. HIPAA's Privacy Rule (45 C.F.R. §164.514) specifies two de-identification standards: the <em>Safe Harbor</em> method, which requires removal of 18 enumerated identifiers, and the <em>Expert Determination</em> method, which demands that a statistical or scientific expert certify that residual re-identification risk is "very small."</p>
+<p><strong>Formal framing.</strong> Let $\mathcal{D}$ denote a dataset of $n$ records drawn from population $\mathcal{P}$, with quasi-identifier space $\mathcal{Q}$. Safe Harbor de-identification projects $\mathcal{D}$ onto a reduced attribute space $\mathcal{D}'$. The residual re-identification risk under adversarial background knowledge $\mathcal{B}$ can be bounded by $k$-anonymity: a dataset satisfies $k$-anonymity if every record shares its quasi-identifier tuple with at least $k-1$ others, so that $\Pr[\text{identify}(r \mid \mathcal{D}', \mathcal{B})] \leq 1/k$. Expert Determination implicitly targets $k \geq 1/\epsilon$ for some small $\epsilon$, though the threshold is unspecified in regulation. Differential privacy provides a stronger, composition-closed guarantee: a randomized mechanism $\mathcal{M}$ is $(\epsilon, \delta)$-differentially private if for all adjacent datasets $\mathcal{D}, \mathcal{D}'$ and all outputs $S$,</p>
+$$\Pr[\mathcal{M}(\mathcal{D}) \in S] \leq e^{\epsilon} \Pr[\mathcal{M}(\mathcal{D}') \in S] + \delta.$$
+<p><strong>Literature context.</strong> Sweeney (2002) demonstrated that 87% of Americans could be uniquely identified from $\{$ZIP, birth date, sex$\}$ alone, motivating the 18-identifier Safe Harbor list yet exposing its inadequacy against auxiliary data. Machanavajjhala et al. (2007) extended $k$-anonymity to $\ell$-diversity to counter attribute-inference attacks. The differential privacy framework (Dwork et al., 2006; Dwork & Roth, 2014) offers a rigorous alternative, and the Apple–Google exposure-notification protocols and the U.S. Census 2020 TopDown algorithm are landmark deployments. Open questions include: (i) calibrating $\epsilon$ to regulatory thresholds in a principled way, (ii) composition under repeated HIPAA disclosures across covered entities, and (iii) integrating generative models (LLMs trained on EHR corpora) under HIPAA constraints without formal DP guarantees.</p>
+<p><strong>Suggested investigation.</strong> Obtain a publicly available de-identified clinical dataset (e.g., MIMIC-III on PhysioNet, which itself requires a data-use agreement). Apply Safe Harbor de-identification, then measure empirical re-identification rate using a linkage attack against a demographic auxiliary table (e.g., U.S. Census microdata). Quantify the effective $k$ achieved and compare against a Laplace-mechanism DP release at $\epsilon \in \{0.1, 1.0, 10.0\}$ on a summary statistic of clinical interest. Compute the privacy-utility tradeoff curve and identify the $\epsilon$ value at which DP matches Safe Harbor's empirical $k$.</p>
+<p><strong>Report-writing note.</strong> A rigorous write-up should state the threat model (honest-but-curious linker, bounded auxiliary knowledge), derive the $k$-anonymity achieved before and after the attack, report the $(\epsilon,\delta)$ parameters of the DP mechanism with justification for the noise calibration, and discuss whether the Expert Determination standard could be satisfied by the DP certificate. The report should conclude with a policy recommendation: does the chosen $\epsilon$ constitute "very small" risk under 45 C.F.R. §164.514(b)(1), and how should that threshold be formalized?</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

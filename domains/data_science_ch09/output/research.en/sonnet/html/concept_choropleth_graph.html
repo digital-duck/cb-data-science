@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choropleth Graph | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="choropleth-graph">Choropleth Graph</h2>
+<p><strong>Definition.</strong> Let $\mathcal{R} = \{r_1, r_2, \ldots, r_n\}$ be a finite partition of a domain $\Omega \subset \mathbb{R}^2$ into simply connected regions (countries, census tracts, electoral districts). A <em>choropleth graph</em> is the triple $\mathcal{C} = (G, f, \tau)$, where $G = (V, E)$ is the planar adjacency graph with vertex set $V = \mathcal{R}$ and edge set $E = \{(r_i, r_j) : \partial r_i \cap \partial r_j \neq \emptyset,\; i \neq j\}$; $f : V \to \mathbb{R}$ is a scalar field assigning an aggregate statistical value to each region (e.g., population density, unemployment rate); and $\tau : \mathbb{R} \to \mathcal{C}_k$ is a <em>color transfer function</em> mapping real values to a $k$-color palette. The resulting visualization encodes $f$ through filled region color rather than through position or size.</p>
+<p><strong>Theorem (Classification-Induced Distortion).</strong> Let $\hat{f} = \tau^{-1} \circ \tau \circ f$ be the piecewise-constant approximation of $f$ induced by any finite classification scheme that partitions $\text{range}(f)$ into $k$ bins. Then for any Lipschitz loss $\ell$,</p>
+$$\mathbb{E}_{r \sim \mu}\bigl[\ell(f(r), \hat{f}(r))\bigr] \;\geq\; \frac{1}{4k^2}\,\mathrm{Var}_\mu(f),$$
+<p>where $\mu$ is the area measure on $\Omega$. <em>Proof sketch.</em> By the classical $k$-bin quantization lower bound, any uniform-width partition achieves worst-case squared error at least $(1/4k^2)\mathrm{Var}(f)$; Lipschitz $\ell$ with constant $L$ then gives the result by Jensen's inequality. Optimal bin placement (Jenks–Fisher natural breaks) minimizes within-class variance $\sum_{j=1}^k \sum_{r \in B_j}(f(r) - \bar{f}_{B_j})^2$, but the lower bound is tight for adversarial $f$.</p>
+<p><strong>Literature context.</strong> The choropleth as a statistical graphic traces to Dupin (1826) and was formalized by Tobler's <em>First Law of Spatial Autocorrelation</em> (1970): nearby regions tend to exhibit similar values. This is captured by Moran's $I$,</p>
+$$I = \frac{n}{\sum_{i,j} w_{ij}} \cdot \frac{\sum_{i,j} w_{ij}(f_i - \bar{f})(f_j - \bar{f})}{\sum_i (f_i - \bar{f})^2},$$
+<p>where $w_{ij} = \mathbf{1}[(r_i, r_j) \in E]$ is the adjacency weight matrix. $I \approx 1$ signals strong positive spatial clustering; $I \approx -1$ signals dispersion. Open questions center on: (i) perceptual nonlinearity — sequential colorbrewer palettes may introduce perceived discontinuities not present in $f$; (ii) modifiable areal unit problem (MAUP), whereby identical underlying distributions yield different $I$ values under different partitions $\mathcal{R}$; (iii) optimal-transport formulations of choropleth comparison, wherein the Wasserstein distance $W_2(\mu_f, \mu_g)$ between two scalar fields is a partition-invariant dissimilarity.</p>
+<p><strong>Suggested investigation.</strong> Obtain a public dataset with two coincident partitions at different spatial scales (e.g., US counties vs. states, or NUTS-2 vs. NUTS-3 European regions). Fix a variable $f$ (e.g., median household income). Compute $I$ at both scales and record the ratio $I_{\text{fine}} / I_{\text{coarse}}$. Repeat under three classification schemes (equal interval, quantile, Jenks). Measure perceptual accuracy by presenting choropleth renderings to naive raters and asking them to rank regions, then computing Kendall's $\tau$ against ground truth $f$. The question of interest: does Jenks minimization of quantization distortion translate to higher $\tau$ in perceptual rank recovery, or does scale dominate scheme?</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) an explicit mathematical definition of the partition and the transfer function used; (2) the value of $I$ at each scale with a permutation-test $p$-value under spatial randomization; (3) a table of within-class variance by scheme and scale; (4) a psychophysical result reporting Kendall's $\tau$ with confidence intervals; and (5) a discussion section identifying whether observed accuracy differences survive MAUP resampling, connecting findings to the MAUP literature (Openshaw 1984) and recent optimal-transport critiques of choropleth comparison.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

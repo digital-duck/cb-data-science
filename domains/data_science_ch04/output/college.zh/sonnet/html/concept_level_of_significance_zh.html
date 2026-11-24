@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level Of Significance | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="显著性水平">显著性水平</h2>
+<p><strong>定义。</strong> 显著性水平(level of significance)记作 $\alpha$,是我们事先规定的、可以容忍的<strong>犯第一类错误的最大概率</strong>。第一类错误指:原假设 $H_0$ 实际为真,却被我们拒绝了。即</p>
+$$
+\alpha \ge P(\text{拒绝 } H_0 \mid H_0 \text{ 为真}).
+$$
+<p>常用取值为 $0.05$、$0.01$、$0.10$。$\alpha$ 必须在看到数据<strong>之前</strong>选定,它是决策规则的一部分,而不是由数据得出的结果。</p>
+<p><strong>与 $p$ 值的关系。</strong> $p$ 值是在 $H_0$ 为真的前提下,得到至少与观测结果一样极端的结果的概率。判断规则为:</p>
+$$
+p \le \alpha \;\Rightarrow\; \text{拒绝 } H_0;\qquad p > \alpha \;\Rightarrow\; \text{不拒绝 } H_0.
+$$
+<p>$\alpha$ 越小,拒绝 $H_0$ 越困难,第一类错误越少,但第二类错误(漏掉真实效应)的概率 $\beta$ 通常会增大。</p>
+<p><strong>例题。</strong> 某饮料瓶标称容量 $\mu_0 = 500$ mL,已知标准差 $\sigma = 6$ mL。抽取 $n=36$ 瓶,样本均值 $\bar x = 497.5$ mL。在 $\alpha = 0.05$ 下,检验容量是否偏低。</p>
+<p>建立假设:$H_0:\mu = 500$,$H_1:\mu<500$(左侧检验)。</p>
+<p>检验统计量:</p>
+$$
+z=\frac{\bar x-\mu_0}{\sigma/\sqrt n}=\frac{497.5-500}{6/\sqrt{36}}=\frac{-2.5}{1}=-2.5.
+$$
+<p>临界值:左侧检验在 $\alpha=0.05$ 时,$z_{0.05}=-1.645$,拒绝域为 $z\le -1.645$。因为 $-2.5<-1.645$,所以拒绝 $H_0$。</p>
+<p>用 $p$ 值核对:$p=P(Z\le -2.5)\approx 0.0062<0.05$,结论一致。</p>
+<p><strong>问题求解应用。</strong> 同样的数据,换一个 $\alpha$,结论可能不同,这说明 $\alpha$ 的选择本身就是一种决策。</p>
+<li>若 $\alpha=0.001$:临界值为 $-3.090$,而 $-2.5>-3.090$,<strong>不能</strong>拒绝 $H_0$。($p=0.0062>0.001$,同样得出此结论。)</li>
+<li>若把检验改为双侧,$\alpha=0.05$ 时临界值为 $\pm1.96$,$|-2.5|>1.96$,仍然拒绝;此时 $p=2\times0.0062=0.0124$。</li>
+<p><strong>如何选择 $\alpha$。</strong> 先问:犯第一类错误的代价有多大?</p>
+<li>新药审批:错误地宣称无效药有效后果严重,取 $\alpha=0.01$ 或更小。</li>
+<li>探索性的初步筛查:漏掉真实效应的代价更高,可取 $\alpha=0.10$。</li>
+<p><strong>常见误区。</strong></p>
+<li>$\alpha$ 不是"$H_0$ 为真的概率",而是在 $H_0$ 为真的条件下,犯第一类错误的概率。</li>
+<li>"不拒绝 $H_0$"不等于"证明了 $H_0$",只说明证据不足。</li>
+<li>检验 $m$ 个独立假设时,至少出现一次第一类错误的概率为 $1-(1-\alpha)^m$。例如 $m=20$、$\alpha=0.05$ 时约为 $0.64$,需要用 Bonferroni 校正(使用 $\alpha/m$)加以控制。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

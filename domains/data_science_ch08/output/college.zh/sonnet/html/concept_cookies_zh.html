@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="网络-cookie">网络 Cookie</h2>
+<h2 id="cookies">Cookies</h2>
+<p><strong>定义。</strong> Cookie 是网站通过浏览器存放在用户设备上的小型文本数据,通常由“名称=值”的键值对加上属性(作用域、有效期等)组成。它依托 HTTP 协议工作:服务器在响应头中用 <code>Set-Cookie</code> 下发,浏览器此后访问同一站点时,自动在请求头 <code>Cookie</code> 中带回。HTTP 本身是无状态的,Cookie 就是给它“补上记忆”的机制。</p>
+<p>Cookie 分为两类:</p>
+<li><strong>第一方 Cookie</strong>:由用户正在访问的网站设置,用于登录状态、购物车、语言偏好等。</li>
+<li><strong>第三方 Cookie</strong>:由页面中嵌入的其他域名(如广告、统计服务)设置。同一个广告服务商出现在许多网站上,就能用同一个标识符把你在不同网站的访问串联起来,这就是“跟踪浏览历史、定向投放广告”的原理。</li>
+<p><strong>例题。</strong> 你访问购物网站 <code>shop.example</code>,服务器返回:</p>
+<pre><code>Set-Cookie: session=abc123; Max-Age=3600; Secure; HttpOnly; SameSite=Lax</code></pre>
+<p>解读各属性:</p>
+<li><code>session=abc123</code>:服务器给你的会话标识。</li>
+<li><code>Max-Age=3600</code>:有效期 3600 秒,即 1 小时。</li>
+<li><code>Secure</code>:只通过 HTTPS 发送。</li>
+<li><code>HttpOnly</code>:页面脚本无法读取,可降低被 XSS 窃取的风险。</li>
+<li><code>SameSite=Lax</code>:大多数跨站请求不携带它,可降低 CSRF 风险。</li>
+<p>之后每次请求,浏览器都会带上 <code>Cookie: session=abc123</code>,服务器据此认出“还是同一个人”,购物车才不会清空。</p>
+<p><strong>问题解决应用。</strong> 假设一个广告商 <code>ads.example</code> 的脚本嵌入了 3 个网站 A、B、C,并在你的浏览器中设置了第三方 Cookie <code>uid=77</code>。</p>
+<li>访问 A 时,浏览器向 <code>ads.example</code> 发出请求,带上 <code>uid=77</code>,广告商记录“77 看了运动鞋”。</li>
+<li>访问 B、C 时同样带上 <code>uid=77</code>,广告商记录“77 看了机票”“77 看了酒店”。</li>
+<li>广告商把这些记录合并到同一个 <code>uid</code> 下,得到跨站画像,并据此推送“旅行装备”广告。</li>
+<p>防御思路因此很明确,可以在不同层面各自切断这条链:</p>
+<li><strong>浏览器设置</strong>:阻止第三方 Cookie(Safari、Firefox 已默认限制)。</li>
+<li><strong>属性约束</strong>:设置 <code>SameSite=Strict</code>,使 Cookie 不随跨站请求发送。</li>
+<li><strong>用户操作</strong>:定期清除 Cookie,或使用隐私模式,使 <code>uid</code> 失效或重置。</li>
+<li><strong>法律合规</strong>:欧盟 GDPR 与 ePrivacy 要求网站在设置非必要 Cookie 前取得用户同意,所以你会看到“接受 Cookie”横幅。</li>
+<p><strong>小结思考。</strong> 判断一个 Cookie 是否涉及隐私风险,可以问两个问题:它是谁设置的(第一方还是第三方)?它存储的是功能性状态还是可跨站关联的唯一标识?</p>
+<pre class="mermaid">sequenceDiagram
+    participant U as 用户浏览器
+    participant S as 网站服务器
+    participant A as 广告服务商
+    U->>S: 首次访问网站
+    S-->>U: 响应并附带 Set-Cookie
+    U->>S: 再次访问并带上 Cookie
+    S-->>U: 识别用户,恢复状态
+    U->>A: 加载嵌入的广告脚本
+    A-->>U: 设置第三方标识 Cookie
+    U->>A: 访问其他网站时再次带上标识</pre>
+<p><em>图:第一方 Cookie 用于维持网站会话;第三方 Cookie 让广告服务商在不同网站间识别同一浏览器。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

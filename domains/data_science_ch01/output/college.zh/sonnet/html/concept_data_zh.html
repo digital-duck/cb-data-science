@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据">数据</h2>
+<h3 id="定义">定义</h3>
+<p><strong>数据</strong>(data)是可以被记录、存储并加以分析的观察结果或证据,是我们从中提炼高层见解(insight)的原材料。单个数据点本身意义有限;只有经过整理、比较与分析之后,数据才会变成可以支持决策的信息。</p>
+<p>按取值类型,数据通常分为两类:</p>
+<li><strong>定量数据</strong>:可以做算术运算的数值,如身高、温度、反应时间。</li>
+<li><strong>定性(分类)数据</strong>:表示类别或标签,如血型、专业、评价等级。</li>
+<p>从数据到见解的基本流程是:<strong>收集 → 整理 → 汇总 → 解释</strong>。</p>
+<h3 id="例题">例题</h3>
+<p>某班 8 名学生一周的自习时长(小时)为:</p>
+$$4,\ 5,\ 5,\ 6,\ 7,\ 7,\ 7,\ 15$$
+<p><strong>第一步:汇总。</strong>均值为</p>
+$$\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i=\frac{4+5+5+6+7+7+7+15}{8}=\frac{56}{8}=7.$$
+<p>中位数是排序后中间两个数的平均:$\dfrac{6+7}{2}=6.5$;众数为 $7$。</p>
+<p><strong>第二步:衡量离散程度。</strong>样本标准差为</p>
+$$s=\sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2}=\sqrt{\frac{64}{7}}\approx 3.02.$$
+<p>其中 $\sum (x_i-\bar{x})^2 = 9+4+4+1+0+0+0+64=82$,所以更准确地写作 $s=\sqrt{82/7}\approx 3.42$。</p>
+<p><strong>第三步:解释。</strong>均值(7)高于中位数(6.5),说明分布被右侧的大值 $15$ 拉高。这个数据点是否为<strong>异常值</strong>?用 $1.5\times\mathrm{IQR}$ 规则检验:$Q_1=5,\ Q_3=7,\ \mathrm{IQR}=2$,上界为 $7+1.5\times 2=10$。因为 $15>10$,它被判定为异常值。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong>假设你想知道"学生自习越久,考试成绩越高"是否成立。你收集了 5 名学生的数据 $(x,y)$,其中 $x$ 为自习时长,$y$ 为成绩:</p>
+$$(2,60),\ (4,70),\ (6,75),\ (8,85),\ (10,90)$$
+<p><strong>分析:</strong>计算相关系数 $r$。已知 $\bar{x}=6,\ \bar{y}=76$,则</p>
+$$r=\frac{\sum (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum (x_i-\bar{x})^2}\sqrt{\sum (y_i-\bar{y})^2}}=\frac{150}{\sqrt{40}\,\sqrt{570}}\approx 0.993.$$
+<p>$r$ 接近 $1$,说明二者存在很强的正线性关系。</p>
+<p><strong>但要谨慎解释:</strong></p>
+<li><strong>相关不等于因果。</strong>也许基础好的学生既自习更久、成绩也更高。</li>
+<li><strong>样本量太小。</strong>$n=5$ 无法支持普遍结论。</li>
+<li><strong>抽样偏差。</strong>数据若只来自愿意填写问卷的学生,结论未必适用于全体。</li>
+<p><strong>要点:</strong>分析数据时,先问数据<strong>从哪里来</strong>(收集方式),再问<strong>如何汇总</strong>(统计量),最后问<strong>能推出什么</strong>(结论的边界)。好的见解来自这三步的结合,而不是单个漂亮的数字。</p>
+<pre class="mermaid">flowchart LR
+    A[观察与收集] --> B[整理与清洗]
+    B --> C[汇总统计量]
+    C --> D[可视化与比较]
+    D --> E[解释与见解]
+    E --> F[决策或新问题]</pre>
+<p><em>图:从原始观察到高层见解的数据分析流程。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch1: What Are Data and Data Science? (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

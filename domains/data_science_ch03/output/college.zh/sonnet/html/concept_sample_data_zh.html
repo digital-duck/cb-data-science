@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Data | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="样本数据">样本数据</h2>
+<h3 id="定义">定义</h3>
+<p><strong>样本数据</strong>(sample data)是从研究对象的<strong>总体</strong>(population)中抽取一部分个体,对其进行观测或测量所得到的结果。我们很少能测量整个总体,例如全国所有高中生的身高,所以用样本来推断总体。</p>
+<p>常用记号如下:</p>
+<li>总体均值 $\mu$、总体标准差 $\sigma$,是固定但通常未知的<strong>参数</strong>;</li>
+<li>样本容量 $n$,样本观测值 $x_1, x_2, \dots, x_n$;</li>
+<li>样本均值 $\bar{x}=\dfrac{1}{n}\sum_{i=1}^{n}x_i$,样本标准差 $s=\sqrt{\dfrac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2}$,是由样本算出的<strong>统计量</strong>,用来估计参数。</li>
+<p>样本能否代表总体,关键在于抽样方式。<strong>简单随机抽样</strong>让总体中每个个体被抽到的机会相同,可以避免系统性偏差。如果只在篮球队里测身高,样本就有<strong>选择偏差</strong>,无论 $n$ 多大都无法修正。</p>
+<h3 id="worked-example-例题">worked example(例题)</h3>
+<p>某校有 2000 名学生。随机抽取 $n=5$ 名学生,测得每周运动时长(小时)为:</p>
+$$3,\ 5,\ 4,\ 8,\ 5$$
+<p>样本均值:</p>
+$$\bar{x}=\frac{3+5+4+8+5}{5}=5$$
+<p>离差平方和:</p>
+$$(3-5)^2+(5-5)^2+(4-5)^2+(8-5)^2+(5-5)^2=4+0+1+9+0=14$$
+<p>样本标准差:</p>
+$$s=\sqrt{\frac{14}{5-1}}=\sqrt{3.5}\approx 1.87$$
+<p>这里除以 $n-1$ 而不是 $n$,是因为样本数据比总体更集中:样本点到 $\bar{x}$ 的距离平方和,总是小于它们到真实 $\mu$ 的距离平方和。除以 $n-1$ 可以修正这种低估,使 $s^2$ 成为 $\sigma^2$ 的无偏估计。</p>
+<h3 id="问题解决应用">问题解决应用</h3>
+<p><strong>问题</strong>:根据上面的样本,估计全校学生平均每周运动时长,并说明估计的可靠程度。</p>
+<p><strong>步骤 1:点估计。</strong> 用 $\bar{x}=5$ 小时估计 $\mu$。</p>
+<p><strong>步骤 2:量化抽样误差。</strong> 样本均值的标准误为</p>
+$$SE=\frac{s}{\sqrt{n}}=\frac{1.87}{\sqrt{5}}\approx 0.84$$
+<p>它表示不同样本得到的 $\bar{x}$ 大致会在 $\mu$ 附近波动多少。$n$ 越大,$SE$ 越小,估计越稳定,但它以 $\dfrac{1}{\sqrt{n}}$ 的速度缩小,要把误差减半,样本量需要变成原来的 4 倍。</p>
+<p><strong>步骤 3:区间估计。</strong> 因为 $n$ 很小,使用 $t$ 分布,自由度 $n-1=4$,查表得 $t^*\approx 2.776$(95% 置信水平):</p>
+$$\bar{x}\pm t^*\cdot SE = 5\pm 2.776\times 0.84\approx 5\pm 2.33$$
+<p>即 $\mu$ 的 95% 置信区间约为 $(2.67,\ 7.33)$ 小时。</p>
+<p><strong>结论与反思</strong>:这个区间很宽,说明 5 个样本的信息有限。若想把误差缩小到约 $\pm 0.5$ 小时,按 $n \approx \left(\dfrac{t^<em> s}{0.5}\right)^2$ 估算,需要的样本量大约是 $n\approx(2.0\times1.87/0.5)^2\approx 56$,这里 $t^</em>$ 取大样本时的近似值 2.0。可以看出,只有在抽样方式合理且样本量足够时,样本数据才能给出对总体可靠的推断。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

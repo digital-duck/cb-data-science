@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audience | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="audience">Audience</h2>
+<p><strong>Definition.</strong> In adaptive knowledge systems, an <em>audience</em> is not a demographic category but a formal specification of epistemic state. Let $K$ denote the set of all concepts in a domain and let $2^K$ denote its power set. A <em>knowledge state</em> is a subset $q \subseteq K$ representing the concepts a learner has mastered. An <em>audience</em> $\mathcal{A} \subseteq 2^K$ is a collection of knowledge states — the population of learners a piece of content is designed to serve. This framing originates in Knowledge Space Theory (KST), introduced by Doignon and Falmagne (1985), where the central object is a <em>knowledge space</em>: a pair $(K, \mathcal{Q})$ with $\mathcal{Q} \subseteq 2^K$ closed under union, encoding the set of reachable knowledge states given a prerequisite structure on $K$.</p>
+<p><strong>Theorem (Audience-Concept Compatibility).</strong> Let $G = (K, E)$ be a directed acyclic prerequisite graph and let $\mathcal{Q}_G$ be the associated knowledge space (states closed under taking prerequisite-satisfying subsets). A concept $c \in K$ is <em>reachable</em> from audience $\mathcal{A}$ if and only if every knowledge state $q \in \mathcal{A}$ contains the predecessors $\mathrm{pred}_G(c) = \{k \in K : k \to^* c\}$ as a subset. Formally,</p>
+$$c \text{ is reachable from } \mathcal{A} \iff \forall q \in \mathcal{A},\; \mathrm{pred}_G(c) \subseteq q.$$
+<p><em>Proof.</em> By definition of $\mathcal{Q}_G$, a learner in state $q$ can acquire $c$ only if all prerequisites of $c$ are already in $q$. The condition is necessary: missing any prerequisite makes $c$ unreachable for at least one member of $\mathcal{A}$. It is sufficient: if $\mathrm{pred}_G(c) \subseteq q$ for all $q \in \mathcal{A}$, then for each such $q$, the state $q \cup \{c\}$ is a valid successor state in $\mathcal{Q}_G$. $\square$</p>
+<p><strong>Literature context.</strong> Doignon and Falmagne's monograph (1999) establishes the combinatorial foundations; Heller et al. (2006) extend KST to probabilistic settings, giving rise to <em>Probabilistic Knowledge Structures</em> in which each state $q$ carries a probability $\pi(q)$ — precisely the distribution over an audience. Bayesian Knowledge Tracing (Corbett & Anderson, 1994) offers a sequential state-estimation model but lacks the global topological structure of KST. More recently, neural approaches to knowledge tracing (Piech et al., 2015, DKT) model audience state as a hidden vector, sacrificing interpretability for expressiveness. A central open question is whether the lattice structure of $\mathcal{Q}_G$ can be recovered from interaction data alone — an inverse problem connecting combinatorics to identifiability theory.</p>
+<p><strong>Suggested investigation.</strong> Take a small domain (e.g., undergraduate linear algebra: 15–20 concepts). Elicit a prerequisite DAG from a textbook or expert, construct $\mathcal{Q}_G$, and define three distinct audience distributions $\pi_1, \pi_2, \pi_3$ (novice-heavy, intermediate, expert-heavy). For a target concept $c$, compute the <em>expected instructional gap</em> $\mathbb{E}_{q \sim \pi}[|\mathrm{pred}_G(c) \setminus q|]$ for each audience. Verify that the minimal prerequisite cover differs across audiences and design three distinct learning paths accordingly. Then simulate a DKT model on synthetic response data and ask: does the learned hidden state recover the lattice boundaries of $\mathcal{Q}_G$?</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should formally define the prerequisite graph and knowledge space used, state the audience distributions and justify their construction, derive the expected instructional gap analytically, and provide a table comparing path lengths and required prerequisite remediation across the three audiences. It should conclude with a remark on whether interpretable (KST) and black-box (DKT) audience models agree on path recommendations — and where they diverge.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

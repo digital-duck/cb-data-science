@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidence Interval | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="confidence-interval">Confidence Interval</h2>
+<p><strong>Definition.</strong> Let $X_1, \ldots, X_n$ be i.i.d. random variables with distribution $P_\theta$ indexed by an unknown parameter $\theta \in \Theta \subseteq \mathbb{R}$. A $100(1-\alpha)\%$ <em>confidence interval</em> is a pair of statistics $(L_n, U_n)$, both functions of the data, satisfying</p>
+$$P_\theta\!\left(L_n(X_1,\ldots,X_n) \leq \theta \leq U_n(X_1,\ldots,X_n)\right) \geq 1 - \alpha \quad \forall\, \theta \in \Theta.$$
+<p>The probability statement is over the randomness in the sample, not over $\theta$; this frequentist interpretation is routinely misread even in published work. A Bayesian <em>credible interval</em> satisfies $P(\theta \in [L,U] \mid X) \geq 1-\alpha$ with $\theta$ treated as a random variable under a prior — the two objects are numerically identical only under flat priors and special model families.</p>
+<p><strong>Theorem (Wald interval for the mean).</strong> Under the assumptions above with $\mathbb{E}[X_i] = \mu$ and $\mathrm{Var}(X_i) = \sigma^2 < \infty$, the interval</p>
+$$\left[\bar{X}_n - z_{\alpha/2}\frac{\sigma}{\sqrt{n}},\; \bar{X}_n + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right]$$
+<p>achieves exactly $1-\alpha$ asymptotic coverage, where $z_{\alpha/2} = \Phi^{-1}(1-\alpha/2)$.</p>
+<p><em>Proof sketch.</em> By the Central Limit Theorem, $\sqrt{n}(\bar{X}_n - \mu)/\sigma \xrightarrow{d} \mathcal{N}(0,1)$. The event $|\sqrt{n}(\bar{X}_n - \mu)/\sigma| \leq z_{\alpha/2}$ has asymptotic probability $1-\alpha$; solving for $\mu$ yields the stated interval. When $\sigma$ is unknown, substituting the sample standard deviation $S_n$ preserves the limit by Slutsky's theorem, with finite-sample exactness recovered under Gaussianity via Student's $t$-distribution. $\square$</p>
+<p><strong>Literature context.</strong> The Wald interval is textbook (Casella and Berger, §9.2), but its finite-sample defects are well-documented: coverage can drop catastrophically for bounded parameters — e.g., a binomial proportion $p$ near 0 or 1. Brown, Cai, and DasGupta (2001, <em>Statistical Science</em>) demonstrate that the Wilson score interval and the Agresti-Coull interval achieve substantially better coverage uniformity; this is an open <em>engineering</em> problem wherever small-sample guarantees matter. For multivariate parameters, the natural extension is a confidence <em>region</em> based on Wald, likelihood-ratio, or score statistics, with asymptotic equivalence at order $O(n^{-1})$ but distinct higher-order behavior — a territory where Barndorff-Nielsen and Cox (1994) remain the primary reference. Non-parametric settings introduce additional subtlety: the bootstrap offers distribution-free intervals (Efron and Tibshirani, 1993), yet bias-corrected accelerated (BCa) variants are needed to match parametric rates in skewed distributions. Current research probes whether conformal prediction intervals (Venn, 2005; Angelopoulos and Bates, 2023) can be viewed as a unifying framework that yields finite-sample, distribution-free coverage without the large-$n$ assumption.</p>
+<p><strong>Suggested investigation.</strong> Implement a Monte Carlo coverage study: fix a Bernoulli$(p)$ model, vary $p \in \{0.05, 0.1, 0.3, 0.5\}$ and $n \in \{10, 30, 100\}$, and compute empirical coverage across $10^4$ replicates for the Wald, Wilson, Clopper-Pearson (exact), and BCa bootstrap intervals. Plot coverage as a function of $p$ for each $n$. Extend the comparison to a heavy-tailed Pareto distribution to stress-test the CLT-based intervals.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a clear definition distinguishing coverage probability from posterior probability; (2) the asymptotic derivation for at least one interval method; (3) a table reporting empirical versus nominal coverage, with standard errors on the coverage estimates themselves; and (4) a discussion of when finite-sample exactness is practically necessary versus when asymptotic approximation suffices.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

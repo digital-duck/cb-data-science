@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Compression | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-compression">Data Compression</h2>
+<p>Data compression reduces the number of bits needed to represent information. <strong>Lossless compression</strong> guarantees exact reconstruction of the original data (required for text, code, and executables), while <strong>lossy compression</strong> discards perceptually less important information to achieve much higher reduction (used for images, audio, and video, e.g., JPEG or MP3). The theoretical floor for lossless compression is set by Claude Shannon's source coding theorem: for a source emitting symbols with probabilities $p_i$, the minimum average number of bits per symbol is the entropy</p>
+$$H = -\sum_i p_i \log_2 p_i.$$
+<p>No lossless code can do better than $H$ bits per symbol on average; a good compressor tries to get close to it.</p>
+<p><strong>Huffman coding</strong>, a classic lossless algorithm, achieves near-entropy performance by assigning shorter binary codes to more frequent symbols. It builds a binary tree bottom-up: repeatedly take the two least-frequent nodes (symbols or merged groups), combine them into a new node whose frequency is their sum, and repeat until one root remains. The path from root to each leaf, reading left = 0 and right = 1, gives that symbol's code — no code is a prefix of another, so a decoder can read a bit stream unambiguously without delimiters.</p>
+<p><strong>Worked example.</strong> Suppose a message uses symbols A (frequency 5), B (2), C (1), D (1). Merge C and D first (sum 2), then merge that pair with B (sum 4), then merge with A (sum 9). Reading tree paths gives codes: A = 0 (1 bit), B = 10, C = 110, D = 111. The average code length is $(5\cdot1 + 2\cdot2 + 1\cdot3 + 1\cdot3)/9 \approx 1.67$ bits/symbol, versus 2 bits/symbol for a fixed-length code — a real, computable saving.</p>
+<pre class="mermaid">graph TD
+    Root["Root (9)"] --> A["A (5) → code 0"]
+    Root --> N2["Node (4)"]
+    N2 --> B["B (2) → code 10"]
+    N2 --> N1["Node (2)"]
+    N1 --> C["C (1) → code 110"]
+    N1 --> D["D (1) → code 111"]</pre>
+<p><em>Huffman tree construction: merging the two lowest-frequency nodes at each step yields shorter codes for frequent symbols.</em></p>
+<p><strong>Problem-solving application:</strong> given a frequency table, build the Huffman tree, derive codes, and compute the compression ratio versus fixed-length encoding — a standard exercise in evaluating whether a compression scheme approaches the entropy bound $H$.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

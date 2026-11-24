@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial Heatmap | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="spatial-heatmap">Spatial Heatmap</h2>
+<p><strong>Definition.</strong> Let $\mathcal{D} \subset \mathbb{R}^2$ be a bounded spatial domain and let $\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ be a set of observations where $\mathbf{x}_i \in \mathcal{D}$ and $y_i \in \mathbb{R}$ is a scalar intensity. A <em>spatial heatmap</em> is any continuous surrogate $\hat{f} : \mathcal{D} \to \mathbb{R}$ that approximates an underlying field $f : \mathcal{D} \to \mathbb{R}$, rendered as a color-encoded surface. The construction of $\hat{f}$ from sparse observations is an interpolation or density estimation problem; the <em>display</em> of $\hat{f}$ is a perceptual mapping problem. Both carry non-trivial mathematical structure that is frequently collapsed into a single "plot a heatmap" step in applied work, obscuring important assumptions.</p>
+<p><strong>Theorem (Kernel Density Estimator Bias–Variance Decomposition).</strong> Let $f \in C^2(\mathcal{D})$ and let $\hat{f}_h(\mathbf{x}) = \frac{1}{n h^2} \sum_{i=1}^n K\!\left(\frac{\mathbf{x} - \mathbf{x}_i}{h}\right)$ be the kernel density estimator with bandwidth $h > 0$ and kernel $K$ satisfying $\int K = 1$, $\int \mathbf{u} K(\mathbf{u})\,d\mathbf{u} = \mathbf{0}$, $\int \|\mathbf{u}\|^2 K(\mathbf{u})\,d\mathbf{u} = \sigma_K^2 < \infty$. Then:</p>
+$$\mathbb{E}\!\left[\hat{f}_h(\mathbf{x})\right] - f(\mathbf{x}) = \frac{h^2 \sigma_K^2}{2} \nabla^2 f(\mathbf{x}) + O(h^4),$$
+$$\operatorname{Var}\!\left[\hat{f}_h(\mathbf{x})\right] = \frac{f(\mathbf{x}) \|K\|_2^2}{n h^2} + O\!\left(\frac{1}{n h^2}\right)^2.$$
+<p>The mean integrated squared error (MISE) is therefore $\operatorname{MISE}(h) \asymp \frac{h^4}{4} \sigma_K^4 \int (\nabla^2 f)^2 + \frac{\|K\|_2^2}{n h^2}$, minimized at the <em>optimal bandwidth</em> $h^* \propto n^{-1/6}$ in $\mathbb{R}^2$. This $n^{-1/6}$ rate is slower than the univariate $n^{-1/5}$, reflecting the curse of dimensionality that spatial visualization inherits from nonparametric density estimation.</p>
+<p><strong>Literature context.</strong> The classical treatment of bivariate KDE appears in Wand & Jones (1995, <em>Kernel Smoothing</em>) and Scott (1992, <em>Multivariate Density Estimation</em>). Bandwidth selection in two dimensions remains active: plug-in selectors (Duong & Hazelton 2003), cross-validation, and diffusion-based estimators (Botev et al. 2010) each make different regularity assumptions on $f$. Separately, the perceptual validity of color maps is addressed by Crameri et al. (2020, <em>Nature Communications</em>), who show that non-perceptually-uniform maps (e.g., the default "jet") introduce false feature artifacts — effectively distorting $\hat{f}$ in the viewer's interpretation. An open question links both threads: given a budget of $n$ samples and a perceptual color resolution of $K$ distinguishable levels, what is the optimal joint design of sampling strategy, bandwidth, and color map to maximize the probability that a human observer correctly localizes the global maximum of $f$?</p>
+<p><strong>Suggested investigation.</strong> Generate a synthetic $f(\mathbf{x}) = \sum_{k=1}^K \alpha_k \exp(-\|\mathbf{x} - \boldsymbol{\mu}_k\|^2 / (2\sigma_k^2))$ with known peak locations. Sample $n \in \{50, 200, 1000\}$ points from $f$ (treating it as a density), and produce heatmaps under three bandwidth selection rules (Silverman's rule of thumb, least-squares cross-validation, and the Botev diffusion estimator). Quantify localization error as $\|\hat{\mathbf{x}}^<em> - \mathbf{x}^</em>\|_2$ where $\hat{\mathbf{x}}^*$ is the argmax of the rendered surface. Repeat under two color maps (jet vs. viridis) and assess whether the color choice biases the reported peak location when read by naive human subjects.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) the MISE convergence rate achieved empirically versus the theoretical $O(n^{-2/3})$ bound; (2) a bias map $\hat{f}(\mathbf{x}) - f(\mathbf{x})$ at each sample size to visualize where the estimator fails; (3) a table of localization errors broken down by bandwidth method and color map; and (4) a critical discussion of whether heatmap construction choices constitute a researcher degree of freedom that should be preregistered in empirical studies using spatial data.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

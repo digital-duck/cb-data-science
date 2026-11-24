@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analysis | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据分析">数据分析</h2>
+<h3 id="定义">定义</h3>
+<p><strong>数据分析</strong>(data analysis)是对已经准备好的数据(已清洗、格式统一、缺失值已处理)进行检查、变换和解释,从中发现规律、检验假设并支持决策的过程。它通常包含三个层次:</p>
+<li><strong>描述</strong>:用统计量概括数据"是什么样";</li>
+<li><strong>探索</strong>:用图表和分组比较寻找关系;</li>
+<li><strong>推断</strong>:判断观察到的规律是否可能只是随机波动。</li>
+<p>常用的描述量包括样本均值与样本标准差:</p>
+$$\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad s=\sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2}$$
+<p>衡量两个变量线性关系的<strong>皮尔逊相关系数</strong>为:</p>
+$$r=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}},\qquad -1\le r\le 1$$
+<h3 id="例题">例题</h3>
+<p>某班 5 名学生的每周学习时间 $x$(小时)与测验成绩 $y$(分)如下:</p>
+<p>| $x$ | 2 | 4 | 6 | 8 | 10 | |---|---|---|---|---|---| | $y$ | 55 | 65 | 70 | 80 | 90 |</p>
+<p><strong>第一步:描述。</strong> $\bar{x}=6$,$\bar{y}=72$。</p>
+<p><strong>第二步:计算偏差。</strong></p>
+<li>$\sum(x_i-\bar{x})^2=16+4+0+4+16=40$</li>
+<li>$\sum(y_i-\bar{y})^2=289+49+4+64+324=730$</li>
+<li>$\sum(x_i-\bar{x})(y_i-\bar{y})=(-4)(-17)+(-2)(-7)+0+(2)(8)+(4)(18)=68+14+0+16+72=170$</li>
+<p><strong>第三步:求相关系数。</strong></p>
+$$r=\frac{170}{\sqrt{40}\sqrt{730}}=\frac{170}{\sqrt{29200}}\approx\frac{170}{170.88}\approx 0.995$$
+<p>学习时间与成绩呈很强的正线性相关。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 若某同学每周学习 7 小时,预计成绩是多少?</p>
+<p>用最小二乘回归直线 $\hat{y}=a+bx$,其中</p>
+$$b=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{\sum(x_i-\bar{x})^2}=\frac{170}{40}=4.25,\qquad a=\bar{y}-b\bar{x}=72-4.25\times 6=46.5$$
+<p>所以 $\hat{y}=46.5+4.25x$。代入 $x=7$:</p>
+$$\hat{y}=46.5+4.25\times 7=76.25\ \text{分}$$
+<p><strong>分析时的三个检查点:</strong></p>
+<li><strong>只在数据范围内预测。</strong> $x=7$ 位于 2 到 10 之间(内插)是合理的。若预测 $x=40$,得到 216.5 分,显然荒谬。外推不可靠。</li>
+<li><strong>相关不等于因果。</strong> 高成绩的学生可能本来就更自律,学习时间只是其中一个表现。</li>
+<li><strong>样本太小。</strong> 只有 $n=5$ 时,$r$ 很高也可能出于偶然,需要更多数据或显著性检验来确认。</li>
+<h3 id="流程图">流程图</h3>
+<pre class="mermaid">flowchart LR
+A[准备好的数据] --> B[描述统计]
+B --> C[可视化探索]
+C --> D[建立模型]
+D --> E[检验与推断]
+E --> F[解释并做出决策]
+E -->|结果不可靠| C</pre>
+<p><em>数据分析的典型流程:从描述到探索、建模、检验,若结论不可靠则回到探索阶段重新分析。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch1: What Are Data and Data Science? (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

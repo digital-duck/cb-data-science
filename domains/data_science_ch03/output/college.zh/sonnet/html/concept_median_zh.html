@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Median | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="中位数">中位数</h2>
+<p><strong>定义。</strong> 将 $n$ 个数据按从小到大排序为 $x_{(1)}\le x_{(2)}\le\cdots\le x_{(n)}$。<strong>中位数</strong>(median)是排在正中间的值:</p>
+$$
+\text{median}=
+\begin{cases}
+x_{\left(\frac{n+1}{2}\right)}, & n \text{ 为奇数},\\[6pt]
+\dfrac{x_{\left(\frac{n}{2}\right)}+x_{\left(\frac{n}{2}+1\right)}}{2}, & n \text{ 为偶数}.
+\end{cases}
+$$
+<p>也就是说,至少有一半数据不大于它,至少有一半数据不小于它。中位数只依赖数据的<strong>位置(排名)</strong>,而不依赖极端值的大小,因此对异常值不敏感,这称为<strong>稳健性</strong>。</p>
+<p><strong>求解步骤。</strong></p>
+<li>将数据排序。</li>
+<li>确定 $n$ 是奇数还是偶数。</li>
+<li>奇数取正中间的一个值;偶数取中间两个值的平均。</li>
+<p><strong>例题 1(奇数个数据)。</strong> 某班 7 名学生的周学习时间(小时)为:$5,\ 8,\ 3,\ 6,\ 9,\ 4,\ 7$。</p>
+<p>排序得 $3,4,5,6,7,8,9$。$n=7$,中位数为第 $\frac{7+1}{2}=4$ 个数,即 $6$ 小时。</p>
+<p><strong>例题 2(偶数个数据)。</strong> 数据为 $2,\ 4,\ 4,\ 10,\ 12,\ 30$。</p>
+<p>$n=6$,中间两个数是第 3、4 个,即 $4$ 和 $10$,所以中位数为 $\dfrac{4+10}{2}=7$。</p>
+<p><strong>问题求解应用:抵抗异常值。</strong> 某小城市 5 户家庭的年收入(万元)为:$8,\ 9,\ 10,\ 11,\ 12$。</p>
+<li>平均数:$\bar{x}=\dfrac{8+9+10+11+12}{5}=10$</li>
+<li>中位数:$10$</li>
+<p>现在一位亿万富翁搬来,第 6 户的年收入为 $1000$ 万元:</p>
+<li>平均数:$\bar{x}=\dfrac{8+9+10+11+12+1000}{6}=\dfrac{1050}{6}=175$</li>
+<li>中位数:排序后中间两个数为 $10$ 和 $11$,得 $\dfrac{10+11}{2}=10.5$</li>
+<p>平均数从 $10$ 飙升到 $175$,远不能代表普通家庭的收入;而中位数只从 $10$ 变为 $10.5$,依然反映了"典型"家庭的水平。这就是房价、工资、家庭收入等<strong>右偏分布</strong>的数据通常报告中位数的原因。</p>
+<p><strong>用代码验证。</strong></p>
+<pre><code>import statistics
+
+data = [8, 9, 10, 11, 12, 1000]
+print(statistics.mean(data))    # 175.0
+print(statistics.median(data))  # 10.5</code></pre>
+<p><strong>如何选择?</strong> </p>
+<li>数据大致对称、没有明显异常值时,平均数和中位数相近,平均数利用了全部信息,更有效。</li>
+<li>数据严重偏斜或含有异常值时,优先使用中位数。</li>
+<li>若平均数明显大于中位数,通常说明分布<strong>右偏</strong>(有少数极大值把平均数"拉高")。</li>
+<p><strong>小结。</strong> 中位数是排序后位于正中间的值,计算简单、对异常值稳健。在描述偏斜数据的"典型水平"时,它往往比平均数更可靠。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

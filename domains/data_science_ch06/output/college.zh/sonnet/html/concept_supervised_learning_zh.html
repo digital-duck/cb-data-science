@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervised Learning | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="监督学习">监督学习</h2>
+<p><strong>定义。</strong> 监督学习(supervised learning)是一类机器学习方法:训练数据中每个样本都带有已知的<strong>标签</strong>,模型通过比较自身预测与真实标签之间的差距,不断调整参数。设训练集为</p>
+$$D=\{(x_i,y_i)\}_{i=1}^{n},$$
+<p>其中 $x_i$ 是特征,$y_i$ 是标签。我们要学习一个函数 $f_\theta(x)$,使预测 $\hat y_i=f_\theta(x_i)$ 尽量接近 $y_i$。"接近"的程度由<strong>损失函数</strong> $L$ 衡量,训练就是最小化平均损失:</p>
+$$J(\theta)=\frac1n\sum_{i=1}^{n}L\big(f_\theta(x_i),y_i\big),\qquad \theta^*=\arg\min_\theta J(\theta).$$
+<p>标签为连续数值时称为<strong>回归</strong>,为离散类别时称为<strong>分类</strong>。</p>
+<p><strong>求解方法。</strong> 最常用的是梯度下降:每一步沿损失下降最快的方向更新参数,</p>
+$$\theta \leftarrow \theta-\eta\,\nabla_\theta J(\theta),$$
+<p>其中 $\eta$ 为学习率。</p>
+<p><strong>例题。</strong> 用一元线性模型 $f(x)=wx$ 拟合三个样本 $(1,2),(2,4),(3,6)$,取平方损失 $L=(\hat y-y)^2$,初始 $w=0$,学习率 $\eta=0.05$。</p>
+<p>损失的梯度为</p>
+$$\frac{dJ}{dw}=\frac{2}{n}\sum_i (wx_i-y_i)x_i.$$
+<p>当 $w=0$ 时:</p>
+$$\frac{dJ}{dw}=\frac{2}{3}\big(-2\cdot1-4\cdot2-6\cdot3\big)=\frac{2}{3}(-28)\approx-18.67.$$
+<p>更新得 $w=0-0.05\times(-18.67)\approx0.93$。继续迭代,$w$ 会逐步逼近 $2$,此时损失为 $0$。这说明模型从标签的"对错"中学到了数据背后的规律 $y=2x$。</p>
+<pre class="mermaid">flowchart LR
+A[带标签训练数据] --> B[模型预测]
+B --> C[与真实标签比较]
+C --> D[计算损失]
+D --> E[更新参数]
+E --> B</pre>
+<p><em>图:监督学习的训练循环——预测、比较标签、计算损失、更新参数,反复迭代直至收敛。</em></p>
+<p><strong>问题求解中的应用。</strong> 实际应用必须把数据分成<strong>训练集</strong>与<strong>测试集</strong>。训练集用于调整参数;测试集在训练中完全不使用,仅用来评估模型在新数据上的<strong>泛化</strong>能力。</p>
+<p>假设一个垃圾邮件分类器在训练集上准确率为 $99\%$,在测试集上只有 $70\%$。训练误差很低而测试误差很高,这是<strong>过拟合</strong>:模型记住了训练样本的细节,而非一般规律。常见的对策有:</p>
+<li>增加训练数据;</li>
+<li>降低模型复杂度;</li>
+<li>加入正则化项,例如 $J(\theta)+\lambda\lVert\theta\rVert^2$;</li>
+<li>使用交叉验证选择超参数。</li>
+<p>反过来,如果训练误差和测试误差都很高,则是<strong>欠拟合</strong>,应当换用表达能力更强的模型或增加特征。</p>
+<p><strong>小结。</strong> 解决监督学习问题的一般步骤是:确定任务类型(回归或分类)→选择模型与损失函数→在训练集上优化参数→在测试集上检验泛化→根据训练误差与测试误差的差距诊断并改进模型。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

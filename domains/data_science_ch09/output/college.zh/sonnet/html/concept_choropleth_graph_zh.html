@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choropleth Graph | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="分级统计图-choropleth-graph">分级统计图(Choropleth Graph)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>分级统计图</strong>是一种专题地图:把地图划分为若干地理单元(国家、省、县、邮区等),并按每个单元的某项<strong>统计量</strong>为其整块区域着色,颜色深浅(或色系)对应数值大小。它用来揭示空间模式,例如聚集、梯度和异常区域。</p>
+<p>关键要点:着色对象是<strong>区域</strong>,而不是点。因此地图上看到的是"每个区域一个值"。</p>
+<h3 id="关键公式-先标准化-再着色">关键公式:先标准化,再着色</h3>
+<p>分级统计图最常见的错误,是直接对<strong>原始计数</strong>着色。设区域 $i$ 的计数为 $c_i$,面积为 $A_i$,人口为 $P_i$。应当映射的是比率:</p>
+$$
+\text{密度}_i=\frac{c_i}{A_i},\qquad \text{发生率}_i=\frac{c_i}{P_i}\times 100000
+$$
+<p>大区域或人口多的区域,原始计数天然偏大,会造成视觉上的误导。</p>
+<h3 id="分级方法">分级方法</h3>
+<p>连续数值需要分成 $k$ 个级别(通常 $k=4\sim7$),再对应到颜色。</p>
+<li><strong>等距分级</strong>:组距 $w=\dfrac{x_{\max}-x_{\min}}{k}$。简单,但数据偏斜时多数区域会挤进同一级。</li>
+<li><strong>分位数分级</strong>:每级含约 $n/k$ 个区域。颜色分布均衡,但可能把差别很小的值分入不同级。</li>
+<h3 id="例题">例题</h3>
+<p>四个县的人口与病例数如下,用 $k=2$ 的等距分级着色。</p>
+<p>| 县 | 病例 $c$ | 人口 $P$ | 发生率(每10万人) | |---|---|---|---| | A | 50 | 10 000 | 500 | | B | 120 | 100 000 | 120 | | C | 30 | 20 000 | 150 | | D | 200 | 50 000 | 400 |</p>
+<p>组距 $w=(500-120)/2=190$,分界点为 $120+190=310$。</p>
+<li>低级($<310$):B、C</li>
+<li>高级($\ge310$):A、D</li>
+<p>注意:若直接按原始计数着色,D(200)与 B(120)会显得最"严重",而 B 的发生率其实最低。标准化后,最需关注的是 A。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p>用 Python 绘制(需要含几何信息的 GeoDataFrame):</p>
+<pre><code>import geopandas as gpd
+
+gdf = gpd.read_file("counties.geojson")
+gdf["rate"] = gdf["cases"] / gdf["pop"] * 100000
+gdf.plot(column="rate", cmap="OrRd", scheme="quantiles",
+         k=5, legend=True)</code></pre>
+<p>设计检查清单:</p>
+<li><strong>用比率,不用计数</strong>,避免面积和人口造成偏差。</li>
+<li><strong>顺序型色板</strong>(单色由浅到深)表示从低到高;<strong>发散型色板</strong>用于以零或均值为中心的数据。</li>
+<li><strong>图例要标明分级方法和分界点</strong>,因为换一种分级方式,图像可能给出不同的结论。</li>
+<li><strong>留意"可塑性面积单元问题"</strong>:同一数据按不同边界划分(如县与州),模式可能完全不同。</li>
+<li><strong>小面积高人口区域</strong>(如城市)在图上不显眼,可考虑配合变形地图(cartogram)或点密度图。</li>
+<h3 id="小结">小结</h3>
+<p>分级统计图 = <strong>地理边界 + 标准化数值 + 合理分级 + 恰当配色</strong>。每一步选择都会改变读者看到的"空间模式",因此应当有意识地选择并在图例中说明。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch9: Visualizing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

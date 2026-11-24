@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Null Hypothesis | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="null-hypothesis">Null Hypothesis</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P_\theta)$ be a statistical model indexed by $\theta \in \Theta$. A <em>null hypothesis</em> is a measurable restriction $H_0 : \theta \in \Theta_0 \subsetneq \Theta$, which partitions the parameter space so that $\Theta = \Theta_0 \cup \Theta_1$ with $\Theta_0 \cap \Theta_1 = \emptyset$. A test is a measurable function $\phi : \mathcal{X}^n \to \{0,1\}$; we reject $H_0$ when $\phi(\mathbf{x}) = 1$. The <em>size</em> of $\phi$ is $\alpha = \sup_{\theta \in \Theta_0} \mathbb{E}_\theta[\phi(\mathbf{X})]$, and its <em>power</em> against a specific $\theta_1 \in \Theta_1$ is $\beta(\theta_1) = \mathbb{E}_{\theta_1}[\phi(\mathbf{X})]$.</p>
+<p><strong>Theorem (Neyman–Pearson Lemma).</strong> Let $H_0 : \theta = \theta_0$ and $H_1 : \theta = \theta_1$ be simple hypotheses with densities $f_0, f_1$ with respect to a dominating measure $\mu$. Define the likelihood ratio $\Lambda(\mathbf{x}) = f_1(\mathbf{x}) / f_0(\mathbf{x})$. For a fixed level $\alpha \in (0,1)$, the most powerful test rejects $H_0$ whenever $\Lambda(\mathbf{x}) > k_\alpha$, where $k_\alpha$ is the $(1-\alpha)$-quantile of $\Lambda$ under $P_{\theta_0}$. Formally, no other size-$\alpha$ test $\tilde\phi$ can satisfy $\mathbb{E}_{\theta_1}[\tilde\phi] > \mathbb{E}_{\theta_1}[\phi^*]$.</p>
+<p><em>Proof sketch.</em> For any competing test $\tilde\phi$ of size $\leq \alpha$:</p>
+$$\mathbb{E}_{\theta_1}[\phi^* - \tilde\phi] = \int (\phi^* - \tilde\phi)(f_1 - k_\alpha f_0)\,d\mu + k_\alpha\underbrace{\int(\phi^* - \tilde\phi)f_0\,d\mu}_{\geq 0}.$$
+<p>The integrand of the first term is $\geq 0$ pointwise by construction of the rejection region, so the whole expression is non-negative. $\square$</p>
+<p><strong>Literature context.</strong> The Neyman–Pearson framework, introduced in their 1933 <em>Philosophical Transactions</em> paper, remains the foundational architecture for frequentist inference. Wald (1950) extended it to sequential and decision-theoretic settings; Lehmann and Romano (2005, <em>Testing Statistical Hypotheses</em>) provide the canonical modern treatment. Composite nulls ($|\Theta_0| > 1$) are substantially harder: uniformly most powerful (UMP) tests exist only under special structure (e.g., one-parameter exponential families with monotone likelihood ratios). In high dimensions, recent work by Candès et al. (2018) on model-X knockoffs and Bates et al. (2023) on e-values revisits what "valid" null rejection means when $n \ll p$ or the model is misspecified. A live open question is how to maintain valid Type-I error control in adaptive or data-dependent hypothesis selection pipelines—the multiple-testing problem as encountered in modern ML model selection.</p>
+<p><strong>Suggested investigation.</strong> Simulate a one-sample $z$-test under varying degrees of model misspecification: generate data from a heavy-tailed distribution (e.g., $t_3$) while testing $H_0 : \mu = 0$ with the Gaussian likelihood ratio. Plot realized size (empirical rejection rate under $H_0$) as a function of $n$ and tail index. Then implement the same experiment using a permutation test; verify that the permutation test maintains exact size regardless of the generating distribution. Extend the comparison to composite $H_0$ (testing $\mu \leq 0$) and assess power curves numerically, checking whether the UMP test from Lehmann–Romano §3.4 is recovered.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should formally state the null and alternative as parameter-space subsets, specify the test statistic and its null distribution (exact or asymptotic), report both the empirical size at the nominal $\alpha$ and the power curve over a grid of $\theta_1$ values, and conclude with a discussion of which regularity conditions were violated in the misspecified setting and how the permutation test circumvents them. Figures should include overlaid power curves for parametric versus permutation tests, annotated with the theoretically predicted power derived from the Neyman–Pearson envelope.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

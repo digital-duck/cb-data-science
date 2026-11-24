@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parsing And Extraction | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="parsing-and-extraction">Parsing And Extraction</h2>
+<p><strong>定义</strong></p>
+<p>解析与提取（Parsing and Extraction）指的是从非结构化或半结构化的数据（如字符串、日志文件、网页文本）中，系统性地识别并取出所需信息的过程。核心技术包括三类：<strong>切片（slicing）</strong>——按位置截取子串；<strong>分割（splitting）</strong>——依据分隔符将字符串拆分为若干片段；以及<strong>正则表达式（regular expressions, regex）</strong>——用一套形式化的模式语言描述字符串的结构规律，从而匹配、定位或替换符合规律的文本。这三种技术并非互斥，而是按数据结构化程度递进使用：结构固定时用切片，分隔符明确时用分割，模式复杂多变时用正则。</p>
+<p><strong>基本原理与形式化表示</strong></p>
+<p>正则表达式本质上是一种描述<strong>正规语言（regular language）</strong>的代数系统，由有限状态自动机（finite automaton）在计算上等价实现。一个正则表达式 $r$ 可以递归定义为：单个字符 $a$、空串 $\varepsilon$、拼接 $r_1 r_2$、选择 $r_1 \mid r_2$，以及闭包 $r^*$（表示重复零次或多次）。例如日期格式 <code>YYYY-MM-DD</code> 可写作：</p>
+$$
+\text{[0-9]}^{4}-\text{[0-9]}^{2}-\text{[0-9]}^{2}
+$$
+<p>其中 <code>[0-9]</code> 表示字符类（选择的简写），指数记法表示固定次数的拼接。这一形式化背景解释了为什么正则表达式匹配的时间复杂度可以做到与输入长度 $n$ 成线性关系 $O(n)$（基于 Thompson 构造的 NFA 算法），而某些引擎（如支持回溯的 PCRE）在病态模式下会退化为指数级 $O(2^n)$——这正是实践中需警惕"灾难性回溯（catastrophic backtracking）"的理论根源。</p>
+<p><strong>问题求解应用</strong></p>
+<p>给定日志行：</p>
+<pre><code>log = "2026-09-27 14:03:11 ERROR user=42 msg='connection timeout'"</code></pre>
+<p>若仅需日期与时间，可用切片：<code>log[:19]</code>。若需按空格分割出字段：<code>log.split(" ", 3)</code> 得到前缀信息与消息体。若需精确提取 <code>user=</code> 后的数字，则正则更可靠：</p>
+<pre><code>import re
+m = re.search(r"user=(\d+)", log)
+user_id = m.group(1)  # "42"</code></pre>
+<p>括号构成的<strong>捕获组（capture group）</strong>是正则超越简单分割的关键：它允许在匹配整体模式的同时，精确锚定并返回内部子结构，即使字段顺序或周边文本发生变化也不受影响。</p>
+<pre class="mermaid">flowchart LR
+    A["原始字符串"] --> B{"结构是否固定?"}
+    B -->|"固定长度"| C["切片 slicing"]
+    B -->|"有分隔符"| D["分割 split"]
+    B -->|"模式可变"| E["正则表达式 regex"]
+    C --> F["提取结果"]
+    D --> F
+    E --> F</pre>
+<p><em>该图展示根据数据结构规律性选择切片、分割或正则表达式的决策路径。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

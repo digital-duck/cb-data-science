@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternative Hypothesis | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="alternative-hypothesis">Alternative Hypothesis</h2>
+<p><strong>Definition.</strong> Let $(\Omega, \mathcal{F}, P_\theta)$ be a statistical model indexed by parameter $\theta \in \Theta$. A hypothesis is a restriction on $\theta$; a <em>null hypothesis</em> $H_0 : \theta \in \Theta_0$ is the claim to be falsified, while the <em>alternative hypothesis</em> $H_1 : \theta \in \Theta_1 = \Theta \setminus \Theta_0$ is the complement that a test seeks evidence for. The alternative is not merely the logical negation of $H_0$: it encodes the <em>direction</em> of departure the investigator considers scientifically meaningful, and this choice structurally constrains every downstream operating characteristic of the test.</p>
+<p>The alternative may be <em>simple</em> ($|\Theta_1| = 1$), <em>composite</em> (a proper subset of $\Theta$), <em>one-sided</em> ($\theta > \theta_0$), or <em>two-sided</em> ($\theta \neq \theta_0$). These are not equivalent, and conflating them is a persistent source of inferential error in applied work.</p>
+<p><strong>Theorem (Neyman–Pearson Lemma).</strong> Suppose $H_0 : \theta = \theta_0$ and $H_1 : \theta = \theta_1$ are both simple hypotheses and observations $X_1, \ldots, X_n$ are i.i.d. with densities $f_{\theta_0}$ and $f_{\theta_1}$, respectively. Among all tests of size at most $\alpha$, the likelihood ratio test</p>
+$$\phi^*(x) = \mathbf{1}\!\left\{\frac{\prod_{i=1}^n f_{\theta_1}(x_i)}{\prod_{i=1}^n f_{\theta_0}(x_i)} > k_\alpha\right\}$$
+<p>is uniformly most powerful (UMP): it maximises power $\beta(\theta_1) = E_{\theta_1}[\phi^<em>(X)]$ subject to $E_{\theta_0}[\phi^</em>(X)] \leq \alpha$.</p>
+<p><em>Proof sketch.</em> The Neyman–Pearson fundamental lemma establishes that any test $\phi$ with $E_{\theta_0}[\phi] \leq \alpha$ satisfies $E_{\theta_1}[\phi^<em> - \phi](f_{\theta_1} - k_\alpha f_{\theta_0}) \geq 0$, which immediately yields $E_{\theta_1}[\phi^</em>] \geq E_{\theta_1}[\phi]$. See Lehmann and Romano (2005, Ch. 3) for the complete argument including the randomised boundary case. $\square$</p>
+<p><strong>Literature context.</strong> The Neyman–Pearson framework is foundational but exhibits a fundamental asymmetry: the alternative enters only through the likelihood ratio, so the test is constructed <em>around</em> the null. This asymmetry becomes consequential when $\Theta_1$ is composite: UMP tests generally do not exist, and one must appeal to uniformly most powerful unbiased (UMPU) tests, invariance arguments, or Bayesian alternatives (Berger, 1985). The choice between one-sided and two-sided alternatives is a research design decision with direct power implications—a one-sided test against $\theta > \theta_0$ achieves higher power there but has zero formal power against $\theta < \theta_0$. In high-dimensional settings ($p \gg n$), the classical theory breaks down further; minimax testing rates over composite alternatives become the operative criterion (Ingster and Suslina, 2003; Collier et al., 2017).</p>
+<p><strong>Suggested investigation.</strong> Implement a simulation study in which the true data-generating process lies at varying distances from $\Theta_0$ along a one-dimensional parameter path. Compute empirical power curves for a one-sided $z$-test, a two-sided $z$-test, and the Bayesian posterior probability $P(\theta > \theta_0 \mid X)$ as a function of effect size $\delta = (\theta_1 - \theta_0)/\sigma$ and sample size $n$. Vary the prior on $\theta$ (flat, weakly informative, spiked at $\theta_0$) and record how the alternative specification interacts with prior choice. Extend by replacing the Gaussian model with a heavy-tailed distribution and observe whether the Neyman–Pearson optimality is preserved empirically.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should (i) state the parameter space and both hypotheses with full mathematical notation before any simulation detail; (ii) report power as a function of $\delta$ and $n$ in a single well-labelled figure with confidence bands; (iii) articulate precisely what "choosing the alternative" implies for the experiment's inferential scope; and (iv) discuss one open question—for instance, whether the observed power ordering between frequentist and Bayesian procedures is robust to misspecification of the likelihood family.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

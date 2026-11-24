@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quartiles | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="quartiles">Quartiles</h2>
+<p><strong>Definition.</strong> Let $X$ be a real-valued random variable with cumulative distribution function $F$. The $p$-th quantile of $F$ is the generalized inverse $Q(p) = F^{-1}(p) = \inf\{x \in \mathbb{R} : F(x) \geq p\}$ for $p \in (0,1)$. The <em>quartiles</em> are the three special cases $Q_1 = Q(1/4)$, $Q_2 = Q(1/2)$ (the median), and $Q_3 = Q(3/4)$. The <em>interquartile range</em> is $\mathrm{IQR} = Q_3 - Q_1$.</p>
+<p>This clean theoretical definition conceals a persistent ambiguity: given a finite sample $x_{(1)} \leq x_{(2)} \leq \cdots \leq x_{(n)}$, no single canonical estimator of $Q(p)$ emerges from first principles. The sample quantile function must interpolate between order statistics, and the choice of interpolation scheme is genuinely consequential.</p>
+<p><strong>Theorem (Asymptotic normality of sample quantiles).</strong> Let $X_1, \ldots, X_n$ be i.i.d.\ from $F$ with density $f$ satisfying $f(Q(p)) > 0$. Define the sample quantile $\hat{Q}_n(p)$ via any consistent interpolation scheme. Then</p>
+$$\sqrt{n}\bigl(\hat{Q}_n(p) - Q(p)\bigr) \xrightarrow{d} \mathcal{N}\!\left(0,\, \frac{p(1-p)}{f(Q(p))^2}\right).$$
+<p><em>Proof sketch.</em> Write $\hat{Q}_n(p) = F_n^{-1}(p)$ where $F_n$ is the empirical CDF. The Bahadur representation (Bahadur 1966) gives $\hat{Q}_n(p) = Q(p) + \frac{p - F_n(Q(p))}{f(Q(p))} + O(n^{-3/4}\log n)$ a.s. The leading term $\frac{p - F_n(Q(p))}{f(Q(p))}$ has mean zero and variance $\frac{p(1-p)}{f(Q(p))^2 n}$ by the variance of the empirical CDF, so the CLT applies. $\square$</p>
+<p>The variance $p(1-p)/[f(Q(p))^2 n]$ grows as $f(Q(p)) \to 0$, quantifying the familiar intuition that sparse regions of the distribution make quantile estimation hard.</p>
+<p><strong>Literature context.</strong> Hyndman and Fan (1996, <em>The American Statistician</em>) catalogued nine distinct sample quantile definitions in common use, differing in their type of interpolation between $x_{(\lfloor np \rfloor)}$ and $x_{(\lceil np \rceil)}$. Four are implemented in NumPy and R by default, yet produce meaningfully different results on small samples. This definitional multiplicity is not merely pedagogical: it affects downstream statistics such as IQR-based outlier thresholds and boxplot whiskers. A more recent line of work (Ma and Genton 2011; Serfling and Xiao 2007) extends the IQR concept to multivariate settings via halfspace depth, where the notion of "between the 25th and 75th percentile" requires a complete rethinking of order.</p>
+<p><strong>Suggested investigation.</strong> Fix $n \in \{10, 30, 100\}$ and draw samples from three distributions: $\mathcal{N}(0,1)$, $\mathrm{Exp}(1)$, and a heavy-tailed $t_3$. For each $(n, F)$ pair, compute $Q_1$ and $Q_3$ under all nine Hyndman–Fan definitions and record mean absolute error against the true theoretical quartile over $10^4$ Monte Carlo replications. Determine which definition minimizes bias and MSE for each distribution and sample size, and verify that the asymptotic variance formula above tightens with $n$ for the continuous-interpolation estimators (types 7–9). As a secondary experiment, compare IQR-based outlier detection rates ($x \notin [Q_1 - 1.5\,\mathrm{IQR},\, Q_3 + 1.5\,\mathrm{IQR}]$) across definitions: even small definitional differences can shift flagging thresholds substantially under skewed data.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should: (1) state the precise Hyndman–Fan type used whenever quartiles are reported; (2) report Monte Carlo standard errors alongside bias to distinguish finite-sample and variance effects; (3) verify that the empirical variance of $\hat{Q}_n(p)$ converges to $p(1-p)/[f(Q(p))^2 n]$ as $n$ grows, establishing contact with the theoretical result; and (4) discuss whether the "best" definition is invariant to distributional family, since a recommendation that holds only for Gaussian data is of limited practical use.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+domain: data_science_ch3
+sources:
+  descriptive_statistics:
+    label: Descriptive Statistics
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  population_data:
+    label: Population Data
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  sample_data:
+    label: Sample Data
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  frequency_distribution:
+    label: Frequency Distribution
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  mean:
+    label: Mean
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  trimmed_mean:
+    label: Trimmed Mean
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  median:
+    label: Median
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  mode:
+    label: Mode
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  outliers:
+    label: Outliers
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+  central_tendency:
+    label: Central Tendency
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+  range:
+    label: Range
+    sections:
+    - id: ch03_s3_2
+      title: 3.2 Measures of Variation
+  variance:
+    label: Variance
+    sections:
+    - id: ch03_s3_2
+      title: 3.2 Measures of Variation
+  standard_deviation:
+    label: Standard Deviation
+    sections:
+    - id: ch03_s3_2
+      title: 3.2 Measures of Variation
+  coefficient_of_variation:
+    label: Coefficient of Variation
+    sections:
+    - id: ch03_s3_2
+      title: 3.2 Measures of Variation
+  percentiles:
+    label: Percentiles
+    sections:
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+  quartiles:
+    label: Quartiles
+    sections:
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+  interquartile_range:
+    label: Interquartile Range (IQR)
+    sections:
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+  z_score:
+    label: Z-score
+    sections:
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+  probability:
+    label: Probability
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  sample_space:
+    label: Sample Space
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  event:
+    label: Event
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  relative_frequency_probability:
+    label: Relative Frequency (Empirical) Probability
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  theoretical_probability:
+    label: Theoretical Probability
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  complement_of_an_event:
+    label: Complement of an Event
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  independent_dependent_events:
+    label: Independent and Dependent Events
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  conditional_probability:
+    label: Conditional Probability
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  probability_of_at_least_one:
+    label: Probability of At Least One
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  bayes_theorem:
+    label: Bayes' Theorem
+    sections:
+    - id: ch03_s3_4
+      title: 3.4 Probability Theory
+  random_variable:
+    label: Random Variable
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  discrete_random_variable:
+    label: Discrete Random Variable
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  continuous_random_variable:
+    label: Continuous Random Variable
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  probability_distribution:
+    label: Probability Distribution
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  binomial_distribution:
+    label: Binomial Distribution
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  poisson_distribution:
+    label: Poisson Distribution
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  probability_density_function:
+    label: Probability Density Function (PDF)
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  normal_distribution:
+    label: Normal Distribution
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  standard_normal_distribution:
+    label: Standard Normal Distribution
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  empirical_rule:
+    label: Empirical Rule
+    sections:
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions
+  python_data_analysis:
+    label: Python for Statistical Analysis
+    sections:
+    - id: ch03_s3_1
+      title: 3.1 Measures of Center
+    - id: ch03_s3_2
+      title: 3.2 Measures of Variation
+    - id: ch03_s3_3
+      title: 3.3 Measures of Position
+    - id: ch03_s3_5
+      title: 3.5 Discrete and Continuous Probability Distributions

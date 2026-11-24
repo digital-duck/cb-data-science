@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Period | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="period">Period</h2>
+<p>The period of a seasonal pattern is the smallest time interval, $T$, after which the pattern repeats itself exactly. If sales spike every December and fall back to baseline by February, then rise again the following December, the period is 12 months — regardless of how large or small the spikes are. Period describes <em>timing</em>, not magnitude: it answers the question "how often?" rather than "how much?"</p>
+<p>Formally, a time series component $S_t$ is periodic with period $T$ if $S_{t+T} = S_t$ for all $t$. The key word is <em>smallest</em>: a pattern that repeats every 12 months technically also "repeats" every 24 or 36 months, but its period is 12, because that is the shortest interval satisfying the condition.</p>
+<p><strong>Worked example.</strong> Suppose a company records ice cream sales monthly and observes this seasonal index pattern, repeating year after year:</p>
+$$
+\text{Jan}=0.6,\ \text{Feb}=0.6,\ \text{Mar}=0.8,\ \text{Apr}=1.0,\ \text{May}=1.2,\ \text{Jun}=1.4,
+$$
+$$
+\text{Jul}=1.5,\ \text{Aug}=1.4,\ \text{Sep}=1.0,\ \text{Oct}=0.8,\ \text{Nov}=0.6,\ \text{Dec}=0.6
+$$
+<p>After December, January's value returns to 0.6, matching the value 12 months earlier. No shorter sub-cycle (say, every 6 months) reproduces the same sequence — June (1.4) doesn't match December (0.6). So the period is confirmed as 12 months, consistent with an annual demand cycle driven by summer heat.</p>
+<p><strong>Problem-solving application.</strong> Identifying the correct period is the first step in almost any seasonal analysis, because it determines the "lag" you use in decomposition or seasonal-differencing models like SARIMA. If you mistakenly assume a period of 4 (quarterly) for data that actually cycles every 12 months (monthly-annual), your seasonal adjustment will be wrong, and residual seasonality will leak into your "deseasonalized" series, distorting trend estimates.</p>
+<p>A practical diagnostic: plot the series and scan for the shortest interval at which the pattern visibly repeats, then confirm it by checking that the values line up across cycles (as in the worked example above). For daily retail data, you might spot two overlapping periods: a 7-day (weekly) cycle from weekday/weekend shopping habits, and a 365-day (annual) cycle from holidays. Real-world series often have multiple, nested periods, and part of the analyst's job is disentangling which period matters for the question being asked.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Level: College &middot; Language: EN &middot; Model: sonnet</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

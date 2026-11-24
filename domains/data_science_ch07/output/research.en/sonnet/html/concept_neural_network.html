@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Network | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="neural-network">Neural Network</h2>
+<p><strong>Definition.</strong> A <em>feedforward neural network</em> of depth $L$ is a parameterized function $f_\theta : \mathbb{R}^{d_0} \to \mathbb{R}^{d_L}$ defined by the composition</p>
+$$f_\theta(x) = W_L \sigma(W_{L-1} \sigma(\cdots \sigma(W_1 x + b_1) \cdots) + b_{L-1}) + b_L,$$
+<p>where $\sigma : \mathbb{R} \to \mathbb{R}$ is a nonlinear activation applied elementwise, $W_\ell \in \mathbb{R}^{d_\ell \times d_{\ell-1}}$ and $b_\ell \in \mathbb{R}^{d_\ell}$ are learnable weight matrices and bias vectors, and $\theta = \{W_\ell, b_\ell\}_{\ell=1}^L$ is the full parameter vector. The integer $d_\ell$ is the <em>width</em> at layer $\ell$; $L$ is the <em>depth</em>. Recurrent and convolutional variants introduce parameter sharing across positions, but the compositional structure and gradient-based training remain the same.</p>
+<p><strong>Theorem (Universal Approximation, Cybenko 1989; Hornik et al. 1989).</strong> Let $\sigma$ be a continuous, bounded, non-constant function. For every $\varepsilon > 0$ and every continuous $g : [0,1]^d \to \mathbb{R}$, there exists a single-hidden-layer network $f_\theta$ such that $\sup_{x \in [0,1]^d} |f_\theta(x) - g(x)| < \varepsilon$.</p>
+<p><em>Proof sketch.</em> The set of finite linear combinations of compositions of the form $\sigma(\mathbf{w}^\top x + b)$ is dense in $C([0,1]^d)$ equipped with the uniform norm. Density follows from the fact that this set is not contained in any closed proper subspace—verified by a measure-theoretic argument invoking the Hahn–Banach theorem in the dual of $C([0,1]^d)$. Because $\sigma$ is non-polynomial, no such proper subspace contains it, completing the argument. $\square$</p>
+<p>This result is existential, not constructive: it guarantees that a representation exists but provides no bound on the required width, no learning algorithm, and no generalization guarantee.</p>
+<p><strong>Literature context.</strong> The classical universal approximation theorem leaves several fundamental questions open, each the subject of active research. The theorem as stated is silent on <em>how large</em> the network must be: for smooth target functions in $d$ dimensions, width requirements can scale exponentially in $d$, a manifestation of the curse of dimensionality. Barron (1993) shows that functions whose Fourier transform has finite first-moment norm admit shallow approximations with width $O(1/\varepsilon^2)$ independent of $d$, identifying a function class where the theorem becomes quantitatively useful. The question of whether <em>depth</em> can substitute for width in a non-trivial sense is settled in one direction—Telgarsky (2016) and Eldan & Shamir (2016) exhibit functions that depth-$k$ networks represent efficiently but depth-$(k-1)$ networks require exponential width to approximate—yet a complete characterization of the depth–width tradeoff for natural function classes remains open. The leap from approximation to <em>learning</em>—whether gradient descent on a finite sample finds the guaranteed representation—is an entirely separate problem not addressed by these theorems, and remains the central open question in the theory of deep learning.</p>
+<p><strong>Suggested investigation.</strong> Study the empirical width requirement of the universal approximation theorem directly. Fix target functions of increasing complexity: $g_1(x) = \sin(2\pi x)$, $g_2(x) = \sin(2\pi x) + \sin(6\pi x)$, and $g_3(x) = \sum_{k=1}^{5} k^{-1}\sin(2\pi k x)$ on $[0,1]$. For each target, train single-hidden-layer networks with widths $n \in \{8, 32, 128, 512\}$ until convergence (or a fixed epoch budget) and record the uniform approximation error $\sup_x |f_\theta(x) - g(x)|$ on a held-out grid. Plot error as a function of $n$ on a log–log scale and test whether the observed scaling matches the $O(1/\varepsilon^2)$ Barron rate or degrades faster with spectral complexity of the target. Repeat with ReLU and $\tanh$ activations to assess sensitivity to $\sigma$.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish: (1) a precise statement of the universal approximation theorem and the Barron class condition, with an explicit derivation of the $O(1/\varepsilon^2)$ width bound for functions in that class; (2) empirical approximation-error curves as a function of width and target complexity, with error bars over random initializations; (3) a comparison of the observed scaling exponent against the theoretical prediction, noting where the bound is tight and where it is loose; and (4) a discussion of what the gap between the existential guarantee and the empirical result implies—specifically, whether the shortfall is attributable to optimization failure or to the function lying outside the Barron class, and how one might distinguish these explanations experimentally.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multilayer Perceptron | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="multilayer-perceptron">Multilayer Perceptron</h2>
+<p><strong>Definition.</strong> A <em>multilayer perceptron</em> (MLP) with $L$ hidden layers is a parametric function $f_\theta : \mathbb{R}^{d_0} \to \mathbb{R}^{d_{L+1}}$ defined by the composition</p>
+$$f_\theta(x) = W^{(L+1)} \sigma\!\left(W^{(L)} \sigma\!\left(\cdots \sigma\!\left(W^{(1)} x + b^{(1)}\right)\cdots\right) + b^{(L)}\right) + b^{(L+1)},$$
+<p>where $W^{(\ell)} \in \mathbb{R}^{d_\ell \times d_{\ell-1}}$ and $b^{(\ell)} \in \mathbb{R}^{d_\ell}$ are learnable parameters and $\sigma : \mathbb{R} \to \mathbb{R}$ is a fixed nonlinearity applied elementwise. The total parameter count is $|\theta| = \sum_{\ell=1}^{L+1} d_\ell(d_{\ell-1} + 1)$. The model is trained by minimizing an empirical risk $\hat{\mathcal{L}}(\theta) = \frac{1}{n}\sum_{i=1}^n \ell(f_\theta(x_i), y_i)$ via stochastic gradient descent or one of its adaptive variants.</p>
+<p><strong>Theorem (Universal Approximation, Hornik–Stinchcombe–White 1989).</strong> <em>Let $\sigma$ be a continuous, bounded, and non-constant activation. For any $\varepsilon > 0$ and any $g \in C(K)$ on a compact $K \subset \mathbb{R}^{d_0}$, there exist $N \in \mathbb{N}$ and parameters $\{v_j, w_j, b_j\}_{j=1}^N$ such that</em></p>
+$$\sup_{x \in K} \left| g(x) - \sum_{j=1}^{N} v_j\, \sigma(w_j^\top x + b_j) \right| < \varepsilon.$$
+<p><em>Proof sketch.</em> The set of finite linear combinations of shifts and scalings of $\sigma$ forms a subspace $\mathcal{H}_\sigma \subset C(K)$. Because $\sigma$ is non-constant, discriminatory functions in $\mathcal{H}_\sigma$ separate points; the Stone–Weierstrass theorem then implies $\mathcal{H}_\sigma$ is dense in $C(K)$ under the sup-norm. $\square$</p>
+<p>This theorem is existential: it guarantees width $N$ may grow arbitrarily with $\varepsilon$ and $d_0$, but says nothing about the required $N$ for a given function class, about generalization, or about whether gradient descent finds the approximating weights.</p>
+<p><strong>Literature context.</strong> The depth-width tradeoff is an active frontier. Barron (1993) showed that single-hidden-layer networks approximate functions with finite first-moment spectra at rate $O(1/N)$ in $L^2$, avoiding the curse of dimensionality for that function class. Depth-separation results (Telgarsky 2016; Eldan–Shamir 2016) prove that certain functions require exponentially wide shallow networks but are efficiently realized by deep ones, motivating the practical shift toward depth. The loss landscape of overparameterized MLPs — why gradient descent finds global minima despite non-convexity — remains incompletely understood; the neural tangent kernel (NTK) regime (Jacot et al. 2018) provides a linearization in the infinite-width limit, but its applicability to practical finite-width, finite-step training is contested.</p>
+<p><strong>Suggested investigation.</strong> Replicate the depth-separation experiment of Telgarsky (2016, §4): construct the piecewise-linear "triangle wave" function $t_k : [0,1] \to [0,1]$ with $2^k$ oscillations and train MLPs of depths $L \in \{1, 2, k\}$ with matched parameter budgets (ReLU activations) to approximate $t_k$ in $L^2$. Record approximation error versus $k$ for each depth. Then vary the width at fixed depth to locate the crossover point where width can compensate for depth. This isolates the combinatorial mechanism underlying depth separation and builds intuition for when architectural depth is irreducible.</p>
+<p><strong>Report-writing note.</strong> A write-up of this investigation should establish three things cleanly: (1) a precise statement of the function family and the parameter-matching protocol used, so the comparison is not confounded by total parameter count; (2) empirical loss curves alongside the theoretical bound on oscillation count as a function of depth, cited against Telgarsky (2016, Theorem 1.1); (3) a discussion of whether the NTK linearization predicts the observed training dynamics, and where it fails—this bridges the experiment to the open question of when the NTK regime is a faithful proxy for real networks.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

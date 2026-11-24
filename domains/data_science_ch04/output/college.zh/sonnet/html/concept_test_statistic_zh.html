@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Statistic | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="检验统计量">检验统计量</h2>
+<p><strong>定义。</strong> 检验统计量(test statistic)是由样本数据计算出的一个标准化数值,用来衡量样本结果偏离原假设 $H_0$ 的程度。它把“样本均值与假设值差多少”换算成“差了多少个标准误”,因此不同量纲的问题可以用同一把尺子比较。</p>
+<p>当总体标准差 $\sigma$ 已知时,检验总体均值用 $z$ 统计量:</p>
+$$z=\frac{\bar x-\mu_0}{\sigma/\sqrt{n}}$$
+<p>当 $\sigma$ 未知、用样本标准差 $s$ 代替时,用 $t$ 统计量:</p>
+$$t=\frac{\bar x-\mu_0}{s/\sqrt{n}},\qquad \text{自由度 } df=n-1$$
+<p>通用形式是:</p>
+$$\text{检验统计量}=\frac{\text{样本估计值}-\text{原假设值}}{\text{估计值的标准误}}$$
+<p>在 $H_0$ 成立的前提下,$z$ 近似服从标准正态分布,$t$ 服从自由度为 $n-1$ 的 $t$ 分布。统计量的绝对值越大,说明样本结果在 $H_0$ 下越“罕见”,反对 $H_0$ 的证据越强。</p>
+<p><strong>例题。</strong> 某品牌电池标称平均寿命为 $\mu_0=500$ 小时。质检员随机抽取 $n=25$ 块电池,测得 $\bar x=488$ 小时,$s=30$ 小时。问:在 $\alpha=0.05$ 水平下,能否认为平均寿命低于标称值?</p>
+<li>假设:$H_0:\mu=500$,$H_a:\mu<500$(左尾检验)。</li>
+<li>标准误:$\dfrac{s}{\sqrt n}=\dfrac{30}{5}=6$。</li>
+<li>检验统计量:</li>
+$$t=\frac{488-500}{6}=-2$$
+<li>自由度 $df=24$,查表得左尾临界值 $t_{0.05}\approx-1.711$。因为 $-2<-1.711$,统计量落入拒绝域;对应的 $p$ 值约为 $0.028<0.05$。</li>
+<li>结论:拒绝 $H_0$,有证据表明平均寿命低于 500 小时。</li>
+<p><strong>问题求解应用。</strong> 做检验时可按固定流程操作:</p>
+<li><strong>选对统计量。</strong> 均值检验中,$\sigma$ 已知用 $z$,未知用 $t$;比例检验用 $z=\dfrac{\hat p-p_0}{\sqrt{p_0(1-p_0)/n}}$。</li>
+<li><strong>注意方向。</strong> 统计量的符号要与 $H_a$ 一致,双尾检验看 $|t|$。</li>
+<li><strong>理解样本量的作用。</strong> 若上例中 $n=100$,其余不变,标准误变为 $3$,则 $t=-4$,证据明显更强。样本量越大,同样的差距越容易被判为显著。</li>
+<li><strong>区分统计显著与实际重要。</strong> 检验统计量大,只说明差异不太可能由抽样波动造成,并不说明差异本身很大。上例中 12 小时的差距是否有实际意义,要由具体情境判断。</li>
+<p><strong>常见误区。</strong> $p$ 值不是 $H_0$ 为真的概率,而是在 $H_0$ 为真时,出现至少与当前统计量一样极端的结果的概率。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

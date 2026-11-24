@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Augmented Dickey Fuller Test | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="增广迪基-富勒检验">增广迪基-富勒检验</h2>
+<p><strong>定义。</strong> 许多时间序列方法(如 ARIMA)都要求序列平稳,即均值、方差和自协方差不随时间改变。增广迪基-富勒检验(ADF 检验)用来检验序列是否含有<strong>单位根</strong>,也就是它是否像随机游走那样不平稳。</p>
+<p>考虑回归模型:</p>
+$$\Delta y_t = \alpha + \beta t + \gamma\, y_{t-1} + \sum_{i=1}^{p} \delta_i\, \Delta y_{t-i} + \varepsilon_t$$
+<p>其中 $\Delta y_t = y_t - y_{t-1}$。右端的滞后差分项 $\Delta y_{t-i}$ 用来吸收残差的自相关,这就是"增广"的含义。假设为:</p>
+<li>原假设 $H_0:\ \gamma = 0$(存在单位根,序列不平稳)</li>
+<li>备择假设 $H_1:\ \gamma < 0$(序列平稳)</li>
+<p>检验统计量为 $\tau = \hat\gamma / \mathrm{SE}(\hat\gamma)$。注意 $\tau$ <strong>不服从</strong>普通 t 分布,必须使用迪基-富勒临界值表(或 MacKinnon 近似 p 值)。$\tau$ 越负,越有理由拒绝原假设。</p>
+<p><strong>例题。</strong> 对某序列做常数项版本的 ADF 检验,得到 $\tau = -3.85$。5% 显著性水平下的临界值约为 $-2.86$。因为 $-3.85 < -2.86$,所以拒绝 $H_0$。对应 p 值约为 $0.002$,小于 $0.05$,结论是序列平稳。</p>
+<p>反之,若 $\tau = -1.20$,则 $-1.20 > -2.86$,p 值约为 $0.67$,无法拒绝 $H_0$,序列很可能含有单位根。</p>
+<p><strong>问题求解应用。</strong> 在实际建模中,可以按下列流程使用:</p>
+<pre><code>from statsmodels.tsa.stattools import adfuller
+
+def make_stationary(y, alpha=0.05, max_d=2):
+    d = 0
+    while d &lt;= max_d:
+        stat, pvalue, *_ = adfuller(y, autolag="AIC")
+        print(f"d={d}, tau={stat:.2f}, p={pvalue:.3f}")
+        if pvalue &lt; alpha:
+            return d, y
+        y = y.diff().dropna()
+        d += 1
+    raise ValueError("差分后仍不平稳")</code></pre>
+<p>这段代码对序列反复检验并差分,直到 p 值低于 $\alpha$。返回的 $d$ 就是 ARIMA$(p,d,q)$ 中的差分阶数。其中 <code>autolag="AIC"</code> 通过信息准则自动选择滞后阶数 $p$。</p>
+<p><strong>常见陷阱。</strong></p>
+<li><strong>原假设方向。</strong> ADF 的原假设是"不平稳"。p 值大只表示证据不足,不能证明序列有单位根。</li>
+<li><strong>确定性项设定错误。</strong> 序列有明显趋势时,应在回归中加入 $\beta t$。若遗漏,检验会失去效力。</li>
+<li><strong>功效较低。</strong> 当序列接近单位根(如 $\gamma = -0.01$)或样本很短时,检验常常无法拒绝 $H_0$。可以配合 KPSS 检验(其原假设是"平稳")交叉验证。</li>
+<li><strong>结构突变。</strong> 序列有突变时,ADF 容易误判为不平稳。</li>
+<p><strong>小结。</strong> ADF 检验通过判断 $\gamma$ 是否显著小于 0 来检验单位根。使用时先选好确定性项和滞后阶数,再用 Dickey-Fuller 分布的临界值判断。若 p 值很小,可视为平稳;否则就差分后重新检验。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

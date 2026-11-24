@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Data Analysis | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="python-数据分析">Python 数据分析</h2>
+<h3 id="定义">定义</h3>
+<p><strong>Python 数据分析</strong>是指用 Python 的科学计算库，把原始数据转化为统计结论的过程。两个核心工具如下：</p>
+<li><code>pandas</code>：提供 <code>DataFrame</code> 表格结构，用 <code>.mean()</code>、<code>.var()</code>、<code>.describe()</code> 等方法计算<strong>描述统计量</strong>。</li>
+<li><code>scipy.stats</code>：提供概率分布对象，如 <code>norm</code>、<code>binom</code>、<code>t</code>，可计算概率质量/密度（<code>pdf</code>/<code>pmf</code>）、累积概率（<code>cdf</code>）和分位数（<code>ppf</code>）。</li>
+<p>两者对应的数学量如下。样本均值与样本方差为</p>
+$$\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2 .$$
+<p>要特别注意：<code>pandas</code> 的 <code>.var()</code> 和 <code>.std()</code> 默认使用分母 $n-1$（无偏估计，即 <code>ddof=1</code>），而 <code>numpy</code> 的 <code>np.var</code> 默认使用分母 $n$（<code>ddof=0</code>）。混用二者是常见错误。</p>
+<h3 id="例题">例题</h3>
+<p>某班 8 名学生的测验成绩为 $62,70,75,78,80,84,88,93$。求均值、样本标准差，并在成绩服从正态分布的假设下，估计成绩超过 90 分的概率。</p>
+<pre><code>import pandas as pd
+from scipy import stats
+
+scores = pd.Series([62, 70, 75, 78, 80, 84, 88, 93])
+mean = scores.mean()          # 78.75
+sd = scores.std()             # 默认 ddof=1，约 9.80
+print(scores.describe())      # 一次给出计数、均值、四分位数等
+
+p = 1 - stats.norm.cdf(90, loc=mean, scale=sd)
+print(p)                      # 约 0.126</code></pre>
+<p><strong>手工验证</strong>：均值为 $\bar{x}=630/8=78.75$。离差平方和约为 $672.5$，所以 $s=\sqrt{672.5/7}\approx 9.80$。标准化得</p>
+$$z=\frac{90-78.75}{9.80}\approx 1.15,\qquad P(X>90)=1-\Phi(1.15)\approx 0.126 .$$
+<p>代码结果与手算一致。<code>stats.norm.sf(90, mean, sd)</code>（生存函数）与 <code>1 - cdf</code> 等价，而且在尾部概率很小时数值更稳定。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题</strong>：某工厂零件长度近似服从 $N(50,\,0.4^2)$（单位 mm）。合格范围是 $[49.2,\,50.8]$。求合格率，并求出长度最短的 5% 零件所对应的临界值。</p>
+<pre><code>from scipy.stats import norm
+X = norm(loc=50, scale=0.4)
+pass_rate = X.cdf(50.8) - X.cdf(49.2)   # 约 0.9545
+cutoff = X.ppf(0.05)                     # 约 49.34</code></pre>
+<p><strong>分析</strong>：合格范围恰好是 $\mu\pm 2\sigma$，所以合格率为 $\Phi(2)-\Phi(-2)\approx 0.9545$，与经验法则（68–95–99.7）一致。第二问是反问题：已知概率，求分位数，用 <code>ppf</code>（$\Phi^{-1}$）。因为 $z_{0.05}\approx-1.645$，所以临界值为 $50-1.645\times0.4\approx 49.34$ mm。</p>
+<p><strong>解题套路</strong>：</p>
+<li>用 <code>pandas</code> 汇总数据，得到 $\bar{x}$ 和 $s$。</li>
+<li>判断适用的分布，如连续数据用正态，计数数据用二项或泊松。</li>
+<li>正向问题（求概率）用 <code>cdf</code>/<code>sf</code>，反向问题（求临界值）用 <code>ppf</code>。</li>
+<li>用手算或经验法则做数量级检验，确认 <code>ddof</code> 等参数设置无误。</li>
+<pre class="mermaid">flowchart LR
+A[原始数据] --> B[pandas 描述统计]
+B --> C[估计均值与标准差]
+C --> D[选择 scipy.stats 分布]
+D --> E{求什么?}
+E -->|概率| F[cdf / sf]
+E -->|临界值| G[ppf]</pre>
+<p><em>图:从原始数据到概率结论的分析流程。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

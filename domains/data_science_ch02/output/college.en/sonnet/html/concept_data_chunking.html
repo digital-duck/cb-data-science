@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Chunking | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-chunking">Data Chunking</h2>
+<p>Data chunking is the practice of dividing a large dataset or data stream into smaller, fixed- or variable-size units — called chunks — so that no single operation must hold, transmit, or process the entire dataset at once. This is a practical systems concept: the "correctness" of a chunking scheme is judged by whether it respects memory limits, preserves data integrity across boundaries, and keeps processing efficient, not by a mathematical proof.</p>
+<p>Consider a 50 GB CSV file that must be loaded into a machine with 8 GB of RAM. Reading the whole file with <code>pandas.read_csv()</code> will exhaust memory and crash the process. Instead, you read it in chunks:</p>
+<pre><code>import pandas as pd
+
+total_rows = 0
+for chunk in pd.read_csv("large_file.csv", chunksize=100_000):
+    total_rows += len(chunk)
+    # process chunk, e.g., filter, aggregate, write to database
+    chunk.to_sql("staging_table", con=engine, if_exists="append")
+
+print(total_rows)</code></pre>
+<p>Each chunk (100,000 rows here) is loaded, transformed, and released before the next one arrives, so peak memory usage stays bounded regardless of the file's total size.</p>
+<p>Chunk size is a genuine engineering trade-off, not an arbitrary knob. Small chunks minimize memory footprint but increase overhead (more I/O calls, more function-call and network round-trip costs). Large chunks reduce overhead but risk memory pressure and longer recovery time if one chunk fails mid-process. A common problem-solving heuristic: pick a chunk size such that one chunk comfortably fits within a target fraction (e.g., 10–20%) of available RAM, then benchmark and adjust based on measured throughput.</p>
+<p>Chunking also matters when boundaries carry meaning. If you split a text corpus for a search index, cutting mid-sentence can destroy semantic units; a common fix is to chunk by paragraph or sentence with a small <strong>overlap</strong> (e.g., the last 50 words of chunk $n$ repeated at the start of chunk $n+1$) so that context spanning a boundary is not lost. In distributed systems, chunking additionally enables parallelism: independent chunks can be processed on separate workers simultaneously, which is why frameworks like Hadoop, Spark, and cloud object storage (e.g., splitting files into 64–128 MB blocks) chunk data by default — chunk boundaries double as units of parallel work distribution.</p>
+<pre class="mermaid">flowchart LR
+    A[Large Dataset] --> B[Split into Chunks]
+    B --> C1[Chunk 1]
+    B --> C2[Chunk 2]
+    B --> C3[Chunk 3]
+    C1 --> D[Process / Load]
+    C2 --> D
+    C3 --> D
+    D --> E[Aggregated Result]</pre>
+<p><em>A large dataset is split into chunks, processed independently (in sequence or in parallel), and combined into a final result.</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

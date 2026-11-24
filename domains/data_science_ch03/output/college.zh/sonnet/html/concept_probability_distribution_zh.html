@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability Distribution | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="概率分布">概率分布</h2>
+<p><strong>定义。</strong> 设 $X$ 是一个随机变量,它的<strong>概率分布</strong>(probability distribution)描述了 $X$ 取各个可能值的概率如何分配。分布必须满足两条公理性要求:</p>
+<li>非负性:对任意取值,概率 $\ge 0$;</li>
+<li>归一性:全部概率之和(或积分)等于 $1$。</li>
+<p><strong>离散型</strong>随机变量用概率质量函数(PMF)$p(x)=P(X=x)$ 描述,要求</p>
+$$\sum_x p(x)=1.$$
+<p><strong>连续型</strong>随机变量用概率密度函数(PDF)$f(x)$ 描述,单点概率为 $0$,区间概率由积分给出:</p>
+$$P(a\le X\le b)=\int_a^b f(x)\,dx,\qquad \int_{-\infty}^{\infty} f(x)\,dx=1.$$
+<p>两类变量都可用<strong>累积分布函数</strong>(CDF)统一表示:$F(x)=P(X\le x)$,它单调不减,且 $F(-\infty)=0$,$F(+\infty)=1$。</p>
+<p>分布的两个核心特征量是期望与方差:</p>
+$$E[X]=\sum_x x\,p(x),\qquad \mathrm{Var}(X)=E\big[(X-E[X])^2\big].$$
+<p>连续情形把求和换成积分。</p>
+<p><strong>例题。</strong> 掷一枚公平骰子两次,令 $X$ 为两次点数之和。$X$ 取 $2,3,\dots,12$,其 PMF 为</p>
+$$p(k)=\frac{6-|k-7|}{36},\quad k=2,\dots,12.$$
+<p>检验归一性:各值的分子依次为 $1,2,3,4,5,6,5,4,3,2,1$,总和 $36$,故 $\sum p(k)=36/36=1$。由对称性,$E[X]=7$。</p>
+<p>求 $P(X\ge 10)$:</p>
+$$P(X\ge 10)=p(10)+p(11)+p(12)=\frac{3+2+1}{36}=\frac{1}{6}.$$
+<p><strong>问题求解应用。</strong> 某工厂零件长度近似服从正态分布 $X\sim N(\mu=50,\ \sigma^2=4)$(单位:mm),规格要求为 $48\le X\le 54$。求合格率。</p>
+<p>先标准化,令 $Z=\dfrac{X-\mu}{\sigma}$,则 $Z\sim N(0,1)$:</p>
+$$P(48\le X\le 54)=P\!\left(\frac{48-50}{2}\le Z\le\frac{54-50}{2}\right)=P(-1\le Z\le 2)=\Phi(2)-\Phi(-1).$$
+<p>查标准正态表:$\Phi(2)\approx 0.9772$,$\Phi(-1)\approx 0.1587$,所以合格率约为</p>
+$$0.9772-0.1587=0.8185,$$
+<p>即约 $81.9\%$。</p>
+<p><strong>解题套路。</strong> (1)判断变量是离散还是连续,选择 PMF 或 PDF;(2)用归一性检验或确定未知参数;(3)把所求事件写成求和、积分或 CDF 之差;(4)需要时用期望与方差概括分布的"中心"与"离散程度"。</p>
+<p><strong>常见误区。</strong> 连续分布中 $f(x)$ 的值不是概率,可以大于 $1$;只有它在区间上的积分才是概率。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

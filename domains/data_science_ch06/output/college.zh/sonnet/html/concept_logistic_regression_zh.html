@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logistic Regression | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="逻辑回归-logistic-regression">逻辑回归(Logistic Regression)</h2>
+<h3 id="定义">定义</h3>
+<p>逻辑回归是一种用于<strong>二分类</strong>的预测模型。它不直接预测类别,而是预测样本属于正类($y=1$)的概率。核心思想是:假设<strong>对数几率(log-odds)是特征的线性函数</strong>:</p>
+$$\ln\frac{p}{1-p} = z = \mathbf{w}^\top \mathbf{x} + b$$
+<p>解出 $p$,得到 Sigmoid 函数:</p>
+$$p = P(y=1\mid \mathbf{x}) = \sigma(z) = \frac{1}{1+e^{-z}}$$
+<p>Sigmoid 把任意实数压缩到 $(0,1)$ 之间。当 $z=0$ 时 $p=0.5$,这就是决策边界;通常取 $p\ge 0.5$ 预测为正类。</p>
+<p>参数通过<strong>极大似然估计</strong>获得,等价于最小化交叉熵损失:</p>
+$$J(\mathbf{w},b) = -\frac{1}{m}\sum_{i=1}^{m}\Big[y_i\ln p_i + (1-y_i)\ln(1-p_i)\Big]$$
+<p>该损失是凸函数,可用梯度下降求解,其梯度形式简洁:</p>
+$$\frac{\partial J}{\partial \mathbf{w}} = \frac{1}{m}\sum_{i=1}^{m}(p_i - y_i)\,\mathbf{x}_i$$
+<h3 id="例题">例题</h3>
+<p>某学生每周学习时长 $x$(小时)与是否通过考试 $y$ 之间,拟合得到:$z = -4 + 0.8x$。</p>
+<li>学习 $x=5$ 小时:$z = -4+4 = 0$,所以 $p = 0.5$,恰在决策边界上。</li>
+<li>学习 $x=8$ 小时:$z = 2.4$,$p = \dfrac{1}{1+e^{-2.4}} \approx 0.917$,预测通过。</li>
+<li>解释系数:$w=0.8$ 表示每多学 1 小时,对数几率增加 $0.8$,即几率(odds)乘以 $e^{0.8}\approx 2.23$。</li>
+<p>注意:概率并不是随 $x$ 线性增长的,而几率的<strong>对数</strong>才是线性的。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 一封邮件有两个特征:可疑词数量 $x_1$ 和链接数 $x_2$。模型为 $z = -3 + 0.5x_1 + 1.0x_2$。若邮件含 4 个可疑词、1 个链接,它是垃圾邮件的概率是多少?若要求概率超过 $0.9$ 才拦截,应如何判断?</p>
+<p><strong>解:</strong></p>
+<li>计算 $z = -3 + 0.5(4) + 1.0(1) = 0$,得 $p=0.5$,不满足拦截阈值。</li>
+<li>概率超过 $0.9$ 等价于 $z > \ln\frac{0.9}{0.1} = \ln 9 \approx 2.20$。因此只需检验 $z$,无需每次计算 Sigmoid。</li>
+<li>若该邮件改为 6 个可疑词、2 个链接:$z = -3+3+2 = 2$,$p\approx 0.881<0.9$,仍不拦截。</li>
+<p><strong>要点:</strong></p>
+<li>阈值可根据代价调整:误拦正常邮件代价高时,应提高阈值。</li>
+<li>决策边界 $\mathbf{w}^\top\mathbf{x}+b=0$ 是特征空间中的超平面,因此逻辑回归只能处理<strong>线性可分</strong>(或近似线性可分)的问题;非线性边界需要构造多项式特征等。</li>
+<li>若数据完全线性可分,最大似然会使权重趋于无穷,实践中需加入 $L_2$ 正则项 $\frac{\lambda}{2}\|\mathbf{w}\|^2$。</li>
+<pre class="mermaid">flowchart LR
+    A[输入特征 x] --> B[线性组合 z = w·x + b]
+    B --> C[Sigmoid 函数 σ]
+    C --> D[概率 p]
+    D --> E{p 大于等于阈值?}
+    E -->|是| F[预测正类]
+    E -->|否| G[预测负类]</pre>
+<p><em>图:逻辑回归的预测流程:特征经线性组合得到对数几率,经 Sigmoid 转为概率,再与阈值比较得到类别。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternative Hypothesis | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="备择假设">备择假设</h2>
+<p><strong>定义。</strong> 在假设检验中,<strong>备择假设</strong>(alternative hypothesis,记作 $H_a$ 或 $H_1$)是与原假设 $H_0$ 互补的陈述:它断言总体参数不等于(或大于、小于)原假设所设定的值。原假设代表"没有效应、没有差异"的现状;备择假设则代表研究者希望用数据加以支持的结论。只有当样本证据足够强,以致在 $H_0$ 成立时极不可能出现,我们才拒绝 $H_0$,转而接受 $H_a$。</p>
+<p>以总体均值 $\mu$ 和原假设值 $\mu_0$ 为例,备择假设有三种形式:</p>
+$$
+\begin{aligned}
+&\text{双侧:} && H_a:\ \mu \neq \mu_0 \\
+&\text{右侧:} && H_a:\ \mu > \mu_0 \\
+&\text{左侧:} && H_a:\ \mu < \mu_0
+\end{aligned}
+$$
+<p>选择哪一种,取决于<strong>研究问题本身</strong>,而且必须在看到数据<strong>之前</strong>确定。若只关心"是否有变化",用双侧;若只关心"是否提高"或"是否降低",用单侧。</p>
+<p><strong>例题。</strong> 某饮料厂声称每瓶容量均值为 $500$ mL。消费者协会怀疑瓶装量不足,随机抽取 $n=36$ 瓶,测得样本均值 $\bar{x}=497$ mL,已知总体标准差 $\sigma=9$ mL。检验显著性水平 $\alpha=0.05$。</p>
+<li>建立假设。怀疑"不足",所以是左侧检验:</li>
+$$H_0:\ \mu = 500,\qquad H_a:\ \mu < 500$$
+<li>计算检验统计量:</li>
+$$z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}=\frac{497-500}{9/\sqrt{36}}=\frac{-3}{1.5}=-2$$
+<li>求 $p$ 值。因为 $H_a$ 指向左侧,只看左尾:</li>
+$$p=P(Z\le -2)\approx 0.0228$$
+<li>决策:$p<0.05$,拒绝 $H_0$。有充分证据表明平均容量低于 $500$ mL。</li>
+<p><strong>问题求解应用。</strong> 如果同样的数据改用双侧检验($H_a:\mu\neq 500$),则 $p=2\times0.0228=0.0456$。此时 $p$ 仍小于 $0.05$,但已非常接近临界值;若 $\alpha=0.04$,结论就会翻转。这说明<strong>备择假设的方向直接改变 $p$ 值与结论</strong>。</p>
+<p>解题时可按下列步骤识别 $H_a$:</p>
+<li>找关键词:"不同于""有变化"→ $\neq$;"高于""提高""超过"→ $>$;"低于""减少""不足"→ $<$。</li>
+<li>等号($=$、$\le$、$\ge$)永远属于 $H_0$;$H_a$ 只使用 $\neq,>,<$。</li>
+<li>不要在看到 $\bar{x}$ 后再挑选方向,否则等于偷偷把 $\alpha$ 放大,使结论失去可信度。</li>
+<p><strong>常见误区。</strong> 未能拒绝 $H_0$ 并不等于"证明 $H_0$ 为真",只是证据不足以支持 $H_a$;反之,拒绝 $H_0$ 也不意味着 $H_a$ 的效应一定很大,仅表示它在统计上可被检测到。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Multiclass Classification | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="二元与多类分类">二元与多类分类</h2>
+<p><strong>定义。</strong> 分类是预测离散标签的监督学习任务。给定特征向量 $\mathbf{x}\in\mathbb{R}^d$，模型输出类别 $y$。</p>
+<li><strong>二元分类（binary）</strong>：$y\in\{0,1\}$，例如邮件是否为垃圾邮件。</li>
+<li><strong>多类分类（multiclass）</strong>：$y\in\{1,2,\dots,K\}$，$K>2$，例如手写数字识别（$K=10$）。</li>
+<p>注意，多类分类中每个样本只属于<strong>一个</strong>类别。如果一个样本可同时带有多个标签，那是多标签分类，不属于本节讨论范围。</p>
+<p><strong>二元情形：逻辑回归。</strong> 模型先计算得分 $z=\mathbf{w}^\top\mathbf{x}+b$，再用 sigmoid 函数转换为概率：</p>
+$$P(y=1\mid\mathbf{x})=\sigma(z)=\frac{1}{1+e^{-z}},\qquad P(y=0\mid\mathbf{x})=1-\sigma(z).$$
+<p>当 $\sigma(z)\ge 0.5$（即 $z\ge0$）时预测为 1。决策边界 $\mathbf{w}^\top\mathbf{x}+b=0$ 是一条直线（或超平面）。</p>
+<p><strong>多类情形：softmax。</strong> 对每个类别 $k$ 设一个得分 $z_k=\mathbf{w}_k^\top\mathbf{x}+b_k$，然后归一化：</p>
+$$P(y=k\mid\mathbf{x})=\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}.$$
+<p>各类概率非负且总和为 1。预测取概率最大的类别。当 $K=2$ 时，softmax 退化为 sigmoid，所以二元分类是多类分类的特例。</p>
+<p><strong>训练目标：交叉熵损失。</strong> 对真实类别 $y$，</p>
+$$L=-\log P(y\mid\mathbf{x}).$$
+<p>二元时即 $-[y\log p+(1-y)\log(1-p)]$。</p>
+<p><strong>例题。</strong> 某三类问题（猫、狗、鸟）中，模型对一张图片给出得分 $\mathbf{z}=(2.0,\,1.0,\,0.1)$。求各类概率和损失（真实类别为猫）。</p>
+<p>先算指数：$e^{2.0}\approx7.39$，$e^{1.0}\approx2.72$，$e^{0.1}\approx1.11$，和为 $11.22$。于是</p>
+$$P=(0.659,\;0.242,\;0.099).$$
+<p>预测为"猫"，正确。损失 $L=-\ln 0.659\approx0.417$。若得分变为 $(0.1,1.0,2.0)$，同一张图会被判为"鸟"，此时 $P(\text{猫})\approx0.099$，$L=-\ln0.099\approx2.31$，损失明显变大。</p>
+<p><strong>问题求解应用。</strong> 面对实际问题，可以按以下步骤处理：</p>
+<li><strong>确定 $K$</strong>：数一数互斥的类别数。$K=2$ 用 sigmoid，$K>2$ 用 softmax。</li>
+<li><strong>选择评价指标</strong>：类别不平衡时（如欺诈检测中 99% 为正常），准确率会误导人。此时应看精确率 $\frac{TP}{TP+FP}$ 和召回率 $\frac{TP}{TP+FN}$。多类问题还要看混淆矩阵，找出哪些类别容易混淆。</li>
+<li><strong>没有原生多类支持时</strong>：可用 <em>一对多</em>（one-vs-rest，训练 $K$ 个二元分类器）或 <em>一对一</em>（one-vs-one，训练 $\binom{K}{2}$ 个分类器）。</li>
+<pre class="mermaid">flowchart TD
+    A[输入特征 x] --> B{类别数 K}
+    B -->|K = 2| C[sigmoid 输出 P_y=1]
+    B -->|K > 2| D[softmax 输出 K 个概率]
+    C --> E[阈值 0.5 判定]
+    D --> F[取最大概率的类别]</pre>
+<p><em>图：按类别数选择输出层。二元用 sigmoid 加阈值，多类用 softmax 取最大值。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

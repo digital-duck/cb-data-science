@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Privacy | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据隐私">数据隐私</h2>
+<p><strong>定义。</strong> 数据隐私(data privacy)是指:个人数据在被收集、处理和存储的全过程中,既受到安全保护,又尊重数据主体的权利与偏好。它包含三个层面:<strong>安全性</strong>(防止未经授权的访问)、<strong>合规性</strong>(遵守 GDPR、CCPA 等法规)和<strong>自主性</strong>(个人可以知情、同意、查询、更正和删除自己的数据)。需要注意:安全不等于隐私。一家公司可以把数据保管得很安全,却仍然在用户不知情的情况下滥用这些数据。</p>
+<p><strong>核心原则。</strong> 实践中通常遵循以下原则:</p>
+<li><strong>数据最小化</strong>:只收集完成目的所必需的数据。</li>
+<li><strong>目的限定</strong>:数据只能用于收集时声明的目的。</li>
+<li><strong>知情同意</strong>:用户明确同意后才能处理其数据。</li>
+<li><strong>存储限制</strong>:超过必要期限就删除数据。</li>
+<p><strong>量化隐私:$k$-匿名。</strong> 隐私也可以度量。若一个发布的数据表中,每条记录在其"准标识符"(如邮编、年龄、性别)上,都与至少另外 $k-1$ 条记录完全相同,则称该表满足 $k$-匿名。此时攻击者仅凭准标识符,重识别某个人的概率至多为</p>
+$$P(\text{重识别}) \le \frac{1}{k}.$$
+<p><strong>例题。</strong> 某医院发布如下数据(邮编、年龄、疾病):</p>
+<p>| 邮编 | 年龄 | 疾病 | |---|---|---| | 13053 | 28 | 心脏病 | | 13068 | 29 | 病毒感染 | | 13068 | 21 | 病毒感染 | | 13053 | 23 | 心脏病 |</p>
+<p>问:该表满足几-匿名?如何改进?</p>
+<p><em>解:</em> 准标识符组合(邮编, 年龄)的四条记录各不相同,每组大小为 1,所以只满足 $k=1$,即没有任何匿名保护。若知道邻居住在 13053 且 28 岁,就能确定其患有心脏病。</p>
+<p><strong>泛化处理。</strong> 把邮编改为前三位加星号,把年龄改为区间:</p>
+<p>| 邮编 | 年龄 | 疾病 | |---|---|---| | 130\<em>\</em> | 20–29 | 心脏病 | | 130\<em>\</em> | 20–29 | 病毒感染 | | 130\<em>\</em> | 20–29 | 病毒感染 | | 130\<em>\</em> | 20–29 | 心脏病 |</p>
+<p>现在四条记录属于同一个等价类,$k=4$,重识别概率至多为 $\frac{1}{4}=25\%$。代价是信息精度下降,这就是<strong>隐私与数据效用之间的权衡</strong>。</p>
+<p><strong>问题求解应用。</strong> 一个更强的数学框架是<strong>差分隐私</strong>。若随机算法 $\mathcal{M}$ 对任意仅相差一条记录的两个数据集 $D, D'$ 以及任意输出集合 $S$,都满足</p>
+$$\Pr[\mathcal{M}(D)\in S] \le e^{\varepsilon}\,\Pr[\mathcal{M}(D')\in S],$$
+<p>则称它满足 $\varepsilon$-差分隐私。$\varepsilon$ 越小,隐私保护越强。</p>
+<p>例如发布"患心脏病人数"这个计数查询。它的敏感度为 $\Delta f = 1$(增删一人最多使结果变化 1)。加入拉普拉斯噪声 $\text{Lap}(\Delta f/\varepsilon)$ 即可满足 $\varepsilon$-差分隐私。取 $\varepsilon = 0.5$ 时,噪声尺度为 $1/0.5 = 2$。真实值为 2,发布值可能是 1.3 或 3.8,但无法据此判断某个具体的人是否在数据集中。</p>
+<p><strong>小结。</strong> 数据隐私既是技术问题,也是权利问题。解决它需要做到:先最小化收集,再用泛化或噪声等手段保护,最后用 $k$ 或 $\varepsilon$ 等指标量化检验。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

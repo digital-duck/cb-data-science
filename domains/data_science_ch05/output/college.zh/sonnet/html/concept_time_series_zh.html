@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Series | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="时间序列">时间序列</h2>
+<p><strong>定义。</strong> 时间序列(time series)是对同一变量按照规则的时间间隔(如每日、每月、每年)依次采集并排列而成的一组数值测量,记作 $\{y_t\}_{t=1}^{n}$。由于观测值按时间排序,相邻数据点通常<strong>不相互独立</strong>,这正是时间序列分析区别于一般统计分析的根本原因。</p>
+<p>经典分解模型把序列拆成四个成分:</p>
+<li>趋势 $T_t$:长期上升或下降的走向;</li>
+<li>季节性 $S_t$:以固定周期 $m$ 重复的波动;</li>
+<li>周期性 $C_t$:无固定周期的长期起伏;</li>
+<li>随机噪声 $\varepsilon_t$:不可预测的残差。</li>
+<p>加法模型为</p>
+$$y_t = T_t + S_t + \varepsilon_t,$$
+<p>当季节波动幅度随水平增大时,改用乘法模型 $y_t = T_t \cdot S_t \cdot \varepsilon_t$。</p>
+<p><strong>常用工具:移动平均。</strong> 取窗口长度 $k$,平滑后的序列为</p>
+$$\hat{T}_t = \frac{1}{k}\sum_{i=0}^{k-1} y_{t-i}.$$
+<p>它可以抑制噪声,凸显趋势。</p>
+<p><strong>例题。</strong> 某小店连续 6 个月的销售额(单位:千元)为:</p>
+$$12,\ 14,\ 13,\ 17,\ 18,\ 20.$$
+<p>求窗口 $k=3$ 的移动平均,并预测第 7 个月。</p>
+<p><em>解:</em></p>
+$$\hat{T}_3=\frac{12+14+13}{3}=13,\quad \hat{T}_4=\frac{14+13+17}{3}=14.67,$$
+$$\hat{T}_5=\frac{13+17+18}{3}=16,\quad \hat{T}_6=\frac{17+18+20}{3}=18.33.$$
+<p>平滑值从 13 稳步升到 18.33,说明存在上升趋势。最简单的预测是用最近一个移动平均值:$\hat{y}_7\approx 18.33$。若考虑趋势,平均每步增长 $(18.33-13)/3\approx 1.78$,则可把预测修正为约 $20.1$。</p>
+<p><strong>问题求解应用。</strong> 面对一个实际的时间序列,可按以下步骤处理:</p>
+<li><strong>作图</strong>:先画出序列图,观察趋势、季节性与异常点。</li>
+<li><strong>去趋势/去季节</strong>:用差分 $\nabla y_t = y_t - y_{t-1}$ 消除趋势,用 $y_t - y_{t-m}$ 消除周期为 $m$ 的季节性。</li>
+<li><strong>检验相关性</strong>:计算自相关系数</li>
+$$r_h=\frac{\sum_{t=h+1}^{n}(y_t-\bar y)(y_{t-h}-\bar y)}{\sum_{t=1}^{n}(y_t-\bar y)^2},$$
+<p>它衡量序列与其滞后 $h$ 期的自身的相关程度。若 $r_h$ 很大,说明过去的值对预测未来有价值。</p>
+<li><strong>建模与检验</strong>:建立预测模型(如移动平均、指数平滑、自回归模型 AR),并用<strong>按时间划分</strong>的数据检验:用前面的数据训练,用后面的数据评估,切勿随机打乱顺序,否则会泄露未来信息。</li>
+<p>对上例做一阶差分,得 $2,-1,4,1,2$,均值为 $1.6>0$,同样印证了上升趋势,也与前面算出的每步约 1.78 的增长相吻合。</p>
+<p><strong>要点。</strong> 时间序列的核心是"顺序有意义":先分解出趋势、季节与噪声,再利用自相关做预测,并始终用时间顺序检验模型。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

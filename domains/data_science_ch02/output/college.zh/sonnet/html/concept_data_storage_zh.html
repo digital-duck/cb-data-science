@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Storage | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="data-storage">Data Storage</h2>
+<p>数据存储指将处理后的数据以结构化、可复用的格式持久化保存,以便后续分析、共享或建模使用。在数据分析流程中,原始数据经过清洗、转换、特征工程等步骤后,若不加以保存,每次分析都需要重新执行整个处理流程,浪费计算资源与时间。因此,选择合适的存储格式并正确保存数据,是数据分析工作流中承上启下的关键环节。</p>
+<p>常见的存储格式包括 CSV(逗号分隔值)、JSON、Parquet 和数据库表。CSV 格式简单、通用性强,几乎所有数据分析工具都能读取,适合中小规模的表格数据;但它不保存数据类型信息,且不支持嵌套结构。Parquet 是一种列式存储格式,压缩率高、读取速度快,适合大规模数据集与分布式计算场景。选择格式时需权衡:文件大小、读写速度、跨平台兼容性,以及是否需要保留数据类型(如日期、分类变量)。</p>
+<p><strong>实例演示</strong>:假设我们用 pandas 处理了一份销售数据,清洗后得到一个 DataFrame,现在需要保存以便下次直接调用:</p>
+<pre><code>import pandas as pd
+
+# 假设 df 是清洗后的销售数据
+df = pd.DataFrame({
+    "日期": pd.to_datetime(["2026-01-01", "2026-01-02"]),
+    "销售额": [1200.5, 980.0],
+    "地区": ["华东", "华南"]
+})
+
+# 保存为 CSV,不保存索引列
+df.to_csv("sales_clean.csv", index=False)
+
+# 读取时需重新指定日期列类型
+df_loaded = pd.read_csv("sales_clean.csv", parse_dates=["日期"])</code></pre>
+<p>注意 <code>index=False</code> 避免多余的索引列被写入文件;而读取 CSV 时,日期列会被还原为字符串,需要通过 <code>parse_dates</code> 参数显式转换,这正是 CSV 格式"不保存数据类型"这一局限的体现。</p>
+<p><strong>问题解决应用</strong>:在实际项目中,若数据集包含大量分类变量或需要长期归档且频繁读取,应优先选用 Parquet(<code>df.to_parquet("sales.parquet")</code>),因为它能原生保留数据类型并大幅缩短读取时间;若仅是临时导出给非技术人员用 Excel 打开查看,CSV 则是更合适的选择。判断存储格式的原则是:先明确"谁在什么场景下会再次使用这份数据",再反推所需的格式特性。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

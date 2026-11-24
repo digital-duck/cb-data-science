@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seasonal Component | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="季节性成分">季节性成分</h2>
+<p><strong>定义。</strong> 季节性成分(seasonal component)是时间序列中按固定周期重复出现的变化,例如每年同一月份的销量高峰,或每周同一天的客流低谷。它的关键特征是<strong>周期长度 $m$ 固定且已知</strong>(月度数据 $m=12$,按周的日数据 $m=7$)。这一点使它区别于周期不固定的商业周期,也区别于长期趋势。</p>
+<p>经典的加法分解模型把观测值写成:</p>
+$$y_t = T_t + S_t + R_t,\qquad S_{t+m}=S_t,\qquad \sum_{j=1}^{m} S_j = 0$$
+<p>其中 $T_t$ 是趋势,$S_t$ 是季节性成分,$R_t$ 是随机残差。约束 $\sum S_j=0$ 保证季节效应只表示"相对于平均水平的上下波动"。若季节波动幅度随水平增大而增大,则改用乘法模型 $y_t=T_t\cdot S_t\cdot R_t$,此时约束为 $\sum S_j = m$。</p>
+<p><strong>例题。</strong> 某咖啡店连续两周的日销量(杯)如下:</p>
+<p>| 日 | 一 | 二 | 三 | 四 | 五 | 六 | 日 | |---|---|---|---|---|---|---|---| | 第1周 | 80 | 84 | 88 | 90 | 110 | 130 | 108 | | 第2周 | 84 | 88 | 90 | 94 | 114 | 134 | 112 |</p>
+<p>估计"周六"的季节指数(加法模型,$m=7$)。</p>
+<li>估计趋势:第1周均值为 $\frac{690}{7}\approx 98.6$,第2周均值为 $\frac{716}{7}\approx 102.3$,总均值约 $100.4$。</li>
+<li>去趋势:周六的两个观测值与各周均值之差为 $130-98.6=31.4$ 和 $134-102.3=31.7$。</li>
+<li>取平均:$\hat S_{\text{六}}\approx 31.6$。</li>
+<p>即周六平均比当周水平高约 32 杯。用同样方法可得周一约 $-17.6$,周五约 $+12.5$。</p>
+<p><strong>问题求解应用。</strong> 季节性成分有两个核心用途:</p>
+<li><strong>季节调整。</strong> 计算 $y_t - \hat S_t$ 可去掉周期性影响,从而判断变化是"真实增长"还是"正常的季节波动"。例如,12 月零售额上升 20% 并不说明业务好转,因为往年 12 月本来就比平均水平高约 20%。</li>
+<li><strong>预测。</strong> 若趋势预测为 $\hat T_{15}=104$(下周一),则预测值为 $\hat y_{15}=104+(-17.6)\approx 86.4$ 杯。</li>
+<p>在 Python 中可用 <code>statsmodels</code> 一步完成分解:</p>
+<pre><code>from statsmodels.tsa.seasonal import seasonal_decompose
+result = seasonal_decompose(series, model="additive", period=7)
+print(result.seasonal[:7])   # 7 个季节指数</code></pre>
+<p><strong>检验要点。</strong> 判断一个序列是否有季节性,可画季节子序列图,或检查自相关函数(ACF)在滞后 $m, 2m, \dots$ 处是否出现明显峰值。若峰值存在,在建模时就必须显式处理季节性成分。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

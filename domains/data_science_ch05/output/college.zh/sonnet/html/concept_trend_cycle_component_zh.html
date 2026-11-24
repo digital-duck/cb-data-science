@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trend Cycle Component | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="趋势-循环成分">趋势-循环成分</h2>
+<p><strong>定义。</strong> 时间序列通常可分解为三类成分:趋势、季节和随机波动。<strong>趋势-循环成分</strong>(trend-cycle component,记作 $T_t$)把<em>长期趋势</em>与<em>循环波动</em>合并为一项。趋势指序列的长期上升或下降方向;循环指围绕趋势、持续时间不固定(通常多于一年)的起伏,例如经济的扩张与衰退。季节性的周期长度固定(如 12 个月),可以直接建模预测;而循环的周期长短和幅度都不规则,难以与趋势可靠分离,因此实践中把二者合并估计。</p>
+<p>常用的加法分解模型为</p>
+$$y_t = T_t + S_t + R_t,$$
+<p>其中 $S_t$ 为季节成分,$R_t$ 为余项。若先去除季节成分,则 $T_t \approx y_t - S_t - R_t$,而估计 $T_t$ 的经典方法是<strong>移动平均</strong>。</p>
+<p><strong>例题。</strong> 某店铺的季度销售额(万元)为:</p>
+<p>| 季度 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | |---|---|---|---|---|---|---|---| | $y_t$ | 20 | 30 | 26 | 24 | 24 | 34 | 30 |</p>
+<p>由于季节周期为 $m=4$(偶数),使用 $2\times4$ 移动平均:</p>
+$$\hat T_t = \frac{1}{4}\left(\tfrac12 y_{t-2} + y_{t-1} + y_t + y_{t+1} + \tfrac12 y_{t+2}\right).$$
+<p>计算 $t=3$:</p>
+$$\hat T_3 = \frac{1}{4}\left(\tfrac12\cdot 20 + 30 + 26 + 24 + \tfrac12\cdot 24\right) = \frac{102}{4} = 25.5.$$
+<p>计算 $t=4$:</p>
+$$\hat T_4 = \frac{1}{4}\left(\tfrac12\cdot 30 + 26 + 24 + 24 + \tfrac12\cdot 34\right) = \frac{106}{4} = 26.5.$$
+<p>计算 $t=5$:</p>
+$$\hat T_5 = \frac{1}{4}\left(\tfrac12\cdot 26 + 24 + 24 + 34 + \tfrac12\cdot 30\right) = \frac{110}{4} = 27.5.$$
+<p>可见趋势-循环成分每季度约增加 1 万元。移动平均恰好覆盖一个完整季节周期,因此季节波动在平均中相互抵消,留下的就是平滑的趋势-循环。注意首尾各 $m/2=2$ 个时点无法估计。</p>
+<p><strong>问题求解应用。</strong> </p>
+<li><strong>去趋势并提取季节项。</strong> 计算 $y_t - \hat T_t$:$t=3$ 时为 $26-25.5=0.5$,$t=4$ 时为 $24-26.5=-2.5$,$t=5$ 时为 $24-27.5=-3.5$。对同一季度的多个年份取平均,即可得到季节指数 $S_t$。</li>
+<li><strong>判断预测难度。</strong> 季节项可按固定周期外推;但 $T_t$ 含循环,拐点时间无法预知。因此预测时通常只对趋势-循环作短期外推(如沿最近斜率 $+1$ 万元/季度延伸),并给出随预测期增长而变宽的预测区间。</li>
+<li><strong>选择窗口。</strong> 窗口越宽,曲线越平滑,但对拐点反应越迟钝;窗口过窄,则会把随机噪声 $R_t$ 误当作循环。</li>
+<p><strong>要点。</strong> 趋势-循环 $=$ 去除季节与噪声后剩下的“慢变化部分”。它回答“序列大致在往哪里走”,而不回答“下一次衰退何时到来”。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

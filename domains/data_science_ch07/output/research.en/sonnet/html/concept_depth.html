@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depth | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="depth">Depth</h2>
+<p><strong>Definition.</strong> Let $G = (V, E)$ be a directed acyclic graph (DAG) where each vertex $v \in V$ represents a concept and each directed edge $(u, v) \in E$ encodes the prerequisite relation "$u$ must precede $v$." The <em>depth</em> of a vertex $v$, written $d(v)$, is the length (number of edges) of the longest directed path from any source vertex (in-degree zero) to $v$:</p>
+$$d(v) = \max\bigl\{\,|P| : P \text{ is a directed path terminating at } v\bigr\},$$
+<p>where $|P|$ denotes edge-count and $d(v) = 0$ for all sources. Depth is the minimal number of prerequisite steps that must be traversed sequentially before $v$ is reachable, regardless of how other parts of the graph are studied in parallel.</p>
+<hr>
+<p><strong>Theorem (Topological Depth Computation).</strong> <em>Let $G = (V, E)$ be a DAG with $|V| = n$, $|E| = m$. The depth function $d : V \to \mathbb{Z}_{\geq 0}$ satisfies</em></p>
+$$d(v) = \begin{cases} 0 & \mathrm{in\text{-}deg}(v) = 0, \\ 1 + \max_{(u,v) \in E}\, d(u) & \text{otherwise,} \end{cases}$$
+<p><em>and is computable in $O(n + m)$ time.</em></p>
+<p><em>Proof.</em> Produce a topological ordering $\sigma = (v_1, \ldots, v_n)$ of $G$ via Kahn's algorithm or DFS postorder reversal (existence guaranteed by acyclicity; see Cormen et al.\ [CLRS], Ch.\ 22). By the topological property, every predecessor $u$ with $(u, v_i) \in E$ satisfies $u = v_j$ for some $j < i$, so $d(u)$ has already been assigned when $v_i$ is processed. A single forward pass over $\sigma$ evaluates the recurrence in $O(n + m)$ total work. $\blacksquare$</p>
+<p><strong>Corollary (Critical Path).</strong> The <em>diameter</em> $\Delta(G) = \max_{v \in V} d(v)$ is the length of the <em>critical path</em> — the minimum number of sequential learning steps required to reach the deepest concept in $G$, irrespective of any parallelism permitted by the graph structure. No curriculum respecting the prerequisite ordering can achieve the deepest concept in fewer than $\Delta(G)$ sequential steps.</p>
+<hr>
+<p><strong>Literature context.</strong> The critical-path interpretation is the direct knowledge-graph analogue of the <em>Critical Path Method</em> (Kelley & Walker, 1959) and longest-path scheduling (Garey & Johnson, 1979, problem SS14). In <em>knowledge space theory</em> (Doignon & Falmagne, 1999; Falmagne et al., 2013), the closest relative is the notion of a <em>fringe</em> — concepts on the boundary of a learner's current knowledge state — but per-concept depth is not explicitly derived from structural graph properties there. Applied learning-analytics work (Manouselis et al., 2011; Nabizadeh et al., 2020) uses depth as a scalar feature in recommender pipelines without establishing its distributional properties. Several questions remain open: (1) Given a learner knowledge state $K \subsetneq V$ and target concept $t$, what is the minimum-depth completion path from $K$ to $\{t\}$, and what structural properties of $G$ (tree-width, planarity, bounded degree) make this tractable in practice? (2) Is the depth distribution of real-world knowledge DAGs log-normal, as informally asserted in the learning-analytics literature, or does it depend systematically on domain?</p>
+<hr>
+<p><strong>Suggested investigation.</strong> Construct or extract a prerequisite DAG for a moderately complex domain — undergraduate linear algebra or real analysis provides a workable target of roughly 50–200 concepts. Compute $d(v)$ for every vertex and plot the full depth distribution. Then test two falsifiable claims: first, that depth predicts student time-to-mastery better than in-degree alone, measurable against a public dataset such as ASSISTments or OLI; second, that expert-authored graphs and NLP-extracted graphs for the same domain yield significantly different $\Delta(G)$ values and median depths, implying that structural properties are sensitive to graph provenance. As an extension, perturb the graph by removing or adding single prerequisite edges and measure the resulting change in $\Delta(G)$: this quantifies the <em>fragility</em> of the critical path to editorial choices.</p>
+<hr>
+<p><strong>Report-writing note.</strong> A write-up should establish: the formal depth definition and algorithm with stated complexity; graph provenance and any preprocessing decisions (cycle resolution, concept merging); the depth distribution as a histogram with mean, median, and maximum; regression results for student performance with depth and competing predictors; and an explicit verdict on each stated hypothesis. Attach the graph as a reproducible artifact in GraphML or JSON-LD so that results can be replicated or contested against alternative domain graphs.</p>
+  </main>
+  <footer class="spl-credit">Generated by SPL &middot; Powered by SPL.py</footer>
+</div>
+</body>
+</html>

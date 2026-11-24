@@ -1,0 +1,129 @@
+domain: data_science_ch9
+sources:
+  univariate_data:
+    label: Univariate Data
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  bivariate_data:
+    label: Bivariate Data
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+    - id: ch09_s9_5
+      title: 9.5 Multivariate and Network Data Visualization Using Python
+  quartiles:
+    label: Quartiles
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  median:
+    label: Median
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  bin:
+    label: Bin
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  discrete_random_variable:
+    label: Discrete Random Variable
+    sections:
+    - id: ch09_s9_3
+      title: 9.3 Graphing Probability Distributions
+  continuous_random_variable:
+    label: Continuous Random Variable
+    sections:
+    - id: ch09_s9_3
+      title: 9.3 Graphing Probability Distributions
+  geospatial_data:
+    label: Geospatial Data
+    sections:
+    - id: ch09_s9_4
+      title: 9.4 Geospatial and Heatmap Data Visualization Using Python
+  correlation_coefficient:
+    label: Correlation Coefficient (r)
+    sections:
+    - id: ch09_s9_5
+      title: 9.5 Multivariate and Network Data Visualization Using Python
+  five_number_summary:
+    label: Five-Number Summary
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  interquartile_range:
+    label: Interquartile Range (IQR)
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  boxplot:
+    label: Boxplot
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  histogram:
+    label: Histogram
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  pareto_chart:
+    label: Pareto Chart
+    sections:
+    - id: ch09_s9_1
+      title: 9.1 Encoding Univariate Data
+  time_series_graph:
+    label: Time Series Graph (Line Chart)
+    sections:
+    - id: ch09_s9_2
+      title: 9.2 Encoding Data That Change Over Time
+  binomial_distribution:
+    label: Binomial Distribution Graph
+    sections:
+    - id: ch09_s9_3
+      title: 9.3 Graphing Probability Distributions
+  poisson_distribution:
+    label: Poisson Distribution Graph
+    sections:
+    - id: ch09_s9_3
+      title: 9.3 Graphing Probability Distributions
+  normal_distribution_graph:
+    label: Normal Distribution Graph
+    sections:
+    - id: ch09_s9_3
+      title: 9.3 Graphing Probability Distributions
+  spatial_heatmap:
+    label: Spatial Heatmap
+    sections:
+    - id: ch09_s9_4
+      title: 9.4 Geospatial and Heatmap Data Visualization Using Python
+  grid_heatmap:
+    label: Grid Heatmap
+    sections:
+    - id: ch09_s9_4
+      title: 9.4 Geospatial and Heatmap Data Visualization Using Python
+  choropleth_graph:
+    label: Choropleth Graph
+    sections:
+    - id: ch09_s9_4
+      title: 9.4 Geospatial and Heatmap Data Visualization Using Python
+  gis_mapping:
+    label: Geospatial Information System (GIS) Mapping
+    sections:
+    - id: ch09_s9_4
+      title: 9.4 Geospatial and Heatmap Data Visualization Using Python
+  scatterplot_color_encoding:
+    label: Scatterplot with Color Encoding
+    sections:
+    - id: ch09_s9_5
+      title: 9.5 Multivariate and Network Data Visualization Using Python
+  correlation_heatmap:
+    label: Correlation Heatmap
+    sections:
+    - id: ch09_s9_5
+      title: 9.5 Multivariate and Network Data Visualization Using Python
+  three_d_visualization:
+    label: 3D Visualization
+    sections:
+    - id: ch09_s9_5
+      title: 9.5 Multivariate and Network Data Visualization Using Python

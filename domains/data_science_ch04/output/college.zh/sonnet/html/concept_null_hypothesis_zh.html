@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Null Hypothesis | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="零假设-null-hypothesis">零假设(Null Hypothesis)</h2>
+<p><strong>定义。</strong> 零假设记作 $H_0$,是关于总体的一个"无效应、无变化"的陈述,它断言某个总体参数恰好等于一个特定值:</p>
+$$H_0:\ \theta = \theta_0$$
+<p>其中 $\theta$ 可以是总体均值 $\mu$、比例 $p$ 等。与之相对的是备择假设 $H_a$,它表示"确有效应"(如 $\theta \neq \theta_0$、$\theta > \theta_0$ 或 $\theta < \theta_0$)。</p>
+<p>假设检验的逻辑类似于"无罪推定":先假定 $H_0$ 成立,再检验样本数据与这一假定是否严重矛盾。若矛盾足够大,我们<strong>拒绝</strong> $H_0$;若不够大,我们只能说<strong>没有足够证据拒绝</strong> $H_0$,而不能说"证明了 $H_0$ 为真"。</p>
+<p><strong>为什么设成"等于"?</strong> 因为只有给定一个具体的参数值,我们才能算出检验统计量的抽样分布,从而计算"如果 $H_0$ 为真,得到当前这样极端的数据的概率",即 $P$ 值。</p>
+<p><strong>例题。</strong> 某饮料厂声称每瓶净含量为 $500$ mL。质检员怀疑装填不足,随机抽取 $n=36$ 瓶,测得样本均值 $\bar{x}=497$ mL,已知 $\sigma=9$ mL。</p>
+<li>建立假设:</li>
+$$H_0:\ \mu = 500,\qquad H_a:\ \mu < 500$$
+<li>在 $H_0$ 成立时,计算检验统计量:</li>
+$$z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}=\frac{497-500}{9/\sqrt{36}}=\frac{-3}{1.5}=-2$$
+<li>单侧 $P$ 值:$P(Z\le -2)\approx 0.0228$。</li>
+<li>取显著性水平 $\alpha=0.05$,因为 $0.0228<0.05$,拒绝 $H_0$。结论:有足够证据表明平均净含量低于 $500$ mL。</li>
+<p><strong>问题解决应用。</strong> 如何正确设定 $H_0$?可按以下步骤:</p>
+<li><strong>找出"现状"或"声称值"</strong>:它通常成为 $H_0$(如"药物无效""均值不变""硬币公平 $p=0.5$")。</li>
+<li><strong>把研究者想要证明的结论放进 $H_a$</strong>:因为拒绝 $H_0$ 才算"有证据支持"。</li>
+<li><strong>$H_0$ 中必须含等号</strong>($=$、$\le$ 或 $\ge$)。</li>
+<p><strong>练习:</strong> 某老师想检验新教学法是否提高平均成绩(原平均分为 $75$)。正确设定为 $H_0:\mu=75$,$H_a:\mu>75$。若误将"$\mu>75$"设为 $H_0$,就无法在 $\mu=75$ 这一具体值下计算分布。</p>
+<p><strong>常见误区。</strong> (1)"未拒绝 $H_0$"不等于"接受 $H_0$",只是证据不足;(2)$P$ 值<strong>不是</strong> $H_0$ 为真的概率,而是在 $H_0$ 为真的前提下观察到如此极端数据的概率;(3)拒绝 $H_0$ 可能犯第一类错误,其概率恰为 $\alpha$。</p>
+<pre class="mermaid">flowchart TD
+    A[设定零假设 H0 与备择假设 Ha] --> B[假定 H0 为真]
+    B --> C[由样本计算检验统计量]
+    C --> D[求 P 值]
+    D --> E{P 值是否小于 α}
+    E -->|是| F[拒绝 H0]
+    E -->|否| G[没有足够证据拒绝 H0]</pre>
+<p><em>图:假设检验的基本流程——以零假设为出发点,根据 $P$ 值与显著性水平 $\alpha$ 的比较作出决策。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

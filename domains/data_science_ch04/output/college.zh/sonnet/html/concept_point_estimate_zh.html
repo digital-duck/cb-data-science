@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Point Estimate | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="点估计">点估计</h2>
+<p><strong>定义。</strong> 设 $\theta$ 是总体中未知的参数(如总体均值 $\mu$、总体比例 $p$)。从总体中抽取样本 $X_1,\dots,X_n$,<strong>点估计</strong>(point estimate)是用样本算出的<strong>单个数值</strong> $\hat\theta=g(x_1,\dots,x_n)$,作为 $\theta$ 的最佳猜测。产生该数值的公式或规则 $g(X_1,\dots,X_n)$ 称为<strong>估计量</strong>(estimator),它是随机变量;代入具体数据后得到的数才是<strong>估计值</strong>。</p>
+<p>常见的点估计:</p>
+<p>| 参数 | 估计量 | 记号 | |---|---|---| | 总体均值 $\mu$ | 样本均值 | $\bar x=\dfrac1n\sum x_i$ | | 总体比例 $p$ | 样本比例 | $\hat p=\dfrac{x}{n}$ | | 总体方差 $\sigma^2$ | 样本方差 | $s^2=\dfrac{1}{n-1}\sum (x_i-\bar x)^2$ |</p>
+<p><strong>好估计量的标准。</strong> 若 $E[\hat\theta]=\theta$,则称 $\hat\theta$ 是<strong>无偏</strong>的。$\bar X$ 和 $\hat p$ 都是无偏估计量。方差公式中用 $n-1$ 而不是 $n$,正是为了使 $s^2$ 无偏。在无偏估计量中,标准误 $\mathrm{SE}=\sqrt{\mathrm{Var}(\hat\theta)}$ 越小越好。</p>
+<p><strong>例题。</strong> 某校随机抽取 $n=50$ 名学生,记录每周睡眠时间(小时),得 $\sum x_i=340$,$\sum (x_i-\bar x)^2=147$。估计全校学生的平均睡眠时间及其波动。</p>
+<li>均值的点估计:$\bar x=\dfrac{340}{50}=6.8$ 小时。</li>
+<li>方差的点估计:$s^2=\dfrac{147}{49}=3$,所以 $s\approx1.73$ 小时。</li>
+<li>估计的精度:$\mathrm{SE}(\bar X)=\dfrac{\sigma}{\sqrt n}$,用 $s$ 代替 $\sigma$ 得 $\widehat{\mathrm{SE}}=\dfrac{1.73}{\sqrt{50}}\approx0.245$ 小时。</li>
+<p><strong>问题求解应用。</strong> 民调中随机访问 $n=400$ 人,有 $x=232$ 人支持某政策。</p>
+<li>点估计:$\hat p=\dfrac{232}{400}=0.58$。</li>
+<li>标准误:$\widehat{\mathrm{SE}}=\sqrt{\dfrac{\hat p(1-\hat p)}{n}}=\sqrt{\dfrac{0.58\times0.42}{400}}\approx0.0247$。</li>
+<li>解读:真实支持率大约在 $0.58$ 附近,偏差通常在 2.5 个百分点左右。</li>
+<p><strong>局限与要点。</strong> 点估计只给出一个数,本身不说明它离真值有多远。换一个样本,$\bar x$ 或 $\hat p$ 就会变。因此在实际报告中,应同时给出标准误,并进一步构造<strong>置信区间</strong>,例如 $\hat p\pm1.96\,\widehat{\mathrm{SE}}$。还要注意:点估计只能纠正随机误差,不能纠正抽样偏差。若样本不是随机抽取的,即使 $n$ 很大,估计也会系统性地偏离真值。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

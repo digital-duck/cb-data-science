@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trend | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="趋势-trend">趋势(Trend)</h2>
+<p><strong>定义。</strong> 趋势是时间序列在剔除季节波动、周期波动和随机噪声之后,所呈现的长期走向。它回答的问题是:"如果没有其他干扰,这个量长期来看是在上升、下降,还是基本不变?"</p>
+<p>最常见的模型是加法分解:</p>
+$$y_t = T_t + S_t + \varepsilon_t$$
+<p>其中 $T_t$ 为趋势项,$S_t$ 为季节项,$\varepsilon_t$ 为随机误差。最简单的趋势是<strong>线性趋势</strong>:</p>
+$$T_t = \beta_0 + \beta_1 t$$
+<p>斜率 $\beta_1$ 表示每个时间单位的平均变化量。若增长按比例进行(如人口、复利),则用<strong>指数趋势</strong> $T_t = \beta_0 e^{\beta_1 t}$,取对数后化为线性:$\ln T_t = \ln\beta_0 + \beta_1 t$。</p>
+<p><strong>最小二乘估计。</strong> 对 $t=1,\dots,n$ 的数据,斜率与截距为</p>
+$$\hat\beta_1=\frac{\sum_{t}(t-\bar t)(y_t-\bar y)}{\sum_{t}(t-\bar t)^2},\qquad \hat\beta_0=\bar y-\hat\beta_1\bar t.$$
+<p><strong>例题。</strong> 某网店前 5 个月的销量(单位:百件)为 $y=(10,\,12,\,15,\,15,\,18)$,$t=1,\dots,5$。</p>
+<li>$\bar t=3,\ \bar y=14$。</li>
+<li>分子:$(-2)(-4)+(-1)(-2)+0\cdot1+1\cdot1+2\cdot4=8+2+0+1+8=19$。</li>
+<li>分母:$4+1+0+1+4=10$。</li>
+<li>$\hat\beta_1=1.9,\ \hat\beta_0=14-1.9\times3=8.3$。</li>
+<p>所以趋势线为 $\hat T_t=8.3+1.9t$,即销量平均每月增长约 190 件。</p>
+<p><strong>问题求解应用。</strong> 预测第 6 个月:$\hat T_6=8.3+1.9\times6=19.7$,约 1970 件。</p>
+<p>实际分析中通常分三步:</p>
+<li><strong>画图观察</strong>:看增长是近似线性还是按比例增长(后者先取对数)。</li>
+<li><strong>去趋势</strong>:计算 $y_t-\hat T_t$,得到残差。残差若仍有明显规律,说明模型不够好,或还存在季节项。</li>
+<li><strong>检验显著性</strong>:检验 $\beta_1$ 是否显著不为零,以区分真实趋势与随机波动。</li>
+<p>另一种不依赖具体函数形式的方法是<strong>移动平均</strong>。例如对月度数据取 12 个月的平均,可以抵消一个完整季节周期的影响,留下平滑的趋势曲线。</p>
+<p><strong>注意事项。</strong> 趋势外推只在"未来的驱动机制与过去相同"时才可靠。例如将上述线性趋势外推到 5 年后,会忽略市场饱和,预测可能严重偏高。因此,预测范围越远,结论越应谨慎。</p>
+<pre class="mermaid">flowchart LR
+    A[原始序列 y_t] --> B[估计趋势 T_t]
+    B --> C[去趋势 y_t 减 T_t]
+    C --> D[分析季节与随机项]
+    B --> E[外推预测]</pre>
+<p><em>图:先从原始序列中估计趋势,再分别用于去趋势分析和短期预测。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

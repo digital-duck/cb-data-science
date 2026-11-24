@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>String Manipulation | Data Science Ch02</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="string-manipulation">String Manipulation</h2>
+<p>A string is an ordered sequence of characters, and two operations account for most real-world text processing: <strong>slicing</strong>, which extracts a contiguous subsequence using index positions, and <strong>splitting</strong>, which divides a string into a list of substrings based on a delimiter. Both rely on the same underlying fact — strings are indexed from 0, and negative indices count backward from the end.</p>
+<p>Slicing uses the syntax <code>s[start:stop:step]</code>, where <code>start</code> is inclusive and <code>stop</code> is exclusive. For the string <code>s = "concept-book"</code>, <code>s[0:7]</code> returns <code>"concept"</code>, and <code>s[-4:]</code> returns <code>"book"</code> by counting four characters from the end. The <code>step</code> parameter lets you skip characters or reverse a string entirely: <code>s[::-1]</code> reverses <code>s</code>. Because <code>stop</code> is exclusive, the length of a slice is always <code>stop - start</code> (when step is 1), a detail that prevents off-by-one errors once internalized.</p>
+<p>Splitting solves a different problem: breaking a string into meaningful units. <code>"2026-09-27".split("-")</code> returns <code>["2026", "09", "27"]</code>, converting a flat string into structured fields you can index or convert to integers. <code>split()</code> with no argument splits on any whitespace and collapses repeated spaces, which is why it's the default choice for tokenizing sentences. The inverse operation, <code>"-".join(["2026", "09", "27"])</code>, reconstructs the original string, and mastering this split/join pair is essential for parsing CSV rows, log lines, or file paths.</p>
+<p><strong>Worked example.</strong> Suppose you receive a log line <code>"2026-09-27 14:32:01 ERROR disk full"</code> and need the date and the severity level. First split on whitespace with a limit: <code>parts = line.split(" ", maxsplit=2)</code> gives <code>["2026-09-27", "14:32:01", "ERROR disk full"]</code>. Then slice the first element to pull out just the year: <code>parts[0][:4]</code> yields <code>"2026"</code>. Combining split (to isolate fields) with slice (to extract sub-parts of a field) is the standard pattern for parsing semi-structured text without regular expressions.</p>
+<p><strong>Problem-solving application.</strong> Given a filename <code>"report_final_v3.spl"</code>, extract the version number as an integer. One robust approach: split on underscores to get <code>["report", "final", "v3.spl"]</code>, split the last element on <code>"."</code> to get <code>["v3", "spl"]</code>, then slice off the leading <code>"v"</code> from <code>"v3"</code> and convert with <code>int()</code>. Chaining split and slice operations like this — rather than writing a single complex expression — keeps each transformation legible and testable.</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch2: Collecting and Preparing Data (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

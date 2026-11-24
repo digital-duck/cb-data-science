@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trend | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="trend">Trend</h2>
+<p>Trend is the long-term movement in a time series once you strip away seasonal fluctuations, cyclical swings, and random noise. It answers the question: if you squint and ignore the short-term wiggles, is the series generally rising, falling, or holding steady? Trend does not have to be a straight line — it can curve, accelerate, or flatten — but it always represents the persistent, underlying tendency rather than any single period's value.</p>
+<p><strong>Worked example.</strong> Suppose a coffee shop chain tracks quarterly revenue for five years and notices that sales spike every winter holiday season and dip every summer. To see the trend, an analyst first smooths out that seasonal pattern with a moving average — a running average that replaces each quarter's value with the average of it and its neighbors, so the seasonal peaks and troughs cancel out. If the smoothed series climbs steadily from \$2M to \$5M over five years despite the seasonal ups and downs, the trend is a clear long-term growth pattern, even though any individual quarter might dip below the previous one. The moving average itself is enough to see the trend visually; you don't need to fit a line to it to know sales are, on average, moving up over time.</p>
+<p><strong>Problem-solving application.</strong> Trend analysis matters because mistaking noise for trend (or vice versa) leads to bad decisions. Imagine a retailer sees three straight months of declining sales and panics, cutting staff. But if those three months fall in the typical post-holiday slump — a seasonal effect — the underlying trend might still be upward. The fix is to always decompose the series before judging direction: separate trend, seasonality, and residual noise, then evaluate trend on its own. Analysts do this with moving averages of varying window lengths (a longer window smooths out more seasonal noise but reacts more slowly to real shifts), but the core skill is the same: don't read direction into short windows of data that seasonal or random effects can easily distort. When you see a claim like "sales are down," your first question should be: down relative to what — the trend, or just this season's normal dip?</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: EN &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

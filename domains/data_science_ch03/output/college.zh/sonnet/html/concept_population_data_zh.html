@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Population Data | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="总体数据-population-data">总体数据(Population Data)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>总体数据</strong>(population data)是指研究者所关心的<strong>全部</strong>结果或测量值的集合。这里的"全部"并不是指"很多",而是指"没有遗漏":只要某个个体属于研究对象,它的测量值就必须包含在总体之中。</p>
+<p>描述总体的数值称为<strong>参数</strong>(parameter),通常用希腊字母表示。若总体含有 $N$ 个数据 $x_1, x_2, \dots, x_N$,则:</p>
+$$\mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i-\mu)^2, \qquad \sigma=\sqrt{\sigma^2}$$
+<p>其中 $\mu$ 是总体均值,$\sigma^2$ 是总体方差,$\sigma$ 是总体标准差。注意方差的分母是 $N$,而不是样本方差中的 $n-1$。这是因为总体数据已经包含了全部信息,不需要对"用样本估计总体"带来的偏差做修正。</p>
+<p>总体由研究问题决定,而不是由数据量决定。"某班 5 名学生的数学成绩"若只关心这个班,它就是总体;若想借此推断全校,它就只是样本。</p>
+<h3 id="例题">例题</h3>
+<p>某小组共有 5 名学生,是我们唯一关心的对象。他们的测验成绩为:</p>
+$$70,\ 80,\ 85,\ 90,\ 95$$
+<p><strong>第一步:求均值。</strong></p>
+$$\mu = \frac{70+80+85+90+95}{5} = \frac{420}{5} = 84$$
+<p><strong>第二步:求偏差平方和。</strong></p>
+$$(-14)^2+(-4)^2+1^2+6^2+11^2 = 196+16+1+36+121 = 370$$
+<p><strong>第三步:求方差与标准差。</strong></p>
+$$\sigma^2 = \frac{370}{5} = 74, \qquad \sigma = \sqrt{74} \approx 8.60$$
+<p>因为这 5 人就是全部对象,所以 $\mu = 84$ 与 $\sigma \approx 8.60$ 是<strong>精确值</strong>,没有任何抽样误差。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 一家工厂某天恰好生产了 $N=1000$ 个零件,质检员逐个测量了直径,算得 $\mu = 10.00$ mm,$\sigma = 0.05$ mm。第二天,质检员只随机测量了 $n=25$ 个零件,得到样本均值 $\bar{x}=10.02$ mm。问:能否说这一天的总体均值是 $10.02$ mm?</p>
+<p><strong>分析:</strong></p>
+<li>第一天是<strong>普查</strong>,得到的是参数,$\mu=10.00$ 即为真值。</li>
+<li>第二天是<strong>抽样</strong>,$\bar{x}$ 是统计量,会随样本而波动,只是对未知 $\mu$ 的估计。</li>
+<li>样本均值的标准误为</li>
+$$\frac{\sigma}{\sqrt{n}}=\frac{0.05}{\sqrt{25}}=0.01\text{ mm}$$
+<li>因此 $\bar{x}=10.02$ 与 $10.00$ 相差 2 个标准误,偏差不算小,值得进一步检查生产线是否漂移,但不能直接断言总体均值就是 $10.02$。</li>
+<p><strong>要点:</strong> 判断数据属于总体还是样本,是选择公式和结论措辞的第一步。</p>
+<pre class="mermaid">graph TD
+    A[总体:全部关心的对象] -->|普查| B[参数 μ, σ:精确值]
+    A -->|随机抽样| C[样本:部分对象]
+    C --> D[统计量 x̄, s:估计值]
+    D -->|统计推断| A</pre>
+<p><em>图示:总体参数可由普查直接得到,也可由样本统计量通过推断来估计。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

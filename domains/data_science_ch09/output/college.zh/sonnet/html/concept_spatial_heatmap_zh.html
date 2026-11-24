@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spatial Heatmap | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="空间热力图">空间热力图</h2>
+<h3 id="定义">定义</h3>
+<p><strong>空间热力图</strong>(spatial heatmap)是一种用颜色深浅表示地理区域内数据点密度或强度的可视化方法。它把地图划分为连续的区域,并为每个位置赋予一个数值,再通过色阶(例如从浅黄到深红)映射为颜色。</p>
+<p>最常用的数值来自<strong>核密度估计</strong>(kernel density estimation, KDE)。给定 $n$ 个数据点 $\mathbf{x}_1,\dots,\mathbf{x}_n\in\mathbb{R}^2$,位置 $\mathbf{x}$ 处的密度为</p>
+$$
+\hat f(\mathbf{x})=\frac{1}{n h^{2}}\sum_{i=1}^{n}K\!\left(\frac{\mathbf{x}-\mathbf{x}_i}{h}\right),
+$$
+<p>其中 $K$ 是核函数(常取高斯核 $K(\mathbf{u})=\frac{1}{2\pi}e^{-\|\mathbf{u}\|^2/2}$),$h>0$ 是<strong>带宽</strong>。带宽决定平滑程度:$h$ 太小会出现孤立的"斑点",$h$ 太大则会抹平真实的聚集结构。若每个点带有权重 $w_i$(如事故严重程度),则把求和项乘以 $w_i$,并将 $n$ 换成 $\sum w_i$。</p>
+<h3 id="工作示例">工作示例</h3>
+<p>假设城市中有 3 起报警,坐标(单位:km)为 $(0,0)$、$(1,0)$、$(0,1)$,取 $h=1$,求 $\mathbf{x}=(0.5,0.5)$ 处的密度。</p>
+<p>该点到三个数据点的距离平方均为 $0.5$,所以每一项相同:</p>
+$$
+K=\frac{1}{2\pi}e^{-0.25}\approx 0.1592\times0.7788\approx 0.1240 .
+$$
+<p>于是</p>
+$$
+\hat f(0.5,0.5)=\frac{1}{3\cdot1^2}\,(3\times0.1240)\approx 0.124 .
+$$
+<p>而在远处的 $(3,3)$,距离平方约为 $13$、$10$、$10$,各项接近 $0.0001$,密度几乎为 0,对应浅色。把整张网格上的 $\hat f$ 算出来,再按最大值归一化并映射到色阶,就得到热力图。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题</strong>:某自行车共享公司想决定在哪里增设停车桩。已有一周的借车记录(经纬度)。</p>
+<p><strong>步骤</strong>:</p>
+<li><strong>清洗与投影</strong>:将经纬度转换为米制的平面坐标(如 Web Mercator),否则 $h$ 在不同纬度含义不一致。</li>
+<li><strong>选择带宽</strong>:街区尺度的决策可取 $h\approx 200$–$500$ m。可用 Scott 经验法则 $h=n^{-1/6}\sigma$ 作起点,再目视检验。</li>
+<li><strong>网格计算</strong>:在例如 $200\times200$ 的网格上评估 $\hat f$,用复杂度约 $O(nG)$($G$ 为网格数),大数据时可先做分箱再卷积。</li>
+<li><strong>读图与决策</strong>:找出密度高、但已有车桩少的区域(局部最大值)作为候选点。</li>
+<p><strong>常见陷阱</strong>:热力图显示的是<em>点的密集程度</em>,不是<em>人均比率</em>。人口稠密区天然点多,若要比较风险或需求,应除以人口或面积做归一化;色阶的选取与截断也会改变人的视觉判断,不同图之间比较时应使用相同的色阶范围。</p>
+<pre class="mermaid">flowchart LR
+A[地理坐标数据点] --> B[投影到平面坐标]
+B --> C[选择核函数与带宽]
+C --> D[在网格上计算密度]
+D --> E[归一化并映射色阶]
+E --> F[叠加到地图]</pre>
+<p><em>空间热力图的生成流程:从原始坐标到叠加在底图上的彩色密度层。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch9: Visualizing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

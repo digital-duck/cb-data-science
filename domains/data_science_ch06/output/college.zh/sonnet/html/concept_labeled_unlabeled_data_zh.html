@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Labeled Unlabeled Data | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="有标签数据与无标签数据">有标签数据与无标签数据</h2>
+<p><strong>定义。</strong> 设数据集中每个样本由特征向量 $\mathbf{x}_i$ 描述。</p>
+<li><strong>有标签数据</strong>（labeled data）：每个样本都配有一个已知的标签 $y_i$（类别或数值），形成数据对 $\{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$。</li>
+<li><strong>无标签数据</strong>（unlabeled data）：只有特征，没有标签，即 $\{\mathbf{x}_i\}_{i=1}^{m}$。</li>
+<p>标签通常需要人工标注或实验测量，成本高、速度慢；而无标签数据（如网络图片、传感器记录）往往唾手可得。这一差别决定了学习方式：</p>
+<li><strong>监督学习</strong>使用有标签数据，学习映射 $f:\mathbf{x}\mapsto y$，目标是使预测误差 $\frac{1}{n}\sum_{i=1}^{n}\ell\big(f(\mathbf{x}_i),y_i\big)$ 尽量小（$\ell$ 为损失函数）。</li>
+<li><strong>无监督学习</strong>使用无标签数据，发现内部结构，如聚类、降维。</li>
+<li><strong>半监督学习</strong>同时利用少量有标签数据和大量无标签数据。</li>
+<pre class="mermaid">flowchart LR
+    A[原始数据] --> B{是否带有标签?}
+    B -->|是| C[有标签数据]
+    B -->|否| D[无标签数据]
+    C --> E[监督学习：分类与回归]
+    D --> F[无监督学习：聚类与降维]
+    C --> G[半监督学习]
+    D --> G</pre>
+<p><em>图：数据是否带标签，决定了可采用的学习范式。</em></p>
+<p><strong>例题。</strong> 一份邮件数据集有 1000 封邮件，每封提取"感叹号个数"和"是否含链接"两个特征。其中 200 封被人工标记为"垃圾"或"正常"，其余 800 封未标记。</p>
+<li>这 200 封是有标签数据：$n=200$，$y_i\in\{\text{垃圾},\text{正常}\}$。</li>
+<li>其余 800 封是无标签数据：$m=800$。</li>
+<li>有标签比例为 $\frac{200}{1000}=20\%$。</li>
+<p><strong>问题求解应用。</strong> 对上述数据，可以这样选择方法：</p>
+<li><strong>用有标签部分训练分类器。</strong> 若 200 封中垃圾邮件占 60 封，则先验 $P(\text{垃圾})=\frac{60}{200}=0.3$。用这些数据训练逻辑回归或决策树，得到初始模型。</li>
+<li><strong>用无标签部分提升性能。</strong> 先对 800 封做聚类，若某簇中的邮件几乎都含链接且感叹号很多，而簇内已标记样本大多为垃圾，则可把该簇其余邮件的<strong>伪标签</strong>（pseudo-label）设为"垃圾"，再加入训练集重新训练。这就是自训练（self-training）的基本思路。</li>
+<li><strong>注意风险。</strong> 伪标签可能出错并被模型反复强化，因此通常只接受置信度高（如 $P(y\mid\mathbf{x})>0.95$）的预测，并保留一部分有标签数据作验证集，检查性能是否真的提升。</li>
+<p><strong>判断准则。</strong> 标注便宜、数据量够，直接用监督学习；没有标签、只想探索结构，用无监督学习；标注昂贵而原始数据充足，优先考虑半监督学习。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>
