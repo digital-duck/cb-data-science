@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="深度学习">深度学习</h2>
+<p><strong>定义。</strong> 深度学习是指训练含有多个隐藏层的神经网络,使其从原始数据中逐层学习<strong>层次化的结构表示</strong>。设网络有 $L$ 层,第 $l$ 层的计算为</p>
+$$
+\mathbf{h}^{(l)} = \sigma\!\left(W^{(l)}\mathbf{h}^{(l-1)} + \mathbf{b}^{(l)}\right),\quad \mathbf{h}^{(0)}=\mathbf{x},
+$$
+<p>其中 $\sigma$ 是非线性激活函数(如 ReLU:$\sigma(z)=\max(0,z)$)。浅层学到简单特征(如图像中的边缘),中层组合成局部结构(如眼睛、轮廓),深层则表示整体概念(如"人脸")。若没有非线性 $\sigma$,多层只会合并成一个线性映射 $W^{(L)}\cdots W^{(1)}$,"深度"也就失去意义。</p>
+<p><strong>训练。</strong> 给定损失函数 $\mathcal{L}(\theta)$(参数 $\theta=\{W^{(l)},\mathbf{b}^{(l)}\}$),用<strong>反向传播</strong>依链式法则逐层求梯度:</p>
+$$
+\frac{\partial \mathcal{L}}{\partial W^{(l)}} = \boldsymbol{\delta}^{(l)}\,\mathbf{h}^{(l-1)\top},\qquad
+\boldsymbol{\delta}^{(l)} = \left(W^{(l+1)\top}\boldsymbol{\delta}^{(l+1)}\right)\odot \sigma'\!\left(\mathbf{z}^{(l)}\right),
+$$
+<p>再用梯度下降更新:$\theta \leftarrow \theta - \eta\,\nabla_\theta \mathcal{L}$,$\eta$ 为学习率。</p>
+<p><strong>例题:XOR 问题。</strong> 数据点 $(0,0),(1,1)\mapsto 0$,$(0,1),(1,0)\mapsto 1$ 无法被任何线性分类器分开。取一个含两个 ReLU 隐藏单元的网络:</p>
+$$
+h_1=\max(0,\,x_1+x_2),\quad h_2=\max(0,\,x_1+x_2-1),\quad y=h_1-2h_2.
+$$
+<p>逐点验证:$(0,0)$ 得 $y=0$;$(1,0)$ 得 $h_1=1,h_2=0$,$y=1$;$(1,1)$ 得 $h_1=2,h_2=1$,$y=0$。隐藏层把输入"折叠"到一个线性可分的新空间,这正是深度表示的核心思想。</p>
+<p><strong>问题求解应用:梯度消失。</strong> 反向传播中 $\boldsymbol{\delta}^{(1)}$ 含有 $L-1$ 个因子的连乘。若使用 sigmoid,则 $\sigma'(z)\le \tfrac14$,假设每层权重范数约为 1,则梯度量级约为</p>
+$$
+\left(\tfrac14\right)^{10}\approx 10^{-6}\quad(L=11).
+$$
+<p>前几层几乎学不到东西。常见对策:</p>
+<li>换用 ReLU(正区间导数为 1);</li>
+<li>采用合适的初始化(如 He 初始化,令 $\mathrm{Var}(W)=2/n_{\text{in}}$);</li>
+<li>加入残差连接 $\mathbf{h}^{(l)}=\mathbf{h}^{(l-1)}+F(\mathbf{h}^{(l-1)})$,使梯度有一条恒等捷径;</li>
+<li>使用批归一化稳定各层输入分布。</li>
+<p><strong>诊断思路。</strong> 若训练损失下降缓慢,先检查梯度范数是否逐层衰减;若训练损失低而验证损失高,则是过拟合,可用权重衰减、Dropout、数据增强或提前停止来缓解。</p>
+<pre class="mermaid">flowchart LR
+    A[输入数据] --> B[隐藏层1: 边缘]
+    B --> C[隐藏层2: 局部部件]
+    C --> D[隐藏层3: 整体概念]
+    D --> E[输出预测]
+    E --> F[计算损失]
+    F -.反向传播梯度.-> D
+    D -.-> C
+    C -.-> B</pre>
+<p><em>图:深度网络前向逐层提取由简到繁的特征,损失产生的梯度沿相反方向逐层传回,用于更新各层参数。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

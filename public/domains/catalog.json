@@ -141,6 +141,12 @@
         "file": "output/research.en/sonnet/html/book_sports_analytics.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "predictive_analytics",
+        "file": "output/college.zh/sonnet/html/book_predictive_analytics.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -229,6 +235,13 @@
         "language": "en"
       },
       {
+        "name": "data_analysis_zh",
+        "label": "Data Analysis Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_analysis_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_collection",
         "label": "Data Collection",
         "file": "output/research.en/sonnet/html/concept_data_collection.html",
@@ -290,6 +303,13 @@
         "file": "output/intro.en/sonnet/html/concept_data_preparation.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "data_preparation_zh",
+        "label": "Data Preparation Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_preparation_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "data_science",
@@ -416,6 +436,13 @@
         "file": "output/intro.en/sonnet/html/concept_predictive_analytics.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "predictive_analytics_zh",
+        "label": "Predictive Analytics Zh",
+        "file": "output/college.zh/sonnet/html/concept_predictive_analytics_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "recommendation_system",
@@ -546,6 +573,12 @@
         "file": "output/college.zh/sonnet/html/book_large_dataset_management_zh.html",
         "model": "sonnet",
         "language": "zh"
+      },
+      {
+        "target": "cloud_computing",
+        "file": "output/college.zh/sonnet/html/book_cloud_computing.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -578,8 +611,8 @@
         "language": "en"
       },
       {
-        "name": "big_data",
-        "label": "Big Data",
+        "name": "big_data_zh",
+        "label": "Big Data Zh",
         "file": "output/college.zh/sonnet/html/concept_big_data_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -613,8 +646,8 @@
         "language": "en"
       },
       {
-        "name": "cloud_computing",
-        "label": "Cloud Computing",
+        "name": "cloud_computing_zh",
+        "label": "Cloud Computing Zh",
         "file": "output/college.zh/sonnet/html/concept_cloud_computing_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -648,8 +681,8 @@
         "language": "en"
       },
       {
-        "name": "data_chunking",
-        "label": "Data Chunking",
+        "name": "data_chunking_zh",
+        "label": "Data Chunking Zh",
         "file": "output/college.zh/sonnet/html/concept_data_chunking_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -683,8 +716,8 @@
         "language": "en"
       },
       {
-        "name": "data_compression",
-        "label": "Data Compression",
+        "name": "data_compression_zh",
+        "label": "Data Compression Zh",
         "file": "output/college.zh/sonnet/html/concept_data_compression_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -718,8 +751,8 @@
         "language": "en"
       },
       {
-        "name": "data_indexing",
-        "label": "Data Indexing",
+        "name": "data_indexing_zh",
+        "label": "Data Indexing Zh",
         "file": "output/college.zh/sonnet/html/concept_data_indexing_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -753,8 +786,8 @@
         "language": "en"
       },
       {
-        "name": "data_processing",
-        "label": "Data Processing",
+        "name": "data_processing_zh",
+        "label": "Data Processing Zh",
         "file": "output/college.zh/sonnet/html/concept_data_processing_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -788,8 +821,8 @@
         "language": "en"
       },
       {
-        "name": "data_storage",
-        "label": "Data Storage",
+        "name": "data_storage_zh",
+        "label": "Data Storage Zh",
         "file": "output/college.zh/sonnet/html/concept_data_storage_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -823,8 +856,8 @@
         "language": "en"
       },
       {
-        "name": "dbms",
-        "label": "Dbms",
+        "name": "dbms_zh",
+        "label": "Dbms Zh",
         "file": "output/college.zh/sonnet/html/concept_dbms_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -858,8 +891,8 @@
         "language": "en"
       },
       {
-        "name": "large_dataset_management",
-        "label": "Large Dataset Management",
+        "name": "large_dataset_management_zh",
+        "label": "Large Dataset Management Zh",
         "file": "output/college.zh/sonnet/html/concept_large_dataset_management_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -872,8 +905,8 @@
         "language": "en"
       },
       {
-        "name": "missing_data",
-        "label": "Missing Data",
+        "name": "missing_data_zh",
+        "label": "Missing Data Zh",
         "file": "output/college.zh/sonnet/html/concept_missing_data_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -907,8 +940,8 @@
         "language": "en"
       },
       {
-        "name": "parsing_and_extraction",
-        "label": "Parsing And Extraction",
+        "name": "parsing_and_extraction_zh",
+        "label": "Parsing And Extraction Zh",
         "file": "output/college.zh/sonnet/html/concept_parsing_and_extraction_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -942,8 +975,8 @@
         "language": "en"
       },
       {
-        "name": "regular_expressions",
-        "label": "Regular Expressions",
+        "name": "regular_expressions_zh",
+        "label": "Regular Expressions Zh",
         "file": "output/college.zh/sonnet/html/concept_regular_expressions_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -956,8 +989,8 @@
         "language": "en"
       },
       {
-        "name": "sampling",
-        "label": "Sampling",
+        "name": "sampling_zh",
+        "label": "Sampling Zh",
         "file": "output/college.zh/sonnet/html/concept_sampling_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -991,8 +1024,8 @@
         "language": "en"
       },
       {
-        "name": "string_manipulation",
-        "label": "String Manipulation",
+        "name": "string_manipulation_zh",
+        "label": "String Manipulation Zh",
         "file": "output/college.zh/sonnet/html/concept_string_manipulation_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -1049,6 +1082,12 @@
         "file": "output/research.en/sonnet/html/book_python_data_analysis.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "python_data_analysis",
+        "file": "output/college.zh/sonnet/html/book_python_data_analysis.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -1081,6 +1120,13 @@
         "language": "en"
       },
       {
+        "name": "mean_zh",
+        "label": "Mean Zh",
+        "file": "output/college.zh/sonnet/html/concept_mean_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "median",
         "label": "Median",
         "file": "output/research.en/sonnet/html/concept_median.html",
@@ -1107,6 +1153,13 @@
         "file": "output/intro.en/sonnet/html/concept_median.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "median_zh",
+        "label": "Median Zh",
+        "file": "output/college.zh/sonnet/html/concept_median_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "percentiles",
@@ -1137,6 +1190,13 @@
         "language": "en"
       },
       {
+        "name": "percentiles_zh",
+        "label": "Percentiles Zh",
+        "file": "output/college.zh/sonnet/html/concept_percentiles_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "population_data",
         "label": "Population Data",
         "file": "output/research.en/sonnet/html/concept_population_data.html",
@@ -1163,6 +1223,13 @@
         "file": "output/intro.en/sonnet/html/concept_population_data.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "population_data_zh",
+        "label": "Population Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_population_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "probability",
@@ -1221,6 +1288,20 @@
         "language": "en"
       },
       {
+        "name": "probability_distribution_zh",
+        "label": "Probability Distribution Zh",
+        "file": "output/college.zh/sonnet/html/concept_probability_distribution_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "name": "probability_zh",
+        "label": "Probability Zh",
+        "file": "output/college.zh/sonnet/html/concept_probability_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "python_data_analysis",
         "label": "Python Data Analysis",
         "file": "output/research.en/sonnet/html/concept_python_data_analysis.html",
@@ -1247,6 +1328,13 @@
         "file": "output/intro.en/sonnet/html/concept_python_data_analysis.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "python_data_analysis_zh",
+        "label": "Python Data Analysis Zh",
+        "file": "output/college.zh/sonnet/html/concept_python_data_analysis_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "quartiles",
@@ -1277,6 +1365,13 @@
         "language": "en"
       },
       {
+        "name": "quartiles_zh",
+        "label": "Quartiles Zh",
+        "file": "output/college.zh/sonnet/html/concept_quartiles_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "random_variable",
         "label": "Random Variable",
         "file": "output/research.en/sonnet/html/concept_random_variable.html",
@@ -1303,6 +1398,13 @@
         "file": "output/intro.en/sonnet/html/concept_random_variable.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "random_variable_zh",
+        "label": "Random Variable Zh",
+        "file": "output/college.zh/sonnet/html/concept_random_variable_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "sample_data",
@@ -1333,6 +1435,13 @@
         "language": "en"
       },
       {
+        "name": "sample_data_zh",
+        "label": "Sample Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_sample_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "standard_deviation",
         "label": "Standard Deviation",
         "file": "output/research.en/sonnet/html/concept_standard_deviation.html",
@@ -1361,6 +1470,13 @@
         "language": "en"
       },
       {
+        "name": "standard_deviation_zh",
+        "label": "Standard Deviation Zh",
+        "file": "output/college.zh/sonnet/html/concept_standard_deviation_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "variance",
         "label": "Variance",
         "file": "output/research.en/sonnet/html/concept_variance.html",
@@ -1387,6 +1503,13 @@
         "file": "output/intro.en/sonnet/html/concept_variance.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "variance_zh",
+        "label": "Variance Zh",
+        "file": "output/college.zh/sonnet/html/concept_variance_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college"
@@ -1431,6 +1554,12 @@
         "file": "output/research.en/sonnet/html/book_python_statistical_computing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "python_statistical_computing",
+        "file": "output/college.zh/sonnet/html/book_python_statistical_computing.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -1463,6 +1592,13 @@
         "language": "en"
       },
       {
+        "name": "alternative_hypothesis_zh",
+        "label": "Alternative Hypothesis Zh",
+        "file": "output/college.zh/sonnet/html/concept_alternative_hypothesis_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "anova",
         "label": "Anova",
         "file": "output/core.en/sonnet/html/concept_anova.html",
@@ -1489,6 +1625,13 @@
         "file": "output/research.en/sonnet/html/concept_anova.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "anova_zh",
+        "label": "Anova Zh",
+        "file": "output/college.zh/sonnet/html/concept_anova_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "confidence_interval",
@@ -1519,6 +1662,13 @@
         "language": "en"
       },
       {
+        "name": "confidence_interval_zh",
+        "label": "Confidence Interval Zh",
+        "file": "output/college.zh/sonnet/html/concept_confidence_interval_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "correlation_coefficient",
         "label": "Correlation Coefficient",
         "file": "output/core.en/sonnet/html/concept_correlation_coefficient.html",
@@ -1545,6 +1695,13 @@
         "file": "output/research.en/sonnet/html/concept_correlation_coefficient.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "correlation_coefficient_zh",
+        "label": "Correlation Coefficient Zh",
+        "file": "output/college.zh/sonnet/html/concept_correlation_coefficient_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "critical_value",
@@ -1575,6 +1732,13 @@
         "language": "en"
       },
       {
+        "name": "critical_value_zh",
+        "label": "Critical Value Zh",
+        "file": "output/college.zh/sonnet/html/concept_critical_value_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "f_distribution",
         "label": "F Distribution",
         "file": "output/core.en/sonnet/html/concept_f_distribution.html",
@@ -1601,6 +1765,13 @@
         "file": "output/research.en/sonnet/html/concept_f_distribution.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "f_distribution_zh",
+        "label": "F Distribution Zh",
+        "file": "output/college.zh/sonnet/html/concept_f_distribution_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "hypothesis_testing",
@@ -1631,6 +1802,13 @@
         "language": "en"
       },
       {
+        "name": "hypothesis_testing_zh",
+        "label": "Hypothesis Testing Zh",
+        "file": "output/college.zh/sonnet/html/concept_hypothesis_testing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "level_of_significance",
         "label": "Level Of Significance",
         "file": "output/core.en/sonnet/html/concept_level_of_significance.html",
@@ -1657,6 +1835,13 @@
         "file": "output/research.en/sonnet/html/concept_level_of_significance.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "level_of_significance_zh",
+        "label": "Level Of Significance Zh",
+        "file": "output/college.zh/sonnet/html/concept_level_of_significance_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "linear_regression",
@@ -1687,6 +1872,13 @@
         "language": "en"
       },
       {
+        "name": "linear_regression_zh",
+        "label": "Linear Regression Zh",
+        "file": "output/college.zh/sonnet/html/concept_linear_regression_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "margin_of_error",
         "label": "Margin Of Error",
         "file": "output/core.en/sonnet/html/concept_margin_of_error.html",
@@ -1713,6 +1905,13 @@
         "file": "output/research.en/sonnet/html/concept_margin_of_error.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "margin_of_error_zh",
+        "label": "Margin Of Error Zh",
+        "file": "output/college.zh/sonnet/html/concept_margin_of_error_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "null_hypothesis",
@@ -1743,6 +1942,13 @@
         "language": "en"
       },
       {
+        "name": "null_hypothesis_zh",
+        "label": "Null Hypothesis Zh",
+        "file": "output/college.zh/sonnet/html/concept_null_hypothesis_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "point_estimate",
         "label": "Point Estimate",
         "file": "output/core.en/sonnet/html/concept_point_estimate.html",
@@ -1769,6 +1975,13 @@
         "file": "output/research.en/sonnet/html/concept_point_estimate.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "point_estimate_zh",
+        "label": "Point Estimate Zh",
+        "file": "output/college.zh/sonnet/html/concept_point_estimate_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "python_statistical_computing",
@@ -1799,6 +2012,13 @@
         "language": "en"
       },
       {
+        "name": "python_statistical_computing_zh",
+        "label": "Python Statistical Computing Zh",
+        "file": "output/college.zh/sonnet/html/concept_python_statistical_computing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "scatterplot",
         "label": "Scatterplot",
         "file": "output/core.en/sonnet/html/concept_scatterplot.html",
@@ -1827,6 +2047,13 @@
         "language": "en"
       },
       {
+        "name": "scatterplot_zh",
+        "label": "Scatterplot Zh",
+        "file": "output/college.zh/sonnet/html/concept_scatterplot_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "test_statistic",
         "label": "Test Statistic",
         "file": "output/core.en/sonnet/html/concept_test_statistic.html",
@@ -1853,6 +2080,13 @@
         "file": "output/research.en/sonnet/html/concept_test_statistic.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "test_statistic_zh",
+        "label": "Test Statistic Zh",
+        "file": "output/college.zh/sonnet/html/concept_test_statistic_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college"
@@ -2041,6 +2275,18 @@
         "file": "output/college.en/gemma3/html/book_trend.html",
         "model": "gemma3",
         "language": "en"
+      },
+      {
+        "target": "seasonal_trend_decomposition_loess",
+        "file": "output/college.zh/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "augmented_dickey_fuller_test",
+        "file": "output/college.zh/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -2054,23 +2300,9 @@
       {
         "name": "arima",
         "label": "Arima",
-        "file": "output/college.zh/sonnet/html/concept_arima_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "arima",
-        "label": "Arima",
         "file": "output/core.en/sonnet/html/concept_arima.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "arima",
-        "label": "Arima",
-        "file": "output/core.zh/sonnet/html/concept_arima_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "arima",
@@ -2082,13 +2314,6 @@
       {
         "name": "arima",
         "label": "Arima",
-        "file": "output/intro.zh/sonnet/html/concept_arima_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "arima",
-        "label": "Arima",
         "file": "output/college.en/sonnet/html/concept_arima.html",
         "model": "sonnet",
         "language": "en"
@@ -2096,7 +2321,7 @@
       {
         "name": "arima_zh",
         "label": "Arima Zh",
-        "file": "output/research.zh/sonnet/html/concept_arima_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_arima_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2129,18 +2354,18 @@
         "language": "en"
       },
       {
+        "name": "augmented_dickey_fuller_test_zh",
+        "label": "Augmented Dickey Fuller Test Zh",
+        "file": "output/college.zh/sonnet/html/concept_augmented_dickey_fuller_test_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "autoregressive_model",
         "label": "Autoregressive Model",
         "file": "output/research.en/sonnet/html/concept_autoregressive_model.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "autoregressive_model",
-        "label": "Autoregressive Model",
-        "file": "output/college.zh/sonnet/html/concept_autoregressive_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "autoregressive_model",
@@ -2152,23 +2377,9 @@
       {
         "name": "autoregressive_model",
         "label": "Autoregressive Model",
-        "file": "output/core.zh/sonnet/html/concept_autoregressive_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "autoregressive_model",
-        "label": "Autoregressive Model",
         "file": "output/intro.en/sonnet/html/concept_autoregressive_model.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "autoregressive_model",
-        "label": "Autoregressive Model",
-        "file": "output/intro.zh/sonnet/html/concept_autoregressive_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "autoregressive_model",
@@ -2180,7 +2391,7 @@
       {
         "name": "autoregressive_model_zh",
         "label": "Autoregressive Model Zh",
-        "file": "output/research.zh/sonnet/html/concept_autoregressive_model_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_autoregressive_model_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2213,18 +2424,18 @@
         "language": "en"
       },
       {
+        "name": "cyclic_component_zh",
+        "label": "Cyclic Component Zh",
+        "file": "output/college.zh/sonnet/html/concept_cyclic_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "differencing",
         "label": "Differencing",
         "file": "output/research.en/sonnet/html/concept_differencing.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "differencing",
-        "label": "Differencing",
-        "file": "output/college.zh/sonnet/html/concept_differencing_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "differencing",
@@ -2236,23 +2447,9 @@
       {
         "name": "differencing",
         "label": "Differencing",
-        "file": "output/core.zh/sonnet/html/concept_differencing_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "differencing",
-        "label": "Differencing",
         "file": "output/intro.en/sonnet/html/concept_differencing.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "differencing",
-        "label": "Differencing",
-        "file": "output/intro.zh/sonnet/html/concept_differencing_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "differencing",
@@ -2264,7 +2461,7 @@
       {
         "name": "differencing_zh",
         "label": "Differencing Zh",
-        "file": "output/research.zh/sonnet/html/concept_differencing_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_differencing_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2278,23 +2475,9 @@
       {
         "name": "error",
         "label": "Error",
-        "file": "output/college.zh/sonnet/html/concept_error_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "error",
-        "label": "Error",
         "file": "output/core.en/sonnet/html/concept_error.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "error",
-        "label": "Error",
-        "file": "output/core.zh/sonnet/html/concept_error_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "error",
@@ -2306,13 +2489,6 @@
       {
         "name": "error",
         "label": "Error",
-        "file": "output/intro.zh/sonnet/html/concept_error_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "error",
-        "label": "Error",
         "file": "output/college.en/sonnet/html/concept_error.html",
         "model": "sonnet",
         "language": "en"
@@ -2320,7 +2496,7 @@
       {
         "name": "error_zh",
         "label": "Error Zh",
-        "file": "output/research.zh/sonnet/html/concept_error_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_error_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2362,23 +2538,9 @@
       {
         "name": "integrative_component",
         "label": "Integrative Component",
-        "file": "output/college.zh/sonnet/html/concept_integrative_component_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "integrative_component",
-        "label": "Integrative Component",
         "file": "output/core.en/sonnet/html/concept_integrative_component.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "integrative_component",
-        "label": "Integrative Component",
-        "file": "output/core.zh/sonnet/html/concept_integrative_component_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "integrative_component",
@@ -2390,13 +2552,6 @@
       {
         "name": "integrative_component",
         "label": "Integrative Component",
-        "file": "output/intro.zh/sonnet/html/concept_integrative_component_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "integrative_component",
-        "label": "Integrative Component",
         "file": "output/college.en/sonnet/html/concept_integrative_component.html",
         "model": "sonnet",
         "language": "en"
@@ -2404,7 +2559,7 @@
       {
         "name": "integrative_component_zh",
         "label": "Integrative Component Zh",
-        "file": "output/research.zh/sonnet/html/concept_integrative_component_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_integrative_component_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2418,23 +2573,9 @@
       {
         "name": "lag",
         "label": "Lag",
-        "file": "output/college.zh/sonnet/html/concept_lag_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "lag",
-        "label": "Lag",
         "file": "output/core.en/sonnet/html/concept_lag.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "lag",
-        "label": "Lag",
-        "file": "output/core.zh/sonnet/html/concept_lag_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "lag",
@@ -2446,13 +2587,6 @@
       {
         "name": "lag",
         "label": "Lag",
-        "file": "output/intro.zh/sonnet/html/concept_lag_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "lag",
-        "label": "Lag",
         "file": "output/college.en/sonnet/html/concept_lag.html",
         "model": "sonnet",
         "language": "en"
@@ -2460,7 +2594,7 @@
       {
         "name": "lag_zh",
         "label": "Lag Zh",
-        "file": "output/research.zh/sonnet/html/concept_lag_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_lag_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2502,23 +2636,9 @@
       {
         "name": "moving_average_model",
         "label": "Moving Average Model",
-        "file": "output/college.zh/sonnet/html/concept_moving_average_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "moving_average_model",
-        "label": "Moving Average Model",
         "file": "output/core.en/sonnet/html/concept_moving_average_model.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "moving_average_model",
-        "label": "Moving Average Model",
-        "file": "output/core.zh/sonnet/html/concept_moving_average_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "moving_average_model",
@@ -2530,13 +2650,6 @@
       {
         "name": "moving_average_model",
         "label": "Moving Average Model",
-        "file": "output/intro.zh/sonnet/html/concept_moving_average_model_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "moving_average_model",
-        "label": "Moving Average Model",
         "file": "output/college.en/sonnet/html/concept_moving_average_model.html",
         "model": "sonnet",
         "language": "en"
@@ -2544,7 +2657,7 @@
       {
         "name": "moving_average_model_zh",
         "label": "Moving Average Model Zh",
-        "file": "output/research.zh/sonnet/html/concept_moving_average_model_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_moving_average_model_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2605,6 +2718,13 @@
         "language": "en"
       },
       {
+        "name": "noise_zh",
+        "label": "Noise Zh",
+        "file": "output/college.zh/sonnet/html/concept_noise_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "period",
         "label": "Period",
         "file": "output/college.en/sonnet/html/concept_period.html",
@@ -2640,6 +2760,13 @@
         "language": "en"
       },
       {
+        "name": "seasonal_component_zh",
+        "label": "Seasonal Component Zh",
+        "file": "output/college.zh/sonnet/html/concept_seasonal_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "seasonal_trend_decomposition_loess",
         "label": "Seasonal Trend Decomposition Loess",
         "file": "output/research.en/sonnet/html/concept_seasonal_trend_decomposition_loess.html",
@@ -2668,18 +2795,18 @@
         "language": "en"
       },
       {
+        "name": "seasonal_trend_decomposition_loess_zh",
+        "label": "Seasonal Trend Decomposition Loess Zh",
+        "file": "output/college.zh/sonnet/html/concept_seasonal_trend_decomposition_loess_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "sequence",
         "label": "Sequence",
         "file": "output/research.en/sonnet/html/concept_sequence.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "sequence",
-        "label": "Sequence",
-        "file": "output/college.zh/sonnet/html/concept_sequence_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "sequence",
@@ -2691,28 +2818,14 @@
       {
         "name": "sequence",
         "label": "Sequence",
-        "file": "output/core.zh/sonnet/html/concept_sequence_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "sequence",
-        "label": "Sequence",
         "file": "output/intro.en/sonnet/html/concept_sequence.html",
         "model": "sonnet",
         "language": "en"
       },
       {
-        "name": "sequence",
-        "label": "Sequence",
-        "file": "output/intro.zh/sonnet/html/concept_sequence_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
         "name": "sequence_zh",
         "label": "Sequence Zh",
-        "file": "output/research.zh/sonnet/html/concept_sequence_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_sequence_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2745,18 +2858,18 @@
         "language": "en"
       },
       {
+        "name": "stationary_zh",
+        "label": "Stationary Zh",
+        "file": "output/college.zh/sonnet/html/concept_stationary_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "time_series",
         "label": "Time Series",
         "file": "output/research.en/sonnet/html/concept_time_series.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "time_series",
-        "label": "Time Series",
-        "file": "output/college.zh/sonnet/html/concept_time_series_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "time_series",
@@ -2768,23 +2881,9 @@
       {
         "name": "time_series",
         "label": "Time Series",
-        "file": "output/core.zh/sonnet/html/concept_time_series_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "time_series",
-        "label": "Time Series",
         "file": "output/intro.en/sonnet/html/concept_time_series.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "time_series",
-        "label": "Time Series",
-        "file": "output/intro.zh/sonnet/html/concept_time_series_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "time_series",
@@ -2824,7 +2923,7 @@
       {
         "name": "time_series_zh",
         "label": "Time Series Zh",
-        "file": "output/research.zh/sonnet/html/concept_time_series_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_time_series_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2838,13 +2937,6 @@
       {
         "name": "trend",
         "label": "Trend",
-        "file": "output/college.zh/sonnet/html/concept_trend_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "trend",
-        "label": "Trend",
         "file": "output/core.en/sonnet/html/concept_trend.html",
         "model": "sonnet",
         "language": "en"
@@ -2852,23 +2944,9 @@
       {
         "name": "trend",
         "label": "Trend",
-        "file": "output/core.zh/sonnet/html/concept_trend_zh.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "name": "trend",
-        "label": "Trend",
         "file": "output/intro.en/sonnet/html/concept_trend.html",
         "model": "sonnet",
         "language": "en"
-      },
-      {
-        "name": "trend",
-        "label": "Trend",
-        "file": "output/intro.zh/sonnet/html/concept_trend_zh.html",
-        "model": "sonnet",
-        "language": "zh"
       },
       {
         "name": "trend",
@@ -2913,9 +2991,16 @@
         "language": "en"
       },
       {
+        "name": "trend_cycle_component_zh",
+        "label": "Trend Cycle Component Zh",
+        "file": "output/college.zh/sonnet/html/concept_trend_cycle_component_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "trend_zh",
         "label": "Trend Zh",
-        "file": "output/research.zh/sonnet/html/concept_trend_zh.html",
+        "file": "output/college.zh/sonnet/html/concept_trend_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
@@ -2946,6 +3031,13 @@
         "file": "output/college.en/sonnet/html/concept_volatility.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "volatility_zh",
+        "label": "Volatility Zh",
+        "file": "output/college.zh/sonnet/html/concept_volatility_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college",
@@ -3095,6 +3187,18 @@
         "file": "output/research.en/sonnet/html/book_temperature_prediction.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "data_mining",
+        "file": "output/college.zh/sonnet/html/book_data_mining.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "heart_disease_classification",
+        "file": "output/college.zh/sonnet/html/book_heart_disease_classification.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -3155,6 +3259,13 @@
         "language": "en"
       },
       {
+        "name": "big_data_zh",
+        "label": "Big Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_big_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "binary_multiclass_classification",
         "label": "Binary Multiclass Classification",
         "file": "output/research.en/sonnet/html/concept_binary_multiclass_classification.html",
@@ -3181,6 +3292,13 @@
         "file": "output/intro.en/sonnet/html/concept_binary_multiclass_classification.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "binary_multiclass_classification_zh",
+        "label": "Binary Multiclass Classification Zh",
+        "file": "output/college.zh/sonnet/html/concept_binary_multiclass_classification_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "bootstrap_aggregating",
@@ -3267,6 +3385,13 @@
         "language": "en"
       },
       {
+        "name": "data_mining_zh",
+        "label": "Data Mining Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_mining_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "decision_tree",
         "label": "Decision Tree",
         "file": "output/research.en/sonnet/html/concept_decision_tree.html",
@@ -3293,6 +3418,13 @@
         "file": "output/intro.en/sonnet/html/concept_decision_tree.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "decision_tree_zh",
+        "label": "Decision Tree Zh",
+        "file": "output/college.zh/sonnet/html/concept_decision_tree_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "facial_recognition",
@@ -3351,6 +3483,13 @@
         "language": "en"
       },
       {
+        "name": "heart_disease_classification_zh",
+        "label": "Heart Disease Classification Zh",
+        "file": "output/college.zh/sonnet/html/concept_heart_disease_classification_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "information_entropy",
         "label": "Information Entropy",
         "file": "output/research.en/sonnet/html/concept_information_entropy.html",
@@ -3377,6 +3516,13 @@
         "file": "output/intro.en/sonnet/html/concept_information_entropy.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "information_entropy_zh",
+        "label": "Information Entropy Zh",
+        "file": "output/college.zh/sonnet/html/concept_information_entropy_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "labeled_unlabeled_data",
@@ -3407,6 +3553,13 @@
         "language": "en"
       },
       {
+        "name": "labeled_unlabeled_data_zh",
+        "label": "Labeled Unlabeled Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_labeled_unlabeled_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "logistic_regression",
         "label": "Logistic Regression",
         "file": "output/research.en/sonnet/html/concept_logistic_regression.html",
@@ -3435,6 +3588,13 @@
         "language": "en"
       },
       {
+        "name": "logistic_regression_zh",
+        "label": "Logistic Regression Zh",
+        "file": "output/college.zh/sonnet/html/concept_logistic_regression_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "machine_learning_model",
         "label": "Machine Learning Model",
         "file": "output/research.en/sonnet/html/concept_machine_learning_model.html",
@@ -3461,6 +3621,13 @@
         "file": "output/intro.en/sonnet/html/concept_machine_learning_model.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "machine_learning_model_zh",
+        "label": "Machine Learning Model Zh",
+        "file": "output/college.zh/sonnet/html/concept_machine_learning_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "naive_bayes_classifier",
@@ -3547,6 +3714,13 @@
         "language": "en"
       },
       {
+        "name": "sigmoid_function_zh",
+        "label": "Sigmoid Function Zh",
+        "file": "output/college.zh/sonnet/html/concept_sigmoid_function_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "spam_filtering",
         "label": "Spam Filtering",
         "file": "output/research.en/sonnet/html/concept_spam_filtering.html",
@@ -3603,6 +3777,13 @@
         "language": "en"
       },
       {
+        "name": "supervised_learning_zh",
+        "label": "Supervised Learning Zh",
+        "file": "output/college.zh/sonnet/html/concept_supervised_learning_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "temperature_prediction",
         "label": "Temperature Prediction",
         "file": "output/research.en/sonnet/html/concept_temperature_prediction.html",
@@ -3657,6 +3838,13 @@
         "file": "output/intro.en/sonnet/html/concept_training_testing_set.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "training_testing_set_zh",
+        "label": "Training Testing Set Zh",
+        "file": "output/college.zh/sonnet/html/concept_training_testing_set_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college"
@@ -3797,6 +3985,18 @@
         "file": "output/research.en/sonnet/html/book_speech_recognition_tts.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "semantic_segmentation",
+        "file": "output/college.zh/sonnet/html/book_semantic_segmentation.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "large_language_model",
+        "file": "output/college.zh/sonnet/html/book_large_language_model.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -3829,6 +4029,13 @@
         "language": "en"
       },
       {
+        "name": "activation_function_zh",
+        "label": "Activation Function Zh",
+        "file": "output/college.zh/sonnet/html/concept_activation_function_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "artificial_intelligence",
         "label": "Artificial Intelligence",
         "file": "output/research.en/sonnet/html/concept_artificial_intelligence.html",
@@ -3855,6 +4062,13 @@
         "file": "output/intro.en/sonnet/html/concept_artificial_intelligence.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "artificial_intelligence_zh",
+        "label": "Artificial Intelligence Zh",
+        "file": "output/college.zh/sonnet/html/concept_artificial_intelligence_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "bias",
@@ -3885,6 +4099,13 @@
         "language": "en"
       },
       {
+        "name": "bias_zh",
+        "label": "Bias Zh",
+        "file": "output/college.zh/sonnet/html/concept_bias_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "convolutional_neural_network",
         "label": "Convolutional Neural Network",
         "file": "output/research.en/sonnet/html/concept_convolutional_neural_network.html",
@@ -3913,6 +4134,13 @@
         "language": "en"
       },
       {
+        "name": "convolutional_neural_network_zh",
+        "label": "Convolutional Neural Network Zh",
+        "file": "output/college.zh/sonnet/html/concept_convolutional_neural_network_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "deep_learning",
         "label": "Deep Learning",
         "file": "output/research.en/sonnet/html/concept_deep_learning.html",
@@ -3939,6 +4167,13 @@
         "file": "output/intro.en/sonnet/html/concept_deep_learning.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "deep_learning_zh",
+        "label": "Deep Learning Zh",
+        "file": "output/college.zh/sonnet/html/concept_deep_learning_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "deepfake",
@@ -3997,6 +4232,13 @@
         "language": "en"
       },
       {
+        "name": "depth_zh",
+        "label": "Depth Zh",
+        "file": "output/college.zh/sonnet/html/concept_depth_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "feature_map",
         "label": "Feature Map",
         "file": "output/research.en/sonnet/html/concept_feature_map.html",
@@ -4023,6 +4265,13 @@
         "file": "output/intro.en/sonnet/html/concept_feature_map.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "feature_map_zh",
+        "label": "Feature Map Zh",
+        "file": "output/college.zh/sonnet/html/concept_feature_map_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "generative_art",
@@ -4081,6 +4330,13 @@
         "language": "en"
       },
       {
+        "name": "large_language_model_zh",
+        "label": "Large Language Model Zh",
+        "file": "output/college.zh/sonnet/html/concept_large_language_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "layers",
         "label": "Layers",
         "file": "output/research.en/sonnet/html/concept_layers.html",
@@ -4107,6 +4363,13 @@
         "file": "output/intro.en/sonnet/html/concept_layers.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "layers_zh",
+        "label": "Layers Zh",
+        "file": "output/college.zh/sonnet/html/concept_layers_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "multilayer_perceptron",
@@ -4137,6 +4400,13 @@
         "language": "en"
       },
       {
+        "name": "multilayer_perceptron_zh",
+        "label": "Multilayer Perceptron Zh",
+        "file": "output/college.zh/sonnet/html/concept_multilayer_perceptron_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "natural_language_processing",
         "label": "Natural Language Processing",
         "file": "output/research.en/sonnet/html/concept_natural_language_processing.html",
@@ -4163,6 +4433,13 @@
         "file": "output/intro.en/sonnet/html/concept_natural_language_processing.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "natural_language_processing_zh",
+        "label": "Natural Language Processing Zh",
+        "file": "output/college.zh/sonnet/html/concept_natural_language_processing_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "neural_network",
@@ -4193,6 +4470,13 @@
         "language": "en"
       },
       {
+        "name": "neural_network_zh",
+        "label": "Neural Network Zh",
+        "file": "output/college.zh/sonnet/html/concept_neural_network_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "neuron",
         "label": "Neuron",
         "file": "output/research.en/sonnet/html/concept_neuron.html",
@@ -4219,6 +4503,13 @@
         "file": "output/intro.en/sonnet/html/concept_neuron.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "neuron_zh",
+        "label": "Neuron Zh",
+        "file": "output/college.zh/sonnet/html/concept_neuron_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "perceptron",
@@ -4249,6 +4540,13 @@
         "language": "en"
       },
       {
+        "name": "perceptron_zh",
+        "label": "Perceptron Zh",
+        "file": "output/college.zh/sonnet/html/concept_perceptron_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "pooling_layer",
         "label": "Pooling Layer",
         "file": "output/research.en/sonnet/html/concept_pooling_layer.html",
@@ -4277,6 +4575,13 @@
         "language": "en"
       },
       {
+        "name": "pooling_layer_zh",
+        "label": "Pooling Layer Zh",
+        "file": "output/college.zh/sonnet/html/concept_pooling_layer_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "semantic_segmentation",
         "label": "Semantic Segmentation",
         "file": "output/research.en/sonnet/html/concept_semantic_segmentation.html",
@@ -4303,6 +4608,13 @@
         "file": "output/intro.en/sonnet/html/concept_semantic_segmentation.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "semantic_segmentation_zh",
+        "label": "Semantic Segmentation Zh",
+        "file": "output/college.zh/sonnet/html/concept_semantic_segmentation_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "speech_recognition_tts",
@@ -4361,6 +4673,13 @@
         "language": "en"
       },
       {
+        "name": "transformer_model_zh",
+        "label": "Transformer Model Zh",
+        "file": "output/college.zh/sonnet/html/concept_transformer_model_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "vector",
         "label": "Vector",
         "file": "output/research.en/sonnet/html/concept_vector.html",
@@ -4387,6 +4706,13 @@
         "file": "output/intro.en/sonnet/html/concept_vector.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "vector_zh",
+        "label": "Vector Zh",
+        "file": "output/college.zh/sonnet/html/concept_vector_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "weight",
@@ -4417,6 +4743,13 @@
         "language": "en"
       },
       {
+        "name": "weight_zh",
+        "label": "Weight Zh",
+        "file": "output/college.zh/sonnet/html/concept_weight_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "word_embedding",
         "label": "Word Embedding",
         "file": "output/research.en/sonnet/html/concept_word_embedding.html",
@@ -4443,6 +4776,13 @@
         "file": "output/intro.en/sonnet/html/concept_word_embedding.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "word_embedding_zh",
+        "label": "Word Embedding Zh",
+        "file": "output/college.zh/sonnet/html/concept_word_embedding_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college"
@@ -4583,6 +4923,18 @@
         "file": "output/research.en/sonnet/html/book_hipaa.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "cookies",
+        "file": "output/college.zh/sonnet/html/book_cookies.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "explainable_ai",
+        "file": "output/college.zh/sonnet/html/book_explainable_ai.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -4615,6 +4967,13 @@
         "language": "en"
       },
       {
+        "name": "bias_zh",
+        "label": "Bias Zh",
+        "file": "output/college.zh/sonnet/html/concept_bias_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "cookies",
         "label": "Cookies",
         "file": "output/research.en/sonnet/html/concept_cookies.html",
@@ -4643,6 +5002,13 @@
         "language": "en"
       },
       {
+        "name": "cookies_zh",
+        "label": "Cookies Zh",
+        "file": "output/college.zh/sonnet/html/concept_cookies_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_privacy",
         "label": "Data Privacy",
         "file": "output/research.en/sonnet/html/concept_data_privacy.html",
@@ -4669,6 +5035,13 @@
         "file": "output/intro.en/sonnet/html/concept_data_privacy.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "data_privacy_zh",
+        "label": "Data Privacy Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_privacy_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "ethics_in_data_science",
@@ -4727,6 +5100,13 @@
         "language": "en"
       },
       {
+        "name": "explainable_ai_zh",
+        "label": "Explainable Ai Zh",
+        "file": "output/college.zh/sonnet/html/concept_explainable_ai_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "fairness",
         "label": "Fairness",
         "file": "output/research.en/sonnet/html/concept_fairness.html",
@@ -4753,6 +5133,13 @@
         "file": "output/intro.en/sonnet/html/concept_fairness.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "fairness_zh",
+        "label": "Fairness Zh",
+        "file": "output/college.zh/sonnet/html/concept_fairness_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "ferpa",
@@ -4865,6 +5252,13 @@
         "file": "output/intro.en/sonnet/html/concept_personally_identifiable_information.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "personally_identifiable_information_zh",
+        "label": "Personally Identifiable Information Zh",
+        "file": "output/college.zh/sonnet/html/concept_personally_identifiable_information_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "regulatory_compliance",
@@ -5061,6 +5455,18 @@
         "file": "output/research.en/sonnet/html/book_three_d_visualization.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "pareto_chart",
+        "file": "output/college.zh/sonnet/html/book_pareto_chart.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
+        "target": "choropleth_graph",
+        "file": "output/college.zh/sonnet/html/book_choropleth_graph.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -5119,6 +5525,13 @@
         "file": "output/intro.en/sonnet/html/concept_choropleth_graph.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "choropleth_graph_zh",
+        "label": "Choropleth Graph Zh",
+        "file": "output/college.zh/sonnet/html/concept_choropleth_graph_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "correlation_coefficient",
@@ -5205,6 +5618,13 @@
         "language": "en"
       },
       {
+        "name": "geospatial_data_zh",
+        "label": "Geospatial Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_geospatial_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "gis_mapping",
         "label": "Gis Mapping",
         "file": "output/research.en/sonnet/html/concept_gis_mapping.html",
@@ -5289,6 +5709,13 @@
         "language": "en"
       },
       {
+        "name": "pareto_chart_zh",
+        "label": "Pareto Chart Zh",
+        "file": "output/college.zh/sonnet/html/concept_pareto_chart_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "scatterplot_color_encoding",
         "label": "Scatterplot Color Encoding",
         "file": "output/research.en/sonnet/html/concept_scatterplot_color_encoding.html",
@@ -5345,6 +5772,13 @@
         "language": "en"
       },
       {
+        "name": "spatial_heatmap_zh",
+        "label": "Spatial Heatmap Zh",
+        "file": "output/college.zh/sonnet/html/concept_spatial_heatmap_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "three_d_visualization",
         "label": "Three D Visualization",
         "file": "output/research.en/sonnet/html/concept_three_d_visualization.html",
@@ -5399,6 +5833,13 @@
         "file": "output/intro.en/sonnet/html/concept_univariate_data.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "univariate_data_zh",
+        "label": "Univariate Data Zh",
+        "file": "output/college.zh/sonnet/html/concept_univariate_data_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "default_level": "college"
@@ -5449,6 +5890,12 @@
         "file": "output/college.en/sonnet/html/book_technical_report_structure.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "target": "executive_dashboard",
+        "file": "output/college.zh/sonnet/html/book_executive_dashboard.html",
+        "model": "sonnet",
+        "language": "zh"
       }
     ],
     "generated_concepts": [
@@ -5481,6 +5928,13 @@
         "language": "en"
       },
       {
+        "name": "audience_zh",
+        "label": "Audience Zh",
+        "file": "output/college.zh/sonnet/html/concept_audience_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "data_visualization_choice",
         "label": "Data Visualization Choice",
         "file": "output/research.en/sonnet/html/concept_data_visualization_choice.html",
@@ -5509,6 +5963,13 @@
         "language": "en"
       },
       {
+        "name": "data_visualization_choice_zh",
+        "label": "Data Visualization Choice Zh",
+        "file": "output/college.zh/sonnet/html/concept_data_visualization_choice_zh.html",
+        "model": "sonnet",
+        "language": "zh"
+      },
+      {
         "name": "executive_dashboard",
         "label": "Executive Dashboard",
         "file": "output/research.en/sonnet/html/concept_executive_dashboard.html",
@@ -5535,6 +5996,13 @@
         "file": "output/college.en/sonnet/html/concept_executive_dashboard.html",
         "model": "sonnet",
         "language": "en"
+      },
+      {
+        "name": "executive_dashboard_zh",
+        "label": "Executive Dashboard Zh",
+        "file": "output/college.zh/sonnet/html/concept_executive_dashboard_zh.html",
+        "model": "sonnet",
+        "language": "zh"
       },
       {
         "name": "technical_report_structure",

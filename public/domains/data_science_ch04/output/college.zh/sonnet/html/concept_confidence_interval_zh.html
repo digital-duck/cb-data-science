@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidence Interval | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="置信区间">置信区间</h2>
+<p><strong>定义。</strong> 置信区间(confidence interval)是以点估计量为中心构造的一个区间,用来估计总体参数。若置信水平为 $1-\alpha$(常取 95%),则意味着:在相同条件下反复抽样并各自构造区间,长期来看约有 $100(1-\alpha)\%$ 的区间会包含真实参数。需要注意,这是对<em>方法</em>的陈述,而不是说"某一个已算出的区间有 95% 的概率包含参数"——参数是固定的,随机的是区间。</p>
+<p>当总体标准差 $\sigma$ 已知(或样本量较大)时,总体均值 $\mu$ 的置信区间为</p>
+$$
+\bar{x} \pm z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}}
+$$
+<p>其中 $\bar{x}$ 是样本均值,$z_{\alpha/2}$ 是标准正态分布的临界值(95% 时为 $1.96$),$\sigma/\sqrt{n}$ 是标准误,$z_{\alpha/2}\,\sigma/\sqrt{n}$ 称为误差限。若 $\sigma$ 未知且样本较小,则用样本标准差 $s$ 和自由度为 $n-1$ 的 $t$ 分布临界值 $t_{\alpha/2,\,n-1}$ 代替。</p>
+<p><strong>例题。</strong> 某班随机抽取 $n=36$ 名学生,测得每周平均学习时间 $\bar{x}=12.5$ 小时,已知 $\sigma=3$ 小时。求 $\mu$ 的 95% 置信区间。</p>
+<li>标准误:$\dfrac{3}{\sqrt{36}}=0.5$。</li>
+<li>误差限:$1.96\times 0.5=0.98$。</li>
+<li>区间:$12.5\pm 0.98$,即 $(11.52,\ 13.48)$。</li>
+<p>解释:我们有 95% 的信心认为,全班真实平均学习时间在 11.52 到 13.48 小时之间。</p>
+<p><strong>问题求解应用。</strong> 置信区间的宽度由三个因素决定:置信水平(越高,$z$ 越大,区间越宽)、数据波动 $\sigma$(越大越宽)、样本量 $n$(越大越窄,但按 $\sqrt{n}$ 的速度缩小)。这使我们能反过来<em>设计</em>调查。</p>
+<p><em>问题:</em> 若希望误差限不超过 $0.3$ 小时(仍取 95%,$\sigma=3$),至少需要多大样本?</p>
+<p>由 $z_{\alpha/2}\dfrac{\sigma}{\sqrt{n}}\le E$ 得</p>
+$$
+n \ge \left(\frac{z_{\alpha/2}\,\sigma}{E}\right)^2=\left(\frac{1.96\times 3}{0.3}\right)^2=19.6^2=384.16
+$$
+<p>向上取整,至少需要 $n=385$。注意:要把误差限缩小为原来的一半,样本量必须变为原来的 4 倍。</p>
+<p><strong>常见误区。</strong></p>
+<li>误以为"95% 的数据落在区间内":置信区间描述的是<em>均值</em>的不确定性,而不是个体数据的分布范围。</li>
+<li>把"95% 置信"理解为参数有 95% 的概率落在这个具体区间内。</li>
+<li>忽略前提:样本应当随机,且样本量较小时总体应近似正态。</li>
+<p><strong>小结。</strong> 置信区间 = 点估计 ± 临界值 × 标准误。它同时给出估计值和估计的精确程度,是从样本推断总体时最常用的工具之一。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

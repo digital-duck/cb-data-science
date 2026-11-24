@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Tree | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="决策树">决策树</h2>
+<p><strong>定义。</strong> 决策树(decision tree)是一种监督学习算法,它把数据递归地划分为越来越“纯”的子集,从而形成一个层次化的树状结构:每个<strong>内部节点</strong>对某个特征做一次判断(如“年龄 $\le 30$?”),每条<strong>分支</strong>对应判断结果,每个<strong>叶节点</strong>给出最终的类别标签或预测值。预测时,样本从根节点出发,沿着判断结果一路走到叶节点。</p>
+<p><strong>如何选择划分?</strong> 关键是度量节点的“不纯度”。设节点中第 $k$ 类样本所占比例为 $p_k$,则</p>
+$$
+H(S) = -\sum_{k} p_k \log_2 p_k \quad(\text{熵}),\qquad
+G(S) = 1-\sum_{k} p_k^2 \quad(\text{基尼指数}).
+$$
+<p>按特征 $A$ 划分后,<strong>信息增益</strong>为</p>
+$$
+\mathrm{Gain}(S,A)=H(S)-\sum_{v}\frac{|S_v|}{|S|}H(S_v),
+$$
+<p>其中 $S_v$ 是特征 $A$ 取值为 $v$ 的子集。算法(如 ID3、CART)在每个节点贪心地选择增益最大的划分,直到节点足够纯或达到深度上限为止。</p>
+<p><strong>例题。</strong> 某数据集有 10 个样本:6 个“买”、4 个“不买”。特征“是否学生”把它分成两组:</p>
+<li>学生:5 个样本,其中 4 个“买”、1 个“不买”;</li>
+<li>非学生:5 个样本,其中 2 个“买”、3 个“不买”。</li>
+<p>父节点熵:</p>
+$$
+H(S) = -0.6\log_2 0.6 - 0.4\log_2 0.4 \approx 0.971.
+$$
+<p>两个子节点的熵:</p>
+$$
+H(S_{\text{学生}}) = -0.8\log_2 0.8 - 0.2\log_2 0.2 \approx 0.722,
+$$
+$$
+H(S_{\text{非学生}}) = -0.4\log_2 0.4 - 0.6\log_2 0.6 \approx 0.971.
+$$
+<p>加权平均后:</p>
+$$
+\mathrm{Gain}=0.971-\left(0.5\times0.722+0.5\times0.971\right)\approx 0.971-0.847=0.124.
+$$
+<p>如果另一个特征的增益是 $0.05$,那么“是否学生”更适合作为根节点的判断条件。</p>
+<pre class="mermaid">graph TD
+    A["是否学生?"] -->|是| B["预测:买"]
+    A -->|否| C["收入是否较高?"]
+    C -->|是| D["预测:买"]
+    C -->|否| E["预测:不买"]</pre>
+<p><em>一棵简单的决策树:内部节点是特征判断,叶节点是最终预测。</em></p>
+<p><strong>问题求解应用。</strong> 用 scikit-learn 训练并查看一棵树:</p>
+<pre><code>from sklearn.tree import DecisionTreeClassifier, export_text
+clf = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+clf.fit(X_train, y_train)
+print(export_text(clf, feature_names=feature_names))
+print(clf.score(X_test, y_test))</code></pre>
+<p>实践中需注意三点:</p>
+<li><strong>过拟合</strong>:不加限制的树会把训练数据“背下来”,训练准确率接近 100%,测试准确率却很低。可通过限制 <code>max_depth</code>、设置最小叶节点样本数,或<strong>剪枝</strong>来控制。</li>
+<li><strong>贪心的局限</strong>:每步只选局部最优划分,不保证全局最优树。</li>
+<li><strong>可解释性</strong>:每个预测都对应一条“若……且……则……”的规则路径,这是决策树相比许多黑箱模型的突出优点;若想提升精度,可进一步使用随机森林等集成方法。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

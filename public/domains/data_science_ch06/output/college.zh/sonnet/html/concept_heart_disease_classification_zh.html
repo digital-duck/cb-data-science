@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart Disease Classification | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="心脏病分类">心脏病分类</h2>
+<p><strong>定义。</strong> 心脏病分类是一个二分类监督学习问题:给定患者的特征向量 $\mathbf{x}=(x_1,\dots,x_d)$(如年龄、静息血压、血清胆固醇、最大心率),预测标签 $y\in\{0,1\}$,其中 $y=1$ 表示患有心脏病。常用模型有两类:</p>
+<li><strong>逻辑回归</strong>:用 sigmoid 函数把线性得分变成概率,</li>
+$$P(y=1\mid\mathbf{x})=\sigma(\mathbf{w}^\top\mathbf{x}+b)=\frac{1}{1+e^{-(\mathbf{w}^\top\mathbf{x}+b)}}.$$
+<p>通过最小化交叉熵损失 $-\sum_i\big[y_i\ln p_i+(1-y_i)\ln(1-p_i)\big]$ 来训练。</p>
+<li><strong>决策树</strong>:每个节点选择一个特征阈值(如"胆固醇 $>240$"),使基尼不纯度 $G=1-\sum_k p_k^2$ 下降最多,逐层划分直到叶节点。</li>
+<p><strong>工作示例。</strong> 假设已训练好的逻辑回归模型为</p>
+$$z=-8+0.04\,\text{bp}+0.02\,\text{chol}$$
+<p>(bp 为收缩压,chol 为胆固醇,单位 mg/dL)。某患者 bp $=150$,chol $=260$:</p>
+$$z=-8+0.04\times150+0.02\times260=-8+6+5.2=3.2,$$
+$$p=\frac{1}{1+e^{-3.2}}\approx\frac{1}{1+0.0408}\approx0.96.$$
+<p>模型预测该患者患病概率约为 $96\%$。系数 $0.02$ 的含义是:胆固醇每升高 $1$ mg/dL,对数几率(log-odds)增加 $0.02$,即几率乘以 $e^{0.02}\approx1.02$。</p>
+<p><strong>问题求解应用。</strong> 医学诊断中,两类错误的代价不对等:漏诊(假阴性)比误诊(假阳性)危险得多。因此不能只看准确率,而要用混淆矩阵计算:</p>
+$$\text{灵敏度(召回率)}=\frac{TP}{TP+FN},\qquad \text{精确率}=\frac{TP}{TP+FP}.$$
+<p>例:在 $200$ 名患者中,$80$ 人真正患病。模型检出 $68$ 人($TP=68$,$FN=12$),并把 $20$ 名健康者误判为患病($FP=20$)。则灵敏度 $=68/80=0.85$,精确率 $=68/88\approx0.77$,准确率 $=(68+100)/200=0.84$。</p>
+<p>若医院希望灵敏度达到 $95\%$,可把判定阈值从默认的 $0.5$ 降低到如 $0.3$:更多患者被标为"疑似",灵敏度上升,代价是误诊增多。这条权衡曲线就是 ROC 曲线,曲线下面积 AUC 用来比较不同模型。</p>
+<p><strong>模型选择与注意事项。</strong></p>
+<li>逻辑回归系数可解释,便于向医生说明各风险因素的影响;决策树规则直观,但深树容易过拟合。</li>
+<li>必须把数据分为训练集与测试集(或使用交叉验证),只在未见过的数据上评估性能。</li>
+<li>特征量纲差异大(血压约 $10^2$,胆固醇约 $10^2$–$10^3$)时,逻辑回归训练前应做标准化。</li>
+<pre class="mermaid">flowchart LR
+A[患者特征] --> B[标准化]
+B --> C[分类模型]
+C --> D[患病概率 p]
+D --> E{p 大于阈值?}
+E -->|是| F[标记为疑似心脏病]
+E -->|否| G[标记为低风险]</pre>
+<p><em>图:从患者特征到诊断标签的流程;阈值的选择决定灵敏度与误诊率的权衡。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

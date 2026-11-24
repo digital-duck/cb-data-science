@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Regression | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="线性回归">线性回归</h2>
+<p><strong>定义。</strong> 线性回归用一条直线来描述自变量 $x$ 与因变量 $y$ 之间的关系：</p>
+$$\hat{y} = \beta_0 + \beta_1 x$$
+<p>其中 $\beta_0$ 是截距，$\beta_1$ 是斜率，$\hat{y}$ 是模型的预测值。第 $i$ 个样本的<strong>残差</strong>为 $e_i = y_i - \hat{y}_i$。<strong>最小二乘法</strong>选取使残差平方和最小的参数：</p>
+$$\min_{\beta_0,\beta_1} \; \sum_{i=1}^{n}\left(y_i-\beta_0-\beta_1 x_i\right)^2$$
+<p>令偏导数为零，可得闭式解：</p>
+$$\beta_1=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2},\qquad \beta_0=\bar{y}-\beta_1\bar{x}$$
+<p>由此可见，回归直线一定经过样本均值点 $(\bar{x},\bar{y})$。</p>
+<p><strong>例题。</strong> 某学生记录每周学习时长 $x$（小时）与考试成绩 $y$（分）：</p>
+<p>| $x$ | 1 | 2 | 3 | 4 | 5 | |---|---|---|---|---|---| | $y$ | 55 | 65 | 70 | 80 | 90 |</p>
+<p>第一步，求均值：$\bar{x}=3$，$\bar{y}=72$。</p>
+<p>第二步，计算分子与分母：</p>
+$$\sum (x_i-\bar{x})(y_i-\bar{y}) = (-2)(-17)+(-1)(-7)+0\cdot(-2)+(1)(8)+(2)(18)=85$$
+$$\sum (x_i-\bar{x})^2 = 4+1+0+1+4=10$$
+<p>第三步，$\beta_1 = 85/10 = 8.5$，$\beta_0 = 72 - 8.5\times 3 = 46.5$。</p>
+<p>所以回归方程为 $\hat{y}=46.5+8.5x$。含义是：每多学习 1 小时，平均成绩约提高 8.5 分。</p>
+<p><strong>问题求解应用。</strong></p>
+<p><em>(1) 预测。</em> 若学习 6 小时，则 $\hat{y}=46.5+8.5\times 6=97.5$ 分。注意 6 已超出数据范围 $[1,5]$，这属于<strong>外推</strong>，可靠性较低；成绩还有 100 分的上限，直线在此处很可能失效。</p>
+<p><em>(2) 评估拟合优度。</em> 各点的预测值为 $55,\,63.5,\,72,\,80.5,\,89$，残差为 $0,\,1.5,\,-2,\,-0.5,\,1$。于是</p>
+$$SS_{res}=0+2.25+4+0.25+1=7.5,\qquad SS_{tot}=\sum(y_i-\bar{y})^2=289+49+4+64+324=730$$
+$$R^2 = 1-\frac{SS_{res}}{SS_{tot}} = 1-\frac{7.5}{730}\approx 0.990$$
+<p>即学习时长解释了成绩约 99% 的变异，说明线性模型拟合很好。</p>
+<p><em>(3) 检验前提。</em> 使用线性回归前，应画出残差图并检查：关系是否大致线性、残差是否无明显规律且方差大致恒定、是否存在对斜率影响过大的离群点。相关不等于因果：即使斜率显著，也不能仅凭此断定“多学习必然导致高分”，因为基础水平、睡眠等混杂因素可能同时影响两者。</p>
+<pre class="mermaid">flowchart LR
+    A[收集数据对 x, y] --> B[画散点图检查线性趋势]
+    B --> C[用最小二乘法求 β0, β1]
+    C --> D[计算残差并检验前提]
+    D --> E[用 R² 评估拟合优度]
+    E --> F[在数据范围内预测]</pre>
+<p><em>图：线性回归建模的基本流程，从数据检查、参数估计到残差诊断与预测。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

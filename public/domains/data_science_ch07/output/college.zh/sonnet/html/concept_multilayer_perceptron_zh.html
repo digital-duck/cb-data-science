@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multilayer Perceptron | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="多层感知机">多层感知机</h2>
+<h3 id="定义">定义</h3>
+<p><strong>多层感知机</strong>(Multilayer Perceptron,MLP)是由输入层、一个或多个<strong>隐藏层</strong>和输出层依次全连接而成的前馈神经网络。单层感知机只能产生线性决策边界,因此无法解决异或(XOR)这类线性不可分问题。MLP 在层与层之间加入<strong>非线性激活函数</strong>,从而突破了这一限制。</p>
+<p>第 $l$ 层的计算为</p>
+$$
+\mathbf{h}^{(l)} = \sigma\!\left(W^{(l)}\mathbf{h}^{(l-1)} + \mathbf{b}^{(l)}\right),\qquad \mathbf{h}^{(0)}=\mathbf{x}
+$$
+<p>其中 $W^{(l)}$ 是权重矩阵,$\mathbf{b}^{(l)}$ 是偏置,$\sigma$ 是激活函数,常用 $\sigma(z)=\max(0,z)$(ReLU)或 $\sigma(z)=\dfrac{1}{1+e^{-z}}$(sigmoid)。</p>
+<p>关键点:若去掉 $\sigma$,多层只是矩阵连乘,$W^{(2)}W^{(1)}$ 仍是一个线性变换,深度就没有意义。非线性才是 MLP 表达能力的来源。</p>
+<h3 id="例题-用两层网络解决-xor">例题:用两层网络解决 XOR</h3>
+<p>XOR 的输入输出为 $(0,0)\to0,\ (0,1)\to1,\ (1,0)\to1,\ (1,1)\to0$。没有任何一条直线能把两类点分开。</p>
+<p>取一个含 2 个隐藏单元的 ReLU 网络:</p>
+$$
+h_1=\max(0,\,x_1+x_2),\quad h_2=\max(0,\,x_1+x_2-1),\quad y=h_1-2h_2
+$$
+<p>逐点验证:</p>
+<p>| $(x_1,x_2)$ | $h_1$ | $h_2$ | $y$ | |---|---|---|---| | (0,0) | 0 | 0 | 0 | | (0,1) | 1 | 0 | 1 | | (1,0) | 1 | 0 | 1 | | (1,1) | 2 | 1 | 0 |</p>
+<p>四个点全部分类正确。隐藏层把原本线性不可分的数据映射到新的表示空间,在那里一个线性输出层就够用了。</p>
+<h3 id="问题求解应用-训练与参数计数">问题求解应用:训练与参数计数</h3>
+<p><strong>训练</strong>。MLP 通过最小化损失函数(如均方误差 $L=\frac12\|\hat{\mathbf{y}}-\mathbf{y}\|^2$)来学习,用<strong>反向传播</strong>结合链式法则计算梯度。设 $\mathbf{z}^{(l)}=W^{(l)}\mathbf{h}^{(l-1)}+\mathbf{b}^{(l)}$,误差信号为 $\boldsymbol{\delta}^{(l)}=\partial L/\partial\mathbf{z}^{(l)}$,则</p>
+$$
+\boldsymbol{\delta}^{(l)}=\left(W^{(l+1)\top}\boldsymbol{\delta}^{(l+1)}\right)\odot\sigma'(\mathbf{z}^{(l)}),\qquad
+\frac{\partial L}{\partial W^{(l)}}=\boldsymbol{\delta}^{(l)}\,\mathbf{h}^{(l-1)\top}
+$$
+<p>再用梯度下降更新:$W^{(l)}\leftarrow W^{(l)}-\eta\,\partial L/\partial W^{(l)}$。</p>
+<p><strong>参数计数</strong>。设网络结构为 784–128–64–10(如手写数字识别),各层参数量为</p>
+$$
+784\times128+128 = 100480,\quad 128\times64+64=8256,\quad 64\times10+10=650
+$$
+<p>共 $109386$ 个参数。这类估算帮助你在设计模型时权衡容量、内存和过拟合风险。</p>
+<p><strong>理论保证</strong>。万能逼近定理指出:含足够多隐藏单元的单隐藏层 MLP,可以在紧致集上以任意精度逼近任意连续函数。但它没有说明所需单元数,也没有说明梯度下降能否找到这组权重。因此实践中常用更深的网络,以更少的参数获得更好的表达效率。</p>
+<pre class="mermaid">flowchart LR
+    A[输入层 x] --> B[隐藏层 1 加非线性]
+    B --> C[隐藏层 2 加非线性]
+    C --> D[输出层 y]
+    D --> E[计算损失 L]
+    E -.反向传播梯度.-> C
+    C -.反向传播梯度.-> B
+    B -.反向传播梯度.-> A</pre>
+<p><em>图:MLP 的前向传播(实线)与反向传播(虚线)。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

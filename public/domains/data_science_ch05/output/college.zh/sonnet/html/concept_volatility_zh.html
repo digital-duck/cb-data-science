@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volatility | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="波动率">波动率</h2>
+<p><strong>定义。</strong> 波动率(volatility)衡量数据点围绕均值波动的剧烈程度,通常源于难以分析或预测的因素。在金融中,它最常用收益率的样本标准差来度量:</p>
+$$\sigma = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(r_i-\bar r)^2}$$
+<p>其中 $r_i$ 是第 $i$ 期收益率,$\bar r$ 是样本均值。$\sigma$ 越大,数据偏离均值越远,结果越难预测。需要注意:波动率衡量的是波动幅度,不是方向,上涨和下跌都会使它增大。</p>
+<p><strong>年化。</strong> 若 $\sigma_{\text{日}}$ 为日波动率,一年约有 252 个交易日。假设各日收益相互独立,方差随时间线性累加,因此</p>
+$$\sigma_{\text{年}} = \sigma_{\text{日}}\sqrt{252}$$
+<p><strong>例题。</strong> 某股票连续 5 日的收益率(%)为:$1,\ -2,\ 3,\ 0,\ -2$。求日波动率与年化波动率。</p>
+<li>均值:$\bar r = \dfrac{1-2+3+0-2}{5} = 0$。</li>
+<li>离差平方和:$1^2+(-2)^2+3^2+0^2+(-2)^2 = 1+4+9+0+4 = 18$。</li>
+<li>样本方差:$\dfrac{18}{5-1} = 4.5$,所以 $\sigma_{\text{日}} = \sqrt{4.5}\approx 2.12\%$。</li>
+<li>年化:$2.12\% \times \sqrt{252} \approx 2.12\% \times 15.87 \approx 33.7\%$。</li>
+<p>这说明该股票的日波动约为 2%,折算成一年则相当于约 34% 的波动水平。</p>
+<p><strong>问题求解应用。</strong> 比较两项资产时,不能只看平均收益。设资产 A、B 的平均年收益都是 8%,但 $\sigma_A = 10\%$,$\sigma_B = 30\%$。若收益近似服从正态分布,则约 68% 的年份中收益落在 $\bar r \pm \sigma$ 内:</p>
+<li>A:约 $[-2\%,\ 18\%]$</li>
+<li>B:约 $[-22\%,\ 38\%]$</li>
+<p>两者平均收益相同,但 B 的结果区间宽得多,不确定性更大。一种常用的综合指标是夏普比率:</p>
+$$S = \frac{\bar r - r_f}{\sigma}$$
+<p>其中 $r_f$ 是无风险利率。取 $r_f = 2\%$,则 $S_A = \dfrac{8-2}{10} = 0.6$,$S_B = \dfrac{8-2}{30} = 0.2$。A 每承担一单位波动所获得的超额收益更高,在这个意义上更有效率。</p>
+<p><strong>常见误区。</strong></p>
+<li>波动率不等于亏损风险。它同时包含向上和向下的偏离。</li>
+<li>波动率会随时间变化,称为"波动率聚集":剧烈波动之后往往还会出现剧烈波动。因此用历史数据估计未来波动率时,窗口长度的选择会影响结果。</li>
+<li>正态假设在极端行情下常常失效,真实市场的"厚尾"事件比正态分布预测的更频繁。</li>
+<pre class="mermaid">flowchart LR
+    A[收益率序列] --> B[计算均值]
+    B --> C[计算离差平方]
+    C --> D[样本标准差 日波动率]
+    D --> E[乘以根号252 年化波动率]
+    E --> F[风险比较与夏普比率]</pre>
+<p><em>图:从收益率数据到年化波动率及风险比较的计算流程。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

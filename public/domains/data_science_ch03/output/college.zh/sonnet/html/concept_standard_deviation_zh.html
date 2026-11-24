@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standard Deviation | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="标准差">标准差</h2>
+<p><strong>定义。</strong> 标准差(standard deviation)衡量数据围绕平均值的离散程度,单位与原始数据相同。它是方差的算术平方根。对总体 $x_1,\dots,x_N$,均值为 $\mu$,则</p>
+$$\sigma=\sqrt{\frac{1}{N}\sum_{i=1}^{N}(x_i-\mu)^2}.$$
+<p>对样本 $x_1,\dots,x_n$,均值为 $\bar{x}$,通常使用</p>
+$$s=\sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2}.$$
+<p>分母取 $n-1$(贝塞尔修正)是因为样本均值 $\bar{x}$ 本身由数据算出,偏差平方和会被系统性低估。除以 $n-1$ 可使样本方差成为总体方差的无偏估计。</p>
+<p>取平方根的原因是:方差的单位是原单位的平方(如"分²"),不便解释。开方之后,标准差又回到"分"这样的原单位。</p>
+<p><strong>例题。</strong> 某小组 5 名同学的测验成绩为 $70,\ 75,\ 80,\ 85,\ 90$,把它们视为一个样本。</p>
+<li>均值:$\bar{x}=\dfrac{70+75+80+85+90}{5}=80$。</li>
+<li>各偏差:$-10,\,-5,\,0,\,5,\,10$。</li>
+<li>偏差平方和:$100+25+0+25+100=250$。</li>
+<li>样本方差:$s^2=\dfrac{250}{5-1}=62.5$。</li>
+<li>标准差:$s=\sqrt{62.5}\approx 7.9$(分)。</li>
+<p>可见,典型成绩与平均分相差约 8 分。</p>
+<p><strong>问题解决应用。</strong> 标准差常用于比较不同数据集的波动,也用于判断某个数值是否"异常"。</p>
+<p><em>比较稳定性。</em> 甲、乙两名运动员的平均成绩都是 80 分。甲的 $s=3$,乙的 $s=9$。甲的发挥更稳定。</p>
+<p><em>判断异常值(经验法则)。</em> 若数据近似服从正态分布,则约 68% 的数据落在 $\bar{x}\pm s$ 内,约 95% 落在 $\bar{x}\pm 2s$ 内,约 99.7% 落在 $\bar{x}\pm 3s$ 内。</p>
+<p>设某班成绩 $\bar{x}=80,\ s=8$。一名学生得 $98$ 分,其 $z$ 分数为</p>
+$$z=\frac{x-\bar{x}}{s}=\frac{98-80}{8}=2.25.$$
+<p>该成绩高于平均值 2.25 个标准差,超出 $\bar{x}+2s=96$,属于约前 2% 的优秀水平。</p>
+<p><em>用代码计算。</em></p>
+<pre><code>import statistics as st
+data = [70, 75, 80, 85, 90]
+print(st.stdev(data))   # 样本标准差 ≈ 7.91
+print(st.pstdev(data))  # 总体标准差 ≈ 7.07</code></pre>
+<p><strong>常见误区。</strong></p>
+<li>标准差对极端值敏感,因为偏差先平方再求和。</li>
+<li>标准差不能为负,只有所有数据相同时才为 0。</li>
+<li>先判断数据是样本还是总体,再选择分母 $n-1$ 还是 $N$。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

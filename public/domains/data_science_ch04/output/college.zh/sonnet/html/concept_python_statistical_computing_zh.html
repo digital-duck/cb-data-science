@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Statistical Computing | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="python-统计计算">Python 统计计算</h2>
+<h3 id="定义">定义</h3>
+<p><strong>Python 统计计算</strong>是指利用 <code>NumPy</code>、<code>SciPy</code>（<code>scipy.stats</code>）、<code>statsmodels</code> 等库，把统计推断中的公式计算交给程序完成。我们负责三件事：选对方法、检查前提条件、解释输出。</p>
+<p>常用函数对应关系如下：</p>
+<p>| 任务 | 函数 | |---|---| | 单样本/双样本 $t$ 检验 | <code>stats.ttest_1samp</code>, <code>stats.ttest_ind</code> | | 置信区间 | <code>stats.t.interval</code> | | 相关系数 | <code>stats.pearsonr</code> | | 简单线性回归 | <code>stats.linregress</code> | | 单因素方差分析 | <code>stats.f_oneway</code> |</p>
+<p>均值的 $(1-\alpha)$ 置信区间为</p>
+$$\bar{x} \pm t_{\alpha/2,\,n-1}\cdot \frac{s}{\sqrt{n}}$$
+<p>$t$ 统计量为</p>
+$$t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}$$
+<p>$p$ 值是在原假设成立时，出现至少与观测结果一样极端的结果的概率。它不是“原假设为真的概率”。</p>
+<h3 id="worked-example-置信区间与假设检验">worked example：置信区间与假设检验</h3>
+<p>某班 8 名学生的每日学习时长（小时）为 <code>[2.1, 2.8, 3.0, 2.5, 3.4, 2.9, 3.1, 2.7]</code>。检验平均学习时长是否不同于 $\mu_0=2.5$。</p>
+<pre><code>import numpy as np
+from scipy import stats
+
+x = np.array([2.1, 2.8, 3.0, 2.5, 3.4, 2.9, 3.1, 2.7])
+n, xbar, s = len(x), x.mean(), x.std(ddof=1)   # ddof=1：样本标准差
+
+ci = stats.t.interval(0.95, df=n-1, loc=xbar, scale=s/np.sqrt(n))
+t, p = stats.ttest_1samp(x, popmean=2.5)
+print(xbar, ci, t, p)</code></pre>
+<p>结果：$\bar{x}=2.8125$，$s\approx0.396$，95% 置信区间约为 $(2.48,\,3.14)$，$t\approx2.23$，$p\approx0.061$。</p>
+<p>解释：$p>0.05$，所以在 5% 显著性水平下不拒绝 $H_0$。置信区间包含 2.5，这与检验结论一致。注意 <code>ddof=1</code> 很关键，<code>np.std</code> 默认使用总体公式（<code>ddof=0</code>），会低估 $s$。</p>
+<h3 id="问题求解应用-相关-回归与-anova">问题求解应用：相关、回归与 ANOVA</h3>
+<p><strong>相关与回归。</strong> 研究学习时长 $x$ 与成绩 $y$ 的关系：</p>
+<pre><code>hours = [1, 2, 3, 4, 5, 6]
+score = [55, 62, 68, 75, 79, 88]
+r, p_r = stats.pearsonr(hours, score)
+res = stats.linregress(hours, score)
+print(r, res.slope, res.intercept, res.rvalue**2, res.pvalue)</code></pre>
+<p>回归模型为 $\hat{y}=\beta_0+\beta_1 x$。输出的 <code>slope</code> 约为 6.5，表示每多学 1 小时，成绩平均约提高 6.5 分。$R^2=$ <code>rvalue**2</code> 接近 1，说明线性关系解释了绝大部分变异。<code>pvalue</code> 检验的是 $H_0:\beta_1=0$。</p>
+<p><strong>单因素 ANOVA。</strong> 比较三种教学方法的成绩均值：</p>
+<pre><code>a = [78, 82, 85, 80]; b = [72, 75, 70, 74]; c = [88, 90, 85, 91]
+F, p = stats.f_oneway(a, b, c)</code></pre>
+<p>检验统计量为</p>
+$$F=\frac{\text{组间均方}}{\text{组内均方}}=\frac{SS_B/(k-1)}{SS_W/(N-k)}$$
+<p>若 $p<0.05$，说明至少有一组均值不同。ANOVA 本身不会指出是哪一组，需要再做事后检验，例如 <code>scipy.stats.tukey_hsd</code>。</p>
+<p><strong>实践检查清单：</strong></p>
+<li>先画图，再检验。</li>
+<li>检查前提：近似正态、方差齐性、观测独立。小样本时可用 <code>stats.shapiro</code> 和 <code>stats.levene</code>。</li>
+<li>同时报告效应大小（斜率、均值差、$R^2$）和 $p$ 值，不要只看显著与否。</li>
+<li>相关不等于因果。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

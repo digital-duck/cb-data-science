@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variance | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="方差">方差</h2>
+<p><strong>定义。</strong> 方差(variance)衡量数据围绕均值的离散程度。设一组数据 $x_1, x_2, \dots, x_n$,均值为 $\bar{x}$,则</p>
+$$
+\sigma^2 = \frac{1}{n}\sum_{i=1}^{n}(x_i-\bar{x})^2 \quad(\text{总体方差})
+$$
+<p>当数据是来自总体的样本时,通常使用</p>
+$$
+s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2 \quad(\text{样本方差})
+$$
+<p>为什么要平方?若直接把偏差 $x_i-\bar{x}$ 相加,正负偏差会相互抵消,结果恒为 $0$。平方既消除了符号,又使远离均值的点贡献更大。方差的单位是原数据单位的平方,其算术平方根 $\sigma$ 称为<strong>标准差</strong>,单位与原数据一致。</p>
+<p>分母取 $n-1$ 的原因是:用样本均值 $\bar{x}$ 代替未知的总体均值后,偏差平方和会系统性偏小。除以 $n-1$ 可以修正这一偏差,使 $s^2$ 成为总体方差的无偏估计。</p>
+<p><strong>例题。</strong> 某同学五次测验成绩为 $70, 80, 80, 90, 100$。把它看作样本,求方差。</p>
+<li>均值:$\bar{x} = \dfrac{70+80+80+90+100}{5} = 84$。</li>
+<li>偏差平方:$(-14)^2=196,\ (-4)^2=16,\ 16,\ 6^2=36,\ 16^2=256$。</li>
+<li>求和:$196+16+16+36+256 = 520$。</li>
+<li>样本方差:$s^2 = \dfrac{520}{5-1} = 130$,标准差 $s \approx 11.4$ 分。</li>
+<p>这说明成绩平均偏离均值约 $11$ 分。</p>
+<p><strong>解题应用。</strong> 方差常用于比较稳定性。甲、乙两名射手各射击五次,环数如下:</p>
+<li>甲:$8, 9, 9, 9, 10$,均值 $9$</li>
+<li>乙:$6, 8, 9, 10, 12$,均值 $9$</li>
+<p>两人平均环数相同。甲的偏差平方和为 $1+0+0+0+1=2$,乙为 $9+1+0+1+9=20$。按总体方差计算,$\sigma_{\text{甲}}^2 = 0.4$,$\sigma_{\text{乙}}^2 = 4$。甲的方差更小,所以发挥更稳定。</p>
+<p>方差还有两条常用性质,可简化计算:</p>
+$$
+\sigma^2 = \frac{1}{n}\sum x_i^2 - \bar{x}^2, \qquad \operatorname{Var}(aX+b) = a^2\operatorname{Var}(X)
+$$
+<p>第一式表示“平方的均值减去均值的平方”,免去了逐项求偏差。第二式表明:所有数据加上常数 $b$ 不改变离散程度,而乘以 $a$ 会使方差变为 $a^2$ 倍。例如把百分制成绩换算成满分 $50$ 的成绩($a=0.5$),方差变为原来的 $0.25$ 倍。</p>
+<p><strong>小结。</strong> 方差用“偏差平方的平均”刻画离散程度。计算时要先判断数据是总体还是样本,以决定分母取 $n$ 还是 $n-1$。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

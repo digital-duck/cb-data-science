@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Critical Value | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="临界值">临界值</h2>
+<p><strong>定义。</strong> 临界值(critical value)是分布曲线上的一个分界点:它把曲线下的面积按指定的置信水平 $C$ 切开,使中间面积为 $C$,两侧尾部面积共为 $\alpha = 1-C$。临界值记作 $z^<em>$(标准正态分布)或 $t^</em>$(自由度为 $df$ 的 $t$ 分布),在置信区间中用来确定误差范围:</p>
+$$
+\text{误差范围 } E = \text{临界值} \times \text{标准误}
+$$
+<p>例如,总体均值的置信区间为 $\bar{x} \pm z^<em> \dfrac{\sigma}{\sqrt{n}}$(已知 $\sigma$),或 $\bar{x} \pm t^</em> \dfrac{s}{\sqrt{n}}$(未知 $\sigma$,用样本标准差 $s$ 代替)。</p>
+<p><strong>如何确定。</strong> 每侧尾部面积为 $\alpha/2$,所以 $z^<em>$ 满足 $P(-z^</em> < Z < z^<em>) = C$,即 $z^</em> = \Phi^{-1}(1-\alpha/2)$。常用值如下:</p>
+<p>| 置信水平 | $z^*$ | |---|---| | 90% | 1.645 | | 95% | 1.960 | | 99% | 2.576 |</p>
+<p>$t^<em>$ 的尾部更厚,所以同一置信水平下 $t^</em> > z^<em>$;自由度 $df = n-1$ 越大,$t^</em>$ 越接近 $z^*$。</p>
+<p><strong>例题。</strong> 某校随机抽取 $n=25$ 名学生,测得每日睡眠时间的样本均值 $\bar{x}=7.2$ 小时,样本标准差 $s=0.9$ 小时。求总体均值的 95% 置信区间。</p>
+<li>$\sigma$ 未知,使用 $t$ 分布,$df = 24$。</li>
+<li>$\alpha/2 = 0.025$,查表得 $t^* = 2.064$。</li>
+<li>标准误 $= \dfrac{0.9}{\sqrt{25}} = 0.18$。</li>
+<li>误差范围 $E = 2.064 \times 0.18 \approx 0.372$。</li>
+<li>置信区间为 $7.2 \pm 0.372$,即 $(6.83,\ 7.57)$ 小时。</li>
+<p>若误用 $z^* = 1.960$,则 $E \approx 0.353$,区间偏窄,会高估估计的精确程度。</p>
+<p><strong>问题求解应用。</strong> 临界值也能反过来用于确定样本量。要使误差范围不超过 $E$,由 $E = z^*\dfrac{\sigma}{\sqrt{n}}$ 解得</p>
+$$
+n \ge \left(\frac{z^* \sigma}{E}\right)^2 .
+$$
+<p>设 $\sigma = 15$,希望 99% 置信水平下 $E \le 3$:</p>
+$$
+n \ge \left(\frac{2.576 \times 15}{3}\right)^2 = (12.88)^2 \approx 165.9,
+$$
+<p>向上取整,需要 $n = 166$。若改用 95% 置信水平,则 $n \ge (1.960\times 15/3)^2 = 96.04$,取 97。可见置信水平越高,临界值越大,所需样本量也越大。</p>
+<p><strong>选择流程。</strong></p>
+<pre class="mermaid">flowchart TD
+A["确定置信水平 C"] --> B["计算 α = 1 - C"]
+B --> C{"σ 已知,或 n 很大?"}
+C -->|"是"| D["取 z* = Φ⁻¹(1 - α/2)"]
+C -->|"否"| E["取 t*,自由度 df = n - 1"]
+D --> F["误差范围 E = 临界值 × 标准误"]
+E --> F</pre>
+<p><em>该图展示了由置信水平出发,选择 $z^</em>$ 还是 $t^<em>$,再计算误差范围的流程。</em></p>
+<p><strong>小结。</strong> 临界值把"我们有多大把握"这一置信水平转换成一个乘数:要求越高,临界值越大,区间越宽。选对分布(是 $z$ 还是 $t$)与自由度,是避免低估误差的关键。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

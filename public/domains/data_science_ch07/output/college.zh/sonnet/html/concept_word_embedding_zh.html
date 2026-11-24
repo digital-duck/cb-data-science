@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Embedding | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="词嵌入-word-embedding">词嵌入(Word Embedding)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>词嵌入</strong>是把词表 $V$ 中的每个词映射为一个稠密的实数向量的方法:</p>
+$$
+f: V \to \mathbb{R}^d,\qquad w \mapsto \mathbf{v}_w
+$$
+<p>其中维度 $d$ 通常取 $50$ 到 $1000$,远小于词表大小 $|V|$。与独热编码(one-hot)相比,独热向量的维度等于 $|V|$,且任意两个不同词的向量互相正交,无法表达"相似"。词嵌入则要求<strong>语义相近的词在空间中距离相近</strong>。</p>
+<p>衡量相近程度常用余弦相似度:</p>
+$$
+\cos(\mathbf{u},\mathbf{v})=\frac{\mathbf{u}\cdot\mathbf{v}}{\|\mathbf{u}\|\,\|\mathbf{v}\|}
+$$
+<p>其理论基础是分布假说:<strong>一个词的含义由其上下文决定</strong>。Word2Vec 的 Skip-gram 模型据此训练:给定中心词 $w_c$,最大化其上下文词 $w_o$ 的概率</p>
+$$
+P(w_o\mid w_c)=\frac{\exp(\mathbf{u}_{o}^{\top}\mathbf{v}_{c})}{\sum_{w\in V}\exp(\mathbf{u}_{w}^{\top}\mathbf{v}_{c})}
+$$
+<p>训练完成后,出现在相似上下文中的词会得到相似的向量。</p>
+<h3 id="worked-example-例题">worked example(例题)</h3>
+<p>设三个词的二维嵌入为:</p>
+$$
+\mathbf{v}_{\text{猫}}=(0.9,\,0.8),\quad \mathbf{v}_{\text{狗}}=(0.8,\,0.9),\quad \mathbf{v}_{\text{汽车}}=(-0.7,\,0.6)
+$$
+<p>计算"猫"与"狗"的余弦相似度:</p>
+$$
+\cos=\frac{0.9\times0.8+0.8\times0.9}{\sqrt{0.81+0.64}\cdot\sqrt{0.64+0.81}}=\frac{1.44}{1.45}\approx 0.993
+$$
+<p>"猫"与"汽车":</p>
+$$
+\cos=\frac{0.9\times(-0.7)+0.8\times0.6}{\sqrt{1.45}\cdot\sqrt{0.85}}=\frac{-0.15}{1.110}\approx -0.135
+$$
+<p>结果符合直觉:猫和狗几乎同向,而汽车与猫几乎无关。</p>
+<h3 id="问题求解应用-类比推理">问题求解应用:类比推理</h3>
+<p>嵌入空间的一个著名性质是,语义关系近似对应<strong>向量差</strong>:</p>
+$$
+\mathbf{v}_{\text{国王}}-\mathbf{v}_{\text{男人}}+\mathbf{v}_{\text{女人}}\approx\mathbf{v}_{\text{王后}}
+$$
+<p><strong>问题</strong>:已知 $\mathbf{v}_{\text{巴黎}}=(2,1)$,$\mathbf{v}_{\text{法国}}=(1,1)$,$\mathbf{v}_{\text{日本}}=(3,2)$,求"巴黎之于法国,相当于哪个城市之于日本"。</p>
+<p><strong>解</strong>:计算目标向量</p>
+$$
+\mathbf{q}=\mathbf{v}_{\text{巴黎}}-\mathbf{v}_{\text{法国}}+\mathbf{v}_{\text{日本}}=(2-1+3,\;1-1+2)=(4,\,2)
+$$
+<p>然后在词表中找与 $\mathbf{q}$ 余弦相似度最大的词(排除问题中已出现的词)。若 $\mathbf{v}_{\text{东京}}=(4,2.1)$,则 $\cos\approx 1.000$,答案即"东京"。</p>
+<pre class="mermaid">flowchart LR
+    A[词表中的词] --> B[查找嵌入矩阵]
+    B --> C[稠密向量]
+    C --> D[计算余弦相似度]
+    C --> E[向量加减做类比]
+    D --> F[语义相近的词]
+    E --> G[类比答案]</pre>
+<p><em>图:词被映射为稠密向量后,可用于相似度检索与类比推理两类任务。</em></p>
+<h3 id="小结">小结</h3>
+<p>词嵌入把离散符号变成可计算的几何对象:相似度对应夹角,语义关系对应向量差。需要注意,嵌入反映的是训练语料中的统计规律,因此也会继承语料中的偏见;类比推理只是近似成立,应通过检验而非默认接受结果。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

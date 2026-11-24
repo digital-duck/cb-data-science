@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seasonal Trend Decomposition Loess | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="季节-趋势分解-基于-loess">季节-趋势分解(基于 Loess)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>STL</strong>(Seasonal-Trend decomposition using Loess)把一个时间序列分解为三个分量的加法模型:</p>
+$$
+Y_t = T_t + S_t + R_t,\quad t = 1,\dots,N
+$$
+<p>其中 $T_t$ 是<strong>趋势-周期分量</strong>(缓慢变化的整体走向),$S_t$ 是<strong>季节分量</strong>(周期为 $n_p$ 的重复模式,如月度数据中 $n_p=12$),$R_t$ 是<strong>余项</strong>(噪声)。</p>
+<p>STL 的核心工具是 <strong>Loess(局部加权回归)</strong>:为了估计点 $x_0$ 处的值,取其邻近的若干点,赋予三次权重函数</p>
+$$
+w(u) = (1-|u|^3)^3,\quad |u|<1,
+$$
+<p>距离越近权重越大,然后在该邻域内做加权最小二乘的低阶多项式(常用一次)拟合,取拟合值作为 $x_0$ 处的平滑结果。</p>
+<h3 id="stl-的迭代流程">STL 的迭代流程</h3>
+<p>STL 由<strong>内循环</strong>与<strong>外循环</strong>组成。内循环每轮包含:</p>
+<li><strong>去趋势</strong>:$Y_t - T_t^{(k)}$。</li>
+<li><strong>周期子序列平滑</strong>:把去趋势序列按季节位置分组(如所有 1 月、所有 2 月……),对每组做 Loess,再拼接并扩展两端。</li>
+<li><strong>低通滤波</strong>:对结果依次做长度为 $n_p$、$n_p$、3 的滑动平均,再做一次 Loess,去掉其中混入的低频成分,得到 $L_t$。</li>
+<li><strong>季节分量</strong>:$S_t^{(k+1)} = C_t^{(k+1)} - L_t$。</li>
+<li><strong>去季节与趋势平滑</strong>:对 $Y_t - S_t^{(k+1)}$ 做 Loess,得到 $T_t^{(k+1)}$。</li>
+<p><strong>外循环</strong>根据余项大小计算<strong>稳健权重</strong> $\rho_t$(如双平方函数,离群点权重接近 0),在下一轮内循环中与 Loess 权重相乘,使异常值不会扭曲趋势和季节。</p>
+<h3 id="示例">示例</h3>
+<p>设某商店 4 年的月度销量,平均每月约 100 件,年增长约 12 件,12 月出现约 $+30$ 的促销高峰,另有一个月因系统故障销量异常偏低。</p>
+<li>周期子序列平滑:12 月分组的 4 个值经 Loess 平滑后,得到稳定的 $S_{12}\approx +30$。</li>
+<li>趋势平滑:去季节后的序列呈上升走势,$T_t$ 每年约增加 12。</li>
+<li>故障月的 $R_t$ 很大,外循环给它的稳健权重 $\rho_t\approx 0$,因此它几乎不影响 $T_t$ 与 $S_t$。</li>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p>以下 Python 代码使用 <code>statsmodels</code> 完成分解,并据此做季节调整:</p>
+<pre><code>from statsmodels.tsa.seasonal import STL
+
+res = STL(y, period=12, robust=True).fit()
+trend, seasonal, resid = res.trend, res.seasonal, res.resid
+adjusted = y - seasonal          # 季节调整后的序列</code></pre>
+<p><strong>如何判断结果是否合理?</strong> 可用<strong>季节强度</strong></p>
+$$
+F_S = \max\!\left(0,\ 1-\frac{\operatorname{Var}(R_t)}{\operatorname{Var}(S_t+R_t)}\right).
+$$
+<p>$F_S$ 接近 1 表示季节性很强;接近 0 则说明该序列几乎没有季节性。趋势强度 $F_T$ 的定义类似,把 $S_t$ 换成 $T_t$ 即可。</p>
+<p><strong>参数选择要点</strong>:</p>
+<li>季节平滑窗口(<code>seasonal</code>)越大,季节模式越稳定,随年份变化越小;越小则越能捕捉季节形状的演变。</li>
+<li>趋势窗口(<code>trend</code>)越大,趋势越平滑。</li>
+<li>数据含离群点时应开启 <code>robust=True</code>。</li>
+<li>若季节波动幅度随水平上升,可先取对数,再用加法模型:$\log Y_t = T_t + S_t + R_t$,这等价于原序列上的乘法分解。</li>
+<h3 id="小结">小结</h3>
+<p>STL 用 Loess 在"季节位置"与"时间"两个方向上交替平滑,并借助稳健权重抵御离群点。它能处理任意周期长度、允许季节形状随时间缓慢变化,因此成为现代时间序列分析中的标准分解工具。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

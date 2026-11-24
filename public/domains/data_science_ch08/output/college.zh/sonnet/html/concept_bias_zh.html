@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bias | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="偏置-bias">偏置(Bias)</h2>
+<h3 id="定义">定义</h3>
+<p>在单个神经元中,输入先经过加权求和,再通过激活函数输出。<strong>偏置</strong> $b$ 是加在加权和上的一个可学习常数:</p>
+$$z = \sum_{i=1}^{n} w_i x_i + b, \qquad a = \sigma(z)$$
+<p>权重 $w_i$ 决定"每个输入有多重要",而偏置 $b$ 决定"在没有任何输入刺激时,神经元本身有多容易被激活"。$b$ 越大,神经元越容易激活;$b$ 越小(越负),神经元越"迟钝",需要更强的输入才会被激活。</p>
+<p>从几何上看,偏置让决策边界不必经过原点。没有偏置时,$w_1x_1 + w_2x_2 = 0$ 必然是一条过原点的直线;加入偏置后,边界 $w_1x_1 + w_2x_2 + b = 0$ 可以平移到任意位置。</p>
+<h3 id="例题">例题</h3>
+<p>设一个神经元使用阶跃激活函数:$z \ge 0$ 时输出 1,否则输出 0。它有两个二值输入 $x_1, x_2 \in \{0,1\}$,权重 $w_1 = w_2 = 1$。</p>
+<p><strong>情形 A:$b = -1.5$。</strong> 计算 $z = x_1 + x_2 - 1.5$:</p>
+<p>| $x_1$ | $x_2$ | $z$ | 输出 | |---|---|---|---| | 0 | 0 | $-1.5$ | 0 | | 0 | 1 | $-0.5$ | 0 | | 1 | 0 | $-0.5$ | 0 | | 1 | 1 | $0.5$ | 1 |</p>
+<p>这正是逻辑<strong>与(AND)</strong>。</p>
+<p><strong>情形 B:$b = -0.5$。</strong> 此时 $z = x_1 + x_2 - 0.5$,只要有一个输入为 1,就有 $z \ge 0.5 > 0$,输出 1;仅当两个输入都为 0 时输出 0。这是逻辑<strong>或(OR)</strong>。</p>
+<p>权重完全相同,仅仅改变 $b$,神经元就实现了不同的功能。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 一个神经元用来判断"是否带伞"。输入 $x_1$ 为降雨概率(0 到 1),权重 $w_1 = 4$。要求:降雨概率超过 0.5 时才输出 1。求 $b$。</p>
+<p><strong>解:</strong> 临界点处 $z = 0$,即</p>
+$$4 \times 0.5 + b = 0 \;\Rightarrow\; b = -2.$$
+<p>验证:$x_1 = 0.7$ 时 $z = 2.8 - 2 = 0.8 > 0$,输出 1;$x_1 = 0.3$ 时 $z = 1.2 - 2 = -0.8 < 0$,输出 0。</p>
+<p><strong>一般方法:</strong> 若希望单输入神经元在 $x = x_0$ 处翻转,则令 $b = -w_1 x_0$。即偏置等于"阈值乘以权重"的相反数,这也说明偏置可以理解为<strong>可学习的阈值</strong>。</p>
+<p><strong>训练中的偏置:</strong> 梯度下降同样会更新偏置。因为 $\partial z / \partial b = 1$,所以</p>
+$$\frac{\partial L}{\partial b} = \frac{\partial L}{\partial a}\,\sigma'(z),$$
+<p>更新规则为 $b \leftarrow b - \eta \,\dfrac{\partial L}{\partial b}$。实践中常把偏置视为一个恒为 1 的额外输入 $x_0 = 1$ 所对应的权重 $w_0 = b$,这样可以统一处理所有参数。</p>
+<p><strong>小结:</strong> 权重控制边界的<strong>方向</strong>(斜率),偏置控制边界的<strong>位置</strong>(平移)。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

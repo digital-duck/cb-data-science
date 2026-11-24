@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Learning Model | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="机器学习模型">机器学习模型</h2>
+<h3 id="定义">定义</h3>
+<p><strong>机器学习模型</strong>是一个带有可调参数的数学函数 $f_{\theta}$。它从数据集中学习输入 $x$ 与输出 $y$ 之间的关系。这里的 $\theta$ 表示模型的内部参数，例如权重和偏置。"学习"就是在训练数据上不断调整 $\theta$，使预测值 $\hat{y}=f_{\theta}(x)$ 与真实值 $y$ 的差距（损失）降到可接受的水平。</p>
+<p>常用的损失函数是均方误差：</p>
+$$L(\theta)=\frac{1}{n}\sum_{i=1}^{n}\bigl(y_i-f_{\theta}(x_i)\bigr)^2$$
+<p>调整参数最常用的方法是梯度下降：</p>
+$$\theta \leftarrow \theta-\eta\,\nabla_{\theta}L(\theta)$$
+<p>其中 $\eta>0$ 是学习率，它决定每一步更新的幅度。</p>
+<h3 id="worked-example-一元线性回归">worked example：一元线性回归</h3>
+<p>设模型为 $f_{w,b}(x)=wx+b$，训练数据为 $(1,3),\,(2,5),\,(3,7)$。初始参数取 $w=0,\ b=0$，学习率取 $\eta=0.1$。</p>
+<li>预测值全为 $0$，误差 $e_i=\hat y_i-y_i$ 分别为 $-3,-5,-7$。</li>
+<li>梯度为</li>
+$$\frac{\partial L}{\partial w}=\frac{2}{n}\sum e_i x_i=\frac{2}{3}(-3-10-21)\approx-22.67,$$
+$$\frac{\partial L}{\partial b}=\frac{2}{n}\sum e_i=\frac{2}{3}(-15)=-10.$$
+<li>更新参数：$w\leftarrow 0-0.1\times(-22.67)\approx 2.27$，$b\leftarrow 0-0.1\times(-10)=1.0$。</li>
+<p>只更新一步，$w$ 和 $b$ 就明显向真实关系 $y=2x+1$ 靠近。重复迭代后，损失会趋近于 $0$，参数收敛到 $w=2,\ b=1$。</p>
+<pre class="mermaid">flowchart LR
+    A[训练数据] --> B[模型预测]
+    B --> C[计算损失]
+    C --> D{损失达标?}
+    D -- 否 --> E[梯度下降更新参数]
+    E --> B
+    D -- 是 --> F[得到训练好的模型]</pre>
+<p><em>图：模型训练循环。预测、计算损失、更新参数，直到精度满足要求为止。</em></p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p>训练好的模型要用在<strong>没见过的数据</strong>上，所以不能只看训练损失。标准做法是把数据分成训练集和测试集。</p>
+<p><strong>问题</strong>：某模型训练集 MSE 为 $0.01$，测试集 MSE 为 $4.2$。该怎么判断？</p>
+<p><strong>解答</strong>：两者差距很大，说明模型出现了<strong>过拟合</strong>。它记住了训练数据的噪声，没有学到真正的规律。可以采取以下对策：</p>
+<li>增加训练数据；</li>
+<li>降低模型复杂度，例如减少多项式次数；</li>
+<li>加入正则化项，把损失改为 $L(\theta)+\lambda\|\theta\|^2$；</li>
+<li>用交叉验证来选择超参数 $\eta$ 和 $\lambda$。</li>
+<p>相反，如果训练和测试误差都很高，就是<strong>欠拟合</strong>。这时应该增加模型表达能力，例如加入更多特征。</p>
+<p><strong>小结</strong>：机器学习模型 = 函数形式 + 可调参数 + 损失函数 + 优化方法。建模时要在拟合能力和泛化能力之间取得平衡。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Variable | Data Science Ch03</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="随机变量">随机变量</h2>
+<p><strong>定义。</strong> 设一次随机试验的样本空间为 $\Omega$。<strong>随机变量</strong>(random variable)是一个函数 $X:\Omega\to\mathbb{R}$,它给试验的每一个结果 $\omega\in\Omega$ 指定唯一一个实数 $X(\omega)$。</p>
+<p>要点有两个:</p>
+<li>随机变量本身不"随机",随机性来自试验结果 $\omega$ 的不确定性;</li>
+<li>它把"文字描述的结果"转化为"可计算的数",从而可以求平均、算方差、画分布。</li>
+<p>若 $X$ 只取有限个或可数个值,称为<strong>离散型</strong>;若取值充满某个区间,称为<strong>连续型</strong>。</p>
+<p>随机变量的<strong>分布</strong>由事件概率描述,例如</p>
+$$P(X=x)=P(\{\omega\in\Omega: X(\omega)=x\}).$$
+<p><strong>例题。</strong> 掷两枚均匀骰子,令 $X$ 为两枚点数之和。样本空间有 $36$ 个等可能结果,例如 $X((2,3))=5$,$X((6,6))=12$。</p>
+<p>求 $X$ 的分布:和为 $5$ 的结果为 $(1,4),(2,3),(3,2),(4,1)$,共 $4$ 个,故</p>
+$$P(X=5)=\frac{4}{36}=\frac19.$$
+<p>同理 $P(X=7)=\frac{6}{36}=\frac16$ 最大,$P(X=2)=P(X=12)=\frac1{36}$ 最小。</p>
+<p>期望为</p>
+$$E[X]=\sum_x x\,P(X=x)=2\cdot\tfrac1{36}+3\cdot\tfrac2{36}+\cdots+12\cdot\tfrac1{36}=7.$$
+<p><strong>问题求解应用。</strong> 某游戏规则:掷两枚骰子,若和为 $7$ 你赢 $10$ 元,若和为 $2$ 或 $12$ 你赢 $30$ 元,其余情况你付 $4$ 元。每局收益是否划算?</p>
+<p><strong>第一步:定义随机变量。</strong> 令 $Y$ 为你的净收益,它是结果的函数:</p>
+$$Y=\begin{cases}10, & X=7\\ 30, & X\in\{2,12\}\\ -4, & \text{其他}\end{cases}$$
+<p><strong>第二步:求分布。</strong> $P(Y=10)=\frac{6}{36}$,$P(Y=30)=\frac{2}{36}$,$P(Y=-4)=1-\frac{8}{36}=\frac{28}{36}$。</p>
+<p><strong>第三步:求期望。</strong></p>
+$$E[Y]=10\cdot\frac{6}{36}+30\cdot\frac{2}{36}-4\cdot\frac{28}{36}=\frac{60+60-112}{36}=\frac{8}{36}\approx 0.22\text{(元)}.$$
+<p>平均每局小赚约 $0.22$ 元,游戏略有利于玩家。</p>
+<p><strong>小结。</strong> 解题的通用套路是:先明确样本空间,再写出随机变量(结果 $\to$ 数值),然后求分布,最后计算期望等数字特征。把"结果"变成"数",是概率从描述走向计算的关键一步。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch3: Descriptive Statistics: Statistical Measurements and Probability Distributions (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

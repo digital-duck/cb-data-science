@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vector | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="vector-向量">Vector（向量）</h2>
+<p><strong>定义</strong></p>
+<p>向量（vector）是同时具有<strong>大小（magnitude）</strong>与<strong>方向（direction）</strong>的量，用图形表示时为一条箭头：箭头的长度正比于大小，箭头的指向即为方向。这与标量（scalar，只有大小无方向的量，如质量、温度）形成鲜明对比。在平面直角坐标系中，向量 $\vec{v}$ 可用分量形式表示为 $\vec{v} = (v_x, v_y)$，其大小由勾股定理给出：</p>
+$$|\vec{v}| = \sqrt{v_x^2 + v_y^2}$$
+<p>方向则可用与 $x$ 轴的夹角 $\theta = \tan^{-1}(v_y / v_x)$ 描述。向量的核心运算规则是：加法遵循平行四边形法则（或首尾相接法），标量乘法只改变长度不改变方向（除非乘以负数，此时方向反转）。</p>
+<p><strong>范例</strong></p>
+<p>设一架飞机以相对空气 $200\text{ km/h}$ 向正北方向飞行，同时遭遇一股向东吹的风，风速为 $50\text{ km/h}$。飞机相对地面的实际速度即为两个速度向量之和：</p>
+$$\vec{v}_{\text{飞机}} = (0, 200), \quad \vec{v}_{\text{风}} = (50, 0)$$
+$$\vec{v}_{\text{合}} = (50, 200)$$
+<p>合速度大小为 $|\vec{v}_{\text{合}}| = \sqrt{50^2 + 200^2} \approx 206.2\text{ km/h}$，方向偏东 $\theta = \tan^{-1}(50/200) \approx 14.0°$。这说明即使各分力独立作用，最终效果必须通过向量合成才能正确求得——直接相加大小（如 $200+50=250$）是错误的，因为方向未对齐。</p>
+<p><strong>解题应用</strong></p>
+<p>向量思维广泛用于力学（力的合成与分解）、导航（位移与速度）以及计算机图形学（物体位移与朝向）。解题的标准流程是：①将每个向量分解为正交分量；②对分量分别求和；③用勾股定理求合向量大小，用反正切求方向角。例如，物体同时受到 $30\text{ N}$（沿 $0°$）和 $40\text{ N}$（沿 $90°$）两个力，合力大小为 $\sqrt{30^2+40^2}=50\text{ N}$，方向角 $\tan^{-1}(40/30)\approx 53.1°$。掌握向量分解与合成，是后续学习力矩、动量守恒乃至线性代数中向量空间概念的基础。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

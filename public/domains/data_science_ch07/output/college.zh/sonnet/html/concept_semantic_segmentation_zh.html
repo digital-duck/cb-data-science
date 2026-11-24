@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Segmentation | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="语义分割">语义分割</h2>
+<h3 id="定义">定义</h3>
+<p><strong>语义分割</strong>(semantic segmentation)是一种计算机视觉任务:为图像中的<strong>每一个像素</strong>分配一个语义类别标签(如"道路""行人""天空"),从而把图像划分为有意义的区域。与图像分类(整幅图一个标签)和目标检测(用方框框出物体)不同,语义分割给出像素级的输出。</p>
+<p>形式上,设输入图像为 $x\in\mathbb{R}^{H\times W\times 3}$,类别数为 $C$。模型输出每个像素的类别概率:</p>
+$$
+P\in[0,1]^{H\times W\times C},\qquad \sum_{c=1}^{C}P_{i,j,c}=1,
+$$
+<p>预测标签为 $\hat y_{i,j}=\arg\max_c P_{i,j,c}$。注意:语义分割<strong>不区分同一类别的不同个体</strong>,两个相邻的行人都被标为"人"。</p>
+<p>典型的网络是<strong>编码器–解码器</strong>结构(如 FCN、U-Net):编码器用卷积和下采样提取语义特征,解码器用上采样(转置卷积或插值)恢复分辨率,并常通过<strong>跳跃连接</strong>把浅层的细节信息传给解码器,以获得清晰的边界。</p>
+<pre class="mermaid">flowchart LR
+A[输入图像] --> B[编码器: 卷积与下采样]
+B --> C[低分辨率语义特征]
+C --> D[解码器: 上采样]
+B -. 跳跃连接 .-> D
+D --> E[逐像素分类]
+E --> F[分割掩码]</pre>
+<p><em>编码器–解码器结构:下采样提取语义,上采样恢复分辨率,跳跃连接补充边界细节。</em></p>
+<h3 id="训练与评价">训练与评价</h3>
+<p>训练时对每个像素使用交叉熵损失:</p>
+$$
+\mathcal{L}=-\frac{1}{HW}\sum_{i,j}\sum_{c}y_{i,j,c}\log P_{i,j,c}.
+$$
+<p>评价常用某一类别的<strong>交并比</strong>(IoU):</p>
+$$
+\text{IoU}=\frac{|A\cap B|}{|A\cup B|}=\frac{TP}{TP+FP+FN},
+$$
+<p>其中 $A$ 为预测区域,$B$ 为真实区域;对所有类别取平均即得 <strong>mIoU</strong>。</p>
+<h3 id="例题">例题</h3>
+<p>一幅图像中,"道路"类的真实像素有 1000 个。模型预测了 900 个道路像素,其中 800 个正确。求该类 IoU 与像素准确率。</p>
+<li>$TP=800$</li>
+<li>$FP=900-800=100$</li>
+<li>$FN=1000-800=200$</li>
+$$
+\text{IoU}=\frac{800}{800+100+200}=\frac{800}{1100}\approx 0.727.
+$$
+<p>道路类的召回率为 $800/1000=0.8$,精确率为 $800/900\approx0.889$。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>场景:自动驾驶可行驶区域识别。</strong> 假设"道路"只占图像 5%,其余 95% 是背景。一个把所有像素都预测为背景的模型,像素准确率高达 95%,但道路 IoU 为 $0$。这说明:</p>
+<li>类别不平衡时,<strong>像素准确率会误导</strong>,应优先报告 IoU / mIoU;</li>
+<li>可以改用<strong>加权交叉熵</strong>或 <strong>Dice 损失</strong> $\;1-\dfrac{2|A\cap B|}{|A|+|B|}$,提高对小类别的关注;</li>
+<li>若需区分"每一辆车",语义分割不够,应转向<strong>实例分割</strong>。</li>
+<p><strong>要点:</strong> 语义分割 = 逐像素分类;网络靠编码器–解码器兼顾"是什么"与"在哪里";评价看 IoU,而不是简单的准确率。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

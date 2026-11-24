@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pareto Chart | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="帕累托图">帕累托图</h2>
+<p><strong>定义。</strong> 帕累托图(Pareto chart)是一种把"柱状图"与"累计百分比折线"叠加在同一坐标系中的图表。它先把各类别按频数从大到小排列,再用柱子表示每一类的频数,用折线表示累计占比。它依据的经验规律是<strong>帕累托原则</strong>(80/20 法则):少数几个原因往往造成大部分结果。</p>
+<p>设第 $i$ 类(已按频数降序排列)的频数为 $f_i$,总频数为 $N=\sum_{i=1}^{k} f_i$,则第 $i$ 类的累计百分比为</p>
+$$
+C_i=\frac{\sum_{j=1}^{i} f_j}{N}\times 100\%.
+$$
+<p>柱高读左侧纵轴(频数),折线读右侧纵轴(0%–100%)。</p>
+<p><strong>例题。</strong> 某工厂一周内记录了 200 件不合格品,按缺陷类型统计如下:</p>
+<p>| 缺陷类型 | 频数 $f_i$ | |---|---| | 划痕 | 84 | | 尺寸偏差 | 52 | | 焊接不良 | 30 | | 颜色不均 | 20 | | 其他 | 14 |</p>
+<p>第一步:已按降序排列。 第二步:计算累计百分比:</p>
+<li>$C_1 = 84/200 = 42\%$</li>
+<li>$C_2 = (84+52)/200 = 68\%$</li>
+<li>$C_3 = (84+52+30)/200 = 83\%$</li>
+<li>$C_4 = 186/200 = 93\%$</li>
+<li>$C_5 = 100\%$</li>
+<p>第三步:作图。横轴依次为五个类别,柱高分别为 84、52、30、20、14,折线连接各 $C_i$ 的值。</p>
+<p><strong>问题解决应用。</strong> 折线在第三类处首次超过 80%,说明"划痕""尺寸偏差""焊接不良"这三类(占全部 5 类中的 60%)造成了 83% 的不合格品。若资源有限,应优先解决这三类问题,而不是平均用力。</p>
+<p>进一步地,可以估算改进效果:假设通过更换夹具把划痕减少 75%,则划痕由 84 降为 $84\times0.25=21$,不合格品总数变为 $200-63=137$,降幅为 $63/200=31.5\%$。对比之下,若同样把"其他"减少 75%,总数只下降 $10.5/200\approx5.3\%$。这说明<strong>先攻最高的柱子,收益最大</strong>。</p>
+<pre class="mermaid">flowchart LR
+A[收集分类数据] --> B[按频数降序排列]
+B --> C[计算累计百分比]
+C --> D[绘制柱状图与折线]
+D --> E[找出累计约80%的主要类别]
+E --> F[优先改进主要类别]</pre>
+<p><em>绘制并使用帕累托图的流程:从数据整理到确定优先改进对象。</em></p>
+<p><strong>注意事项。</strong> (1) 类别必须互不重叠、合计完整;(2) "其他"类无论大小都放在最右端;(3) 80/20 只是经验值,实际比例因数据而异,应以图中折线的实际走势为准;(4) 帕累托图只指出"哪里"问题最多,不解释"为什么",后续仍需用鱼骨图或根因分析来探究原因。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch9: Visualizing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

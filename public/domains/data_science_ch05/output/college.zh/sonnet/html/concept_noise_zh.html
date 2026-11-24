@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noise | Data Science Ch05</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="噪声">噪声</h2>
+<p><strong>定义。</strong> 在时间序列中,<strong>噪声</strong>(noise,又称随机分量或不规则分量)是指无法归因于趋势、周期或季节成分的随机、不可预测的波动。经典加法分解模型写作</p>
+$$
+y_t = T_t + C_t + S_t + \varepsilon_t,
+$$
+<p>其中 $\varepsilon_t$ 即噪声。最常用的假设是<strong>白噪声</strong>:</p>
+$$
+E[\varepsilon_t]=0,\qquad \operatorname{Var}(\varepsilon_t)=\sigma^2,\qquad \operatorname{Cov}(\varepsilon_s,\varepsilon_t)=0\ (s\neq t).
+$$
+<p>这三条的含义是:噪声围绕零上下波动,波动幅度恒定,而且今天的噪声对预测明天的噪声没有任何帮助。若还假设 $\varepsilon_t\sim N(0,\sigma^2)$,则称为高斯白噪声。</p>
+<p><strong>工作示例。</strong> 某咖啡店连续 6 天的销量为 $52, 48, 55, 50, 47, 54$。设已知趋势与季节成分之和为常数 $\mu=51$,则各日残差(噪声估计)为</p>
+$$
+\hat\varepsilon_t = y_t-\mu:\ 1,\,-3,\,4,\,-1,\,-4,\,3.
+$$
+<p>残差之和为 $0$,样本方差为</p>
+$$
+\hat\sigma^2=\frac{1^2+(-3)^2+4^2+(-1)^2+(-4)^2+3^2}{6-1}=\frac{52}{5}=10.4,
+$$
+<p>所以 $\hat\sigma\approx 3.2$ 杯。这意味着即使模型完全正确,单日销量仍会有约 $\pm3$ 杯的不可预测偏差。</p>
+<p><strong>问题求解应用。</strong> 噪声的实际意义体现在三个问题上:</p>
+<li><strong>预测区间。</strong> 若 $\sigma=3.2$,下一日点预测为 $51$,则约 95% 的预测区间为 $51\pm1.96\times3.2\approx[44.7,\,57.3]$。噪声设定了预测精度的下限,再好的模型也无法消除它。</li>
+<li><strong>平滑去噪。</strong> 对 $k$ 个独立观测取平均,噪声方差降为 $\sigma^2/k$。用 $k=4$ 的移动平均,标准差由 $3.2$ 降到 $1.6$,代价是对快速变化的响应变慢。</li>
+<li><strong>检验模型是否充分。</strong> 拟合后检查残差:若残差的自相关系数 $r_k$ 在多个滞后阶 $k$ 上超出 $\pm 2/\sqrt{n}$,说明残差中仍有结构(漏掉了趋势或季节性),不是纯噪声,需要改进模型。反之,残差像白噪声,就说明可预测的信息已被提取完毕。</li>
+<pre class="mermaid">flowchart LR
+    A[观测序列] --> B[分离趋势]
+    B --> C[分离季节与周期]
+    C --> D[残差]
+    D --> E{是否白噪声?}
+    E -->|是| F[模型充分]
+    E -->|否| G[改进模型]</pre>
+<p><em>图:通过检验残差是否为白噪声来判断时间序列模型是否充分。</em></p>
+<p><strong>要点。</strong> 噪声不是"错误",而是系统中固有的不可预测部分。建模的目标不是消除噪声,而是把所有可预测的结构提取出来,使剩下的部分只是噪声。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch5: Time Series and Forecasting (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

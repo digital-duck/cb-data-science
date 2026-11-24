@@ -24,18 +24,24 @@ Usage examples:
     # Only specific domains
     python scripts/batch_generate.py --domain mechanics --domain calculus
 
+    # Domain ranges/lists in one --domain value (comma-separated, "-" for an
+    # inclusive numeric range between two same-prefix ids)
+    python scripts/batch_generate.py --domain "chemistry_ch05-chemistry_ch10,chemistry_ch21"
+
     # Force-regenerate targets already in catalog.json (default is to skip them)
     python scripts/batch_generate.py --no-skip-existing
 
     # Only specific targets (concept IDs) across all/selected domains
-    python scripts/batch_generate.py --domain data_science_ch01 --include data_science,dataset
+    python scripts/batch_generate.py --include data_science,dataset
 
     # Skip specific targets
     python scripts/batch_generate.py --exclude arima,hipaa
 
+    # Defaults: --domain all --level college --language en
+    #           --llm claude_cli:claude-sonnet-5-5 --n-targets 2
     # Override level (single or comma-separated for multi-level runs)
-    python scripts/batch_generate.py --level college --llm claude_cli:claude-opus-4-8
-    python scripts/batch_generate.py --level intro,core,college,research --domain data_science_ch01
+    python scripts/batch_generate.py --level college --llm claude_cli:claude-opus-5-5
+    python scripts/batch_generate.py --level intro,core,college,research
 
     # Language accepts ISO codes or friendly names (case-insensitive)
     python scripts/batch_generate.py --language chinese
@@ -43,6 +49,7 @@ Usage examples:
     python scripts/batch_generate.py --language zh
 """
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -106,9 +113,9 @@ from level_style import LEVEL_TO_STYLE as _LEVEL_TO_STYLE, resolve_style as _res
 _LLM_TO_MODEL: dict[str, str] = {
     "ollama:gemma3":                    "gemma3",
     "ollama:gemma4":                    "gemma4",
-    "claude_cli:claude-sonnet-5":     "sonnet",
-    "claude_cli:claude-haiku-4-5-20251001": "haiku",
-    "claude_cli:claude-opus-4-8":       "opus",
+    "claude_cli:claude-sonnet-5-5":     "sonnet",
+    "claude_cli:claude-haiku-5-5":      "haiku",
+    "claude_cli:claude-opus-5-5":       "opus",
 }
 
 
@@ -147,54 +154,33 @@ def _mark_generated(domain_id: str, target: str, level: str, language: str, mode
     """Update catalog.json after a successful generation."""
     variant = f"{level}.{language}"
     html_dir = DOMAINS_DIR / domain_id / "output" / variant / model / "html"
-    # spl/tools.py's write_concept_html/build_book_index suffix every filename
-    # with "_{language}" except English — match that convention when
-    # recording book_file below, otherwise it points at a file that was
-    # never written for any non-English generation.
-    suffix = f"_{language}" if language and language != "en" else ""
-    new_concepts = []
-    for p in html_dir.glob("concept_*.html"):
-        stem = p.stem[len("concept_"):]
-        # Strip the same "_{language}" suffix write_concept_html appends to
-        # the filename — otherwise a Chinese "observation" concept gets
-        # named/labeled "observation_zh"/"Observation Zh", a different
-        # identity from the English "observation" entry rather than the
-        # same concept in a different language.
-        name = stem[:-len(suffix)] if suffix and stem.endswith(suffix) else stem
-        new_concepts.append({
-            "name": name,
-            "label": name.replace("_", " ").title(),
+    new_concepts = [
+        {
+            "name": p.stem[len("concept_"):],
+            "label": p.stem[len("concept_"):].replace("_", " ").title(),
             "file": f"output/{variant}/{model}/html/{p.name}",
             "model": model,
-        })
+        }
+        for p in html_dir.glob("concept_*.html")
+    ]
 
     def mutate(catalog: list[dict]) -> None:
         for d in catalog:
             if d["id"] != domain_id:
                 continue
             books: list[dict] = d.setdefault("books", [])
-            book_file = f"output/{variant}/{model}/html/book_{target}{suffix}.html"
-            # Dedupe by the exact output file path (which already encodes
-            # level/language/model) rather than the (target, model, language)
-            # triple — that triple collided across levels: generating the
-            # same target/model/language at a level different from an
-            # earlier run matched the earlier run's entry and silently
-            # skipped recording the new file at all.
-            if not any(b.get("file") == book_file for b in books):
+            book_file = f"output/{variant}/{model}/html/book_{target}.html"
+            if not any(
+                b["target"] == target and b.get("model") == model
+                and b.get("language", "en") == language
+                for b in books
+            ):
                 books.append({"target": target, "file": book_file, "model": model, "language": language})
             d["has_book"] = True
-            # Preserve every entry except the ones this exact directory glob
-            # just superseded (same level/language/model). Filtering by
-            # (model, language) alone — the old behavior — wiped out a
-            # *different* level's already-generated concepts sharing the
-            # same model/language: e.g. generating "research" level for
-            # model=sonnet silently deleted the "college" level sonnet
-            # entries an earlier run had recorded, even though those files
-            # were untouched on disk.
-            variant_dir_prefix = f"output/{variant}/{model}/html/"
+            # Preserve legacy entries (no model field) and entries from other models/languages
             other = [
                 c for c in d.get("generated_concepts", [])
-                if not c.get("file", "").startswith(variant_dir_prefix)
+                if c.get("model") != model or c.get("language", "en") != language
             ]
             for c in new_concepts:
                 c["language"] = language
@@ -214,6 +200,12 @@ def _mark_generated(domain_id: str, target: str, level: str, language: str, mode
 # remaining job in the batch would hit the same limit and print the same
 # traceback again.
 _SESSION_LIMIT_MARKERS = ("session limit", "rate limit", "quota", "usage limit", "modeloverloaded")
+
+
+# Distinct exit status (EX_TEMPFAIL) so wrapper scripts such as
+# concept-book/scripts/run_all_cb_books.sh can tell "LLM limit hit, stop
+# everything" apart from an ordinary failure (exit 1).
+EXIT_SESSION_LIMIT = 75
 
 
 class SessionLimitHit(Exception):
@@ -299,23 +291,89 @@ def _run_spl3(
     return proc.returncode == 0
 
 
-@click.command()
+_TRAILING_NUM = re.compile(r"^(.*?)(\d+)$")
+
+
+def _expand_domain_spec(spec: str) -> list[str]:
+    """Expand one --domain value into concrete domain ids.
+
+    Supports comma-separated lists and inclusive numeric ranges written as
+    "<prefix><NN>-<prefix><MM>" (same prefix, zero-padded to the left id's
+    width) or "<prefix><NN>-<MM>" (bare end number). Anything that doesn't
+    match a range shape is passed through unchanged.
+    """
+    ids = []
+    for chunk in spec.split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if "-" in chunk:
+            left, _, right = chunk.partition("-")
+            left, right = left.strip(), right.strip()
+            m_left = _TRAILING_NUM.match(left)
+            if m_left:
+                prefix, start_str = m_left.groups()
+                m_right = _TRAILING_NUM.match(right)
+                if m_right and m_right.group(1) == prefix:
+                    end_str = m_right.group(2)
+                elif right.isdigit():
+                    end_str = right
+                else:
+                    end_str = None
+                if end_str is not None:
+                    start, end, width = int(start_str), int(end_str), len(start_str)
+                    if start <= end:
+                        ids.extend(f"{prefix}{n:0{width}d}" for n in range(start, end + 1))
+                        continue
+            ids.append(chunk)  # not a recognized range — treat as a literal id
+        else:
+            ids.append(chunk)
+    return ids
+
+
+def _resolve_domains(raw_values: tuple) -> tuple:
+    """Expand --domain values; an empty tuple means "all domains"."""
+    ids = tuple(dict.fromkeys(
+        expanded for raw in raw_values for expanded in _expand_domain_spec(raw)
+    ))
+    if any(i.lower() == "all" for i in ids):
+        return ()
+    return ids
+
+
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+
+
+@click.group(context_settings=CONTEXT_SETTINGS)
+def cli() -> None:
+    """Batch pre-generate concept books. See 'generate --help' / 'status --help'.
+
+    A bare invocation with no subcommand (e.g. `batch_generate.py --domain X`)
+    implicitly runs 'generate' for backward compatibility.
+    """
+
+
+@cli.command("generate", context_settings=CONTEXT_SETTINGS)
 @click.option(
-    "--domain", "domains", multiple=True,
-    help="Domain ID to generate (repeatable). Default: all domains in catalog.",
+    "--domain", "domains", multiple=True, default=("all",),
+    help="Domain ID to generate (repeatable). Each value may also be a "
+         "comma-separated list, and/or a range of two same-prefix "
+         "zero-padded ids joined by '-' (e.g. "
+         "'chemistry_ch05-chemistry_ch10,chemistry_ch21'). "
+         "Use 'all' for every domain in the catalog. Default: all.",
 )
 @click.option(
-    "--n-targets", default=None, type=int,
-    help="Cap the number of applications generated per domain (default: all of them).",
+    "--n-targets", default=2, type=int,
+    help="Cap the number of applications generated per domain (default: 2).",
 )
 @click.option(
-    "--level", default=None,
+    "--level", default="college", show_default=True,
     help="Comma-separated content level(s) to generate (intro/core/college/research). "
-         "Default: each domain's default_level. Multiple levels run all combinations.",
+         "Multiple levels run all combinations.",
 )
 @click.option("--language", default="en", show_default=True, help="Output language code.")
 @click.option(
-    "--llm", default="claude_cli:claude-sonnet-5", show_default=True,
+    "--llm", default="claude_cli:claude-sonnet-5-5", show_default=True,
     envvar="CB_LLM", help="LLM backend string passed to spl3.",
 )
 @click.option(
@@ -342,7 +400,7 @@ def _run_spl3(
     "--stop-on-error", is_flag=True, default=False,
     help="Abort the batch if any single generation fails.",
 )
-def main(
+def generate(
     domains: tuple,
     n_targets: int | None,
     level,
@@ -357,6 +415,7 @@ def main(
     stop_on_error: bool,
 ) -> None:
     """Batch pre-generate concept books for multiple domains."""
+    domains = _resolve_domains(domains)
     if spl_dir is None:
         spl_dir = Path.home() / "projects" / "digital-duck" / "SPL.py"
 
@@ -435,7 +494,7 @@ def main(
                 f"{remaining} not attempted.",
                 err=True,
             )
-            sys.exit(1)
+            sys.exit(EXIT_SESSION_LIMIT)
 
         if ok:
             _mark_generated(did, target, eff_level, language, model)
@@ -453,5 +512,72 @@ def main(
         sys.exit(1)
 
 
+@cli.command("status", context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--domain", "domains", multiple=True, default=("all",),
+    help="Restrict to these domain ids (same comma-list/range syntax as "
+         "'generate --domain'). Default: all domains in catalog.json.",
+)
+@click.option(
+    "--verbose", "-v", is_flag=True,
+    help="Also list each domain's not-yet-generated target ids.",
+)
+def status(domains: tuple, verbose: bool) -> None:
+    """Show, per domain, how many application targets have been generated."""
+    domains = _resolve_domains(domains)
+    catalog = _load_catalog()
+    domain_map = {d["id"]: d for d in catalog}
+    if domains:
+        missing = set(domains) - set(domain_map)
+        if missing:
+            click.echo(f"[warn] Unknown domain(s): {', '.join(sorted(missing))}", err=True)
+
+    entries = [d for d in catalog if not domains or d["id"] in domains]
+    if not entries:
+        click.echo("No domains found in catalog.json.")
+        return
+
+    header = f"{'Domain':28s} {'Name':38s} {'Done':>5s} {'Total':>6s} {'Pending':>8s}  Models/Langs"
+    click.echo(header)
+    click.echo("-" * len(header))
+
+    total_done = total_targets = 0
+    for entry in entries:
+        did = entry["id"]
+        app_ids = _get_application_ids(did)
+        books = entry.get("books", [])
+        done_targets = sorted({b["target"] for b in books if b["target"] in app_ids})
+        pending = [t for t in app_ids if t not in done_targets]
+        variants = sorted({f"{b.get('model', '?')}/{b.get('language', 'en')}" for b in books})
+        total_done += len(done_targets)
+        total_targets += len(app_ids)
+
+        name = entry.get("name", did)
+        click.echo(
+            f"{did:28s} {name[:38]:38s} {len(done_targets):5d} {len(app_ids):6d} "
+            f"{len(pending):8d}  {', '.join(variants) or '-'}"
+        )
+        if verbose and pending:
+            click.echo(f"    pending: {', '.join(pending)}")
+
+    click.echo("-" * len(header))
+    click.echo(
+        f"{'TOTAL':28s} {'':38s} {total_done:5d} {total_targets:6d} "
+        f"{total_targets - total_done:8d}"
+    )
+
+
+def _main() -> None:
+    """Dispatch to 'generate' by default so `batch_generate.py --domain X`
+    (pre-subcommand invocation style) keeps working unchanged."""
+    known = {"generate", "status"}
+    args = sys.argv[1:]
+    if not args:
+        args = ["generate"]
+    elif args[0] not in known and args[0] not in ("-h", "--help"):
+        args = ["generate", *args]
+    cli(args=args, prog_name=Path(sys.argv[0]).name)
+
+
 if __name__ == "__main__":
-    main()
+    _main()

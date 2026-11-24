@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scatterplot | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="散点图-scatterplot">散点图(Scatterplot)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>散点图</strong>是把成对数据 $(x_i, y_i)$, $i=1,\dots,n$ 画在直角坐标系中的图形。每一对观测值对应平面上的一个点,横轴通常表示解释变量(自变量) $x$,纵轴表示响应变量(因变量) $y$。</p>
+<p>读散点图时,重点看四个特征:</p>
+<li><strong>方向</strong>:点云整体上升为正相关,下降为负相关;</li>
+<li><strong>形状</strong>:近似直线(线性)还是弯曲(非线性);</li>
+<li><strong>强度</strong>:点围绕趋势线的紧密程度;</li>
+<li><strong>异常点</strong>:明显偏离整体模式的点,以及可能的聚类。</li>
+<p>散点图只显示"关联",不能证明因果关系。</p>
+<h3 id="例题">例题</h3>
+<p>某班 6 名学生的每周学习时间 $x$(小时)与测验成绩 $y$(分)如下:</p>
+<p>| $x$ | 2 | 4 | 5 | 7 | 8 | 10 | |---|---|---|---|---|---|---| | $y$ | 55 | 62 | 70 | 78 | 83 | 92 |</p>
+<p>描点后,点从左下向右上排列,基本落在一条直线附近:方向为正,形状为线性,强度较强,没有明显异常点。</p>
+<p>为了量化,计算样本相关系数 $r$。先求均值:$\bar{x}=6$,$\bar{y}=73.33$。则</p>
+$$
+r=\frac{\sum (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum (x_i-\bar{x})^2\,\sum (y_i-\bar{y})^2}}\approx 0.997 .
+$$
+<p>$r$ 接近 $1$,与图形的直观判断一致。最小二乘回归直线约为 $\hat{y}\approx 4.1x+48.7$,意思是:每多学 1 小时,平均成绩大约提高 4.1 分。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题</strong>:用上面的直线预测学习 6 小时的成绩,并判断能否预测学习 20 小时的成绩。</p>
+<p><strong>解</strong>:</p>
+<li>代入 $x=6$:$\hat{y}\approx 4.1\times 6+48.7=73.3$ 分。这在数据范围(2~10 小时)之内,属于<strong>内插</strong>,可信度较高。</li>
+<li>代入 $x=20$:得 $\hat{y}\approx 130.7$ 分,超过满分,显然不合理。这是<strong>外推</strong>,超出了观测范围,线性关系未必继续成立,结论不可靠。</li>
+<p><strong>常见陷阱</strong>:</p>
+<li><strong>只看 $r$、不画图</strong>:著名的安斯库姆四重奏(Anscombe's quartet)中,四组形状完全不同的数据有几乎相同的 $r$ 和回归直线。只有画出散点图,才能发现曲线关系或离群点。</li>
+<li><strong>离群点的影响</strong>:一个远离其余点的观测值可以显著改变 $r$ 和回归直线,应先检查它是数据错误还是真实现象。</li>
+<li><strong>混淆关联与因果</strong>:学习时间与成绩正相关,但散点图本身不能排除其他因素(如基础水平、睡眠)的影响。</li>
+<p><strong>小结</strong>:分析双变量数据时,先画散点图,判断方向、形状、强度和异常点;确认关系大致线性后,再计算 $r$ 并建立回归模型,最后只在数据范围内做预测。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

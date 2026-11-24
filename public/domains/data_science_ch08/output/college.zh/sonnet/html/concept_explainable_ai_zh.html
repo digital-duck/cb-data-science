@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explainable Ai | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="可解释人工智能-explainable-ai">可解释人工智能(Explainable AI)</h2>
+<p><strong>定义。</strong> 可解释人工智能(XAI)是一类方法的总称,目的是让复杂模型(如深度网络、梯度提升树)的预测能被人理解、检验和质疑。XAI 通常分两类:<strong>内在可解释</strong>模型(线性回归、决策树,结构本身透明)和<strong>事后解释</strong>方法(对已训练好的黑箱模型做归因)。常用的一种事后解释是<strong>特征归因</strong>:给每个输入特征 $x_i$ 分配一个贡献值 $\phi_i$,使其满足"可加性":</p>
+$$f(x) \approx \phi_0 + \sum_{i=1}^{n} \phi_i$$
+<p>其中 $\phi_0$ 是模型在全体数据上的平均输出(基线)。SHAP 方法用博弈论中的 Shapley 值来定义 $\phi_i$:</p>
+$$\phi_i = \sum_{S \subseteq F\setminus\{i\}} \frac{|S|!\,(n-|S|-1)!}{n!}\Big[f(S\cup\{i\}) - f(S)\Big]$$
+<p>它表示特征 $i$ 在所有可能的特征加入顺序下的平均边际贡献。</p>
+<p><strong>例题。</strong> 某银行模型预测一位申请人的违约概率为 $0.40$,全体申请人的平均违约概率为 $\phi_0=0.15$。模型只用两个特征:收入 $A$ 和负债率 $B$。已知:</p>
+<li>$f(\varnothing)=0.15$,$f(\{A\})=0.20$,$f(\{B\})=0.35$,$f(\{A,B\})=0.40$。</li>
+<p>计算 $\phi_A$。$n=2$,子集 $S$ 只有 $\varnothing$ 和 $\{B\}$,权重均为 $\frac{1}{2}$:</p>
+$$\phi_A=\tfrac12\,(0.20-0.15)+\tfrac12\,(0.40-0.35)=0.05$$
+<p>同理 $\phi_B=\tfrac12(0.35-0.15)+\tfrac12(0.40-0.20)=0.20$。验证:$0.15+0.05+0.20=0.40=f(x)$,可加性成立。结论:负债率是推高违约风险的主要原因(贡献 $+0.20$),收入的影响较小($+0.05$)。</p>
+<p><strong>问题求解应用。</strong> 假设申请人被拒贷,要求你判断"拒贷是否合理"。步骤如下:</p>
+<li>计算每个特征的 $\phi_i$,找出贡献最大的特征。</li>
+<li>检查该特征是否合法、合理。如果最大贡献来自邮政编码这类可能代理种族或地域的变量,说明模型存在<strong>偏见风险</strong>。</li>
+<li>做<strong>反事实</strong>检验:若负债率从 $0.6$ 降到 $0.3$,预测会降到多少?这给申请人一个可操作的建议。</li>
+<li>用解释<strong>调试</strong>模型:若某特征贡献异常大(如"申请编号"),往往意味着数据泄漏。</li>
+<p><strong>注意。</strong> 事后解释只是对模型行为的近似,不等于模型的真实机理。特征相关时,Shapley 值的计算依赖于如何"移除"特征,结果可能不同。在医疗、金融、司法等高风险场景,若精度相近,应优先选择内在可解释的模型。</p>
+<pre class="mermaid">flowchart LR
+A[输入特征] --> B[黑箱模型]
+B --> C[预测结果]
+A --> D[解释方法 SHAP]
+B --> D
+D --> E[特征贡献值]
+E --> F[检查偏见与泄漏]
+F --> G[改进模型或给出建议]</pre>
+<p><em>图:事后解释流程。解释方法同时读取输入与模型,输出各特征的贡献,用于审查与改进。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

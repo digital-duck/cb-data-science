@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geospatial Data | Data Science Ch09</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="地理空间数据">地理空间数据</h2>
+<p><strong>定义。</strong> 地理空间数据(geospatial data)是描述地球表面上某个位置,以及该位置的形状、大小和其他属性的数据。它由两部分组成:</p>
+<li><strong>几何部分</strong>:位置和形状,通常用坐标表示。</li>
+<li><strong>属性部分</strong>:与该位置相关的非空间信息,例如人口、海拔、土地用途。</li>
+<p>几何部分有两种基本数据模型:</p>
+<li><strong>矢量数据</strong>:用点、线、多边形表示对象。例如,城市是点,河流是线,国家边界是多边形。</li>
+<li><strong>栅格数据</strong>:把地表划分为规则网格,每个单元格存一个值。例如,卫星影像和高程模型。</li>
+<p>位置通常用纬度 $\varphi$ 和经度 $\lambda$ 表示,并依赖于某个<strong>坐标参考系</strong>(如 WGS84)。参考系不同,同一组数字指向的位置就可能不同。</p>
+<p><strong>例题:两点间的距离。</strong> 求北京($\varphi_1=39.9^\circ$, $\lambda_1=116.4^\circ$)与上海($\varphi_2=31.2^\circ$, $\lambda_2=121.5^\circ$)之间的距离。</p>
+<p>不能直接对经纬度用平面勾股定理,因为地球表面是曲面。应使用球面上的哈弗辛(Haversine)公式:</p>
+$$
+d = 2R\arcsin\sqrt{\sin^2\!\frac{\Delta\varphi}{2}+\cos\varphi_1\cos\varphi_2\sin^2\!\frac{\Delta\lambda}{2}}
+$$
+<p>其中 $R\approx 6371\,\text{km}$。代入数据:</p>
+<li>$\Delta\varphi = 8.7^\circ$,$\Delta\lambda = 5.1^\circ$</li>
+<li>$\sin^2(4.35^\circ)\approx 0.00575$</li>
+<li>$\cos 39.9^\circ\cos 31.2^\circ\sin^2(2.55^\circ)\approx 0.767\times0.855\times0.00198\approx 0.00130$</li>
+<li>根号内之和约为 $0.00705$,开方得 $0.0840$</li>
+<li>$d \approx 2\times6371\times 0.0840\approx 1070\ \text{km}$</li>
+<p>这与实际直线(大圆)距离约 1067 km 相符。</p>
+<p><strong>问题解决应用:选址分析。</strong> 某连锁店要在城市中选一个新店址,条件是:</p>
+<li>距地铁站不超过 500 m;</li>
+<li>不在洪水淹没区内;</li>
+<li>周边 1 km 内人口至少 2 万。</li>
+<p>解决步骤如下:</p>
+<li><strong>统一坐标系</strong>:先把所有图层转换到同一个投影坐标系,否则距离和面积会出错。</li>
+<li><strong>缓冲区分析</strong>:以地铁站点(矢量点)为中心生成 500 m 缓冲区(多边形)。</li>
+<li><strong>叠加分析</strong>:用缓冲区减去洪水区多边形,得到候选区域。</li>
+<li><strong>属性汇总</strong>:对候选区域叠加人口栅格,统计 1 km 范围内的人口总和,保留不低于 2 万的区域。</li>
+<p>下面用 Python 演示前两步:</p>
+<pre><code>import geopandas as gpd
+
+stations = gpd.read_file("stations.geojson").to_crs(epsg=32650)  # 投影到米制坐标
+flood = gpd.read_file("flood.geojson").to_crs(epsg=32650)
+
+buffer = stations.buffer(500)                       # 500 m 缓冲区
+candidate = buffer.unary_union.difference(flood.unary_union)
+print(candidate.area)                               # 候选区域面积(平方米)</code></pre>
+<p><strong>常见误区。</strong> 不要在未投影的经纬度上直接计算面积或距离;经度 $1^\circ$ 对应的实际长度随纬度变化,在赤道约为 111 km,而在 $60^\circ$ 纬度处只有约 55 km。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch9: Visualizing Data (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

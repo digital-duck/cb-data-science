@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margin Of Error | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="误差范围-margin-of-error">误差范围(Margin Of Error)</h2>
+<h3 id="定义">定义</h3>
+<p>用样本估计总体参数时,点估计值 $\hat{\theta}$ 几乎不可能恰好等于真实参数 $\theta$。<strong>误差范围</strong>(margin of error,记作 $E$)是在给定置信水平下,点估计与真实参数之间"预期的最大距离"。置信区间就是</p>
+$$
+\hat{\theta} \pm E .
+$$
+<p>对总体均值(总体标准差 $\sigma$ 已知,或样本量较大),</p>
+$$
+E = z^{*}\,\frac{\sigma}{\sqrt{n}},
+$$
+<p>其中 $z^{*}$ 是置信水平对应的临界值(90% 取 1.645,95% 取 1.96,99% 取 2.576),$\sigma/\sqrt{n}$ 是样本均值的标准误。对总体比例,</p>
+$$
+E = z^{*}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} .
+$$
+<p>由公式可见三个规律:</p>
+<li>样本量 $n$ 越大,$E$ 越小,但只按 $1/\sqrt{n}$ 的速度缩小;</li>
+<li>置信水平越高,$z^{*}$ 越大,$E$ 越大;</li>
+<li>总体波动 $\sigma$ 越大,$E$ 越大。</li>
+<h3 id="例题">例题</h3>
+<p>某校随机抽取 $n=64$ 名学生,测得每天平均睡眠时间 $\bar{x}=7.2$ 小时,已知 $\sigma=1.6$ 小时。求 95% 置信区间。</p>
+$$
+E = 1.96\times\frac{1.6}{\sqrt{64}} = 1.96\times 0.2 = 0.392 \approx 0.39 \text{ 小时}.
+$$
+<p>置信区间为 $7.2 \pm 0.39$,即 $(6.81,\ 7.59)$ 小时。</p>
+<p>注意正确的解释:这并不表示"真实均值有 95% 的概率落在这个区间内"。它的含义是:如果重复抽样很多次并用同样方法构造区间,约 95% 的区间会覆盖真实均值。</p>
+<h3 id="问题求解-反推所需样本量">问题求解:反推所需样本量</h3>
+<p>民调机构想估计某政策的支持率,要求 95% 置信水平下误差范围不超过 $E=0.03$(即 3 个百分点)。需要多大样本?</p>
+<p>解 $E$ 的公式得</p>
+$$
+n = \left(\frac{z^{*}}{E}\right)^{2}\hat{p}(1-\hat{p}).
+$$
+<p>事先没有 $\hat{p}$ 的信息时,取最保守的 $\hat{p}=0.5$(此时 $\hat{p}(1-\hat{p})$ 最大,为 0.25):</p>
+$$
+n = \left(\frac{1.96}{0.03}\right)^{2}\times 0.25 \approx 1067.1 .
+$$
+<p>样本量必须取整数,且<strong>向上取整</strong>,所以 $n=1068$。</p>
+<p>再思考一下:若想把误差范围减半到 1.5%,样本量需要变为原来的 $2^2=4$ 倍,约 4268 人。这就是"精度翻倍、成本翻四倍"的代价。</p>
+<h3 id="常见误区">常见误区</h3>
+<li>误差范围只反映<strong>随机抽样误差</strong>,不包含抽样偏差(如问卷设计不当、无应答)。样本有偏时,再大的 $n$ 也无法修正。</li>
+<li>比较两组结果时,需要看差异是否超出各自的误差范围,而不能只看数字大小。</li>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

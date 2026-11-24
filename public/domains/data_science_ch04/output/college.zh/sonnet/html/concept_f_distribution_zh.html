@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Distribution | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="f-分布">F 分布</h2>
+<p><strong>定义。</strong> 设 $U \sim \chi^2_{d_1}$,$V \sim \chi^2_{d_2}$,且二者相互独立,则比值</p>
+$$F = \frac{U/d_1}{V/d_2} \sim F(d_1, d_2)$$
+<p>服从自由度为 $d_1$(分子自由度)和 $d_2$(分母自由度)的 <strong>F 分布</strong>。它的直观含义是:两个"方差估计量"之比。若两者估计的是同一个总体方差,比值应接近 1。</p>
+<p>主要性质:</p>
+<li>$F \ge 0$,密度曲线<strong>右偏</strong>;$d_1, d_2$ 增大时,分布逐渐向 1 附近集中、趋于对称。</li>
+<li>当 $d_2 > 2$ 时,$E[F] = \dfrac{d_2}{d_2-2}$,略大于 1。</li>
+<li>分子、分母自由度不可互换:$F(d_1,d_2)$ 与 $F(d_2,d_1)$ 不同,且 $F_{1-\alpha}(d_1,d_2) = 1/F_{\alpha}(d_2,d_1)$。</li>
+<li>若 $T \sim t_{d}$,则 $T^2 \sim F(1, d)$。</li>
+<p><strong>与 ANOVA 的联系。</strong> 单因素方差分析中有 $k$ 个组、共 $N$ 个观测。若各组总体均值相等(原假设 $H_0$),则</p>
+$$F = \frac{MS_B}{MS_W} = \frac{SS_B/(k-1)}{SS_W/(N-k)} \sim F(k-1,\; N-k).$$
+<p>组间均方 $MS_B$ 反映组均值的差异,组内均方 $MS_W$ 反映随机噪声。若 $H_0$ 不成立,$MS_B$ 偏大,$F$ 落在右尾,所以 ANOVA 采用<strong>右尾检验</strong>。</p>
+<p><strong>例题。</strong> 三种教学方法(各 5 名学生,$k=3$,$N=15$)的成绩得到 $SS_B = 84$,$SS_W = 108$。</p>
+<li>自由度:$d_1 = k-1 = 2$,$d_2 = N-k = 12$。</li>
+<li>均方:$MS_B = 84/2 = 42$,$MS_W = 108/12 = 9$。</li>
+<li>统计量:$F = 42/9 \approx 4.67$。</li>
+<li>显著性水平 $\alpha = 0.05$ 时,查表得临界值 $F_{0.05}(2,12) \approx 3.89$。</li>
+<p>因为 $4.67 > 3.89$,落入拒绝域,所以拒绝 $H_0$:三种教学方法的平均成绩并不全相同。</p>
+<p><strong>问题求解应用。</strong> 用软件可直接求 $p$ 值:</p>
+<pre><code>from scipy import stats
+F, df1, df2 = 4.67, 2, 12
+p = stats.f.sf(F, df1, df2)   # 右尾概率
+crit = stats.f.ppf(0.95, df1, df2)
+print(p, crit)   # p ≈ 0.032, crit ≈ 3.89</code></pre>
+<p>$p \approx 0.032 < 0.05$,与查表结论一致。</p>
+<p><strong>注意事项。</strong></p>
+<li>F 检验只说明"至少有一对均值不同",不指出具体哪一对,需要事后检验(如 Tukey HSD)。</li>
+<li>使用前应检查前提:各组近似正态、方差齐性、观测相互独立。</li>
+<li>若只比较两个总体的方差,可用 $F = s_1^2/s_2^2 \sim F(n_1-1, n_2-1)$,习惯上把较大的方差放在分子。</li>
+<p><strong>小结。</strong> F 分布是两个独立卡方变量(各除以自由度)之比的分布。它右偏且由 $(d_1,d_2)$ 决定,是 ANOVA 判断"组间差异是否大于随机噪声"的基础。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

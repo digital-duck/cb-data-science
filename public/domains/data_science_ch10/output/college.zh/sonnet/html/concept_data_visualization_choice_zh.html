@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Visualization Choice | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据可视化的选择">数据可视化的选择</h2>
+<p><strong>定义。</strong> 数据可视化的选择,是指根据<strong>数据类型</strong>、<strong>受众</strong>和<strong>汇报目标</strong>,从图或表中挑出最合适的一种来呈现数据。同一组数据换一种图形,传达的结论可能完全不同。判断的核心不是"哪个好看",而是"读者能否在最短时间内得到正确的结论"。</p>
+<p><strong>常用匹配规则。</strong></p>
+<p>| 汇报目标 | 数据类型 | 推荐形式 | |---|---|---| | 比较类别大小 | 分类变量 + 数值 | 条形图 | | 展示随时间的趋势 | 时间序列 | 折线图 | | 展示两变量关系 | 两个连续变量 | 散点图 | | 展示分布形状 | 单个连续变量 | 直方图、箱线图 | | 展示构成比例 | 部分占整体(类别少) | 堆叠条形图(或类别 $\le 4$ 时的饼图) | | 查找精确数值 | 少量数据 | 表格 |</p>
+<pre class="mermaid">flowchart TD
+A[明确汇报目标] --> B{目标是什么?}
+B -->|比较类别| C[条形图]
+B -->|看趋势| D[折线图]
+B -->|看关系| E[散点图]
+B -->|看分布| F[直方图或箱线图]
+B -->|查精确值| G[表格]</pre>
+<p><em>图:根据汇报目标选择图形的决策流程。</em></p>
+<p><strong>例题。</strong> 某班 30 名学生的期末成绩,平均分 $\bar{x}=76$,但有少数学生成绩极低。老师想让家长了解"成绩整体情况"。</p>
+<li>只报告平均分:会掩盖两极分化。</li>
+<li>用直方图:能显示分布是否偏斜、是否有两个峰。</li>
+<li>用箱线图:能同时显示中位数、四分位距 $IQR = Q_3 - Q_1$ 和离群点。</li>
+<p>对家长,直方图更直观;对教研组比较多个班级,并排箱线图更高效。结论:<strong>目标(看分布)决定图形类型,受众决定复杂程度。</strong></p>
+<p><strong>问题解决应用。</strong> 请为下列情形选择图形并说明理由:</p>
+<li><em>某公司 2015–2024 年每年的销售额。</em> 数据是时间序列,目标是趋势,选<strong>折线图</strong>。用条形图也可行,但折线更强调"变化的连续性"。</li>
+<li><em>学生每周学习时长与成绩的关系。</em> 两个连续变量,目标是相关性,选<strong>散点图</strong>,还可加回归线 $\hat{y}=a+bx$。</li>
+<li><em>向管理层汇报 5 个部门的预算。</em> 目标是比较大小,选<strong>条形图</strong>并按数值排序;不要用饼图,因为人眼难以准确比较 5 个角度的差异。</li>
+<li><em>审计员需要核对每笔费用的确切金额。</em> 目标是精确查找,选<strong>表格</strong>。</li>
+<p><strong>常见错误检查清单。</strong></p>
+<li>条形图的纵轴必须从 $0$ 开始,否则会夸大差异。</li>
+<li>类别过多时不要用饼图。</li>
+<li>避免不必要的三维效果和过多颜色。</li>
+<li>每张图都应有标题、坐标轴标签和单位。</li>
+<p><strong>小结。</strong> 选择可视化的三步法:先问"我想让读者得出什么结论"(目标),再看"数据是什么类型"(数据),最后考虑"读者是谁"(受众)。图形只是手段,清晰、准确地传达结论才是目的。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch10: Reporting Results (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

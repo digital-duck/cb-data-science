@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predictive Analytics | Data Science Ch01</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="预测分析">预测分析</h2>
+<p><strong>定义。</strong> 预测分析(predictive analytics)是利用历史数据建立统计或机器学习模型,并用模型对未来或未知事件做出预测的方法。其核心思想是:假设过去数据中的规律在未来仍大体成立,于是学习一个函数 $f$,使得</p>
+$$\hat{y} = f(x_1, x_2, \dots, x_p),$$
+<p>其中 $x_i$ 是特征(已知信息),$\hat{y}$ 是对目标 $y$ 的预测。目标为连续数值时称为回归问题,为类别时称为分类问题。</p>
+<p><strong>标准流程。</strong> 收集历史数据 → 划分训练集与测试集 → 拟合模型 → 在测试集上评估 → 部署并持续监控。</p>
+<pre class="mermaid">flowchart LR
+A[历史数据] --> B[特征处理]
+B --> C[划分训练集与测试集]
+C --> D[拟合模型]
+D --> E[测试集评估]
+E --> F[预测新数据]
+F --> G[监控与更新]</pre>
+<p><em>预测分析的基本流程:从历史数据出发,经训练、评估后用于预测新数据,并持续监控。</em></p>
+<p><strong>例题。</strong> 某咖啡店记录了 5 天的气温 $x$(°C)与热饮销量 $y$(杯):</p>
+<p>| $x$ | 0 | 5 | 10 | 15 | 20 | |---|---|---|---|---|---| | $y$ | 90 | 80 | 62 | 50 | 38 |</p>
+<p>用最小二乘法拟合 $\hat{y}=\beta_0+\beta_1 x$。先算均值:$\bar{x}=10$,$\bar{y}=64$。则</p>
+$$\beta_1=\frac{\sum (x_i-\bar{x})(y_i-\bar{y})}{\sum (x_i-\bar{x})^2}=\frac{(-10)(26)+(-5)(16)+0+(5)(-14)+(10)(-26)}{250}=\frac{-670}{250}=-2.68,$$
+$$\beta_0=\bar{y}-\beta_1\bar{x}=64+26.8=90.8.$$
+<p>模型为 $\hat{y}=90.8-2.68x$。预测气温 12°C 时:$\hat{y}=90.8-32.16=58.64$,约 59 杯。</p>
+<p><strong>问题解决应用。</strong> 仅有预测还不够,必须评估其可靠性。</p>
+<li><strong>误差度量。</strong> 回归常用均方根误差 $\text{RMSE}=\sqrt{\frac{1}{n}\sum (y_i-\hat{y}_i)^2}$。本例拟合值依次为 90.8、77.4、64.0、50.6、37.2,残差为 $-0.8,\,2.6,\,-2.0,\,-0.6,\,0.8$,残差平方和为 $0.64+6.76+4+0.36+0.64=12.4$,故 $\text{RMSE}=\sqrt{12.4/5}\approx1.57$ 杯。</li>
+<li><strong>过拟合。</strong> 模型在训练数据上误差很小,不代表对新数据同样准确。过于复杂的模型会把噪声也"记住"。因此必须用<strong>未参与训练</strong>的测试数据评估,或使用交叉验证。</li>
+<li><strong>外推风险。</strong> 若预测 40°C 时销量为 $90.8-107.2<0$,结果显然不合理——模型只在训练数据覆盖的范围内可信。</li>
+<li><strong>选择指标。</strong> 分类问题(如预测客户是否流失)应根据代价选择精确率、召回率或 AUC,而不仅是准确率;当正例很少时,"全部预测为负"也能得到很高的准确率。</li>
+<p><strong>小结。</strong> 预测分析 = 历史数据 + 模型 + 严格的out-of-sample 评估。好的预测不仅给出数值,还要说明其误差范围与适用条件。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch1: What Are Data and Data Science? (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

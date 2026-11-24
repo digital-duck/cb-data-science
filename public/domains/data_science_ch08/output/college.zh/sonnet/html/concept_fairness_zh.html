@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fairness | Data Science Ch08</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="公平性">公平性</h2>
+<p><strong>定义。</strong> 在数据处理中,<em>公平性</em>(fairness)指模型或算法的决策不因受保护属性(如性别、种族、年龄)而对某些群体产生系统性的不利偏差。"没有偏差"并不是单一标准,而是有多种可形式化的度量。设 $\hat{Y}$ 为模型预测,$Y$ 为真实标签,$A$ 为受保护属性。三种常用标准如下:</p>
+<li><strong>人口统计均等</strong>(demographic parity):$P(\hat{Y}=1\mid A=a)=P(\hat{Y}=1\mid A=b)$,即各群体获得正向结果的比例相同。</li>
+<li><strong>机会均等</strong>(equal opportunity):$P(\hat{Y}=1\mid Y=1,A=a)=P(\hat{Y}=1\mid Y=1,A=b)$,即真正合格者被选中的概率相同(真正例率相等)。</li>
+<li><strong>均等化赔率</strong>(equalized odds):在机会均等的基础上,再要求假正例率也相等。</li>
+<p><strong>例题。</strong> 某贷款模型对两个群体的测试结果如下:</p>
+<p>| 群体 | 人数 | 实际会还款 | 模型批准数 | 其中实际会还款者被批准数 | |---|---|---|---|---| | $A$ | 100 | 60 | 50 | 42 | | $B$ | 100 | 50 | 30 | 20 |</p>
+<p>先算批准率:$P(\hat{Y}=1\mid A)=50/100=0.50$,$P(\hat{Y}=1\mid B)=30/100=0.30$。人口统计均等差为 $|0.50-0.30|=0.20$。</p>
+<p>再算真正例率:$\mathrm{TPR}_A=42/60=0.70$,$\mathrm{TPR}_B=20/50=0.40$。机会均等差为 $0.30$。</p>
+<p>这说明:有能力还款的 $B$ 组申请人被错误拒绝的比例明显更高。</p>
+<p><strong>问题求解应用。</strong> 实践中的流程分为三步:</p>
+<li><strong>度量</strong>:选定与场景相符的公平性标准,按群体分别计算指标。</li>
+<li><strong>诊断</strong>:检查偏差的来源,例如训练数据的代表性不足、标签本身带有历史偏见,或某个特征是受保护属性的代理变量(如邮政编码)。</li>
+<li><strong>缓解</strong>:可在训练前重新采样或加权,在训练中加入公平性约束,或在训练后为各群体设置不同的决策阈值。</li>
+<p>以上例为例,若对 $B$ 组降低阈值,使 $\mathrm{TPR}_B$ 从 $0.40$ 提高到 $0.70$,机会均等差就会缩小到 $0$。但这通常会改变假正例率和整体准确率,需要权衡。</p>
+<p><strong>一个重要结论。</strong> 当两个群体的基础比率不同(此处为 $0.60$ 与 $0.50$)且分类器不完美时,人口统计均等、均等化赔率与预测值均等(各群体的精确率相等)一般无法同时满足。因此公平性不是一个可以"一键达成"的技术指标,而需要结合具体场景的后果与价值取向,明确选择并说明所采用的标准。</p>
+<pre class="mermaid">flowchart LR
+    A[选择公平性标准] --> B[按群体计算指标]
+    B --> C{差距是否可接受?}
+    C -->|是| D[部署并持续监测]
+    C -->|否| E[诊断偏差来源]
+    E --> F[训练前/中/后缓解]
+    F --> B</pre>
+<p><em>图:公平性评估与改进的循环流程:度量、诊断、缓解,再度量,直至差距可接受。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch8: Ethics Throughout the Data Science Cycle (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

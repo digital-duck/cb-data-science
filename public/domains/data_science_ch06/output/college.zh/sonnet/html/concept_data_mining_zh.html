@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Mining | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="数据挖掘">数据挖掘</h2>
+<p><strong>定义。</strong> 数据挖掘(data mining)是从大规模数据集中自动发现有用模式、趋势和关联的过程,综合运用机器学习、统计学与数据库技术。常见任务包括:关联规则挖掘、聚类、分类和异常检测。</p>
+<p>以关联规则为例,设事务集合为 $T$,项集 $X$ 与 $Y$ 互不相交,规则 $X \Rightarrow Y$ 用三个指标衡量:</p>
+$$
+\text{支持度}(X\Rightarrow Y)=\frac{|\{t\in T: X\cup Y\subseteq t\}|}{|T|},\qquad
+\text{置信度}=\frac{\text{支持度}(X\cup Y)}{\text{支持度}(X)},
+$$
+$$
+\text{提升度}=\frac{\text{置信度}(X\Rightarrow Y)}{\text{支持度}(Y)}.
+$$
+<p>提升度大于 $1$,说明 $X$ 的出现确实提高了 $Y$ 出现的可能性。</p>
+<p><strong>例题。</strong> 某超市有 $100$ 笔交易:其中 $40$ 笔含面包,$30$ 笔含牛奶,$24$ 笔两者都含。求规则"面包 $\Rightarrow$ 牛奶"的各项指标。</p>
+<li>支持度 $=24/100=0.24$</li>
+<li>置信度 $=0.24/0.40=0.6$</li>
+<li>牛奶的支持度为 $0.30$,故提升度 $=0.6/0.30=2$</li>
+<p>结论:买面包的顾客购买牛奶的概率是一般顾客的 $2$ 倍,这条规则有实际价值。</p>
+<p><strong>问题求解应用。</strong> 数据挖掘通常遵循如下流程,先看图再讨论各步骤的要点。</p>
+<pre class="mermaid">flowchart LR
+A[数据收集] --> B[清洗与预处理]
+B --> C[特征选择]
+C --> D[模型或算法]
+D --> E[评估与验证]
+E --> F[业务决策]
+E --> C</pre>
+<p><em>数据挖掘的典型流程:评估结果不理想时,需要回到特征选择阶段迭代改进。</em></p>
+<p>假设要找出信用卡盗刷交易,可以这样处理:</p>
+<li><strong>清洗与预处理</strong>:处理缺失值,对金额等特征标准化。</li>
+<li><strong>选择方法</strong>:盗刷占比极小,适合用异常检测或类别加权的分类模型。</li>
+<li><strong>评估</strong>:不能只看准确率。若盗刷仅占 $0.1\%$,"全部判为正常"的准确率高达 $99.9\%$,却毫无用处。应改用精确率 $P=\frac{TP}{TP+FP}$ 和召回率 $R=\frac{TP}{TP+FN}$,并计算 $F_1=\frac{2PR}{P+R}$。</li>
+<li><strong>验证</strong>:用交叉验证或留出集,避免模型只是记住了训练数据(过拟合)。</li>
+<p>另一个常见陷阱是把相关性当作因果。冰淇淋销量与溺水人数同步上升,是因为共同的原因(高温),而不是冰淇淋导致溺水。挖掘出的模式只是假设,需要结合领域知识或实验来检验。</p>
+<p><strong>小结。</strong> 数据挖掘的核心是:用合适的指标量化模式(如支持度、置信度、提升度),用恰当的评估方法检验模型,并谨慎解释结果。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

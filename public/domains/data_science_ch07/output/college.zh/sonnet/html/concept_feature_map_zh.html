@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feature Map | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="特征图-feature-map">特征图(Feature Map)</h2>
+<h3 id="定义">定义</h3>
+<p><strong>特征图</strong>是卷积层的输出:一个卷积核(滤波器)在输入上滑动,对每个空间位置计算加权和,所得到的二维数组就是一张特征图。它记录了"某种特定模式在输入的哪些位置出现、强度多大"。</p>
+<p>设输入为 $X \in \mathbb{R}^{H\times W}$,卷积核为 $K \in \mathbb{R}^{k\times k}$,偏置为 $b$,激活函数为 $\sigma$,则特征图 $F$ 的元素为</p>
+$$
+F_{i,j}=\sigma\!\left(\sum_{u=0}^{k-1}\sum_{v=0}^{k-1}K_{u,v}\,X_{i+u,\,j+v}+b\right).
+$$
+<p>(严格地说,这是深度学习中通用的"互相关"形式。)若一层有 $C_{out}$ 个卷积核,就得到 $C_{out}$ 张特征图,堆叠成张量 $F\in\mathbb{R}^{H'\times W'\times C_{out}}$。输出的空间尺寸为</p>
+$$
+H'=\left\lfloor \frac{H+2p-k}{s}\right\rfloor+1,
+$$
+<p>其中 $p$ 为填充,$s$ 为步幅($W'$ 同理)。</p>
+<h3 id="例题">例题</h3>
+<p>输入为 $4\times4$ 图像,左半部分像素为 0,右半部分为 1:</p>
+$$
+X=\begin{bmatrix}0&0&1&1\\0&0&1&1\\0&0&1&1\\0&0&1&1\end{bmatrix},\quad
+K=\begin{bmatrix}-1&1\\-1&1\end{bmatrix},\quad b=0,\ \sigma=\text{ReLU}.
+$$
+<p>取 $p=0,\ s=1$,则 $H'=W'=4-2+1=3$。</p>
+<li>位置 $(0,0)$:$-0+0-0+0=0$</li>
+<li>位置 $(0,1)$:$-0+1-0+1=2$</li>
+<li>位置 $(0,2)$:$-1+1-1+1=0$</li>
+<p>每一行结果相同,故</p>
+$$
+F=\begin{bmatrix}0&2&0\\0&2&0\\0&2&0\end{bmatrix}.
+$$
+<p>这个卷积核是"竖直边缘检测器":只有在亮暗交界处,特征图才出现高响应。</p>
+<h3 id="问题求解应用">问题求解应用</h3>
+<p><strong>问题:</strong> 输入为 $32\times32\times3$ 的彩色图,使用 16 个 $5\times5$ 卷积核,$p=2,\ s=1$。求输出特征图的形状与该层参数量。</p>
+<p><strong>解:</strong></p>
+<li>空间尺寸:$H'=\lfloor(32+4-5)/1\rfloor+1=32$,所以输出为 $32\times32\times16$,即 16 张特征图。</li>
+<li>每个卷积核需覆盖全部 3 个输入通道,参数为 $5\times5\times3+1=76$(含偏置)。</li>
+<li>总参数量:$16\times76=1216$。</li>
+<p><strong>关键观察:</strong> 同一张特征图共享同一组卷积核权重(权重共享),因此参数量与图像大小无关,只取决于核大小和通道数。若改用全连接层映射到同样大小的输出,需要约 $3072\times16384\approx5\times10^{7}$ 个参数。</p>
+<p><strong>解读:</strong> 浅层特征图通常对应边缘、纹理;随着网络加深并经过池化,特征图空间尺寸缩小而通道数增多,响应的模式也从局部线条逐步变为部件乃至物体。可视化特征图是调试 CNN 的常用手段:若某些特征图全为 0("死通道"),往往说明学习率过大或初始化不当。</p>
+<pre class="mermaid">flowchart LR
+A[输入图像] --> B[卷积核 1]
+A --> C[卷积核 2]
+A --> D[卷积核 C]
+B --> E[特征图 1]
+C --> F[特征图 2]
+D --> G[特征图 C]
+E --> H[堆叠成输出张量]
+F --> H
+G --> H</pre>
+<p><em>图:每个卷积核在输入上滑动并生成一张特征图,所有特征图沿通道维度堆叠,构成该层的输出张量。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Dashboard | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="高管仪表盘">高管仪表盘</h2>
+<h3 id="定义">定义</h3>
+<p><strong>高管仪表盘(Executive Dashboard)</strong>是一种可视化工具。它把组织最重要的关键绩效指标(KPI)集中显示在一个页面上,并随数据更新,供高层管理者快速掌握整体状况。它与详细报表的区别在于:报表回答"发生了什么细节",仪表盘回答"现在是否正常,哪里需要关注"。</p>
+<p>好的仪表盘遵循三条原则:</p>
+<li><strong>少而精</strong>:通常只展示 5–9 个与战略目标直接相关的 KPI。</li>
+<li><strong>有对照</strong>:每个数字都与目标值、上期值或阈值比较,否则单个数字没有意义。</li>
+<li><strong>可下钻</strong>:发现异常后,能够继续查看更细的数据。</li>
+<p>一个常用的比较量是<strong>目标达成率</strong>:</p>
+$$
+\text{达成率} = \frac{\text{实际值}}{\text{目标值}} \times 100\%
+$$
+<p>对于"越低越好"的指标(如客户流失率),应使用目标值除以实际值,或直接比较差值。</p>
+<h3 id="worked-example-例题">worked example(例题)</h3>
+<p>某电商公司本季度的数据如下:</p>
+<p>| KPI | 实际值 | 目标值 | |---|---|---| | 营收(百万元) | 46 | 50 | | 毛利率 | 38% | 35% | | 客户流失率 | 6% | 5% | | 订单准时交付率 | 97% | 95% |</p>
+<p>约定:达成率 $\ge 100\%$ 为绿色,$90\%\text{–}100\%$ 为黄色,低于 $90\%$ 为红色。</p>
+<li>营收:$46/50 = 92\%$ → 黄色。</li>
+<li>毛利率:$38/35 \approx 108.6\%$ → 绿色。</li>
+<li>客户流失率(越低越好):$5/6 \approx 83.3\%$ → 红色。</li>
+<li>准时交付率:$97/95 \approx 102.1\%$ → 绿色。</li>
+<p>仪表盘一眼就能显示:客户流失是最紧迫的问题,营收略有不足,其余指标良好。</p>
+<h3 id="问题解决应用">问题解决应用</h3>
+<p>下面这段代码把上述规则自动化,用来生成仪表盘的状态灯:</p>
+<pre><code>def status(actual, target, lower_better=False):
+    rate = target / actual if lower_better else actual / target
+    if rate &gt;= 1.0:
+        return "绿"
+    return "黄" if rate &gt;= 0.9 else "红"
+
+kpis = [("营收", 46, 50, False), ("流失率", 6, 5, True)]
+for name, a, t, lb in kpis:
+    print(name, status(a, t, lb))</code></pre>
+<p><strong>分析思路</strong>:红灯出现后,按"指标 → 原因 → 行动"逐层下钻。例如流失率偏高,可继续按客户群、地区、产品线拆分,找出流失集中的部分,再决定是改进服务还是调整定价。</p>
+<p><strong>常见陷阱</strong>:</p>
+<li>指标过多,重点被淹没。</li>
+<li>只显示当前值,不显示趋势,无法判断变化方向。</li>
+<li>数据口径不一致,导致不同部门的数字互相矛盾。</li>
+<li>数据延迟,使"实时"失去意义。</li>
+<pre class="mermaid">flowchart LR
+    A[业务数据源] --> B[数据清洗与汇总]
+    B --> C[KPI 计算]
+    C --> D[与目标比较]
+    D --> E[高管仪表盘]
+    E --> F{是否异常}
+    F -->|是| G[下钻分析]
+    F -->|否| H[持续监控]</pre>
+<p><em>图:从数据源到高管仪表盘的流程。KPI 与目标比较后,异常指标触发下钻分析,正常指标继续监控。</em></p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch10: Reporting Results (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

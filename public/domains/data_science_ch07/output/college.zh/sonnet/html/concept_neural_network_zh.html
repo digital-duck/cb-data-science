@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Network | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="神经网络">神经网络</h2>
+<p><strong>定义。</strong> 神经网络(neural network)是由相互连接的“神经元”组成的计算结构,按层组织:<strong>输入层</strong>接收特征,一个或多个<strong>隐藏层</strong>逐层提取更抽象的表示,<strong>输出层</strong>给出分类结果。每个神经元先对输入做加权求和,再经非线性<strong>激活函数</strong>变换:</p>
+$$a = \sigma\!\left(\mathbf{w}^{\top}\mathbf{x} + b\right)$$
+<p>其中 $\mathbf{w}$ 是权重,$b$ 是偏置,$\sigma$ 常取 ReLU $\sigma(z)=\max(0,z)$ 或 sigmoid $\sigma(z)=\dfrac{1}{1+e^{-z}}$。若没有非线性激活,多层网络会退化成单个线性变换,无法表示复杂的决策边界。</p>
+<p>整个网络的前向传播可写成逐层复合:</p>
+$$\mathbf{h}=\sigma(W_1\mathbf{x}+\mathbf{b}_1),\qquad \hat{\mathbf{y}}=\mathrm{softmax}(W_2\mathbf{h}+\mathbf{b}_2)$$
+<p>softmax 把输出变为概率:$\hat y_k=\dfrac{e^{z_k}}{\sum_j e^{z_j}}$。</p>
+<pre class="mermaid">graph LR
+    X1[输入 x1] --> H1[隐藏神经元 1]
+    X1 --> H2[隐藏神经元 2]
+    X2[输入 x2] --> H1
+    X2 --> H2
+    H1 --> O1[输出:类别 A]
+    H1 --> O2[输出:类别 B]
+    H2 --> O1
+    H2 --> O2</pre>
+<p><em>图:含两个输入、两个隐藏神经元和两个输出类别的最小神经网络。</em></p>
+<p><strong>例题。</strong> 设输入 $\mathbf{x}=(1,\,2)$,隐藏层有两个 ReLU 神经元: $W_1=\begin{pmatrix}1&-1\\ 0.5&1\end{pmatrix}$,$\mathbf{b}_1=\mathbf{0}$;输出层 $W_2=\begin{pmatrix}1&0\\ 0&2\end{pmatrix}$,$\mathbf{b}_2=\mathbf{0}$。</p>
+<li>隐藏层预激活:$W_1\mathbf{x}=(1-2,\;0.5+2)=(-1,\;2.5)$。</li>
+<li>ReLU 后:$\mathbf{h}=(0,\;2.5)$。</li>
+<li>输出层:$\mathbf{z}=W_2\mathbf{h}=(0,\;5)$。</li>
+<li>softmax:$\hat y_A=\dfrac{e^0}{e^0+e^5}\approx 0.007$,$\hat y_B\approx 0.993$。</li>
+<p>网络判定该样本属于类别 B。</p>
+<p><strong>问题求解应用。</strong> 网络“学习”就是选择参数 $\theta=\{W,\mathbf{b}\}$ 使损失最小。分类常用交叉熵损失:</p>
+$$L=-\sum_k y_k\log \hat y_k$$
+<p>其中 $\mathbf{y}$ 是真实类别的独热向量。若上例真实类别为 A,则 $L=-\log 0.007\approx 4.96$,损失很大,说明预测错误。训练时用<strong>反向传播</strong>依链式法则计算梯度 $\partial L/\partial\theta$,再做梯度下降:</p>
+$$\theta \leftarrow \theta - \eta\,\frac{\partial L}{\partial \theta}$$
+<p>$\eta$ 为学习率。对 softmax 加交叉熵,输出层梯度形式很简洁:$\partial L/\partial z_k=\hat y_k-y_k$。本例中为 $(0.007-1,\;0.993-0)=(-0.993,\;0.993)$,它推动类别 A 的得分上升、类别 B 的得分下降。</p>
+<p>实际应用步骤:(1)把数据标准化后输入;(2)选择层数与宽度,小数据集先用一到两个隐藏层;(3)监控训练集与验证集损失,若训练损失下降而验证损失上升,则说明<strong>过拟合</strong>,可减小网络、加正则化或提前停止。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

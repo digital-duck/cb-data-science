@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weight | Data Science Ch07</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="weight">Weight</h2>
+<p><strong>定义</strong></p>
+<p>重量（weight）是物体所受的重力大小，其方向指向地心。根据牛顿第二定律，重力是质量与重力加速度的乘积：</p>
+$$W = mg$$
+<p>其中 $m$ 是物体的质量（单位：$\text{kg}$），$g$ 是当地的重力加速度（在地球表面附近约为 $9.8 \ \text{m/s}^2$），$W$ 的单位是牛顿（$\text{N}$）。需要特别区分<strong>质量</strong>与<strong>重量</strong>：质量是物体所含物质多少的量度，是标量、不随位置改变；重量是一种力，是向量，其大小随所在位置的 $g$ 值变化——同一物体在地球和月球上质量相同，但重量不同，因为月球表面的 $g$ 约为地球的 $1/6$。</p>
+<p><strong>例题</strong></p>
+<p>一名航天员在地球上的质量为 $75 \ \text{kg}$。求：(a) 他在地球表面的重量；(b) 他在月球表面（$g_{\text{月}} = 1.6 \ \text{m/s}^2$）的重量。</p>
+<p>解：</p>
+<p>(a) $W_{\text{地}} = mg_{\text{地}} = 75 \times 9.8 = 735 \ \text{N}$</p>
+<p>(b) $W_{\text{月}} = mg_{\text{月}} = 75 \times 1.6 = 120 \ \text{N}$</p>
+<p>可以看到，质量 $m = 75 \ \text{kg}$ 在两地保持不变，而重量随 $g$ 的减小而按比例减小。</p>
+<p><strong>问题解决应用</strong></p>
+<p>重量公式在实际问题中常与其他力平衡分析结合使用。例如，电梯中的人受到的视重（apparent weight）等于地板对人的支持力 $N$，由牛顿第二定律：</p>
+$$N - mg = ma \quad \Rightarrow \quad N = m(g + a)$$
+<p>其中 $a$ 为电梯的加速度（向上为正）。若电梯以 $a = 2 \ \text{m/s}^2$ 加速上升，质量 $m = 60 \ \text{kg}$ 的人所感受到的视重为：</p>
+$$N = 60 \times (9.8 + 2) = 708 \ \text{N}$$
+<p>大于其静止时的重量 $588 \ \text{N}$，这正是电梯启动时人感到"变重"的原因。掌握 $W = mg$ 及其在牛顿第二定律框架下的推广，是分析支持力、张力、自由落体和失重等一系列力学问题的基础工具。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch7: Deep Learning and AI Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

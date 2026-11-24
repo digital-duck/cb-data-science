@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Testing Set | Data Science Ch06</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="训练集与测试集">训练集与测试集</h2>
+<p><strong>定义。</strong> 训练集(training set)是用来让模型"学习"参数的那部分数据;测试集(testing set)是在训练结束后、从未参与学习的数据,用来估计模型在新数据上的表现。核心原则:<strong>评估必须使用模型没见过的数据</strong>。若用训练数据评估,模型只需"死记硬背"就能得高分,这种现象称为过拟合(overfitting),它会让我们高估模型的真实能力。</p>
+<p>常见做法是随机划分,例如 80% 训练、20% 测试。设数据集共有 $N$ 个样本,则训练集大小为 $N_{\text{train}}=0.8N$,测试集大小为 $N_{\text{test}}=0.2N$。模型在测试集上的误差为</p>
+$$
+E_{\text{test}}=\frac{1}{N_{\text{test}}}\sum_{i\in\text{测试集}} L\big(y_i,\hat y_i\big),
+$$
+<p>其中 $L$ 是损失函数(分类中常用 0-1 损失:预测错为 1,对为 0),$y_i$ 为真实值,$\hat y_i$ 为预测值。</p>
+<pre class="mermaid">flowchart LR
+    A[完整数据集] --> B[随机划分]
+    B --> C[训练集 80%]
+    B --> D[测试集 20%]
+    C --> E[训练模型]
+    E --> F[在测试集上评估]
+    D --> F
+    F --> G[估计泛化误差]</pre>
+<p><em>图:数据集被一次性划分,训练集只用于学习,测试集只用于最终评估。</em></p>
+<p><strong>例题。</strong> 共有 1000 张邮件样本(垃圾/正常)。随机取 800 封训练分类器,剩余 200 封测试。结果:训练集上错 8 封,测试集上错 24 封。</p>
+<li>训练误差:$8/800=1\%$</li>
+<li>测试误差:$24/200=12\%$</li>
+<p>两者相差悬殊,说明模型过拟合:它记住了训练邮件的特征,却没学到可推广的规律。对新邮件应以 <strong>12%</strong> 作为误差的估计,而不是 1%。</p>
+<p><strong>问题求解应用。</strong> 实践中要注意以下几点:</p>
+<li><strong>先打乱再划分。</strong> 若数据按时间或类别排序,直接截取会使两个集合分布不同。分类问题宜用分层抽样(stratified sampling),保持各类别比例一致。</li>
+<li><strong>杜绝数据泄漏(data leakage)。</strong> 标准化的均值与方差只能由训练集计算,再应用到测试集;否则测试集信息已"渗入"训练。</li>
+<li><strong>测试集只用一次。</strong> 若反复根据测试误差调参,测试集实际上变成了训练的一部分。调参应使用从训练集中再划出的验证集(validation set),或交叉验证。</li>
+<li><strong>测试集要足够大。</strong> 测试误差本身有随机性。对 0-1 损失,其标准误约为 $\sqrt{p(1-p)/N_{\text{test}}}$。上例中 $p=0.12$,$N_{\text{test}}=200$,标准误约 $\sqrt{0.12\times0.88/200}\approx 2.3\%$,所以真实误差大致在 $12\%\pm 4.6\%$(约两倍标准误)范围内。</li>
+<pre><code>from sklearn.model_selection import train_test_split
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42)
+model.fit(X_tr, y_tr)
+print("测试准确率:", model.score(X_te, y_te))</code></pre>
+<p><strong>小结。</strong> 训练集用来学习,测试集用来诚实地检验;两者严格分离,才能得到对模型泛化能力的可靠估计。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch6: Decision-Making Using Machine Learning Basics (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

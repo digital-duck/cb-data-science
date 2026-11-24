@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correlation Coefficient | Data Science Ch04</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="相关系数">相关系数</h2>
+<p><strong>定义。</strong> 相关系数(皮尔逊相关系数)衡量两个变量之间<em>线性</em>关系的强度与方向。对数据对 $(x_i, y_i)$,$i=1,\dots,n$,定义为</p>
+$$
+r=\frac{\sum_{i=1}^{n}(x_i-\bar x)(y_i-\bar y)}{\sqrt{\sum_{i=1}^{n}(x_i-\bar x)^2}\;\sqrt{\sum_{i=1}^{n}(y_i-\bar y)^2}}=\frac{s_{xy}}{s_x s_y}
+$$
+<p>其中 $s_{xy}$ 是协方差,$s_x,s_y$ 是标准差。除以两个标准差使 $r$ 不再依赖单位,并由柯西—施瓦茨不等式保证 $-1\le r\le 1$。</p>
+<li>$r>0$:正相关;$r<0$:负相关;</li>
+<li>$|r|$ 越接近 1,点越贴近一条直线;</li>
+<li>$r=\pm1$:所有点恰好落在一条直线上;$r\approx0$:没有<em>线性</em>关系。</li>
+<p><strong>例题。</strong> 五名学生的每周学习时间 $x$(小时)与测验成绩 $y$:</p>
+<p>| $x$ | 1 | 2 | 3 | 4 | 5 | |---|---|---|---|---|---| | $y$ | 55 | 60 | 70 | 75 | 90 |</p>
+<p>步骤如下:</p>
+<li>均值:$\bar x=3$,$\bar y=70$。</li>
+<li>离差:$x_i-\bar x=-2,-1,0,1,2$;$y_i-\bar y=-15,-10,0,5,20$。</li>
+<li>乘积之和:$30+10+0+5+40=85$。</li>
+<li>平方和:$\sum(x_i-\bar x)^2=10$,$\sum(y_i-\bar y)^2=225+100+0+25+400=750$。</li>
+<li>代入公式:</li>
+$$
+r=\frac{85}{\sqrt{10}\sqrt{750}}=\frac{85}{\sqrt{7500}}\approx\frac{85}{86.6}\approx0.98
+$$
+<p>这表明学习时间与成绩之间存在很强的正线性关系。</p>
+<p><strong>问题求解应用。</strong> </p>
+<p><em>(1)线性变换不改变 $|r|$。</em> 若把成绩换算为百分制以外的分数,如 $y'=2y+10$,则 $r$ 不变(若乘以负数,则只改变符号)。因此 $r$ 可以跨单位比较。</p>
+<p><em>(2)与回归的联系。</em> 最小二乘回归直线的斜率为 $b=r\,\dfrac{s_y}{s_x}$。本例中 $s_y/s_x=\sqrt{750/10}\approx8.66$,所以 $b\approx0.98\times8.66\approx8.5$:每多学一小时,预测成绩约提高 8.5 分。决定系数 $r^2\approx0.96$,意味着成绩变化的约 96% 可由线性关系解释。</p>
+<p><em>(3)常见陷阱。</em></p>
+<li><strong>非线性关系</strong>:取 $y=x^2$,$x=-2,-1,0,1,2$,则 $r=0$,但 $y$ 完全由 $x$ 决定。$r=0$ 只说明没有线性关系。</li>
+<li><strong>异常值</strong>:一个极端点可以大幅拉高或拉低 $r$,应先画散点图再计算。</li>
+<li><strong>相关不等于因果</strong>:冰淇淋销量与溺水人数正相关,是因为两者都受气温影响(混杂变量),而不是一个导致另一个。</li>
+<p><strong>小结。</strong> 计算 $r$ 前先画散点图,确认关系大致呈直线;再用 $r$ 的符号判断方向、用 $|r|$ 或 $r^2$ 判断强度,并始终避免把相关解读为因果。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch4: Inferential Statistics and Regression Analysis (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>

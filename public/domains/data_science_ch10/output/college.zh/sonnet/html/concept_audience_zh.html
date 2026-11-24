@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audience | Data Science Ch10</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fafaf8;color:#1a1a1a;line-height:1.7}
+h2{font-size:1.45rem;color:#1e3a5f;margin-bottom:12px}
+h3{font-size:1.1rem;color:#2e4a7f;margin:20px 0 8px}
+h4{font-size:1rem;color:#3a5a8f;margin:16px 0 6px}
+p{margin-bottom:16px;font-size:1rem}
+li{margin-bottom:6px;margin-left:24px;font-size:1rem}
+pre{background:#f4f4f0;border:1px solid #d8d8d0;border-radius:6px;
+    padding:16px 20px;overflow-x:auto;margin:16px 0}
+code{font-family:Menlo,Consolas,monospace;font-size:.87em}
+p code{background:#f0f0ea;padding:1px 4px;border-radius:3px}
+footer.spl-credit{margin-top:32px;padding-top:16px;border-top:1px solid #e0e0d8;
+      font-family:system-ui,sans-serif;font-size:.78rem;color:#999;text-align:center}
+footer.spl-credit a{color:#2563eb;text-decoration:none}
+footer.spl-credit span{display:block}
+footer.spl-credit .spl-credit__meta{margin-bottom:4px}
+.cb-figure{margin:24px 0;text-align:center}
+.cb-figure img{max-width:100%;height:auto;border:1px solid #e0e0d8;border-radius:6px}
+figcaption{font-size:.82rem;color:#666;margin-top:8px;font-style:italic;text-align:center}
+pre.mermaid{background:none;border:none;padding:0;overflow:visible;margin:16px 0}
+.page{max-width:780px;margin:0 auto;padding:40px 32px}
+section{margin-bottom:48px;border-top:1px solid #e0e0d8;padding-top:36px}
+section:first-of-type{border-top:none;padding-top:0}
+</style>
+</head>
+<body>
+<div class="page">
+  <main>
+    <h2 id="受众">受众</h2>
+<h3 id="定义">定义</h3>
+<p>技术报告的<strong>受众</strong>是实际阅读报告并据此理解、判断或行动的人或群体。受众不同，他们已有的知识、关心的问题、可支配的时间都不同。因此，同一项研究成果常常需要用不同方式表达。按沟通需求，通常把受众分为四类：</p>
+<p>| 受众 | 背景 | 最关心的问题 | 适合的写法 | |---|---|---|---| | 专家 | 同领域研究者 | 方法是否严谨、结果能否复现 | 完整推导、误差分析、参考文献 | | 技术人员 | 工程师、实施者 | 如何操作、参数是多少 | 步骤、规格、接口、示例代码 | | 管理者 | 决策者 | 成本、风险、收益 | 结论先行、数据摘要、建议 | | 非专业读者 | 公众、跨领域读者 | 这与我有什么关系 | 类比、日常语言、少用术语 |</p>
+<h3 id="工作示例">工作示例</h3>
+<p>假设某团队测得新型电池的容量衰减率为每循环 $0.02\%$，需要为四类读者各写一句核心陈述：</p>
+<li><strong>专家</strong>：“在 $1\,\text{C}$ 倍率下循环 $500$ 次后，容量保持率为 $\approx 90\%$，衰减率为 $0.02\%/\text{循环}$（$n=5$，标准差 $0.003\%$）。”</li>
+<li><strong>技术人员</strong>：“按 $1\,\text{C}$ 充放电，循环 $500$ 次后容量约剩 $90\%$；请在电池管理系统中把报警阈值设为 $80\%$。”</li>
+<li><strong>管理者</strong>：“该电池可使用约 $1000$ 次循环，寿命比现有方案长约 $30\%$，预计每年节省更换成本。建议批准试点。”</li>
+<li><strong>非专业读者</strong>：“这种电池每天充一次，大约能用近三年，性能仍然良好。”</li>
+<p>四句话的事实相同，但详略、术语和结论的位置不同。</p>
+<h3 id="问题解决应用">问题解决应用</h3>
+<p>撰写报告时，按下列步骤分析受众：</p>
+<li><strong>识别读者</strong>：列出谁会读，并判断主要读者是哪一类。</li>
+<li><strong>确定需求</strong>：这位读者读完要做什么决定或动作？</li>
+<li><strong>选择内容与顺序</strong>：管理者和非专业读者适合“结论—依据—细节”；专家和技术人员则需要完整的方法与数据。</li>
+<li><strong>调整语言</strong>：不熟悉的术语要给出解释，或换成日常说法。</li>
+<li><strong>分层组织</strong>：用摘要照顾决策者，用正文照顾技术人员，用附录照顾专家。</li>
+<p><strong>验证</strong>：把初稿交给目标读者的代表，请对方用一句话复述要点，并说出下一步该做什么。如果复述与你的意图不符，就说明报告需要修改。</p>
+<p>当读者混合时，不要把报告写成一份“折中”的文本。更有效的做法是分层：摘要面向管理者，引言和图示面向非专业读者，方法与数据面向专家和技术人员。</p>
+  </main>
+  <footer class="spl-credit"><span class="spl-credit__meta">Data Science Ch10: Reporting Results (Level: College &middot; Language: ZH &middot; Model: sonnet)</span><span class="spl-credit__powered">Generated and Powered by <a href="https://github.com/digital-duck/SPL.py" target="_blank" rel="noopener">SPL</a></span></footer>
+</div>
+</body>
+</html>
