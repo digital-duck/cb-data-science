@@ -144,7 +144,7 @@
       },
       {
         "target": "predictive_analytics",
-        "file": "output/college.zh/sonnet/html/book_predictive_analytics.html",
+        "file": "output/college.zh/sonnet/html/book_predictive_analytics_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -576,7 +576,7 @@
       },
       {
         "target": "cloud_computing",
-        "file": "output/college.zh/sonnet/html/book_cloud_computing.html",
+        "file": "output/college.zh/sonnet/html/book_cloud_computing_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -1085,7 +1085,7 @@
       },
       {
         "target": "python_data_analysis",
-        "file": "output/college.zh/sonnet/html/book_python_data_analysis.html",
+        "file": "output/college.zh/sonnet/html/book_python_data_analysis_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -1557,7 +1557,7 @@
       },
       {
         "target": "python_statistical_computing",
-        "file": "output/college.zh/sonnet/html/book_python_statistical_computing.html",
+        "file": "output/college.zh/sonnet/html/book_python_statistical_computing_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -2140,12 +2140,6 @@
       },
       {
         "target": "arima",
-        "file": "output/intro.zh/sonnet/html/book_arima.html",
-        "model": "sonnet",
-        "language": "zh"
-      },
-      {
-        "target": "arima",
         "file": "output/college.zh/sonnet/html/book_arima_zh.html",
         "model": "sonnet",
         "language": "zh"
@@ -2278,13 +2272,13 @@
       },
       {
         "target": "seasonal_trend_decomposition_loess",
-        "file": "output/college.zh/sonnet/html/book_seasonal_trend_decomposition_loess.html",
+        "file": "output/college.zh/sonnet/html/book_seasonal_trend_decomposition_loess_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
       {
         "target": "augmented_dickey_fuller_test",
-        "file": "output/college.zh/sonnet/html/book_augmented_dickey_fuller_test.html",
+        "file": "output/college.zh/sonnet/html/book_augmented_dickey_fuller_test_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -3190,13 +3184,13 @@
       },
       {
         "target": "data_mining",
-        "file": "output/college.zh/sonnet/html/book_data_mining.html",
+        "file": "output/college.zh/sonnet/html/book_data_mining_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
       {
         "target": "heart_disease_classification",
-        "file": "output/college.zh/sonnet/html/book_heart_disease_classification.html",
+        "file": "output/college.zh/sonnet/html/book_heart_disease_classification_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -3988,13 +3982,13 @@
       },
       {
         "target": "semantic_segmentation",
-        "file": "output/college.zh/sonnet/html/book_semantic_segmentation.html",
+        "file": "output/college.zh/sonnet/html/book_semantic_segmentation_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
       {
         "target": "large_language_model",
-        "file": "output/college.zh/sonnet/html/book_large_language_model.html",
+        "file": "output/college.zh/sonnet/html/book_large_language_model_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -4926,13 +4920,13 @@
       },
       {
         "target": "cookies",
-        "file": "output/college.zh/sonnet/html/book_cookies.html",
+        "file": "output/college.zh/sonnet/html/book_cookies_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
       {
         "target": "explainable_ai",
-        "file": "output/college.zh/sonnet/html/book_explainable_ai.html",
+        "file": "output/college.zh/sonnet/html/book_explainable_ai_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -5458,13 +5452,13 @@
       },
       {
         "target": "pareto_chart",
-        "file": "output/college.zh/sonnet/html/book_pareto_chart.html",
+        "file": "output/college.zh/sonnet/html/book_pareto_chart_zh.html",
         "model": "sonnet",
         "language": "zh"
       },
       {
         "target": "choropleth_graph",
-        "file": "output/college.zh/sonnet/html/book_choropleth_graph.html",
+        "file": "output/college.zh/sonnet/html/book_choropleth_graph_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
@@ -5893,7 +5887,7 @@
       },
       {
         "target": "executive_dashboard",
-        "file": "output/college.zh/sonnet/html/book_executive_dashboard.html",
+        "file": "output/college.zh/sonnet/html/book_executive_dashboard_zh.html",
         "model": "sonnet",
         "language": "zh"
       }
